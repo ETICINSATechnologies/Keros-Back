@@ -1,0 +1,77 @@
+{
+	"info": {
+		"_postman_id": "3d58d329-0c9a-4f30-a0e4-609ffd22de56",
+		"name": "Keros Back",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Cat",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "localhost:8000/v1/cat/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"v1",
+						"cat",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Cat",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "height",
+							"value": "7.4",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "Tom",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:8000/api/v1/cat",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v1",
+						"cat"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			}
+		]
+	}
+}
