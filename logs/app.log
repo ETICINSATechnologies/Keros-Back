@@ -10,3 +10,7 @@
 [2018-05-17 07:01:43] Keros.ERROR: The cat could not be found [] []
 [2018-05-17 07:01:52] Keros.ERROR: The cat could not be found [] []
 [2018-05-17 07:19:15] Keros.ERROR: The provided page is not a number [] []
+[2018-05-17 15:21:31] Keros.ERROR: Callable Keros\Api\Cat\CatController does not exist [] []
+[2018-05-17 15:23:33] Keros.ERROR: Callable CatController does not exist [] []
+[2018-05-17 15:23:34] Keros.ERROR: Callable CatController does not exist [] []
+[2018-05-17 15:23:54] Keros.ERROR: Callable CatController does not exist [] []
