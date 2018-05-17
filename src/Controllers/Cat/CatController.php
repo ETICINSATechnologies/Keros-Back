@@ -1,8 +1,7 @@
 <?php
 namespace Keros\Controllers\Cat;
 
-use Exception;
-use Keros\Entities\Cat;
+use Keros\Entities\Cat\Cat;
 use Keros\Error\KerosException;
 use Keros\Services\Cat\CatService;
 use Keros\Tools\Validator;

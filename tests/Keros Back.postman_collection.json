@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "3d58d329-0c9a-4f30-a0e4-609ffd22de56",
+		"_postman_id": "c75373fa-c1b0-4b8b-90b5-7bfc292ea086",
 		"name": "Keros Back",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -10,17 +10,45 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
-					"raw": "localhost:8000/v1/cat/1",
+					"raw": "localhost:8000/api/v1/cat/11",
 					"host": [
 						"localhost"
 					],
 					"port": "8000",
 					"path": [
+						"api",
 						"v1",
 						"cat",
-						"1"
+						"11"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Cats",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:8000/api/v1/cat",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v1",
+						"cat"
 					]
 				}
 			},
@@ -37,13 +65,11 @@
 						{
 							"key": "height",
 							"value": "7.4",
-							"description": "",
 							"type": "text"
 						},
 						{
 							"key": "name",
 							"value": "Tom",
-							"description": "",
 							"type": "text"
 						}
 					]
