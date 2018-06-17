@@ -41,7 +41,7 @@ CREATE TABLE `core_user` (
   `id` int(11) AUTO_INCREMENT,
   `username` varchar(50) NOT NULL UNIQUE ,
   `password` varchar(100) NOT NULL,
-  `lastConnecteddAt` DATETIME,
+  `lastConnectedAt` DATETIME,
   `createdAt` DATETIME DEFAULT NOW(),
   `disabled` BOOLEAN NOT NULL DEFAULT FALSE,
   `expiresAt` DATETIME NOT NULL,
