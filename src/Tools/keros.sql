@@ -1,7 +1,8 @@
-DROP DATABASE IF EXISTS keros;
-CREATE DATABASE IF NOT EXISTS keros;
-USE keros;
+SET AUTOCOMMIT = 0;
+SET FOREIGN_KEY_CHECKS = 0;
+SET UNIQUE_CHECKS = 0;
 
+DROP TABLE IF EXISTS cat;
 CREATE TABLE cat (
   id     int NOT NULL AUTO_INCREMENT,
   name   varchar(255),
@@ -9,6 +10,7 @@ CREATE TABLE cat (
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS core_pole;
 CREATE TABLE `core_pole` (
   `id` int(5) AUTO_INCREMENT,
   `label` varchar(5) NOT NULL UNIQUE,
@@ -16,6 +18,7 @@ CREATE TABLE `core_pole` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS core_position;
 CREATE TABLE `core_position` (
   `id` int(11) AUTO_INCREMENT,
   `label` varchar(64) NOT NULL UNIQUE,
@@ -24,6 +27,7 @@ CREATE TABLE `core_position` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS core_department;
 CREATE TABLE `core_department` (
   `id` int(11) AUTO_INCREMENT,
   `label` varchar(15) NOT NULL UNIQUE,
@@ -31,12 +35,14 @@ CREATE TABLE `core_department` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS core_country;
 CREATE TABLE `core_country` (
   `id` int(11) AUTO_INCREMENT,
   `label` varchar(64) NOT NULL UNIQUE,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS core_user;
 CREATE TABLE `core_user` (
   `id` int(11) AUTO_INCREMENT,
   `username` varchar(50) NOT NULL UNIQUE ,
@@ -49,12 +55,14 @@ CREATE TABLE `core_user` (
   KEY `core_user_username_key` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS core_gender;
 CREATE TABLE `core_gender` (
   `id` int(1) AUTO_INCREMENT,
   `label` VARCHAR(1) NOT NULL UNIQUE,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS core_address;
 CREATE TABLE `core_address` (
   `id` int(1) AUTO_INCREMENT,
   `line1` VARCHAR(64) NOT NULL,
@@ -66,7 +74,8 @@ CREATE TABLE `core_address` (
   CONSTRAINT `core_address_countryId_fk` FOREIGN KEY (`countryId`) REFERENCES `core_country` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---- L'ID de core_member est le même le core_user qui lui est attaché
+# L'ID de core_member est le même le core_user qui lui est attaché
+DROP TABLE IF EXISTS core_member;
 CREATE TABLE `core_member` (
   `id` int(11) NOT NULL,
   `genderId` int(1) NOT NULL,
@@ -85,6 +94,7 @@ CREATE TABLE `core_member` (
   CONSTRAINT `core_user_departmentId_fk` FOREIGN KEY (`departmentId`) REFERENCES `core_department` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS core_member_position;
 CREATE TABLE `core_member_position` (
   `memberId` int(11) NOT NULL,
   `positionId` int(11) NOT NULL,
@@ -93,46 +103,6 @@ CREATE TABLE `core_member_position` (
   CONSTRAINT `core_position_position_positionId_fk` FOREIGN KEY (`positionId`) REFERENCES `core_position` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-# Temporary Test Data
-INSERT INTO core_pole (id, label, name) VALUES
-  (1, 'DSI', 'Direction des Systèmes d''Information'),
-  (2, 'Bu', 'Bureau'),
-  (3, 'UA', 'Unités d''affaires');
-
-INSERT INTO core_position (label, poleId) VALUES
-  ('Président(e)', 2),
-  ('Chadaff', 3),
-  ('Junior DSI', 1);
-
-INSERT INTO core_department (id, label, name) VALUES
-  (1, 'IF', 'Informatique'),
-  (2, 'TC', 'Télécommunications, Services & Usages');
-
-INSERT INTO core_country (label) VALUES
-  ('France'),
-  ('Irlande'),
-  ('Sénégal');
-
-INSERT INTO core_user (id, username, password, expiresAt) VALUES
-  (1, 'cbreeze', 'hunter11' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')),
-  (2, 'mcool', 'hunter12' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')),
-  (3, 'lswollo', 'hunter13' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'));
-
-INSERT INTO core_gender (label) VALUES ('M'), ('F'), ('A'), ('I');
-
-INSERT INTO core_address (id, line1, line2, postalCode, city, countryId) VALUES
-  (1, '13 rue renard', null, '69100', 'lyon', 1),
-  (2, '11 baker street', 'appt 501', '6930A', 'dublin', 2),
-  (3, '11 fish street', 'bat. b', '91002', 'paris', 1);
-
-INSERT INTO core_member (id, genderId, firstName, lastName, birthdate, telephone, email, addressId, schoolYear, departmentId) VALUES
-  (1, 1, 'Conor', 'Breeze', STR_TO_DATE('1975-12-25', '%Y-%m-%d'), '+332541254', 'fake.mail@fake.com', 2, 3, 1),
-  (2, 1, 'Marah', 'Cool', STR_TO_DATE('1976-10-27', '%Y-%m-%d'), '+332541541', 'fake.mail2@fake.com', 1, 3, 1),
-  (3, 1, 'Lolo', 'Swollo', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.mail3@fake.com', 3, 5, 2);
-
-INSERT INTO core_member_position (memberId, positionId) VALUES
-  (1, 3),
-  (2, 3),
-  (3, 1),
-  (3, 2),
-  (3, 3);
+SET AUTOCOMMIT = 1;
+SET FOREIGN_KEY_CHECKS = 1;
+SET UNIQUE_CHECKS = 1;

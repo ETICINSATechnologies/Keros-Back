@@ -15,7 +15,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "localhost:8000/api/v1/cat/11",
+					"raw": "localhost:8000/api/v1/cat/5",
 					"host": [
 						"localhost"
 					],
@@ -24,7 +24,7 @@
 						"api",
 						"v1",
 						"cat",
-						"11"
+						"5"
 					]
 				}
 			},
@@ -40,7 +40,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "localhost:8000/api/v1/cat",
+					"raw": "localhost:8000/api/v1/cat?orderBy=id&order=asc&pageNumber=1&pageSize=12&search=T",
 					"host": [
 						"localhost"
 					],
@@ -49,6 +49,28 @@
 						"api",
 						"v1",
 						"cat"
+					],
+					"query": [
+						{
+							"key": "orderBy",
+							"value": "id"
+						},
+						{
+							"key": "order",
+							"value": "asc"
+						},
+						{
+							"key": "pageNumber",
+							"value": "1"
+						},
+						{
+							"key": "pageSize",
+							"value": "12"
+						},
+						{
+							"key": "search",
+							"value": "T"
+						}
 					]
 				}
 			},

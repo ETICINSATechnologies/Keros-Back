@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit>
+    <testsuites>
+        <testsuite name="Keros Tests">
+            <directory>.</directory>
+        </testsuite>
+    </testsuites>
+    <logging>
+        <log type="testdox-text" target="php://stdout" showUncoveredFiles="false"/>
+    </logging>
+    <php>
+        <env name="ENV" value="test"/>
+    </php>
+</phpunit>

@@ -1,6 +1,7 @@
 <?php
 
 namespace Keros\Tools;
+use Keros\Entities\Core\RequestParameters;
 use Keros\Error\KerosException;
 
 class Validator
@@ -65,17 +66,5 @@ class Validator
             throw new KerosException("The float provided is not actually a float", 400);
         }
         return $float;
-    }
-
-
-    public static function page($page): int {
-        if($page == null) {
-            return 0;
-        }
-        $page = intval($page);
-        if ($page < 0){
-            throw new KerosException("The page cannot be a negative number", 400);
-        }
-        return $page;
     }
 }
