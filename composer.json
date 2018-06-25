@@ -13,14 +13,19 @@
     "phpunit/phpunit": "^7"
   },
   "autoload": {
-      "files": ["src/Tools/KerosPDO.php"],
-      "psr-4": {
-        "Keros\\": "src/"
-      }
-    },
+    "psr-4": {
+      "Keros\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "KerosTest\\": "tests/"
+    }
+  },
   "require": {
     "php": "^7.1",
     "slim/slim": "^3.10",
-    "monolog/monolog": "^1.23"
+    "monolog/monolog": "^1.23",
+    "doctrine/orm": "^2.6"
   }
 }

@@ -12,25 +12,57 @@ class ConfigLoader
      * @return array a configuration instance
      */
     public static function getConfig(): array {
-        // TODO Check with $_ENV for environement
-        $config = self::getDevelopmentConfig();
 
+        if(isset($_ENV["ENV"]) && $_ENV["ENV"] == "test") {
+            $config = self::getTestConfig();
+        }
+        else if (isset($_ENV["ENV"]) && $_ENV["ENV"] == "travis"){
+            $config = self::getTravisCIConfig();
+        }
+        else {
+            $config = self::getDevelopmentConfig();
+        }
         // General configuration
         $config['addContentLengthHeader'] = true;
 
         return $config;
     }
 
-    /**
-     * @return array The development configuration
-     */
     private static function getDevelopmentConfig(): array {
         $config['displayErrorDetails'] = true;
 
         $config['db']['host']   = 'localhost';
+        $config['db']['port']   = '3306';
         $config['db']['user']   = 'root';
         $config['db']['pass']   = 'root';
-        $config['db']['dbname'] = 'keros';
+        $config['db']['dbName'] = 'keros';
+        $config['db']['isDevMode'] = true;
+
+        return $config;
+    }
+
+    private static function getTestConfig(): array {
+        $config['displayErrorDetails'] = true;
+
+        $config['db']['host']   = 'localhost';
+        $config['db']['port']   = '3306';
+        $config['db']['user']   = 'root';
+        $config['db']['pass']   = 'root';
+        $config['db']['dbName'] = 'keros_test';
+        $config['db']['isDevMode'] = true;
+
+        return $config;
+    }
+
+    private static function getTravisCIConfig(): array {
+        $config['displayErrorDetails'] = true;
+
+        $config['db']['host']   = 'localhost';
+        $config['db']['port']   = '3306';
+        $config['db']['user']   = 'root';
+        $config['db']['pass']   = '';
+        $config['db']['dbName'] = 'keros_test';
+        $config['db']['isDevMode'] = true;
 
         return $config;
     }

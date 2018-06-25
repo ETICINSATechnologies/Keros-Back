@@ -9,6 +9,8 @@ use http\Env\Response;
 use Keros\Config\ConfigLoader;
 use Keros\Controllers\Cat\CatController;
 use Keros\Error\ErrorHandler;
+use Keros\Tools\KerosEntityManager;
+use Keros\Tools\Logger;
 
 /**
  * Class KerosApp - Main class ran by index.php. Used to configure
@@ -37,17 +39,24 @@ class KerosApp
             });
 
             $this->group('/cat', function () {
-                $this->get("", CatController::class . ':getAllCats');
+                $this->get("", CatController::class . ':getPageCats');
                 $this->get('/{id:[0-9]+}', CatController::class . ':getCat');
                 $this->post("", CatController::class . ':createCat');
             });
         });
 
 
-        $app->getContainer()['errorHandler'] = function ($c) {
-            return new ErrorHandler();
+        $app->getContainer()['entityManager'] = function ($c) {
+            return KerosEntityManager::getEntityManager();
         };
 
+        $app->getContainer()['errorHandler'] = function ($c) {
+            return new ErrorHandler($c);
+        };
+
+        $app->getContainer()['logger'] = function ($c) {
+            return Logger::createLogger();
+        };
 
         $this->app = $app;
     }
@@ -56,7 +65,7 @@ class KerosApp
      * Get an instance of the Slim app
      * @return \Slim\App
      */
-    public function get()
+    public function getApp()
     {
         return $this->app;
     }

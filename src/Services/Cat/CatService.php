@@ -3,66 +3,87 @@
 namespace Keros\Services\Cat;
 
 
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
+use Exception;
 use Keros\Entities\Cat\Cat;
+use Keros\Entities\Core\RequestParameters;
 use Keros\Error\KerosException;
-use function Keros\Tools\KerosPDO;
-use PDO;
+use Monolog\Logger;
+use Psr\Container\ContainerInterface;
 
 class CatService
 {
-    private $pdo;
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
+    /**
+     * @var Logger
+     */
+    private $logger;
+    /**
+     * @var EntityRepository
+     */
+    private $repository;
 
-    public function __construct()
+    public function __construct(ContainerInterface $container)
     {
-        $this->pdo = KerosPDO();
+        $this->logger = $container->get('logger');
+        $this->entityManager = $container->get('entityManager');
+        $this->repository = $this->entityManager->getRepository(Cat::class);
     }
 
-    /**
-     * @param Cat $cat the cat to create
-     * @return Cat the created cat
-     * @throws KerosException if the cat could not be created
-     */
-    public function create(Cat $cat): Cat {
-        $PDO = KerosPDO();
-        $req = $PDO->prepare("INSERT INTO cat (name, height) VALUES (:name, :height)");
-        $req->bindParam(':name', $cat->name);
-        $req->bindParam(':height', $cat->height);
-        $res = $req->execute();
 
-        if(!$res){
-            throw new KerosException("The cat could not be created", 500);
+    public function create(Cat $cat)
+    {
+        $this->entityManager->beginTransaction();
+        try {
+            $this->entityManager->persist($cat);
+            $this->entityManager->flush();
+            $this->entityManager->commit();
+        } catch (Exception $e) {
+            $msg = "Failed to create new cat : " . $e->getMessage();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
         }
-
-        $cat->id = $PDO->lastInsertId();
-
-        return $cat;
     }
 
-    /**
-     * @param int $id the id of the searched cat
-     * @return Cat if it exists, falsy value if not
-     */
-    public function getOne(int $id): Cat {
-        $PDO = KerosPDO();
-        $req = $PDO->prepare("SELECT * FROM cat WHERE id =:id");
-        $req->bindParam(':id', $id);
-        $req->execute();
-        $res = $req->fetchObject(Cat::class);
-
-        return $res;
+    public function getOne(int $id): ?Cat
+    {
+        try {
+            $cat = $this->repository->find($id);
+            return $cat;
+        } catch (Exception $e) {
+            $msg = "Error finding cat with ID $id : " . $e->getMessage();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
     }
 
-    /**
-     * @param int $page the requested page number
-     * @return array an array of all the cats on the requested page
-     */
-    public function getAll(int $page): array {
-        $PDO = KerosPDO();
-        $req = $PDO->prepare("SELECT * FROM cat ORDER BY name ASC LIMIT 25 OFFSET :page");
-        $req->bindValue(':page', (int)( $page * 25 ), PDO::PARAM_INT);
-        $req->execute();
-        $res = $req->fetchAll(PDO::FETCH_CLASS, Cat::class);
+    public function getMany(RequestParameters $requestParameters): array
+    {
+        $criteria = $requestParameters->getCriteria();
+        try {
+            $cats = $this->repository->matching($criteria)->getValues();
+            return $cats;
+        } catch (Exception $e) {
+            $msg = "Error finding page of cats : " . $e->getMessage();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
+    }
 
-        return $res;
+
+    public function getCount(?RequestParameters $requestParameters): int
+    {
+        if ($requestParameters != null) {
+            $countCriteria = $requestParameters->getCountCriteria();
+            $count = $this->repository->matching($countCriteria)->count();
+        } else {
+            $count = $this->repository->matching(Criteria::create())->count();
+        }
+        return $count;
     }
 }

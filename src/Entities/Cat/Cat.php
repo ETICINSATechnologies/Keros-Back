@@ -1,21 +1,93 @@
 <?php
 
 namespace Keros\Entities\Cat;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\Table;
+use JsonSerializable;
+use Keros\Tools\Searchable;
 
 /**
- * Class Cat.
- * @package Keros\Entities\Cat
+ * @Entity
+ * @Table(name="cat")
  */
-class Cat
+class Cat implements JsonSerializable, Searchable
 {
-    public $id;
-    public $name;
-    public $height;
+    /**
+     * @Id
+     * @Column(type="integer")
+     * @GeneratedValue
+     */
+    protected $id;
+    /** @Column(type="string", length=255) */
+    protected $name;
+    /** @Column(type="decimal") */
+    protected $height;
 
-    public function __construct(int $id = null, string $name = null, float $height = null)
+    /**
+     * Cat constructor.
+     * @param $name
+     * @param $height
+     */
+    public function __construct($name, $height)
     {
-        if($id != null) $this->id = $id;
-        if($name != null) $this->name = $name;
-        if($height != null) $this->height = $height;
+        $this->name = $name;
+        $this->height = $height;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'height' => $this->getHeight()
+        ];
+    }
+
+    public static function getSearchFields(): array {
+        return ['name', 'height'];
+    }
+
+    // Getters and setters
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param mixed $name
+     */
+    public function setName($name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHeight()
+    {
+        return $this->height;
+    }
+
+    /**
+     * @param mixed $height
+     */
+    public function setHeight($height): void
+    {
+        $this->height = $height;
     }
 }

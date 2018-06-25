@@ -1,6 +1,14 @@
 language: php
+
 php:
   - '7.1'
+services:
+  - mysql
 
+before_install:
+  - mysql -e 'CREATE DATABASE keros_test;'
+  - mysql keros_test < src/Tools/keros.sql
+  
 install: composer install
-script: phpunit --bootstrap vendor/autoload.php tests
+
+script: ./vendor/bin/phpunit -c tests/phpunit.travis.xml
