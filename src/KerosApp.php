@@ -8,6 +8,7 @@ use http\Env\Request;
 use http\Env\Response;
 use Keros\Config\ConfigLoader;
 use Keros\Controllers\Cat\CatController;
+use Keros\Controllers\Department\DepartmentController;
 use Keros\Error\ErrorHandler;
 use Keros\Tools\KerosEntityManager;
 use Keros\Tools\Logger;
@@ -42,6 +43,11 @@ class KerosApp
                 $this->get("", CatController::class . ':getPageCats');
                 $this->get('/{id:[0-9]+}', CatController::class . ':getCat');
                 $this->post("", CatController::class . ':createCat');
+            });
+            $this->group('/core/department', function () {
+                $this->get("", DepartmentController::class . ':getPageDepartments');
+                $this->get('/{id:[0-9]+}', DepartmentController::class . ':getDepartment');
+
             });
         });
 

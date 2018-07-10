@@ -1,0 +1,75 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: User
+ * Date: 10/07/2018
+ * Time: 14:08
+ */
+
+namespace Keros\Controllers\Department;
+use Keros\Entities\Core\Page;
+use Keros\Entities\Core\RequestParameters;
+use Keros\Entities\Department\Department;
+use Keros\Error\KerosException;
+use Keros\Services\Department\DepartmentService;
+use Keros\Tools\Validator;
+use Monolog\Logger;
+use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+
+class DepartmentController
+{
+    /**
+     * @var DepartmentService
+     */
+    private $DepartmentService;
+    /**
+     * @var Logger
+     */
+    private $logger;
+
+    public function __construct(ContainerInterface $container)
+    {
+        $this->logger = $container->get('logger');
+        $this->DepartmentService = new DepartmentService($container);
+    }
+
+    /**
+     * @return Response containing one department if it exists
+     * @throws KerosException if the validation fails
+     */
+    public function getDepartment(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Getting Department by ID from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $id = Validator::id($args['id']);
+
+        $Department = $this->DepartmentService->getOne($id);
+        if (!$Department) {
+            throw new KerosException("The department could not be found", 400);
+        }
+        return $response->withJson($Department, 200);
+    }
+
+
+
+
+    /**
+     * @return Response containing a page of departments
+     * @throws KerosException if an unknown error occurs
+     */
+    public function getPageDepartments(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Get page departments from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $queryParams = $request->getQueryParams();
+        $params = new RequestParameters($queryParams, Department::getSearchFields());
+
+        $departments = $this->DepartmentService->getMany($params);
+        $totalCount = $this->DepartmentService->getCount($params);
+
+        $page = new Page($departments, $params, $totalCount);
+
+        return $response->withJson($page, 200);
+    }
+
+}
