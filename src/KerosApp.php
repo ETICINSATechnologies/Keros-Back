@@ -46,8 +46,8 @@ class KerosApp
             });
 
             $this->group('/country', function () {
-                $this->get("", CountryController::class, ':getAllCountries');
-                $this->get("/{id:[0-9]+}", CountryController::class, ':getCountry');
+                $this->get("", CountryController::class . ':getAllCountries');
+                $this->get("/{id:[0-9]+}", CountryController::class . ':getCountry');
             });
         });
 

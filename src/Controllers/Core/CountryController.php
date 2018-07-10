@@ -57,7 +57,7 @@ class CountryController
      */
     public function getAllCountries(Request $request, Response $response, array $args)
     {
-        $this->logger->debug("Get countries ");
+        $this->logger->debug("Get countries " . $request->getServerParams()["REMOTE_ADDR"]);
         $queryParams = $request->getQueryParams();
         $params = new RequestParameters($queryParams, Country::getSearchFields());
 

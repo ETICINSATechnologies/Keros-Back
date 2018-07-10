@@ -49,9 +49,8 @@ class CountryService
 
     public function getMany(RequestParameters $requestParameters): array
     {
-        $criteria = $requestParameters->getCriteria();
         try {
-            $countries = $this->repository->matching($criteria)->getValues();
+            $countries = $this->repository->findAll();
             return $countries;
         } catch (Exception $e) {
             $msg = "Error finding page of countries : " . $e->getMessage();

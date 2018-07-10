@@ -26,7 +26,7 @@ class Country implements JsonSerializable, Searchable
     protected $label;
 
     /**
-     * Cat constructor.
+     * Country constructor.
      * @param $label
      */
     public function __construct($label)
