@@ -21,7 +21,7 @@ class DepartmentIntegrationTest extends AppTestCase
         $this->assertSame($response->getStatusCode(), 200);
 
         $body = json_decode($response->getBody());
-        $this->assertEquals(3, count($body->content));
+        $this->assertEquals(13, count($body->content));
         $this->assertNotNull(count($body->content[0]->id));
         $this->assertNotNull(count($body->content[0]->label));
         $this->assertNotNull(count($body->content[0]->name));

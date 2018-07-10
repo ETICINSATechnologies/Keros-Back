@@ -45,7 +45,7 @@ class KerosApp
                 $this->post("", CatController::class . ':createCat');
             });
             $this->group('/core/department', function () {
-                $this->get("", DepartmentController::class . ':getPageDepartments');
+                $this->get("", DepartmentController::class . ':getAllDepartments');
                 $this->get('/{id:[0-9]+}', DepartmentController::class . ':getDepartment');
 
             });

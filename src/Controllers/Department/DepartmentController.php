@@ -51,25 +51,17 @@ class DepartmentController
         return $response->withJson($Department, 200);
     }
 
-
-
-
     /**
-     * @return Response containing a page of departments
+     * @return Response containing all departments
      * @throws KerosException if an unknown error occurs
      */
-    public function getPageDepartments(Request $request, Response $response, array $args)
+    public function getAllDepartments(Request $request, Response $response, array $args)
     {
-        $this->logger->debug("Get page departments from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->logger->debug("Get all departments from " . $request->getServerParams()["REMOTE_ADDR"]);
         $queryParams = $request->getQueryParams();
         $params = new RequestParameters($queryParams, Department::getSearchFields());
-
-        $departments = $this->DepartmentService->getMany($params);
-        $totalCount = $this->DepartmentService->getCount($params);
-
-        $page = new Page($departments, $params, $totalCount);
-
-        return $response->withJson($page, 200);
+        $departments = $this->DepartmentService->getAll($params);
+        return $response->withJson($departments, 200);
     }
 
 }

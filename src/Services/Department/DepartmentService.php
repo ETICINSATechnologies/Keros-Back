@@ -54,14 +54,14 @@ class DepartmentService
         }
     }
 
-    public function getMany(RequestParameters $requestParameters): array
+    public function getAll(RequestParameters $requestParameters): array
     {
         $criteria = $requestParameters->getCriteria();
         try {
             $departments = $this->repository->matching($criteria)->getValues();
             return $departments;
         } catch (Exception $e) {
-            $msg = "Error finding page of departments : " . $e->getMessage();
+            $msg = "Error finding departments : " . $e->getMessage();
             $this->logger->error($msg);
             throw new KerosException($msg, 500);
         }
