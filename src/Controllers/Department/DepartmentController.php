@@ -9,7 +9,7 @@
 namespace Keros\Controllers\Department;
 use Keros\Entities\Core\Page;
 use Keros\Entities\Core\RequestParameters;
-use Keros\Entities\Department\Department;
+use Keros\Entities\Core\Department;
 use Keros\Error\KerosException;
 use Keros\Services\Department\DepartmentService;
 use Keros\Tools\Validator;

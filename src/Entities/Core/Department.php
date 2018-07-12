@@ -6,7 +6,7 @@
  * Time: 13:58
  */
 
-namespace Keros\Entities\Department;
+namespace Keros\Entities\Core;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
