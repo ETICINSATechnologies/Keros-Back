@@ -45,9 +45,11 @@ class KerosApp
                 $this->post("", CatController::class . ':createCat');
             });
 
-            $this->group('/country', function () {
-                $this->get("", CountryController::class . ':getAllCountries');
-                $this->get("/{id:[0-9]+}", CountryController::class . ':getCountry');
+            $this->group('/core', function () {
+                $this->group('/country', function() {
+                    $this->get("", CountryController::class . ':getAllCountries');
+                    $this->get("/{id:[0-9]+}", CountryController::class . ':getCountry');
+                });
             });
         });
 
