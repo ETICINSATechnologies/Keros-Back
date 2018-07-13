@@ -21,7 +21,7 @@ class CountryIntegrationTest extends AppTestCase
         $this->assertSame($response->getStatusCode(), 200);
 
         $body = json_decode($response->getBody());
-        $body->assertEquals(196, count($body->content));
+        $this->assertEquals(196, count($body->content));
     }
 
     public function testGetCountryShouldReturn200()
