@@ -21,11 +21,10 @@ class GenderIntegrationTest extends AppTestCase
         $this->assertSame($response->getStatusCode(), 200);
 
         $body = json_decode($response->getBody());
-        $this->assertEquals(4, count($body->content));
-        $this->assertNotNull(count($body->content[0]->id));
-        $this->assertNotNull(count($body->content[0]->label));
+        $this->assertEquals(4, sizeof($body));
+
     }
-    public function testGetGenderShouldReturn200()
+     public function testGetGenderShouldReturn200()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
@@ -38,9 +37,8 @@ class GenderIntegrationTest extends AppTestCase
         $this->assertSame($response->getStatusCode(), 200);
 
         $body = json_decode($response->getBody());
-        $this->assertEquals(1, count($body->content));
-        $this->assertNotNull(count($body->content[0]->id));
-        $this->assertNotNull(count($body->content[0]->label));
+        $this->assertSame($body->id, 1);
+        $this->assertSame($body->label, 'M');
     }
     public function testGetGenderShouldReturn400()
     {
@@ -53,9 +51,5 @@ class GenderIntegrationTest extends AppTestCase
         $response = $this->app->run(true);
 
         $this->assertSame($response->getStatusCode(), 400);
-
-        $body = json_decode($response->getBody());
-        $this->assertEquals(1, count($body->content));
-
     }
 }
