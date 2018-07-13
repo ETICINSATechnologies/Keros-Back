@@ -21,9 +21,9 @@ class CountryIntegrationTest extends AppTestCase
         $this->assertSame($response->getStatusCode(), 200);
 
         $body = json_decode($response->getBody());
-        $this->assertEquals(196, count($body->content));
-        //$this->assertNotNull(count($body->content[0]->id));
-        //$this->assertNotNull(count($body->content[0]->label));
+        // $this->assertEquals(196, count($body->content));
+        $this->assertNotNull(count($body->content[0]->id));
+        $this->assertNotNull(count($body->content[0]->label));
     }
 
     public function testGetCountryShouldReturn200()
@@ -43,7 +43,7 @@ class CountryIntegrationTest extends AppTestCase
         $this->assertSame($body->label, "Afghanistan");
     }
 
-    public function testGetCountryShouldReturn404()
+    public function testGetCountryShouldReturn400()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
@@ -53,6 +53,6 @@ class CountryIntegrationTest extends AppTestCase
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(true);
 
-        $this->assertSame($response->getStatusCode(), 404);
+        $this->assertSame($response->getStatusCode(), 400);
     }
 }
