@@ -21,7 +21,7 @@ class CountryIntegrationTest extends AppTestCase
         $this->assertSame($response->getStatusCode(), 200);
 
         $body = json_decode($response->getBody());
-        $body->assertEquals(196, sizeof($body));
+        $body->assertEquals(196, count($body->content));
     }
 
     public function testGetCountryShouldReturn200()
@@ -41,7 +41,7 @@ class CountryIntegrationTest extends AppTestCase
         $this->assertSame($body->label, "Afghanistan");
     }
 
-    public function testGetCountryShouldReturn400()
+    public function testGetCountryShouldReturn404()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
