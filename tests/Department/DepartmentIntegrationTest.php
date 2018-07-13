@@ -22,12 +22,7 @@ class DepartmentIntegrationTest extends AppTestCase
         $this->assertSame($response->getStatusCode(), 200);
 
         $body = json_decode($response->getBody());
-        $this->assertEquals(13, count($body->content));
-        $this->assertNotNull(count($body->content[0]->id));
-        $this->assertNotNull(count($body->content[0]->label));
-        $this->assertNotNull(count($body->content[0]->name));
-
-
+        $this->assertEquals(2, sizeof($body));
     }
     public function testGetDepartmentShouldReturn200()
     {
@@ -42,18 +37,15 @@ class DepartmentIntegrationTest extends AppTestCase
         $this->assertSame($response->getStatusCode(), 200);
 
         $body = json_decode($response->getBody());
-        $this->assertEquals(1, count($body->content));
-        $this->assertNotNull(count($body->content[0]->id));
-        $this->assertNotNull(count($body->content[0]->label));
-        $this->assertNotNull(count($body->content[0]->name));
-
-
+        $this->assertSame($body->id, 1);
+        $this->assertSame($body->label, "IF");
+        $this->assertSame($body->name, "Informatique");
     }
     public function testGetDepartmentShouldReturn400()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/api/v1/core/department/1',
+            'REQUEST_URI' => '/api/v1/core/department/3',
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
