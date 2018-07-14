@@ -43,7 +43,7 @@ class CountryController
 
         $country = $this->countryService->getOne($id);
         if (!$country) {
-            throw new KerosException("The country could not be found", 404);
+            throw new KerosException("Internal Service Error", 400);
         }
         return $response->withJson($country, 200);
     }
