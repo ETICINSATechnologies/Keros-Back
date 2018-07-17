@@ -1,18 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: User
- * Date: 12/07/2018
- * Time: 15:59
- */
 
-namespace Keros\Controllers\Gender;
+
+namespace Keros\Controllers\Core;
 
 use Keros\Entities\Core\Gender;
-use Keros\Entities\Core\Page;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Error\KerosException;
-use Keros\Services\Gender\GenderService;
+use Keros\Services\Core\GenderService;
 use Keros\Tools\Validator;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
@@ -40,7 +34,7 @@ class GenderController
      */
     public function getGender(Request $request, Response $response, array $args)
     {
-        $this->logger->debug("Getting cat by ID from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->logger->debug("Getting gender by ID from " . $request->getServerParams()["REMOTE_ADDR"]);
         $id = Validator::id($args['id']);
 
         $Gender = $this->GenderService->getOne($id);
@@ -61,8 +55,8 @@ class GenderController
         $this->logger->debug("Get all genders from " . $request->getServerParams()["REMOTE_ADDR"]);
         $queryParams = $request->getQueryParams();
         $params = new RequestParameters($queryParams, Gender::getSearchFields());
-        $departments = $this->GenderService->getAll($params);
-        return $response->withJson($departments, 200);
+        $genders = $this->GenderService->getAll($params);
+        return $response->withJson($genders, 200);
     }
 
 }

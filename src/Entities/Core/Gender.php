@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: User
- * Date: 12/07/2018
- * Time: 15:51
- */
+
 
 namespace Keros\Entities\Core;
 
@@ -30,7 +25,6 @@ class Gender implements JsonSerializable, Searchable
     protected $id;
     /** @Column(type="string", length=1) */
     protected $label;
-    /** @Column(type="decimal") */
 
     /**
      * Gender constructor.

@@ -1,12 +1,7 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: User
- * Date: 12/07/2018
- * Time: 16:06
- */
 
-namespace Keros\Services\Gender;
+
+namespace Keros\Services\Core;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;

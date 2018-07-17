@@ -7,7 +7,7 @@ namespace Keros;
 use http\Env\Request;
 use http\Env\Response;
 use Keros\Config\ConfigLoader;
-use Keros\Controllers\Gender\GenderController;
+use Keros\Controllers\Core\GenderController;
 use Keros\Controllers\Cat\CatController;
 use Keros\Error\ErrorHandler;
 use Keros\Tools\KerosEntityManager;
@@ -44,9 +44,9 @@ class KerosApp
                 $this->get('/{id:[0-9]+}', CatController::class . ':getCat');
                 $this->post("", CatController::class . ':createCat');
             });
-            $this->group('/core/gender', function () {
-                $this->get("", GenderController::class . ':getAllGenders');
-                $this->get('/{id:[0-9]+}', GenderController::class . ':getGender');
+            $this->group('/core', function () {
+                $this->get("/gender", GenderController::class . ':getAllGenders');
+                $this->get('/gender/{id:[0-9]+}', GenderController::class . ':getGender');
 
             });
         });
