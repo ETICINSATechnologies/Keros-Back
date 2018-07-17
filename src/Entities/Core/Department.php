@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: User
- * Date: 10/07/2018
- * Time: 13:58
- */
+
 
 namespace Keros\Entities\Core;
 use Doctrine\ORM\Mapping\Column;
@@ -27,9 +22,9 @@ class Department implements JsonSerializable, Searchable
      * @GeneratedValue
      */
     protected $id;
-    /** @Column(type="string", length=255) */
+    /** @Column(type="string", length=15) */
     protected $label;
-    /** @Column(type="string", length=255) */
+    /** @Column(type="string", length=64) */
     protected $name;
 
 

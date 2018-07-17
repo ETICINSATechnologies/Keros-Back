@@ -1,12 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: User
- * Date: 10/07/2018
- * Time: 14:18
- */
 
-namespace Keros\Services\Department;
+namespace Keros\Services\Core;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;

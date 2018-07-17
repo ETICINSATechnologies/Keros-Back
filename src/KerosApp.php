@@ -8,7 +8,7 @@ use http\Env\Request;
 use http\Env\Response;
 use Keros\Config\ConfigLoader;
 use Keros\Controllers\Cat\CatController;
-use Keros\Controllers\Department\DepartmentController;
+use Keros\Controllers\Core\DepartmentController;
 use Keros\Error\ErrorHandler;
 use Keros\Tools\KerosEntityManager;
 use Keros\Tools\Logger;

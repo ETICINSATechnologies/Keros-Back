@@ -1,17 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: User
- * Date: 10/07/2018
- * Time: 14:08
- */
 
-namespace Keros\Controllers\Department;
-use Keros\Entities\Core\Page;
+namespace Keros\Controllers\Core;
+
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Core\Department;
 use Keros\Error\KerosException;
-use Keros\Services\Department\DepartmentService;
+use Keros\Services\Core\DepartmentService;
 use Keros\Tools\Validator;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
