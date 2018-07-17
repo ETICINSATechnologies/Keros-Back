@@ -1,12 +1,7 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: User
- * Date: 13/07/2018
- * Time: 15:04
- */
 
-namespace Keros\Services\Firm_Type;
+
+namespace Keros\Services\Ua;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
@@ -14,11 +9,11 @@ use Doctrine\ORM\EntityRepository;
 use Exception;
 
 use Keros\Entities\Core\RequestParameters;
-use Keros\Entities\Ua\Firm_type;
+use Keros\Entities\Ua\FirmType;
 use Keros\Error\KerosException;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
-class Firm_typeService
+class FirmTypeService
 {
     /**
      * @var EntityManager
@@ -37,17 +32,17 @@ class Firm_typeService
     {
         $this->logger = $container->get('logger');
         $this->entityManager = $container->get('entityManager');
-        $this->repository = $this->entityManager->getRepository(Firm_type::class);
+        $this->repository = $this->entityManager->getRepository(FirmType::class);
     }
 
 
 
 
-    public function getOne(int $id): ?Firm_type
+    public function getOne(int $id): ?FirmType
     {
         try {
-            $firm_type = $this->repository->find($id);
-            return $firm_type;
+            $firmType = $this->repository->find($id);
+            return $firmType;
         } catch (Exception $e) {
             $msg = "Error finding Firm_type with ID $id : " . $e->getMessage();
             $this->logger->error($msg);
@@ -59,8 +54,8 @@ class Firm_typeService
     {
         $criteria = $requestParameters->getCriteria();
         try {
-            $cats = $this->repository->matching($criteria)->getValues();
-            return $cats;
+            $firmTypes = $this->repository->matching($criteria)->getValues();
+            return $firmTypes;
         } catch (Exception $e) {
             $msg = "Error finding Firm Types : " . $e->getMessage();
             $this->logger->error($msg);

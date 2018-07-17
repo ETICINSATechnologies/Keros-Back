@@ -1,14 +1,14 @@
 <?php
 
-namespace KerosTest\Firm_type;
+namespace KerosTest\Ua;
 
 use KerosTest\AppTestCase;
 use Slim\Http\Environment;
 use Slim\Http\Request;
 
-class Firm_typeIntegrationTest extends AppTestCase
+class FirmTypeIntegrationTest extends AppTestCase
 {
-    public function testGetAllFirm_typeShouldReturn200()
+    public function testGetAllFirmTypeShouldReturn200()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
@@ -22,7 +22,7 @@ class Firm_typeIntegrationTest extends AppTestCase
         $body = json_decode($response->getBody());
         $this->assertEquals(9, sizeof($body));
     }
-    public function testGetFirm_typeShouldReturn200()
+    public function testGetFirmTypeShouldReturn200()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
@@ -36,7 +36,7 @@ class Firm_typeIntegrationTest extends AppTestCase
         $this->assertSame($body->id, 1);
         $this->assertSame($body->label, "Administration");
     }
-    public function testGetFirm_TypeShouldReturn400()
+    public function testGetFirmTypeShouldReturn400()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',

@@ -8,7 +8,7 @@ use http\Env\Request;
 use http\Env\Response;
 use Keros\Config\ConfigLoader;
 use Keros\Controllers\Cat\CatController;
-use Keros\Controllers\Firm_Type\Firm_typeController;
+use Keros\Controllers\Ua\FirmTypeController;
 use Keros\Error\ErrorHandler;
 use Keros\Tools\KerosEntityManager;
 use Keros\Tools\Logger;
@@ -44,9 +44,9 @@ class KerosApp
                 $this->get('/{id:[0-9]+}', CatController::class . ':getCat');
                 $this->post("", CatController::class . ':createCat');
             });
-            $this->group('/ua/firm-type', function () {
-                $this->get("", firm_typeController::class . ':getAllFirm_type');
-                $this->get('/{id:[0-9]+}', firm_typeController::class . ':getFirm_type');
+            $this->group('/ua', function () {
+                $this->get("/firm-type", FirmTypeController::class . ':getAllFirmType');
+                $this->get('/firm-type/{id:[0-9]+}', FirmTypeController::class . ':getFirmType');
 
             });
         });

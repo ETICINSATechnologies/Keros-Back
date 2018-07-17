@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: User
- * Date: 13/07/2018
- * Time: 14:52
- */
+
 
 namespace Keros\Entities\Ua;
 use JsonSerializable;
@@ -13,7 +8,7 @@ use Keros\Tools\Searchable;
  * @Entity
  * @Table(name="ua_firm_type")
  */
-class Firm_type  implements JsonSerializable, Searchable
+class FirmType  implements JsonSerializable, Searchable
 {
     /**
      * @Id
@@ -21,7 +16,7 @@ class Firm_type  implements JsonSerializable, Searchable
      * @GeneratedValue
      */
     protected $id;
-    /** @Column(type="string", length=255) */
+    /** @Column(type="string", length=15) */
     protected $label;
 
 
