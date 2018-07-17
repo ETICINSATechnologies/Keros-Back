@@ -60,9 +60,9 @@ class FirmTypeController
         $queryParams = $request->getQueryParams();
         $params = new RequestParameters($queryParams, FirmType::getSearchFields());
 
-        $FirmTypes = $this->FirmTypeService->getMany($params);
+        $firmTypes = $this->FirmTypeService->getMany($params);
 
 
-        return $response->withJson($FirmTypes, 200);
+        return $response->withJson($firmTypes, 200);
     }
 }
