@@ -9,6 +9,7 @@ use http\Env\Response;
 use Keros\Config\ConfigLoader;
 use Keros\Controllers\Core\GenderController;
 use Keros\Controllers\Cat\CatController;
+use Keros\Controllers\Core\DepartmentController;
 use Keros\Controllers\Core\CountryController;
 use Keros\Error\ErrorHandler;
 use Keros\Tools\KerosEntityManager;
@@ -46,7 +47,13 @@ class KerosApp
                 $this->post("", CatController::class . ':createCat');
             });
 
+
             $this->group('/core', function () {
+              
+                $this->group('/department', function() {
+                    $this->get("", DepartmentController::class . ':getAllDepartments');
+                    $this->get("/{id:[0-9]+}", DepartmentController::class . ':getDepartment');
+                });
               
                 $this->group('/gender', function() {
                     $this->get("", GenderController::class . ':getAllGenders');
@@ -57,7 +64,7 @@ class KerosApp
                     $this->get("", CountryController::class . ':getAllCountries');
                     $this->get("/{id:[0-9]+}", CountryController::class . ':getCountry');
                 });
-              
+             
             });
         });
 
