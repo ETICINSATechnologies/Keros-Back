@@ -20,7 +20,7 @@ class FirmTypeController
     /**
      * @var FirmTypeService
      */
-    private $FirmTypeService;
+    private $firmTypeService;
     /**
      * @var Logger
      */
@@ -29,7 +29,7 @@ class FirmTypeController
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get('logger');
-        $this->FirmTypeService = new FirmTypeService($container);
+        $this->firmTypeService = new FirmTypeService($container);
     }
 
     /**
@@ -41,7 +41,7 @@ class FirmTypeController
         $this->logger->debug("Getting Firm_Type by ID from " . $request->getServerParams()["REMOTE_ADDR"]);
         $id = Validator::id($args['id']);
 
-        $FirmType = $this->FirmTypeService->getOne($id);
+        $FirmType = $this->firmTypeService->getOne($id);
         if (!$FirmType) {
             throw new KerosException("The Firm_Type could not be found", 400);
         }
@@ -51,7 +51,7 @@ class FirmTypeController
 
 
     /**
-     * @return Response containing Firm_Types
+     * @return Response containing FirmTypes
      * @throws KerosException if an unknown error occurs
      */
     public function getAllFirmType(Request $request, Response $response, array $args)
@@ -60,7 +60,7 @@ class FirmTypeController
         $queryParams = $request->getQueryParams();
         $params = new RequestParameters($queryParams, FirmType::getSearchFields());
 
-        $firmTypes = $this->FirmTypeService->getMany($params);
+        $firmTypes = $this->firmTypeService->getMany($params);
 
 
         return $response->withJson($firmTypes, 200);
