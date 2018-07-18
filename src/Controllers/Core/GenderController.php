@@ -37,11 +37,11 @@ class GenderController
         $this->logger->debug("Getting gender by ID from " . $request->getServerParams()["REMOTE_ADDR"]);
         $id = Validator::id($args['id']);
 
-        $Gender = $this->GenderService->getOne($id);
-        if (!$Gender) {
+        $gender = $this->GenderService->getOne($id);
+        if (!$gender) {
             throw new KerosException("The Gender could not be found", 400);
         }
-        return $response->withJson($Gender, 200);
+        return $response->withJson($gender, 200);
     }
 
 
