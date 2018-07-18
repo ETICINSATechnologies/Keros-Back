@@ -31,6 +31,9 @@ class CatController
     }
 
     /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
      * @return Response containing one cat if it exists
      * @throws KerosException if the validation fails
      */
