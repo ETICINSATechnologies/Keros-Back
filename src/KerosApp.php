@@ -48,9 +48,11 @@ class KerosApp
 
             $this->group('/core', function () {
               
-                $this->get("/gender", GenderController::class . ':getAllGenders');
-                $this->get('/gender/{id:[0-9]+}', GenderController::class . ':getGender');
-              
+                $this->group('/gender', function() {
+                    $this->get("", GenderController::class . ':getAllGenders');
+                    $this->get("/{id:[0-9]+}", GenderController::class . ':getGender');
+                });
+                
                 $this->group('/country', function() {
                     $this->get("", CountryController::class . ':getAllCountries');
                     $this->get("/{id:[0-9]+}", CountryController::class . ':getCountry');
