@@ -9,6 +9,7 @@ use http\Env\Response;
 use Keros\Config\ConfigLoader;
 use Keros\Controllers\Core\GenderController;
 use Keros\Controllers\Cat\CatController;
+use Keros\Controllers\Ua\FirmTypeController;
 use Keros\Controllers\Core\DepartmentController;
 use Keros\Controllers\Core\CountryController;
 use Keros\Error\ErrorHandler;
@@ -47,6 +48,12 @@ class KerosApp
                 $this->post("", CatController::class . ':createCat');
             });
 
+            $this->group('/ua', function () {
+                $this->group('/firm-type', function() {
+                    $this->get("", FirmTypeController::class . ':getAllFirmType');
+                    $this->get("/{id:[0-9]+}", FirmTypeController::class . ':getFirmType');
+                });
+            });
 
             $this->group('/core', function () {
               
