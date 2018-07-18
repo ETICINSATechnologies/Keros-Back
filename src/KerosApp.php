@@ -7,6 +7,7 @@ namespace Keros;
 use http\Env\Request;
 use http\Env\Response;
 use Keros\Config\ConfigLoader;
+use Keros\Controllers\Core\GenderController;
 use Keros\Controllers\Cat\CatController;
 use Keros\Controllers\Core\CountryController;
 use Keros\Error\ErrorHandler;
@@ -46,10 +47,17 @@ class KerosApp
             });
 
             $this->group('/core', function () {
+              
+                $this->group('/gender', function() {
+                    $this->get("", GenderController::class . ':getAllGenders');
+                    $this->get("/{id:[0-9]+}", GenderController::class . ':getGender');
+                });
+                
                 $this->group('/country', function() {
                     $this->get("", CountryController::class . ':getAllCountries');
                     $this->get("/{id:[0-9]+}", CountryController::class . ':getCountry');
                 });
+              
             });
         });
 
