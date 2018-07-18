@@ -7,8 +7,11 @@ namespace Keros;
 use http\Env\Request;
 use http\Env\Response;
 use Keros\Config\ConfigLoader;
+use Keros\Controllers\Core\GenderController;
 use Keros\Controllers\Cat\CatController;
 use Keros\Controllers\Ua\FirmTypeController;
+use Keros\Controllers\Core\DepartmentController;
+use Keros\Controllers\Core\CountryController;
 use Keros\Error\ErrorHandler;
 use Keros\Tools\KerosEntityManager;
 use Keros\Tools\Logger;
@@ -44,10 +47,31 @@ class KerosApp
                 $this->get('/{id:[0-9]+}', CatController::class . ':getCat');
                 $this->post("", CatController::class . ':createCat');
             });
-            $this->group('/ua', function () {
-                $this->get("/firm-type", FirmTypeController::class . ':getAllFirmType');
-                $this->get('/firm-type/{id:[0-9]+}', FirmTypeController::class . ':getFirmType');
 
+            $this->group('/ua', function () {
+                $this->group('/firm-type', function() {
+                    $this->get("", FirmTypeController::class . ':getAllFirmType');
+                    $this->get("/{id:[0-9]+}", FirmTypeController::class . ':getFirmType');
+                });
+            });
+
+            $this->group('/core', function () {
+              
+                $this->group('/department', function() {
+                    $this->get("", DepartmentController::class . ':getAllDepartments');
+                    $this->get("/{id:[0-9]+}", DepartmentController::class . ':getDepartment');
+                });
+              
+                $this->group('/gender', function() {
+                    $this->get("", GenderController::class . ':getAllGenders');
+                    $this->get("/{id:[0-9]+}", GenderController::class . ':getGender');
+                });
+                
+                $this->group('/country', function() {
+                    $this->get("", CountryController::class . ':getAllCountries');
+                    $this->get("/{id:[0-9]+}", CountryController::class . ':getCountry');
+                });
+             
             });
         });
 
