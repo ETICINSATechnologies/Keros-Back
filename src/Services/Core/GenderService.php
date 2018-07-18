@@ -39,8 +39,8 @@ class GenderService
     public function getOne(int $id): ?Gender
     {
         try {
-            $Gender = $this->repository->find($id);
-            return $Gender;
+            $gender = $this->repository->find($id);
+            return $gender;
         } catch (Exception $e) {
             $msg = "Error finding Gender with ID $id : " . $e->getMessage();
             $this->logger->error($msg);
