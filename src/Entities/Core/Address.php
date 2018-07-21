@@ -6,6 +6,8 @@ use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\OneToMany;
+use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\Table;
 use JsonSerializable;
 use Keros\Tools\Searchable;
@@ -35,7 +37,10 @@ class Address implements JsonSerializable, Searchable
     /** @Column(type="string", length=64) */
     protected $city;
 
-    /** @OneToMany(targetEntity="Country", mappedBy="id") * */
+    /**
+     * @ManyToOne(targetEntity="Country")
+     * @JoinColumn(name="countryId", referencedColumnName="id")
+     **/
     protected $country;
 
 
@@ -62,7 +67,7 @@ class Address implements JsonSerializable, Searchable
             'id' => $this->getId(),
             'line1' => $this->getLine1(),
             'line2' => $this->getLine2(),
-            'postalcode' => $this->getPostalCode(),
+            'postalCode' => $this->getPostalCode(),
             'city' => $this->getCity(),
             'country' => $this->getCountry()
         ];
