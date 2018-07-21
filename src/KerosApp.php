@@ -7,11 +7,13 @@ namespace Keros;
 use http\Env\Request;
 use http\Env\Response;
 use Keros\Config\ConfigLoader;
+use Keros\Controllers\Core\AddressController;
 use Keros\Controllers\Core\GenderController;
 use Keros\Controllers\Cat\CatController;
 use Keros\Controllers\Ua\FirmTypeController;
 use Keros\Controllers\Core\DepartmentController;
 use Keros\Controllers\Core\CountryController;
+use Keros\Controllers\Core\UserController;
 use Keros\Error\ErrorHandler;
 use Keros\Tools\KerosEntityManager;
 use Keros\Tools\Logger;
@@ -70,6 +72,18 @@ class KerosApp
                 $this->group('/country', function() {
                     $this->get("", CountryController::class . ':getAllCountries');
                     $this->get("/{id:[0-9]+}", CountryController::class . ':getCountry');
+                });
+
+                $this->group('/address', function() {
+                    $this->get("", AddressController::class . ':getPageAddresses');
+                    $this->get('/{id:[0-9]+}', AddressController::class . ':getAddress');
+                    $this->post("", AddressController::class . ':createAddress');
+                });
+
+                $this->group('/user', function() {
+                    $this->get("", UserController::class . ':getPageUsers');
+                    $this->get('/{id:[0-9]+}', UserController::class . ':getUser');
+                    $this->post("", UserController::class . ':createUser');
                 });
              
             });
