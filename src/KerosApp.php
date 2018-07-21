@@ -9,6 +9,7 @@ use http\Env\Response;
 use Keros\Config\ConfigLoader;
 use Keros\Controllers\Core\GenderController;
 use Keros\Controllers\Cat\CatController;
+use Keros\Controllers\Core\PoleController;
 use Keros\Controllers\Ua\FirmTypeController;
 use Keros\Controllers\Core\DepartmentController;
 use Keros\Controllers\Core\CountryController;
@@ -71,7 +72,11 @@ class KerosApp
                     $this->get("", CountryController::class . ':getAllCountries');
                     $this->get("/{id:[0-9]+}", CountryController::class . ':getCountry');
                 });
-             
+
+                $this->group('/pole', function() {
+                    $this->get("", PoleController::class . ':getAllPoles');
+                    $this->get("/{id:[0-9]+}", PoleController::class . ':getPole');
+                });
             });
         });
 
