@@ -79,13 +79,6 @@ class KerosApp
                     $this->get('/{id:[0-9]+}', AddressController::class . ':getAddress');
                     $this->post("", AddressController::class . ':createAddress');
                 });
-
-                $this->group('/user', function() {
-                    $this->get("", UserController::class . ':getPageUsers');
-                    $this->get('/{id:[0-9]+}', UserController::class . ':getUser');
-                    $this->post("", UserController::class . ':createUser');
-                });
-             
             });
         });
 

@@ -31,7 +31,7 @@ class Address implements JsonSerializable, Searchable
     /** @Column(type="string", length=64) */
     protected $line2;
 
-    /** @Column(type="string", length=10) */
+    /** @Column(type="integer", length=10) */
     protected $postalCode;
 
     /** @Column(type="string", length=64) */
