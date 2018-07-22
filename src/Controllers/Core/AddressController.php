@@ -57,10 +57,10 @@ class AddressController
         $line2 = Validator::name($body["line2"]);
         $postalCode = Validator::float($body["postalCode"]);
         $city = Validator::name($body["city"]);
-        $country_id = Validator::float($body["country_id"]);
+        $countryId = Validator::float($body["countryId"]);
 
-        $address = new Address($line1, $line2, $postalCode, $city, $country_id);
-        $this->addressService->create($address);
+        $address = new Address($line1, $line2, $postalCode, $city);
+        $this->addressService->create($address, $countryId);
         return $response->withJson($address, 201);
     }
     /**

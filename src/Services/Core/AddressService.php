@@ -36,11 +36,11 @@ class AddressService
         $this->repository = $this->entityManager->getRepository(Address::class);
     }
 
-    public function create(Address $address)
+    public function create(Address $address, int $countryId)
     {
         $this->entityManager->beginTransaction();
         try {
-            $country = $this->entityManager->getReference('Keros\Entities\Core\Country', $address->getCountryId());
+            $country = $this->entityManager->getReference('Keros\Entities\Core\Country', $countryId);
             $address->setCountry($country);
             $this->entityManager->persist($address);
             $this->entityManager->flush();
