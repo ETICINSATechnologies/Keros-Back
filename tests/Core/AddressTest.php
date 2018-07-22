@@ -26,8 +26,8 @@ final class AddressTest extends TestCase
         $this->assertEquals("", $address->getLine2());
         $this->assertEquals(69000, $address->getPostalCode());
         $this->assertEquals("Lyon", $address->getCity());
-        $this->assertEquals("Eldorado", $address->getCountry()->id);
-        $this->assertNull($address->getCountry()->id);
+        $this->assertEquals("Eldorado", $address->getCountry()->getLabel());
+        $this->assertNull($address->getCountry()->getId());
         $this->assertNull($address->getId());
     }
 }
