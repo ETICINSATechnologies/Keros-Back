@@ -16,15 +16,18 @@ class UserController
      * @var UserService
      */
     private $userService;
+
     /**
      * @var Logger
      */
     private $logger;
+
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get('logger');
         $this->userService = new UserService($container);
     }
+
     /**
      * @param Request $request
      * @param Response $response
@@ -42,6 +45,7 @@ class UserController
         }
         return $response->withJson($user, 200);
     }
+
     /**
      * @return Response containing the created user
      * @throws KerosException if the validation fails or the user cannot be created
@@ -50,12 +54,17 @@ class UserController
     {
         $this->logger->debug("Creating user from " . $request->getServerParams()["REMOTE_ADDR"]);
         $body = $request->getParsedBody();
-        $name = Validator::name($body["name"]);
-        $height = Validator::float($body["height"]);
-        $user = new User($name, $height);
+        $username = Validator::name($body["username"]);
+        $password = Validator::name($body["password"]);
+        $lastConnectedAt  = Validator::name($body["lastConnectedAt"]);
+        $createdAt = Validator::name($body["createdAt"]);
+        $disabled = Validator::name($body["disabled"]);
+        $expiresAt = Validator::name($body["expiresAt"]);
+        $user = new User($username, $password, $lastConnectedAt, $createdAt, $disabled, $expiresAt);
         $this->userService->create($user);
         return $response->withJson($user, 201);
     }
+
     /**
      * @return Response containing a page of users
      * @throws KerosException if an unknown error occurs

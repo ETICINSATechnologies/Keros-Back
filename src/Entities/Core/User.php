@@ -41,12 +41,23 @@ class User implements JsonSerializable, Searchable
     protected $expiresAt;
 
     /**
-     * Country constructor.
-     * @param $label
+     * User constructor.
+     * @param $id
+     * @param $username
+     * @param $password
+     * @param $lastConnectedAt
+     * @param $createdAt
+     * @param $disabled
+     * @param $expiresAt
      */
-    public function __construct($label)
+    public function __construct($username, $password, $lastConnectedAt, $createdAt, $disabled, $expiresAt)
     {
-        $this->username = $label;
+        $this->username = $username;
+        $this->password = $password;
+        $this->lastConnectedAt = $lastConnectedAt;
+        $this->createdAt = $createdAt;
+        $this->disabled = $disabled;
+        $this->expiresAt = $expiresAt;
     }
 
     public function jsonSerialize()
