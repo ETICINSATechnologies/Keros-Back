@@ -44,8 +44,8 @@ class PoleIntegrationTest extends AppTestCase
 
         $body = json_decode($response->getBody());
         $this->assertSame($body->id, 1);
-        $this->assertSame($body->label, "13 rue renard");
-        $this->assertSame($body->label, null);
+        $this->assertSame($body->line1, "13 rue renard");
+        $this->assertSame($body->line2, null);
         $this->assertSame($body->postalCode, 69100);
         $this->assertSame($body->city, "lyon");
         $this->assertSame($body->country->id, 1);

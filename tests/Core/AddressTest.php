@@ -7,12 +7,12 @@ use PHPUnit\Framework\TestCase;
 
 final class AddressTest extends TestCase
 {
-    public function testNewAddressShouldBeInstanceOfAddress()
+    /*public function testNewAddressShouldBeInstanceOfAddress()
     {
         # @TODO: modify this test
-        # $this->assertInstanceOf(Address::class,
-        #                        new Address("18 rue du master", "", 69100, "Lyon", 62));
-    }
+        $this->assertInstanceOf(Address::class,
+                                new Address("18 rue du master", "", 69100, "Lyon", 62));
+    }*/
 
     /*public function testAddressShouldCreateWithParams()
     {
