@@ -69,12 +69,12 @@ class AddressController
      */
     public function getPageAddresses(Request $request, Response $response, array $args)
     {
-        $this->logger->debug("Get page address from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->logger->debug("Get page addresses from " . $request->getServerParams()["REMOTE_ADDR"]);
         $queryParams = $request->getQueryParams();
         $params = new RequestParameters($queryParams, Address::getSearchFields());
-        $addresss = $this->addressService->getMany($params);
+        $addresses = $this->addressService->getMany($params);
         $totalCount = $this->addressService->getCount($params);
-        $page = new Page($addresss, $params, $totalCount);
+        $page = new Page($addresses, $params, $totalCount);
         return $response->withJson($page, 200);
     }
 }
