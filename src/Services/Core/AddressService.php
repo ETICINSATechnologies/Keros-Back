@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Exception;
 use Keros\Entities\Core\Address;
+use Keros\Entities\Core\Country;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Error\KerosException;
 use Monolog\Logger;
@@ -39,6 +40,8 @@ class AddressService
     {
         $this->entityManager->beginTransaction();
         try {
+            $country = $this->entityManager->getReference('Keros\Entities\Core\Country', $address->getCountryId());
+            $address->setCountry($country);
             $this->entityManager->persist($address);
             $this->entityManager->flush();
             $this->entityManager->commit();

@@ -37,6 +37,8 @@ class Address implements JsonSerializable, Searchable
     /** @Column(type="string", length=64) */
     protected $city;
 
+    protected $country_id;
+
     /**
      * @ManyToOne(targetEntity="Country")
      * @JoinColumn(name="countryId", referencedColumnName="id")
@@ -50,15 +52,15 @@ class Address implements JsonSerializable, Searchable
      * @param $line2
      * @param $postalCode
      * @param $city
-     * @param $country
+     * @param $country_id
      */
-    public function __construct($line1, $line2, $postalCode, $city, $country)
+    public function __construct($line1, $line2, $postalCode, $city, $country_id)
     {
         $this->line1 = $line1;
         $this->line2 = $line2;
         $this->postalCode = $postalCode;
         $this->city = $city;
-        $this->country = $country;
+        $this->country_id = $country_id;
     }
 
     public function jsonSerialize()
@@ -150,6 +152,22 @@ class Address implements JsonSerializable, Searchable
     public function setCity($city): void
     {
         $this->city = $city;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCountryId()
+    {
+        return $this->country_id;
+    }
+
+    /**
+     * @param mixed $country_id
+     */
+    public function setCountryId($country_id): void
+    {
+        $this->country_id = $country_id;
     }
 
     /**
