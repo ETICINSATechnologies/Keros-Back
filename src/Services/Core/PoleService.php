@@ -50,10 +50,10 @@ class PoleService
     public function getMany(RequestParameters $requestParameters): array
     {
         try {
-            $countries = $this->repository->findAll();
-            return $countries;
+            $poles = $this->repository->findAll();
+            return $poles;
         } catch (Exception $e) {
-            $msg = "Error finding page of countries : " . $e->getMessage();
+            $msg = "Error finding page of poles : " . $e->getMessage();
             $this->logger->error($msg);
             throw new KerosException($msg, 500);
         }
