@@ -69,7 +69,7 @@ class AddressController
      */
     public function getPageAddresses(Request $request, Response $response, array $args)
     {
-        $this->logger->debug("Get page addresss from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->logger->debug("Get page address from " . $request->getServerParams()["REMOTE_ADDR"]);
         $queryParams = $request->getQueryParams();
         $params = new RequestParameters($queryParams, Address::getSearchFields());
         $addresss = $this->addressService->getMany($params);
