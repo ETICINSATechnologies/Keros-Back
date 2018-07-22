@@ -21,7 +21,7 @@ class PoleIntegrationTest extends AppTestCase
         $this->assertSame($response->getStatusCode(), 200);
 
         $body = json_decode($response->getBody());
-        $this->assertEquals(3, count($body->content));
+        $this->assertEquals(5, count($body->content));
         $this->assertNotNull(count($body->content[0]->id));
         $this->assertNotNull(count($body->content[0]->line1));
         $this->assertNotNull(count($body->content[0]->line2));
@@ -34,7 +34,7 @@ class PoleIntegrationTest extends AppTestCase
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/api/v1/core/address/2',
+            'REQUEST_URI' => '/api/v1/core/address/1',
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
@@ -44,7 +44,7 @@ class PoleIntegrationTest extends AppTestCase
 
         $body = json_decode($response->getBody());
         $this->assertSame($body->id, 1);
-        $this->assertSame($body->label, "13 rue regard");
+        $this->assertSame($body->label, "13 rue renard");
         $this->assertSame($body->label, null);
         $this->assertSame($body->postalCode, 69100);
         $this->assertSame($body->city, "lyon");
