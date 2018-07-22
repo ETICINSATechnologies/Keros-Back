@@ -7,12 +7,14 @@ namespace Keros;
 use http\Env\Request;
 use http\Env\Response;
 use Keros\Config\ConfigLoader;
+use Keros\Controllers\Core\AddressController;
 use Keros\Controllers\Core\GenderController;
 use Keros\Controllers\Cat\CatController;
 use Keros\Controllers\Core\PoleController;
 use Keros\Controllers\Ua\FirmTypeController;
 use Keros\Controllers\Core\DepartmentController;
 use Keros\Controllers\Core\CountryController;
+use Keros\Controllers\Core\UserController;
 use Keros\Error\ErrorHandler;
 use Keros\Tools\KerosEntityManager;
 use Keros\Tools\Logger;
@@ -76,6 +78,12 @@ class KerosApp
                 $this->group('/pole', function() {
                     $this->get("", PoleController::class . ':getAllPoles');
                     $this->get("/{id:[0-9]+}", PoleController::class . ':getPole');
+                });
+
+                $this->group('/address', function() {
+                    $this->get("", AddressController::class . ':getPageAddresses');
+                    $this->get('/{id:[0-9]+}', AddressController::class . ':getAddress');
+                    $this->post("", AddressController::class . ':createAddress');
                 });
             });
         });
