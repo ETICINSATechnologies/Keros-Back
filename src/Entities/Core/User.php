@@ -29,7 +29,7 @@ class User implements JsonSerializable, Searchable
     protected $password;
 
     /** @Column(type="datetime") */
-    protected $lastConnectedAt;
+    protected $lastConnected;
 
     /** @Column(type="datetime") */
     protected $createdAt;
@@ -42,7 +42,6 @@ class User implements JsonSerializable, Searchable
 
     /**
      * User constructor.
-     * @param $id
      * @param $username
      * @param $password
      * @param $lastConnectedAt
@@ -54,7 +53,7 @@ class User implements JsonSerializable, Searchable
     {
         $this->username = $username;
         $this->password = $password;
-        $this->lastConnectedAt = $lastConnectedAt;
+        $this->lastConnected = $lastConnectedAt;
         $this->createdAt = $createdAt;
         $this->disabled = $disabled;
         $this->expiresAt = $expiresAt;
@@ -64,7 +63,12 @@ class User implements JsonSerializable, Searchable
     {
         return [
             'id' => $this->getId(),
-            'label' => $this->getUsername(),
+            'username' => $this->getUsername(),
+            'password' => $this->getPassword(),
+            'lastConnected' => $this->getLastConnected(),
+            'createdAt' => $this->getCreatedAt(),
+            'disabled' => $this->getDisabled(),
+            'expiresAt' => $this->getExpiresAt(),
         ];
     }
 
@@ -100,9 +104,9 @@ class User implements JsonSerializable, Searchable
     /**
      * @return mixed
      */
-    public function getLastConnectedAt()
+    public function getLastConnected()
     {
-        return $this->lastConnectedAt;
+        return $this->lastConnected;
     }
 
     /**
@@ -146,11 +150,11 @@ class User implements JsonSerializable, Searchable
     }
 
     /**
-     * @param mixed $lastConnectedAt
+     * @param mixed $lastConnected
      */
-    public function setLastConnectedAt($lastConnectedAt): void
+    public function setLastConnected($lastConnected): void
     {
-        $this->lastConnectedAt = $lastConnectedAt;
+        $this->lastConnected = $lastConnected;
     }
 
     /**

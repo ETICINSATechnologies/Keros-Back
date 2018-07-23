@@ -22,9 +22,6 @@ class UserIntegrationTest extends AppTestCase
 
         $body = json_decode($response->getBody());
         $this->assertEquals(3, count($body->content));
-        $this->assertEquals(1,$body->content[0]->id);
-        $this->assertEquals("lswollo",$body->content[2]->label);
-
     }
 
     public function testGetUserShouldReturn200()
@@ -41,14 +38,20 @@ class UserIntegrationTest extends AppTestCase
 
         $body = json_decode($response->getBody());
         $this->assertSame($body->id, 1);
-        $this->assertSame($body->label, "cbreeze");
+        $this->assertSame("cbreeze", $body->content[0]->username);
+        $this->assertSame("hunter11", $body->content[0]->password);
+        $this->assertNotNull($body->content[0]->lastConnected);
+        $this->assertSame("2018-07-10 10:06:10.000000", $body->content[0]->createdAt->getDate());
+        $this->assertSame(1, $body->content[0]->id);
+        $this->assertSame(false, $body->content[0]->disabled);
+        $this->assertSame("2022-05-15 08:06:26.000000", $body->content[2]->expiresAt);
     }
 
     public function testGetCountryShouldReturn400()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/api/v1/core/user/4',
+            'REQUEST_URI' => '/api/v1/core/user/100',
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;

@@ -9,14 +9,21 @@ final class UserTest extends TestCase
 {
     public function testNewUserShouldBeInstanceOfUser()
     {
-        $this->assertInstanceOf(User::class, new User("toto"));
+        $date = new \DateTime();
+        $this->assertInstanceOf(User::class, new User("james bond", "JamesBond007", $date, $date, false, $date));
     }
 
     public function testUserShouldCreateWithParams()
     {
-        $user = new User("toto");
+        $date = new \DateTime();
+        $user =  new User("james bond", 007, $date, $date, false, $date);
         $this->assertInstanceOf(User::class, $user);
-        $this->assertEquals("toto", $user->getUsername());
+        $this->assertEquals("james bond", $user->getUsername());
+        $this->assertEquals("JamesBond007", $user->getPassword());
+        $this->assertEquals($date, $user->getLastConnected());
+        $this->assertEquals($date, $user->getCreatedAt());
+        $this->assertEquals(false, $user->getDisabled());
+        $this->assertEquals($date, $user->getExpiresAt());
         $this->assertNull($user->getId());
     }
 }
