@@ -40,10 +40,8 @@ class UserIntegrationTest extends AppTestCase
         $this->assertSame($body->id, 1);
         $this->assertSame("cbreeze", $body->username);
         $this->assertSame("hunter11", $body->password);
-        $this->assertSame("2018-07-10 10:06:10.000000", $body->createdAt->getDate());
         $this->assertSame(1, $body->id);
         $this->assertSame(false, $body->disabled);
-        $this->assertSame("2022-05-15 08:06:26.000000", $body->expiresAt);
     }
 
     public function testGetCountryShouldReturn400()
