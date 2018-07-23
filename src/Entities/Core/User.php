@@ -29,7 +29,7 @@ class User implements JsonSerializable, Searchable
     protected $password;
 
     /** @Column(type="datetime") */
-    protected $lastConnected;
+    protected $lastConnectedAt;
 
     /** @Column(type="datetime") */
     protected $createdAt;
@@ -44,16 +44,16 @@ class User implements JsonSerializable, Searchable
      * User constructor.
      * @param $username
      * @param $password
-     * @param $lastConnectedAt
+     * @param $lastConnected
      * @param $createdAt
      * @param $disabled
      * @param $expiresAt
      */
-    public function __construct($username, $password, $lastConnectedAt, $createdAt, $disabled, $expiresAt)
+    public function __construct($username, $password, $lastConnected, $createdAt, $disabled, $expiresAt)
     {
         $this->username = $username;
         $this->password = $password;
-        $this->lastConnected = $lastConnectedAt;
+        $this->lastConnectedAt = $lastConnected;
         $this->createdAt = $createdAt;
         $this->disabled = $disabled;
         $this->expiresAt = $expiresAt;
@@ -65,7 +65,7 @@ class User implements JsonSerializable, Searchable
             'id' => $this->getId(),
             'username' => $this->getUsername(),
             'password' => $this->getPassword(),
-            'lastConnected' => $this->getLastConnected(),
+            'lastConnectedAt' => $this->getLastConnectedAt(),
             'createdAt' => $this->getCreatedAt(),
             'disabled' => $this->getDisabled(),
             'expiresAt' => $this->getExpiresAt(),
@@ -104,9 +104,9 @@ class User implements JsonSerializable, Searchable
     /**
      * @return mixed
      */
-    public function getLastConnected()
+    public function getLastConnectedAt()
     {
-        return $this->lastConnected;
+        return $this->lastConnectedAt;
     }
 
     /**
@@ -150,11 +150,11 @@ class User implements JsonSerializable, Searchable
     }
 
     /**
-     * @param mixed $lastConnected
+     * @param mixed $lastConnectedAt
      */
-    public function setLastConnected($lastConnected): void
+    public function setLastConnectedAt($lastConnectedAt): void
     {
-        $this->lastConnected = $lastConnected;
+        $this->lastConnectedAt = $lastConnectedAt;
     }
 
     /**

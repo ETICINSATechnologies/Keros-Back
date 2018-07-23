@@ -56,7 +56,7 @@ class UserController
         $body = $request->getParsedBody();
         $username = Validator::name($body["username"]);
         $password = Validator::name($body["password"]);
-        $lastConnectedAt  = Validator::name($body["lastConnectedAt"]);
+        $lastConnectedAt  = Validator::name($body["lastConnected"]);
         $createdAt = Validator::name($body["createdAt"]);
         $disabled = Validator::name($body["disabled"]);
         $expiresAt = Validator::name($body["expiresAt"]);

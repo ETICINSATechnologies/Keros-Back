@@ -20,7 +20,7 @@ final class UserTest extends TestCase
         $this->assertInstanceOf(User::class, $user);
         $this->assertEquals("james bond", $user->getUsername());
         $this->assertEquals("JamesBond007", $user->getPassword());
-        $this->assertEquals($date, $user->getLastConnected());
+        $this->assertEquals($date, $user->getLastConnectedAt());
         $this->assertEquals($date, $user->getCreatedAt());
         $this->assertEquals(false, $user->getDisabled());
         $this->assertEquals($date, $user->getExpiresAt());
