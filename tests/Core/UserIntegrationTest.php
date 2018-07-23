@@ -38,13 +38,13 @@ class UserIntegrationTest extends AppTestCase
 
         $body = json_decode($response->getBody());
         $this->assertSame($body->id, 1);
-        $this->assertSame("cbreeze", $body->content[0]->username);
-        $this->assertSame("hunter11", $body->content[0]->password);
-        $this->assertNotNull($body->content[0]->lastConnected);
-        $this->assertSame("2018-07-10 10:06:10.000000", $body->content[0]->createdAt->getDate());
-        $this->assertSame(1, $body->content[0]->id);
-        $this->assertSame(false, $body->content[0]->disabled);
-        $this->assertSame("2022-05-15 08:06:26.000000", $body->content[2]->expiresAt);
+        $this->assertSame("cbreeze", $body->username);
+        $this->assertSame("hunter11", $body->password);
+        $this->assertNotNull($body->lastConnected);
+        $this->assertSame("2018-07-10 10:06:10.000000", $body->createdAt->getDate());
+        $this->assertSame(1, $body->id);
+        $this->assertSame(false, $body->disabled);
+        $this->assertSame("2022-05-15 08:06:26.000000", $body->expiresAt);
     }
 
     public function testGetCountryShouldReturn400()

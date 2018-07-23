@@ -16,7 +16,7 @@ final class UserTest extends TestCase
     public function testUserShouldCreateWithParams()
     {
         $date = new \DateTime();
-        $user =  new User("james bond", 007, $date, $date, false, $date);
+        $user =  new User("james bond", "JamesBond007", $date, $date, false, $date);
         $this->assertInstanceOf(User::class, $user);
         $this->assertEquals("james bond", $user->getUsername());
         $this->assertEquals("JamesBond007", $user->getPassword());
