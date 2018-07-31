@@ -88,6 +88,7 @@ class KerosApp
                     $this->get("", FirmController::class . ':getPageFirms');
                     $this->get("/{id:[0-9]+}", FirmController::class . ':getFirm');
                     $this->post("", FirmController::class . ':createFirm');
+                    $this->put("", FirmController::class . ':updateFirm');
                 });
             });
 
@@ -117,6 +118,7 @@ class KerosApp
                     $this->get("", AddressController::class . ':getPageAddresses');
                     $this->get('/{id:[0-9]+}', AddressController::class . ':getAddress');
                     $this->post("", AddressController::class . ':createAddress');
+                    $this->put("", AddressController::class . ':updateAddress');
                 });
 
                 $this->group('/position', function() {

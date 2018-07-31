@@ -39,7 +39,8 @@ class FirmService
     {
         $this->entityManager->beginTransaction();
         try {
-            $address = $this->entityManager->getReference('Keros\Entities\Core\Address', $addressId);
+            //$address = $this->entityManager->getReference('Keros\Entities\Core\Address', $addressId);
+            $address=new AdresseService($container);
             $type = $this->entityManager->getReference('Keros\Entities\Ua\FirmType', $typeId);
             $firm->setAddress($address);
             $firm->setType($type);
@@ -48,6 +49,24 @@ class FirmService
             $this->entityManager->commit();
         } catch (Exception $e) {
             $msg = "Failed to create new firm : " . $e->getMessage();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
+    }
+    public function update(Firm $firm, int $addressId,int $typeId)
+    {
+        $this->entityManager->beginTransaction();
+        try {
+            //$address = $this->entityManager->getReference('Keros\Entities\Core\Address', $addressId);
+            $address=new AdresseService($container);
+            $type = $this->entityManager->getReference('Keros\Entities\Ua\FirmType', $typeId);
+            $firm->setAddress($address);
+            $firm->setType($type);
+            $this->entityManager->persist($firm);
+            $this->entityManager->flush();
+            $this->entityManager->commit();
+        } catch (Exception $e) {
+            $msg = "Failed to update new firm : " . $e->getMessage();
             $this->logger->error($msg);
             throw new KerosException($msg, 500);
         }

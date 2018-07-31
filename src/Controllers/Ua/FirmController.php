@@ -65,6 +65,20 @@ class FirmController
 
         return $response->withJson($firm, 201);
     }
+    public function updateFirm(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("updating firm from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $body = $request->getParsedBody();
+        $siret = Validator::name($body["siret"]);
+        $name = Validator::name($body["name"]);
+        $addressId= Validator::name($body["addressId"]);
+        $typeId = Validator::float($body["typeId"]);
+
+        $firm = new Firm($siret, $name);
+        $this->firmService->update($firm, $addressId,$typeId);
+
+        return $response->withJson($firm, 201);
+    }
     /**
      * @return Response containing a page of firms
      * @throws KerosException if an unknown error occurs
