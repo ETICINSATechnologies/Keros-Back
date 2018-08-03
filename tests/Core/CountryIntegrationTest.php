@@ -21,7 +21,6 @@ class CountryIntegrationTest extends AppTestCase
         $this->assertSame($response->getStatusCode(), 200);
 
         $body = json_decode($response->getBody());
-        echo $body;
         $this->assertEquals(196, count($body));
         $this->assertNotNull(count($body[0]->id));
         $this->assertNotNull(count($body[0]->label));
@@ -40,8 +39,7 @@ class CountryIntegrationTest extends AppTestCase
         $this->assertSame($response->getStatusCode(), 200);
 
         $body = json_decode($response->getBody());
-        echo $body;
-        # $this->assertSame($body->id, 1);
+        $this->assertSame($body->id, 1);
         $this->assertSame($body->label, "Afghanistan");
     }
 
