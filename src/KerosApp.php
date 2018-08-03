@@ -11,10 +11,10 @@ use Keros\Controllers\Core\AddressController;
 use Keros\Controllers\Core\GenderController;
 use Keros\Controllers\Cat\CatController;
 use Keros\Controllers\Core\PoleController;
+use Keros\Controllers\Core\PositionController;
 use Keros\Controllers\Ua\FirmTypeController;
 use Keros\Controllers\Core\DepartmentController;
 use Keros\Controllers\Core\CountryController;
-use Keros\Controllers\Core\UserController;
 use Keros\Error\ErrorHandler;
 use Keros\Tools\KerosEntityManager;
 use Keros\Tools\Logger;
@@ -84,6 +84,11 @@ class KerosApp
                     $this->get("", AddressController::class . ':getPageAddresses');
                     $this->get('/{id:[0-9]+}', AddressController::class . ':getAddress');
                     $this->post("", AddressController::class . ':createAddress');
+                });
+
+                $this->group('/position', function() {
+                    $this->get("", PositionController::class . ':getAllPositions');
+                    $this->get("/{id:[0-9]+}", PositionController::class . ':getPosition');
                 });
             });
         });
