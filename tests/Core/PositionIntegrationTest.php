@@ -41,7 +41,7 @@ class PositionIntegrationTest extends AppTestCase
         $body = json_decode($response->getBody());
         $this->assertSame($body->id, 1);
         $this->assertSame($body->label, "Ancien membre");
-        $this->assertNotNull($body->poleId);
+        $this->assertNull($body->poleId);
     }
 
     public function testGetPositionWithPoleShouldReturn200()
