@@ -43,10 +43,10 @@ class Position implements JsonSerializable, Searchable
 
     public function jsonSerialize()
     {
-        $serializePosition = array([
+        $serializePosition = array(
             'id' => $this->getId(),
             'label' => $this->getLabel(),
-        ]);
+        );
 
         if ($this->getPole() == null)
             $serializePosition["poleId"] = null;

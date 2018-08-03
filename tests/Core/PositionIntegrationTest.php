@@ -22,8 +22,8 @@ class PositionIntegrationTest extends AppTestCase
 
         $body = json_decode($response->getBody());
         $this->assertEquals(22, count($body));
-        #$this->assertNotNull(count($body[0]->id));
-        #$this->assertNotNull(count($body[0]->label));
+        $this->assertNotNull(count($body[0]->id));
+        $this->assertNotNull(count($body[0]->label));
     }
 
     public function testGetPositionWithoutPoleShouldReturn200()
