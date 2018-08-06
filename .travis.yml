@@ -1,14 +1,28 @@
 language: php
 
 php:
-  - '7.1'
+- '7.1'
+
 services:
-  - mysql
+- mysql
+
+env:
+  global:
+  - secure: xVqcIVjJsFBxK8yMtV+Sn9vM+P55oe43PTsNM3BRg5DqkNT/AU8qNmNV00vNXOp9MuEJKzIO7+FOCv5XRGYcZoPI5rFfDhenE9jD/nuJeXFXQVgmO9MGJ/jvgOE+roOI16mq9xiA82SCmqo1hTl1hWRZYQX9dtXAfbSAEKpIy2olBfpdvXZJJAO44hdjiMDMJvLe6ZxvSrCO8nXnROU8AurxrrojEXWaDx2LqLBfD7SVo5ujiEJUspbVBqC4mUks+BHgzLi/c0oNJWlVMFXVqXvT7jyC1couxb5l4PHmDEkfEgi1+jkwZvY0bZhxE1FadtpvqQtLjwtBGYmwRGzl/fIcMc+l7dME9V2xV8scNQ/715o0WP26A60KI6+OzSV93S1cvCwz8fDpW7ZKd+JjNptfjYwdcBKr12F3hbp3h+ipykUEUtwm+KNNLdaXTV6UD0eHVq9i0Ab6ITN2VExXa2RdrOoAMO/ZH4inlleSAxSpqNVI1IpJKYI8zQErJv6/TbwJFKiPv8QHaT9dxQzTuW9o44H5OCZQl7HXmI43MtPlSakME1umLW5OCI/6hAxO1NECibdS6kAkvS/m+6lmVjUg8XUx8ekz70T75mOh4CJ+iT+RYPLL+GJaMAaOnPbLs9yGSfPwXxnUTOXGrS9XXVGH4vJ/F+Y82BKz37h9yVc=
+  - secure: CfjWKTXiQ1bz1URelteBN4OL+GjyDpb1K2LbOqx29KjeulphAzBf0xMvIzROZVTCaoLHvTHz2m4R7hYV6cmifiCS4uls4blQOiZsWJLA6VkNapnt8t2YgqgqbyJvJr6pP1WwGVaVu1jnDGUCox6MVls+iAlkbDtxYTT7bUFIGvIBrt5fqEe8xULO9G8+w/gfa0+xszOt4Xwb1oQAIFhiam7D0Xhk8yzJBPwE85VSNt9VtxiXhnr0qxhviFpJtj0ID4K8+c78WLfdaITe6kQgyxdjgflQyp1/FEL69ptq+nDk7ml63S2LgfrPddJkBBFLGEUfmqXLCcyHEIUjW8XBEzoeRLKKvJYkl+qgNA6hsDbtOGRr4+0dmIFKMIZJuAMClYVkdaetMQeB2PzTp9/FbSn+N1/043zd6SgUUyoWFUVB6IYrYxHAlsI+hrYVHOdhaKnCkScCZHlJJPXsoNhsQDeHuqIgmS+3HxMi4BDaaRb141Qv5ZjjgZtYugU/v+JCBXcFu/ZiCIh2iWRmX2GzC2bYOqqb/8+saUzeBwWWr/kHYBSKPrJihzsEoJ9NyP2sRaU/HpmutDOws5y9CkDegsJlppyB/dtX4RaSytrQF2NnRvb8KpOdPZSfVy42yDr/0GdT9Qy04+Ubq/U+bkErKmB83Py2QLbdm2fZUvxHP5g=
+  - secure: BudjQo0QD/aZdNlS16ah6Z4BaTtGSbqTpx/GMiHSdno61/DpQ+vX+r9Ncw6N2S1EVENV5Pm/Dw9I9ypow3jD1U4yflLC/2F9jUo4mARWhehg4wS2N3Tfp+3VbHakOL9yiVWkoHKtJj/8yMXGoliQvo9/tJ6ZNyJSHUt53IIj5RMer4H+MRgQAx1+qm5Wu2w1bw5sEDIqAozZLgTgOVwYjy2v2ZzQ6RX2ysqUlRin8EgCisv5LUrHk+Wqcz1WVvQbi3dXPQtH2QXNn+HIlZldBbrpjC8SED4zU6we7G/hJM81lfxtPAy04SwShBceGC/a/Y7WcOUk6h7/fjbZDae5663AL2PEH5ETIPYBb5iFDGcr1njaTF7PDGKE2SxjMW8y+Yu5CqWICtCgfaIjlZeIkOirHpGBAbqxKl0J2IfkiRAS/AzOdCto16smDBlQ+SFZnEoNuMmJ3Xg3bZ4ywLHklHg/obpLNfWa9Rr3Wq2gWwjkWLp9PqOddwUjTPAOeF3VPz7CMOkEIpMSJNKckdqGjKy/1GhT/SNdTxI+y7NuPq/xNIZSn6hzeZCL9y9HwHkf81pvsopsNPTVWxcbO0krFSTgaTHttKlL3/HOk8jlV+TmXPIbGEuqupnkkGkNj3MYEB+aBDcAb7UqPnKTUooB2183dhuKmOmqR1o/8cN/xMQ=
 
 before_install:
-  - mysql -e 'CREATE DATABASE keros_test;'
-  - mysql keros_test < src/Tools/keros.sql
-  
+- mysql -e 'CREATE DATABASE keros_test;'
+- mysql keros_test < src/Tools/keros.sql
+
 install: composer install
 
-script: ./vendor/bin/phpunit -c tests/phpunit.travis.xml
+script: "./vendor/bin/phpunit -c tests/phpunit.travis.xml"
+
+deploy:
+  provider: script
+  skip_cleanup: true
+  script: rsync -r --delete-after --quiet $TRAVIS_BUILD_DIR/src ${USER}@${HOST}:path/to/files
+  on:
+    branch: master
