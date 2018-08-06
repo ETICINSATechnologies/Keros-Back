@@ -1,0 +1,30 @@
+# Characters uncoding
+AddDefaultCharset UTF-8
+DefaultLanguage fr-FR
+
+# Disallow script execution
+Options -ExecCGI
+AddHandler cgi-script .php .pl .py .jsp .asp .htm .shtml .sh .cgi
+
+# Allow method
+RewriteCond %{REQUEST_METHOD} !^(GET|HEAD|OPTIONS|POST|PUT)
+RewriteRule .? - [F]
+
+# Desactivate directories content display
+Options All -Indexes
+
+# Define time zone
+SetEnv TZ Europe/Paris
+
+# Protect .htaccess file
+<Files ~ "^.*\.([Hh][Tt][AaPp])">
+	Order allow,deny
+	Deny from all
+	Satisfy all
+</Files>
+
+# Rewrite to index.php
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule !\.(js|gif|css|jpg|png|php)$ /index.php [L]
+</IfModule>

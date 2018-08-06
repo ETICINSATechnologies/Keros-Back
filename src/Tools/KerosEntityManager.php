@@ -3,21 +3,20 @@ namespace Keros\Tools;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Tools\Setup;
-use Keros\Config\ConfigLoader;
 
 class KerosEntityManager
 {
     static function getEntityManager()
     {
         $kerosConfig = ConfigLoader::getConfig();
-        $host = $kerosConfig['db']['host'];
-        $port = $kerosConfig['db']['port'];
-        $user = $kerosConfig['db']['user'];
-        $pass = $kerosConfig['db']['pass'];
-        $dbName = $kerosConfig['db']['dbName'];
-        $isDevMode = $kerosConfig['db']['isDevMode'];
+        $host = $kerosConfig['DB_HOST'];
+        $port = $kerosConfig['DB_PORT'];
+        $user = $kerosConfig['DB_USER'];
+        $pass = $kerosConfig['DB_PASS'];
+        $dbName = $kerosConfig['DB_NAME'];
+        $devMode = $kerosConfig['DEV_MODE'];
 
-        $doctrineConfig = Setup::createAnnotationMetadataConfiguration(array(__DIR__), $isDevMode);
+        $doctrineConfig = Setup::createAnnotationMetadataConfiguration(array(__DIR__), $devMode);
 
         $conn = array(
             'url' => "pdo-mysql://$user:$pass@$host:$port/$dbName?charset=UTF8",

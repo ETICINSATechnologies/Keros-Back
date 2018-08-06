@@ -22,9 +22,9 @@ class CatIntegrationTest extends AppTestCase
 
         $body = json_decode($response->getBody());
         $this->assertEquals(3, count($body->content));
-        $this->assertNotNull(count($body->content[0]->id));
-        $this->assertNotNull(count($body->content[0]->name));
-        $this->assertNotNull(count($body->content[0]->height));
+        $this->assertNotNull(strlen($body->content[0]->id));
+        $this->assertNotNull(strlen($body->content[0]->name));
+        $this->assertNotNull(strlen($body->content[0]->height));
 
         // Pas besoin de tester la pagination pour vos autres tests (on fera à part)
         $this->assertEquals(0, $body->meta->page);

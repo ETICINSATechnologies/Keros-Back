@@ -22,8 +22,8 @@ class CountryIntegrationTest extends AppTestCase
 
         $body = json_decode($response->getBody());
         $this->assertEquals(196, count($body));
-        $this->assertNotNull(count($body[0]->id));
-        $this->assertNotNull(count($body[0]->label));
+        $this->assertNotNull(strlen($body[0]->id));
+        $this->assertNotNull(strlen($body[0]->label));
     }
 
     public function testGetCountryShouldReturn200()

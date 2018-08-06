@@ -6,7 +6,7 @@ namespace Keros;
 
 use http\Env\Request;
 use http\Env\Response;
-use Keros\Config\ConfigLoader;
+use Keros\Tools\ConfigLoader;
 use Keros\Controllers\Core\AddressController;
 use Keros\Controllers\Core\GenderController;
 use Keros\Controllers\Cat\CatController;
