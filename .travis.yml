@@ -1,10 +1,9 @@
 language: php
 
 php:
-- '7.1'
-
+  - '7.1'
 services:
-- mysql
+  - mysql
 
 env:
   global:
@@ -13,16 +12,23 @@ env:
   - secure: BudjQo0QD/aZdNlS16ah6Z4BaTtGSbqTpx/GMiHSdno61/DpQ+vX+r9Ncw6N2S1EVENV5Pm/Dw9I9ypow3jD1U4yflLC/2F9jUo4mARWhehg4wS2N3Tfp+3VbHakOL9yiVWkoHKtJj/8yMXGoliQvo9/tJ6ZNyJSHUt53IIj5RMer4H+MRgQAx1+qm5Wu2w1bw5sEDIqAozZLgTgOVwYjy2v2ZzQ6RX2ysqUlRin8EgCisv5LUrHk+Wqcz1WVvQbi3dXPQtH2QXNn+HIlZldBbrpjC8SED4zU6we7G/hJM81lfxtPAy04SwShBceGC/a/Y7WcOUk6h7/fjbZDae5663AL2PEH5ETIPYBb5iFDGcr1njaTF7PDGKE2SxjMW8y+Yu5CqWICtCgfaIjlZeIkOirHpGBAbqxKl0J2IfkiRAS/AzOdCto16smDBlQ+SFZnEoNuMmJ3Xg3bZ4ywLHklHg/obpLNfWa9Rr3Wq2gWwjkWLp9PqOddwUjTPAOeF3VPz7CMOkEIpMSJNKckdqGjKy/1GhT/SNdTxI+y7NuPq/xNIZSn6hzeZCL9y9HwHkf81pvsopsNPTVWxcbO0krFSTgaTHttKlL3/HOk8jlV+TmXPIbGEuqupnkkGkNj3MYEB+aBDcAb7UqPnKTUooB2183dhuKmOmqR1o/8cN/xMQ=
 
 before_install:
-- mysql -e 'CREATE DATABASE keros_test;'
-- mysql keros_test < src/Tools/keros.sql
+  - mysql -e 'CREATE DATABASE keros_test;'
+  - mysql keros_test < src/Tools/keros.sql
 
 install: composer install
 
 script: "./vendor/bin/phpunit -c tests/phpunit.travis.xml"
 
+before_deploy:
+  - openssl aes-256-cbc -K $$encrypted_6fdf0b184643_key -iv $$encrypted_6fdf0b184643_iv -in deploy_rsa.enc -out /tmp/deploy_rsa -d
+  - eval "$(ssh-agent -s)"
+  - chmod 600 /tmp/deploy_rsa
+  - ssh-add /tmp/deploy_rsa
+
 deploy:
+  addons:
+    ssh_known_hosts: ${HOST}
   provider: script
   skip_cleanup: true
-  script: rsync -r --delete-after --quiet $TRAVIS_BUILD_DIR/src ${USER}@${HOST}:path/to/files
-  on:
-    branch: master
+  script: rsync -r --delete-after --quiet $TRAVIS_BUILD_DIR/src ${USER}@${HOST}:keros-api-dev
+
