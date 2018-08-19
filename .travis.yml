@@ -1,14 +1,27 @@
 language: php
-
 php:
-  - '7.1'
+- '7.1'
 services:
-  - mysql
-
-before_install:
-  - mysql -e 'CREATE DATABASE keros_test;'
-  - mysql keros_test < src/Tools/keros.sql
-  
-install: composer install
-
-script: ./vendor/bin/phpunit -c tests/phpunit.travis.xml
+- mysql
+env:
+  global:
+  - secure: y0FTj96Yj0ZV5SCm2PBsruJJLvSaHR5XLsxkjraG+xXPuJOAGv6Dfe8u7ti1CMwSrl1c9ly45RMVzt72qLcJhq8WFSwPR7E/NlL7MTUcPlhDX6oLhYe/6xGVK+uvOxlEcjpBB8RHFAJc33FZv6x3YcU9OWeavkDJh8XH2SCE8sft3Gz6yZU/fxrdeTTKzJ1ROTT9HW0JBD/f8hZT29sw6YxSmI9KKhzcSZB/VBKYGoHx1r05O+VEhFNLLkRwZpUz6ROHQgbGGSNirjXrKayEeaLOvY1j1EwPFBc+Ue9+/CCyXMYmh/Xcm2iv4S8437BepzSlMMNQf16lG8t4ZD+Alq12v6g9wj6MoKNnvVW6OELgK6XQHMOhebhVQ1/IJkPj7CXpY/v0svPy4mjLzsSuA/xzdKfEJf4BLC+nLn+24XO7bWkjbGc/VVYSmtwZgaGKeVsv47Jf9FA/mcapg5FRJLheOfkv/gISf9g05TvK79XZhAHDzJe8tKyJF/NEcx0oUbKieRcbYzsBlaUfN4DKqL/f1Q3XkvQKiEw4uEH9VqNr/K45yqcb/YFGGywMxJq6IH+9k54cO+pI0XJc7PDByh0IiDYwsF++UAJ34Vk4HZZuvuN8eNKgnn/ZApj5YauLt3qv3In9xzYfHfKi1FyeZtTsZKsRvg3zDxak0IllKxQ=
+  - secure: Ufo698fonj+XMXUhFuz6h6dXnC9lriO4WgDANUemlhq7rv2mNP/O/uycbJK5CuL6KPGqGxEVoWcDmqghM7O9sIZLWiqd2VORPL5lFKXtwjZZqgpwGPL7pHeJAXUKVeQTUHOCC9zbpxO/Jhub9sCNggbJ4lL27EQfmN2dBeoFlRXGJhPv1pXcoI8+M7hc/K8Ghs30DGmAWV6UmGe6DlPO7IckOdH8tmXwY1wZqvGY19lu/YAA1e5Jt1WvDZlKkXIVH8tRU57Z18EwaEuewBf5STyeRifHhqE5Sw1gNzzDHfbngcZ1/XanInQSrDpiAwK+PGzf8gRsmqtWkJEIloFrgoxvkZHtXKJOfu30tVctiXkADgPgE6xEm2RLxiDtiooqQtma1GaKVmTLKfVXsxy8ObT7s6fZ6I2a8YeB6vXpNa9DfwqWTjEwWinEizfskQL6z/SuLvdBQXjftvjj7SKDGDCGkOSLTA9G2RB4GUQUNYb+RK/eoLnEzEzl0nU/LhkV9XO+sp6zKE3ptFVFYkcS+gRpF0cZ1hMZE/g3I7ajv9gZcIVn7RyRIDZbTX5kcZy1Nd7NyJte8zMTpzjbo9RXFGU4yH/QMO7rrxcD0vtKAMuwjQpjGaeXRq+yq50BR4Og23MgskR933BMjysInqGb7HW1NrVOHbMdh4eiZkNaftY=
+  - secure: faVqOZn9javWi53pse9ptxk/UUN27JI6tRWo7V2nxuGfWefKclHie0dOtKrR9Oi3hemBaKz174+0etCPJlBSLav5DqkNjyrPars2ImbKJO/X7+trZWYgOMg7OyiRbXjkDhNk8mj5ki4NOKGcVsj3HuUjhUjUuGlxH5x/J0rXFiJvGZBBc9Zo91trUt4UmFFbSlz0z9t8Xubooe0r0KQ/MImNHliktHWRNKjtQJGVRlMrQ8TuAFL076ultNLjAH6RUm44TRMZwtlEtbLii7owRy7owM2uiJDlHrmlcRrzbknNGWxa0S9m71jvXLlOTLloTqTyNrjJOiw3i2iYrOkwfUjzea8/O0vapvmuOqSHldSmXrAMKm9vcxmQwHZALWnJeY8YezsyXRtHZETiC2kx+NFVYbYipSlG1KBBSE9Hvq1OA0bYthctZ9kXZQmfOoiB8A4WZS4xpa/WC5nR/fSCgDfO7qVjxZS3SCKxlmx5bZ6B8qZfXk96WXrAckZFELVHA/JK5rb5gJPL+0MxVMQsVnbtcy8/DpvJQgWkUNxEFEvDx8XID2tK3l5RNxafV6mNEe8S38Dr7Emuyz+BlNArB3oo0YDmY2DIVvsMren/7Mn38oukzAaKoflwflhVe2u4QWCxQZFZ23julElww3rMFIiWv04yZRemjqNIwofa6a0=
+install:
+- composer install
+script:
+- mysql -e 'CREATE DATABASE keros_test;'
+- mysql keros_test < src/Tools/keros.sql
+- ./vendor/bin/phpunit -c tests/phpunit.travis.xml
+before_deploy:
+- sudo apt-get install -y sshpass
+- echo "vps35827.ovh.net,46.105.16.161 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBMe3IgrZgB/aH0F9Rjh+Riy5TLa+Sn/vShQNwC879dobP/nS9AxvMFmad0kjnOiqFjFwP8MpYPmVMfBUHMDVMmI="
+  > ~/.ssh/known_hosts
+deploy:
+  provider: script
+  skip_cleanup: true
+  script: sshpass -p "${SSH_PASS}" rsync -r --delete-after --quiet $TRAVIS_BUILD_DIR/src
+    $TRAVIS_BUILD_DIR/vendor ${SSH_USER}@${SSH_HOST}:keros-api-dev
+  on:
+    branch: deploy-dev
