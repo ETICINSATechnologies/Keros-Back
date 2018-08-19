@@ -16,7 +16,7 @@ script:
 - ./vendor/bin/phpunit -c tests/phpunit.travis.xml
 before_deploy:
 - sudo apt-get install -y sshpass
-- echo "ssh.cluster003.ovh.net,213.186.33.202 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFllxvuJC0KDG96sN3s/7/llbnFcpU6ZsokhKGe2bCPT"
+- echo "vps35827.ovh.net,46.105.16.161 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBMe3IgrZgB/aH0F9Rjh+Riy5TLa+Sn/vShQNwC879dobP/nS9AxvMFmad0kjnOiqFjFwP8MpYPmVMfBUHMDVMmI="
   > ~/.ssh/known_hosts
 deploy:
   provider: script
