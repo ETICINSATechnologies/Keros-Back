@@ -1,31 +1,27 @@
 language: php
-
 php:
-  - '7.1'
-
+- '7.1'
 services:
-  - mysql
-
+- mysql
 env:
   global:
-  - secure: 4anJImq9fI/UlQR+loGc3/yr1HqFB+6PVZGqs5vSXQodPOGiSXfL8R543uGUpNlQwxPTxp/2B4/psdwJ+c5r0sW0FaQb2nySvIP++ZA4a4xmX+7e3XNH8xvX5gL5ns5+j1cbki/CUtcb57gWssvAycmuGSO4ie2vTY90WIgY9fUAyHb5vsXPtaUTatKhQHbCvtmzFVuOynYUkoKdnoX9DLszixLDoiq96M8VRbzm/jGFSyMTR6qmeJASdfW2ZZWvif3zdPcrYXr225FXPeirKhIe6S9ZDgVq7jaGgYblPkejOxqvjYqMLaXyuqSegczge/UpXhAMuzf4OtstputUM4+aCvBel683SGZj9uR+ydTzAf4CFSveFbpcCouN1y1gNsEoD5iZkb2htvBGxnlyZzvHzye22lS1TKje20E/5fePEHzFnG5XxF3KV/Y+YjwncRFVZwv7HoOsgATabnvndCnT6C9/yOj3bMQAy2d2xFM6ThkqH1NaqraiqnOlB5Eiv3mPmaavXrjghqGor2y3dT8+Japfbi36OPqkbeFL87HUkdi6+4OaU6gsfC/Z3jGRKyB8zqRrrON4J2T8X/C2z6S9yXeEFbKdkrVlVsBt+JphvsbqnOU0HSqtjxMdGYDwHVSs0fFnoWkcnvpNPsibVc95s6zlFgrFDzPvoqMxsZU=
-  - secure: bJfD63eiEJzoVrfKEur976QLY4s5syKgnV8RvXNbPIHqp+pydmyy9Z4CWr+37QFS6Pmo0qOGzRKtmw8YlxIzaRyUYqJ3btY1qvKnt3O6c+6AiH15IJuEE9aazDmdGEEh4i3TJ8ezPbJkRD8ItD2qm80lzkYhGYPVxgdb+4BGJkWOXeCuP94DH2RagZJMFpwLAtp3dhWb1JtvBp7joCFQNgLfKpzKuOsQn0/riicNf4KuIFIAnTfVhGIZ5LEwOOs7Yjew4B0CVJlUHJr3pdeUEroBoscAVbXBEat6ejbzPgev1bHptoZU2GTRLeXIxLS1q4HG0x/e3nAiddGFU8Pn+Shp6yHVUs2YP5HR5H2RIS3N0E/PSlRqa2QcxeEmuHFRtQ5/tDVuiAZsxoIelZ/B1PHrPV8/Ahb84m/TCl/L7w0tV1uPRZxXRei1zqaLJtSnouQ2vCSzu3AUOzIHplKJjBmRKMdf15O7HWFSDop0ajJPvv2hYValTfCtt9tlRnAtlRYKbxn19KJEyoo6kT+IfSqkC1NAPeNa+yThjxSp4YiTNqd8G8BDja4GhS0zGRoyXsTXp2XS7MYhH6XenCZGwA4B6KJWG3pgqjdOA9RWOzLjLGp3dvyOmhcJomP5sX9ix1oJqbqktnkbRA0gizSo6T4sIi5KrG0beFA6/rtqI1E=
-  - secure: kgSqll9l8pqG+gaYWZuC5dkaPuQ9u40AbZI7NmF339l3F/G0aQlBPdmHrqZxyoli6jVHqI3sc/87eJnPGijj/ta12lB+4PATenPKXmgo97lbhbAllF0VX2FpQia/ibDTMck8dPS0ByD4HVBbLC8A8dW73taywATDV3a9OCLLmkNzz/U/nt0Be+jdH11tyMFaLep/IAKQqNLecyvlMkt/jVr19wMKnydurf3WBpbYRbKJSUyV6WXuHwLCEfxXD1YzwvmjcHL4NkF1LQiHwJqgklfMIgLGSGA4mne7BQFiJ/tzU0EiFaWFmHX4EvdU/N24GIuu7HlOsT1wZaQiYUE6KZ/Rr6ujx664hMBGDAWhmlpdwjZ8/GELJ03A5/7F+g5rjHIWcca0sHg9YzONtFYVwkYFydXhvVcvuFti9kq24ZAgFGMgGmMbGsZuzwR+J+WWiQ1Ea+o3e6sMhRWWUq/U/QozbTXiHF4P5RoCAFbD1YO58BmpTcj5laCJTVKKm3AsL0IOC9j5w8VZTylQsFp7BXGFF5C5pK5jGokWEG29UvdshM00fYM1o3Prq8gu0zlRLThIM+9hLoz+rfzU1W8+ZeT9eK9vfggSdxpbOOS6zLw23G47/RzIFZ6x+vrrJyLuCXrVBWu7h5arZMD3yYaQv2sC3keWWSI746z5jQpsa/c=
-
+  - secure: y0FTj96Yj0ZV5SCm2PBsruJJLvSaHR5XLsxkjraG+xXPuJOAGv6Dfe8u7ti1CMwSrl1c9ly45RMVzt72qLcJhq8WFSwPR7E/NlL7MTUcPlhDX6oLhYe/6xGVK+uvOxlEcjpBB8RHFAJc33FZv6x3YcU9OWeavkDJh8XH2SCE8sft3Gz6yZU/fxrdeTTKzJ1ROTT9HW0JBD/f8hZT29sw6YxSmI9KKhzcSZB/VBKYGoHx1r05O+VEhFNLLkRwZpUz6ROHQgbGGSNirjXrKayEeaLOvY1j1EwPFBc+Ue9+/CCyXMYmh/Xcm2iv4S8437BepzSlMMNQf16lG8t4ZD+Alq12v6g9wj6MoKNnvVW6OELgK6XQHMOhebhVQ1/IJkPj7CXpY/v0svPy4mjLzsSuA/xzdKfEJf4BLC+nLn+24XO7bWkjbGc/VVYSmtwZgaGKeVsv47Jf9FA/mcapg5FRJLheOfkv/gISf9g05TvK79XZhAHDzJe8tKyJF/NEcx0oUbKieRcbYzsBlaUfN4DKqL/f1Q3XkvQKiEw4uEH9VqNr/K45yqcb/YFGGywMxJq6IH+9k54cO+pI0XJc7PDByh0IiDYwsF++UAJ34Vk4HZZuvuN8eNKgnn/ZApj5YauLt3qv3In9xzYfHfKi1FyeZtTsZKsRvg3zDxak0IllKxQ=
+  - secure: Ufo698fonj+XMXUhFuz6h6dXnC9lriO4WgDANUemlhq7rv2mNP/O/uycbJK5CuL6KPGqGxEVoWcDmqghM7O9sIZLWiqd2VORPL5lFKXtwjZZqgpwGPL7pHeJAXUKVeQTUHOCC9zbpxO/Jhub9sCNggbJ4lL27EQfmN2dBeoFlRXGJhPv1pXcoI8+M7hc/K8Ghs30DGmAWV6UmGe6DlPO7IckOdH8tmXwY1wZqvGY19lu/YAA1e5Jt1WvDZlKkXIVH8tRU57Z18EwaEuewBf5STyeRifHhqE5Sw1gNzzDHfbngcZ1/XanInQSrDpiAwK+PGzf8gRsmqtWkJEIloFrgoxvkZHtXKJOfu30tVctiXkADgPgE6xEm2RLxiDtiooqQtma1GaKVmTLKfVXsxy8ObT7s6fZ6I2a8YeB6vXpNa9DfwqWTjEwWinEizfskQL6z/SuLvdBQXjftvjj7SKDGDCGkOSLTA9G2RB4GUQUNYb+RK/eoLnEzEzl0nU/LhkV9XO+sp6zKE3ptFVFYkcS+gRpF0cZ1hMZE/g3I7ajv9gZcIVn7RyRIDZbTX5kcZy1Nd7NyJte8zMTpzjbo9RXFGU4yH/QMO7rrxcD0vtKAMuwjQpjGaeXRq+yq50BR4Og23MgskR933BMjysInqGb7HW1NrVOHbMdh4eiZkNaftY=
+  - secure: faVqOZn9javWi53pse9ptxk/UUN27JI6tRWo7V2nxuGfWefKclHie0dOtKrR9Oi3hemBaKz174+0etCPJlBSLav5DqkNjyrPars2ImbKJO/X7+trZWYgOMg7OyiRbXjkDhNk8mj5ki4NOKGcVsj3HuUjhUjUuGlxH5x/J0rXFiJvGZBBc9Zo91trUt4UmFFbSlz0z9t8Xubooe0r0KQ/MImNHliktHWRNKjtQJGVRlMrQ8TuAFL076ultNLjAH6RUm44TRMZwtlEtbLii7owRy7owM2uiJDlHrmlcRrzbknNGWxa0S9m71jvXLlOTLloTqTyNrjJOiw3i2iYrOkwfUjzea8/O0vapvmuOqSHldSmXrAMKm9vcxmQwHZALWnJeY8YezsyXRtHZETiC2kx+NFVYbYipSlG1KBBSE9Hvq1OA0bYthctZ9kXZQmfOoiB8A4WZS4xpa/WC5nR/fSCgDfO7qVjxZS3SCKxlmx5bZ6B8qZfXk96WXrAckZFELVHA/JK5rb5gJPL+0MxVMQsVnbtcy8/DpvJQgWkUNxEFEvDx8XID2tK3l5RNxafV6mNEe8S38Dr7Emuyz+BlNArB3oo0YDmY2DIVvsMren/7Mn38oukzAaKoflwflhVe2u4QWCxQZFZ23julElww3rMFIiWv04yZRemjqNIwofa6a0=
 install:
-  - composer install
-
+- composer install
 script:
-  - mysql -e 'CREATE DATABASE keros_test;'
-  - mysql keros_test < src/Tools/keros.sql
-  - "./vendor/bin/phpunit -c tests/phpunit.travis.xml"
-
+- mysql -e 'CREATE DATABASE keros_test;'
+- mysql keros_test < src/Tools/keros.sql
+- ./vendor/bin/phpunit -c tests/phpunit.travis.xml
 before_deploy:
-  - sudo apt-get install -y sshpass
-  - echo "ssh.cluster003.ovh.net,213.186.33.202 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFllxvuJC0KDG96sN3s/7/llbnFcpU6ZsokhKGe2bCPT" > ~/.ssh/known_hosts
+- sudo apt-get install -y sshpass
+- echo "ssh.cluster003.ovh.net,213.186.33.202 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFllxvuJC0KDG96sN3s/7/llbnFcpU6ZsokhKGe2bCPT"
+  > ~/.ssh/known_hosts
 deploy:
   provider: script
   skip_cleanup: true
-  script: sshpass -p "${SSH_PASS}" rsync -r --delete-after --quiet $TRAVIS_BUILD_DIR/src $TRAVIS_BUILD_DIR/vendor ${SSH_USER}@${SSH_HOST}:keros-api-dev
+  script: sshpass -p "${SSH_PASS}" rsync -r --delete-after --quiet $TRAVIS_BUILD_DIR/src
+    $TRAVIS_BUILD_DIR/vendor ${SSH_USER}@${SSH_HOST}:keros-api-dev
   on:
     branch: deploy-dev
