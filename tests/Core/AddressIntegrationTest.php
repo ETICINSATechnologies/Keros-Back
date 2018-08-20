@@ -22,12 +22,12 @@ class PoleIntegrationTest extends AppTestCase
 
         $body = json_decode($response->getBody());
         $this->assertEquals(5, count($body->content));
-        $this->assertNotNull(count($body->content[0]->id));
-        $this->assertNotNull(count($body->content[0]->line1));
-        $this->assertNotNull(count($body->content[0]->line2));
-        $this->assertNotNull(count($body->content[0]->postalCode));
-        $this->assertNotNull(count($body->content[0]->country->id));
-        $this->assertNotNull(count($body->content[0]->country->label));
+        $this->assertNotNull(strlen($body->content[0]->id));
+        $this->assertNotNull(strlen($body->content[0]->line1));
+        $this->assertNotNull(strlen($body->content[0]->line2));
+        $this->assertNotNull(strlen($body->content[0]->postalCode));
+        $this->assertNotNull(strlen($body->content[0]->country->id));
+        $this->assertNotNull(strlen($body->content[0]->country->label));
     }
 
     public function testGetAddressShouldReturn200()

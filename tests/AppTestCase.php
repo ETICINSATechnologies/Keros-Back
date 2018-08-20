@@ -3,6 +3,7 @@
 namespace KerosTest;
 
 use Keros\KerosApp;
+use Keros\Tools\ConfigLoader;
 use PDO;
 
 require dirname(__FILE__) . '/../vendor/autoload.php';
@@ -26,12 +27,12 @@ class AppTestCase extends \PHPUnit\Framework\TestCase
     {
         AppTestCase::$dbDataFileLocation = join(DIRECTORY_SEPARATOR, [__DIR__, '..', 'src', 'Tools', 'kerosData.sql']);
 
-        $config = \Keros\Config\ConfigLoader::getConfig();
-        $host = $config['db']['host'];
-        $port = $config['db']['port'];
-        $user = $config['db']['user'];
-        $pass = $config['db']['pass'];
-        $dbName = $config['db']['dbName'];
+        $config = ConfigLoader::getConfig();
+        $host = $config['DB_HOST'];
+        $port = $config['DB_PORT'];
+        $user = $config['DB_USER'];
+        $pass = $config['DB_PASS'];
+        $dbName = $config['DB_NAME'];
 
         // Connect to the test database
         $dsn = "mysql:dbname=$dbName;host=$host;charset=UTF8;port=$port";
