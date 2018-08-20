@@ -4,8 +4,9 @@
 namespace Keros;
 
 
-use http\Env\Request;
-use http\Env\Response;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Keros\Entities\Auth\LoginResponse;
 use Keros\Tools\ConfigLoader;
 use Keros\Controllers\Core\AddressController;
 use Keros\Controllers\Core\GenderController;
@@ -43,6 +44,13 @@ class KerosApp
             $this->get("/health", function (Request $request, Response $response, array $args) {
                 $response->getBody()->write("OK");
                 return $response;
+            });
+
+            // TODO set up real authentication
+            $this->post("/auth/login", function (Request $request, Response $response, array $args) {
+                $body = $request->getParsedBody();
+                $username = $body["username"];
+                return $response->withJson(new LoginResponse($username), 200);
             });
 
             $this->group('/cat', function () {

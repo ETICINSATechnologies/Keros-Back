@@ -28,7 +28,6 @@ before_deploy:
 deploy:
   provider: script
   skip_cleanup: true
-  script: sshpass -p "${SSH_PASS}" rsync -r --delete-after --quiet $TRAVIS_BUILD_DIR/src
-    $TRAVIS_BUILD_DIR/vendor --exclude /src/settings.ini ${SSH_USER}@${SSH_HOST}:/var/www/keros-api-dev
+  script: bash .deploy/deploy-staging.sh
   on:
-    branch: deploy-dev
+    branch: deploy-staging
