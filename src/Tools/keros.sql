@@ -2,16 +2,6 @@ SET AUTOCOMMIT = 0;
 SET FOREIGN_KEY_CHECKS = 0;
 SET UNIQUE_CHECKS = 0;
 
-DROP TABLE IF EXISTS cat;
-CREATE TABLE cat (
-  id     int NOT NULL AUTO_INCREMENT,
-  name   varchar(255),
-  height float(5, 2),
-  PRIMARY KEY (id)
-)
-  ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
-
 DROP TABLE IF EXISTS core_pole;
 CREATE TABLE `core_pole` (
   `id`    int(5) AUTO_INCREMENT,

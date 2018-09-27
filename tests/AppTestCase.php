@@ -54,4 +54,12 @@ class AppTestCase extends \PHPUnit\Framework\TestCase
         $sql = file_get_contents(AppTestCase::$dbDataFileLocation);
         AppTestCase::$db->exec($sql);
     }
+
+    /**
+     * Test to ensure the class loads correctly
+     */
+    public function testShouldInit()
+    {
+        $this->assertTrue(true);
+    }
 }

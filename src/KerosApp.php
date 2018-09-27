@@ -53,12 +53,6 @@ class KerosApp
                 return $response->withJson(new LoginResponse($username), 200);
             });
 
-            $this->group('/cat', function () {
-                $this->get("", CatController::class . ':getPageCats');
-                $this->get('/{id:[0-9]+}', CatController::class . ':getCat');
-                $this->post("", CatController::class . ':createCat');
-            });
-
             $this->group('/ua', function () {
                 $this->group('/firm-type', function() {
                     $this->get("", FirmTypeController::class . ':getAllFirmType');
