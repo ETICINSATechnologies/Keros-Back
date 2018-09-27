@@ -26,7 +26,7 @@ class PositionController
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get('logger');
-        $this->positionService = new PositionService($container);
+        $this->positionService = $container->get(PositionService::class);
     }
 
     /**

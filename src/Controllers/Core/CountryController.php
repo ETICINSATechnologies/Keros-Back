@@ -26,7 +26,7 @@ class CountryController
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get('logger');
-        $this->countryService = new CountryService($container);
+        $this->countryService = $container->get(CountryService::class);
     }
 
     /**

@@ -4,13 +4,16 @@
 namespace Keros;
 
 
+use Keros\Services\Core\AddressService;
+use Keros\Services\ServiceRegistrar;
+use Keros\Services\Ua\FirmTypeService;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Keros\Entities\Auth\LoginResponse;
 use Keros\Tools\ConfigLoader;
 use Keros\Controllers\Core\AddressController;
 use Keros\Controllers\Core\GenderController;
-use Keros\Controllers\Cat\CatController;
 use Keros\Controllers\Core\PoleController;
 use Keros\Controllers\Core\PositionController;
 use Keros\Controllers\Ua\FirmTypeController;
@@ -34,11 +37,33 @@ class KerosApp
     private $app;
 
     /**
+     * Prepares the container by adding the services as well as logger and other needed container parts
+     * @param ContainerInterface $container the container to add the items to
+     */
+    public function prepareContainer(ContainerInterface $container){
+        $container['entityManager'] = function () {
+            return KerosEntityManager::getEntityManager();
+        };
+
+        $container['errorHandler'] = function ($container) {
+            return new ErrorHandler($container);
+        };
+
+        $container['logger'] = function () {
+            return Logger::createLogger();
+        };
+
+        ServiceRegistrar::registerServices($container);
+    }
+
+    /**
      * KerosApp constructor. Configures the Slim App
      */
     public function __construct()
     {
         $app = new \Slim\App(['settings' => ConfigLoader::getConfig()]);
+
+        $this->prepareContainer($app->getContainer());
 
         $app->group("/api/v1", function () {
             $this->get("/health", function (Request $request, Response $response, array $args) {
@@ -95,18 +120,6 @@ class KerosApp
             });
         });
 
-
-        $app->getContainer()['entityManager'] = function ($c) {
-            return KerosEntityManager::getEntityManager();
-        };
-
-        $app->getContainer()['errorHandler'] = function ($c) {
-            return new ErrorHandler($c);
-        };
-
-        $app->getContainer()['logger'] = function ($c) {
-            return Logger::createLogger();
-        };
 
         $this->app = $app;
     }

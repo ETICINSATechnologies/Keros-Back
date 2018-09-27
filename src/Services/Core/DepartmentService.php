@@ -25,16 +25,13 @@ class DepartmentService
      * @var EntityRepository
      */
     private $repository;
-
+    
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get('logger');
         $this->entityManager = $container->get('entityManager');
         $this->repository = $this->entityManager->getRepository(Department::class);
     }
-
-
-
 
     public function getOne(int $id): ?Department
     {
