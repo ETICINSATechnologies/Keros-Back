@@ -1,6 +1,6 @@
 <?php
 
-namespace KerosTest\Core;
+namespace KerosTest\user;
 
 use KerosTest\AppTestCase;
 use Slim\Http\Environment;
