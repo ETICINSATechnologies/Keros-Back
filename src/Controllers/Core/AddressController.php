@@ -26,7 +26,7 @@ class AddressController
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get('logger');
-        $this->addressService = new AddressService($container);
+        $this->addressService = $container->get(AddressService::class);
     }
     /**
      * @param Request $request

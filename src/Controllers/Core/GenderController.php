@@ -26,7 +26,7 @@ class GenderController
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get('logger');
-        $this->GenderService = new GenderService($container);
+        $this->GenderService = $container->get(GenderService::class);
     }
     /**
      * @return Response containing one Gender if it exists

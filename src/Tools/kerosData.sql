@@ -2,12 +2,6 @@ SET AUTOCOMMIT = 0;
 SET FOREIGN_KEY_CHECKS = 0;
 SET UNIQUE_CHECKS = 0;
 
-TRUNCATE TABLE cat;
-INSERT INTO cat (id, name, height) VALUES
-  (1, 'Tom', 7.14),
-  (2, 'Kevin', 7.14),
-  (3, 'Patch', 7.14);
-
 TRUNCATE TABLE core_user;
 INSERT INTO core_user (id, username, password, expiresAt) VALUES
   (1, 'cbreeze', 'hunter11' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')),

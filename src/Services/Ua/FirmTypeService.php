@@ -35,9 +35,6 @@ class FirmTypeService
         $this->repository = $this->entityManager->getRepository(FirmType::class);
     }
 
-
-
-
     public function getOne(int $id): ?FirmType
     {
         try {
