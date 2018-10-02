@@ -83,25 +83,6 @@ class Validator
     }
 
     /**
-     * @param bool $bool $float the float to validate
-     * @return bool the valid float
-     * @throws KerosException if the float is invalid
-     */
-    public static function bool(bool $bool): bool
-    {
-        /*if ($bool == null)
-        {
-            throw new KerosException("The provided bool cannot be null", 400);
-        }*/
-        if (!is_bool($bool) && $bool!=0 && $bool!=0)
-        {
-            throw new KerosException("The float provided is not actually a float", 400);
-        }
-
-        return $bool;
-    }
-
-    /**
      * @param string $password
      * @return string
      * @throws KerosException

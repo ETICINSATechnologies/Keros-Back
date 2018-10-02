@@ -59,10 +59,11 @@ class UserController
         $body = $request->getParsedBody();
         $username = Validator::name($body["username"]);
         $password = Validator::password($body["password"]);
+        $lastConnectedAt  = Validator::name($body["lastConnected"]);
         $createdAt = Validator::date($body["createdAt"]);
-        $disabled = Validator::bool($body["disabled"]);
+        $disabled = Validator::date($body["disabled"]);
         $expiresAt = Validator::date($body["expiresAt"]);
-        $user = new User($username, $password, Null, $createdAt, $disabled, $expiresAt);
+        $user = new User($username, $password, $lastConnectedAt, $createdAt, $disabled, $expiresAt);
         $this->userService->create($user);
 
         return $response->withJson($user, 201);
