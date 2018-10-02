@@ -47,6 +47,9 @@ class UserController
     }
 
     /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
      * @return Response containing the created user
      * @throws KerosException if the validation fails or the user cannot be created
      */
@@ -55,17 +58,21 @@ class UserController
         $this->logger->debug("Creating user from " . $request->getServerParams()["REMOTE_ADDR"]);
         $body = $request->getParsedBody();
         $username = Validator::name($body["username"]);
-        $password = Validator::name($body["password"]);
+        $password = Validator::password($body["password"]);
         $lastConnectedAt  = Validator::name($body["lastConnected"]);
-        $createdAt = Validator::name($body["createdAt"]);
-        $disabled = Validator::name($body["disabled"]);
-        $expiresAt = Validator::name($body["expiresAt"]);
+        $createdAt = Validator::date($body["createdAt"]);
+        $disabled = Validator::date($body["disabled"]);
+        $expiresAt = Validator::date($body["expiresAt"]);
         $user = new User($username, $password, $lastConnectedAt, $createdAt, $disabled, $expiresAt);
         $this->userService->create($user);
+
         return $response->withJson($user, 201);
     }
 
     /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
      * @return Response containing a page of users
      * @throws KerosException if an unknown error occurs
      */
