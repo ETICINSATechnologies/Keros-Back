@@ -83,15 +83,30 @@ class Validator
     }
 
     /**
+     * @param bool $bool $float the float to validate
+     * @return bool the valid bool
+     * @throws KerosException if the float is invalid
+     */
+    public static function bool(bool $bool): bool
+    {
+        if ($bool != 0 && $bool != 1)
+        {
+            throw new KerosException("The provided boolean is not a boolean", 400);
+        }
+
+        return $bool;
+    }
+
+    /**
      * @param string $password
      * @return string
      * @throws KerosException
      */
     public static function password(string $password): string
     {
-        if (strlen($password) > 8)
-            return $password;
-        throw new KerosException("The password is too short", 400);
+        if (strlen($password) < 8)
+            throw new KerosException("The password is too short", 400);
+        return $password;
     }
 
     /**
@@ -101,14 +116,22 @@ class Validator
      */
     public static function date(string $date): DateTime
     {
+        // check if the string is of type: 'yyyy-dd-mm hh:mm:ss'
         if (preg_match("/^(\d{4})-(\d{2})-(\d{2}) \d\d:\d\d:\d\d/", $date, $matches))
         {
-            if (sizeof($matches) > 3 && checkdate($matches[2], $matches[2], $matches[1]))
+            // <checkdate> parameters are in sequence the day, the month and the year:
+            // - $matches[0]: the entire string
+            // - $matches[1]: the year
+            // - $matches[2]: the day
+            // - $matches[3]: the month
+            if (sizeof($matches) > 3 && checkdate($matches[2], $matches[3], $matches[1]))
             {
                 return DateTime::createFromFormat("Y-m-d H:i:s", $date);
             }
+
+            throw new KerosException("The provided date" . $date . "is not valid", 400);
         }
 
-        throw new KerosException("The date " . $date ." is incorrect", 400);
+        throw new KerosException("The date " . $date ." is not a date", 400);
     }
 }

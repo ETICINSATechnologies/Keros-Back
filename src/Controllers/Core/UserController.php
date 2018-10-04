@@ -25,13 +25,10 @@ class UserController
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get('logger');
-        $this->userService = new UserService($container);
+        $this->userService = $container->get(UserService::class);
     }
 
     /**
-     * @param Request $request
-     * @param Response $response
-     * @param array $args
      * @return Response containing one user if it exists
      * @throws KerosException if the validation fails
      */
@@ -47,9 +44,6 @@ class UserController
     }
 
     /**
-     * @param Request $request
-     * @param Response $response
-     * @param array $args
      * @return Response containing the created user
      * @throws KerosException if the validation fails or the user cannot be created
      */
@@ -59,20 +53,16 @@ class UserController
         $body = $request->getParsedBody();
         $username = Validator::name($body["username"]);
         $password = Validator::password($body["password"]);
-        $lastConnectedAt  = Validator::name($body["lastConnected"]);
         $createdAt = Validator::date($body["createdAt"]);
-        $disabled = Validator::date($body["disabled"]);
+        $disabled = Validator::bool($body["disabled"]);
         $expiresAt = Validator::date($body["expiresAt"]);
-        $user = new User($username, $password, $lastConnectedAt, $createdAt, $disabled, $expiresAt);
+        $user = new User($username, $password, null, $createdAt, $disabled, $expiresAt);
         $this->userService->create($user);
 
         return $response->withJson($user, 201);
     }
 
     /**
-     * @param Request $request
-     * @param Response $response
-     * @param array $args
      * @return Response containing a page of users
      * @throws KerosException if an unknown error occurs
      */

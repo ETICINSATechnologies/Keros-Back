@@ -1,13 +1,7 @@
 <?php
 
 namespace Keros\Entities\Core;
-use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\GeneratedValue;
-use Doctrine\ORM\Mapping\Id;
-use Doctrine\ORM\Mapping\Table;
 use JsonSerializable;
-use Keros\Error\KerosException;
 use Keros\Tools\Searchable;
 
 /**
@@ -74,7 +68,7 @@ class User implements JsonSerializable, Searchable
     }
 
     public static function getSearchFields(): array {
-        return ['label'];
+        return ['username'];
     }
 
     // Getters and setters

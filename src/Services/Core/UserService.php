@@ -35,7 +35,6 @@ class UserService
         $this->repository = $this->entityManager->getRepository(User::class);
     }
 
-
     public function create(User $user)
     {
         $this->entityManager->beginTransaction();
