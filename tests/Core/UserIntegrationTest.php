@@ -3,6 +3,7 @@
 namespace KerosTest\user;
 
 use KerosTest\AppTestCase;
+use phpDocumentor\Reflection\Types\Array_;
 use Slim\Http\Environment;
 use Slim\Http\Request;
 
@@ -44,7 +45,7 @@ class UserIntegrationTest extends AppTestCase
         $this->assertSame(false, $body->disabled);
     }
 
-    public function testGetCountryShouldReturn400()
+    public function testGetUserShouldReturn400()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
@@ -55,5 +56,37 @@ class UserIntegrationTest extends AppTestCase
         $response = $this->app->run(true);
 
         $this->assertSame($response->getStatusCode(), 400);
+    }
+
+    public function testPostUserShouldReturn200()
+    {
+        $post_body = array(
+            "username" => "username",
+            "password" => "password",
+            "description" => "description",
+            "disabled" => 0,
+            "createdAt" => "2018-02-27 10:34:02",
+            "expiresAt" => "2018-12-15 10:34:02"
+        );
+        $options["slim_input"] = http_build_query($post_body);
+        $env = Environment::mock(array_merge(array(
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/core/user/100',
+         ), $options));
+
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(true);
+
+        $this->assertSame($response->getStatusCode(), 200);
+
+        $body = json_decode($response->getBody());
+        $this->assertSame("username", $body->username);
+        $this->assertSame("password", $body->password);
+        $this->assertSame("description", $body->description);
+        $this->assertSame("disabled", $body->disabled);
+        $this->assertSame("2018-02-27 10:34:02", $body->createdAt);
+        $this->assertSame("2018-12-15 10:34:02", $body->expiresAt);
+        $this->assertSame(true, $body->disabled);
     }
 }
