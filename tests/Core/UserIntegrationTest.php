@@ -82,8 +82,8 @@ class UserIntegrationTest extends AppTestCase
         $body = json_decode($response->getBody());
         $this->assertSame("username", $body->username);
         $this->assertSame("password", $body->password);
-        $this->assertSame("2018-02-27 10:34:02", $body->createdAt->date);
-        $this->assertSame("2018-12-15 10:34:02", $body->expiresAt->date);
+        $this->assertContains("2018-02-27 10:34:02", $body->createdAt->date);
+        $this->assertContains("2018-12-15 10:34:02", $body->expiresAt->date);
         $this->assertSame(true, $body->disabled);
     }
 }
