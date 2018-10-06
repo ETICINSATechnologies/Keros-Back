@@ -78,14 +78,14 @@ class UserIntegrationTest extends AppTestCase
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(true);
 
-        $this->assertSame($response->getStatusCode(), 200);
+        $this->assertSame($response->getStatusCode(), 201);
 
-        /*$body = json_decode($response->getBody());
+        $body = json_decode($response->getBody());
         $this->assertSame("username", $body->username);
         $this->assertSame("password", $body->password);
         $this->assertSame("description", $body->description);
         $this->assertSame("2018-02-27 10:34:02", $body->createdAt);
         $this->assertSame("2018-12-15 10:34:02", $body->expiresAt);
-        $this->assertSame(true, $body->disabled);*/
+        $this->assertSame(true, $body->disabled);
     }
 }
