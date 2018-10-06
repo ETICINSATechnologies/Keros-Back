@@ -68,13 +68,13 @@ class UserIntegrationTest extends AppTestCase
             "createdAt" => "2018-02-27 10:34:02",
             "expiresAt" => "2018-12-15 10:34:02"
         );
-        $options["slim_input"] = http_build_query($post_body);
-        $env = Environment::mock(array_merge(array(
+        $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
             'REQUEST_URI' => '/api/v1/core/user/100',
-         ), $options));
+         ]);
 
         $req = Request::createFromEnvironment($env);
+        $req = $req->withParsedBody($post_body);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(true);
 
