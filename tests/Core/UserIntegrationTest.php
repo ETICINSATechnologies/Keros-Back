@@ -86,4 +86,26 @@ class UserIntegrationTest extends AppTestCase
         $this->assertContains("2018-12-15 10:34:02", $body->expiresAt->date);
         $this->assertSame(false, $body->disabled);
     }
+
+    public function testPostUserShouldReturn400()
+    {
+        $post_body = array(
+            "username" => "username",
+            "password" => "password",
+            "disabled" => 0,
+            "createdAt" => "2018-02-27 10:34:02",
+            "expiresAt" => "2018-15-15 10:34:02"
+        );
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => '/api/v1/core/user',
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withParsedBody($post_body);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(true);
+
+        $this->assertSame($response->getStatusCode(), 400);
+    }
 }

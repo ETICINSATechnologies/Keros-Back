@@ -105,7 +105,9 @@ class Validator
     public static function password(string $password): string
     {
         if (strlen($password) < 8)
+        {
             throw new KerosException("The password is too short", 400);
+        }
         return $password;
     }
 
@@ -129,9 +131,9 @@ class Validator
                 return DateTime::createFromFormat("Y-m-d H:i:s", $date);
             }
 
-            throw new KerosException("The provided date" . $date . "is not valid", 400);
+            throw new KerosException("The provided date " . $date . " is not valid", 400);
         }
 
-        throw new KerosException("The date " . $date ." is not a date", 400);
+        throw new KerosException("The date " . $date . " is not a date", 400);
     }
 }
