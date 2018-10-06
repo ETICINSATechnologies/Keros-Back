@@ -69,8 +69,8 @@ class UserIntegrationTest extends AppTestCase
             "expiresAt" => "2018-12-15 10:34:02"
         );
         $env = Environment::mock([
-            'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/api/v1/core/user/100',
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => '/api/v1/core/user',
          ]);
 
         $req = Request::createFromEnvironment($env);
