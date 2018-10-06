@@ -63,7 +63,6 @@ class UserIntegrationTest extends AppTestCase
         $post_body = array(
             "username" => "username",
             "password" => "password",
-            "description" => "description",
             "disabled" => 0,
             "createdAt" => "2018-02-27 10:34:02",
             "expiresAt" => "2018-12-15 10:34:02"
@@ -83,7 +82,6 @@ class UserIntegrationTest extends AppTestCase
         $body = json_decode($response->getBody());
         $this->assertSame("username", $body->username);
         $this->assertSame("password", $body->password);
-        $this->assertSame("description", $body->description);
         $this->assertSame("2018-02-27 10:34:02", $body->createdAt);
         $this->assertSame("2018-12-15 10:34:02", $body->expiresAt);
         $this->assertSame(true, $body->disabled);
