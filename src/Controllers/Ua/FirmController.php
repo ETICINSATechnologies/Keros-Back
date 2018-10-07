@@ -5,9 +5,9 @@ use Keros\Entities\Ua\Firm;
 use Keros\Entities\Core\Page;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Error\KerosException;
-use Keros\Services\Ua\FirmService;
-use Keros\Services\Ua\FirmTypeService;
 use Keros\Services\Core\AddressService;
+use Keros\Services\Ua\FirmService;
+
 use Keros\Entities\Core\Address;
 use Keros\Tools\Validator;
 use Monolog\Logger;
@@ -17,6 +17,10 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 class FirmController
 {
+    /**
+     * @var AddressService
+     */
+    private $addressService;
     /**
      * @var FirmService
      */
@@ -28,6 +32,7 @@ class FirmController
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get('logger');
+        $this->addressService=$container->get(AddressService::class);
         $this->firmService = new FirmService($container);
     }
     /**
@@ -56,12 +61,20 @@ class FirmController
         $this->logger->debug("Creating firm from " . $request->getServerParams()["REMOTE_ADDR"]);
         $body = $request->getParsedBody();
         $siret = Validator::name($body["siret"]);
+        $line1= Validator::name(($body["address"])["line1"]);
+        $line2=Validator::name(($body["address"])["line2"]);
+        $postalCode=Validator::int(($body["address"])["postalCode"]);
+        $city=Validator::name(($body["address"])["city"]);
+        $countryId=Validator::name(($body["address"])["countryId"]);
         $name = Validator::name($body["name"]);
-        $addressId= Validator::name($body["addressId"]);
+        $address=new Address($line1,$line2,$postalCode,$city);
+
+        $this->addressService.create($address,$countryId);
+
         $typeId = Validator::float($body["typeId"]);
 
         $firm = new Firm($siret, $name);
-        $this->firmService->create($firm, $addressId,$typeId);
+        $this->firmService->create($firm,$typeId, $address);
 
         return $response->withJson($firm, 201);
     }

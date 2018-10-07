@@ -7,7 +7,9 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Exception;
+use Keros\Entities\Core\Address;
 use Keros\Entities\Ua\Firm;
+use Keros\Services\Core\AddressService;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Error\KerosException;
 use Monolog\Logger;
@@ -15,6 +17,7 @@ use Psr\Container\ContainerInterface;
 
 class FirmService
 {
+
     /**
      * @var EntityManager
      */
@@ -28,6 +31,8 @@ class FirmService
      */
     private $repository;
 
+
+
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get('logger');
@@ -35,12 +40,11 @@ class FirmService
         $this->repository = $this->entityManager->getRepository(Firm::class);
     }
 
-    public function create(Firm $firm, int $addressId,int $typeId)
+    public function create(Firm $firm,int $typeId, Address $address)
     {
         $this->entityManager->beginTransaction();
         try {
-            //$address = $this->entityManager->getReference('Keros\Entities\Core\Address', $addressId);
-            $address=new AdresseService($container);
+
             $type = $this->entityManager->getReference('Keros\Entities\Ua\FirmType', $typeId);
             $firm->setAddress($address);
             $firm->setType($type);
