@@ -88,7 +88,7 @@ class KerosApp
                     $this->get("", FirmController::class . ':getPageFirms');
                     $this->get("/{id:[0-9]+}", FirmController::class . ':getFirm');
                     $this->post("", FirmController::class . ':createFirm');
-                    $this->put("", FirmController::class . ':updateFirm');
+                    $this->put("/{id:[0-9]+}", FirmController::class . ':updateFirm');
                 });
             });
 

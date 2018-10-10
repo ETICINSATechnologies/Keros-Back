@@ -67,7 +67,7 @@ class Address implements JsonSerializable, Searchable
             'line2' => $this->getLine2(),
             'postalCode' => $this->getPostalCode(),
             'city' => $this->getCity(),
-            'country' => $this->getCountry()
+            'countryId' => ($this->getCountry())->getId()
         ];
     }
 

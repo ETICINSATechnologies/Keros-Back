@@ -33,7 +33,9 @@ class FirmController
     {
         $this->logger = $container->get('logger');
         $this->addressService=$container->get(AddressService::class);
-        $this->firmService = new FirmService($container);
+
+
+        $this->firmService = $container->get(FirmService::class);
     }
     /**
      * @param Request $request
@@ -60,7 +62,7 @@ class FirmController
     {
         $this->logger->debug("Creating firm from " . $request->getServerParams()["REMOTE_ADDR"]);
         $body = $request->getParsedBody();
-        $siret = Validator::name($body["siret"]);
+        $siret = Validator::int($body["siret"]);
         $line1= Validator::name(($body["address"])["line1"]);
         $line2=Validator::name(($body["address"])["line2"]);
         $postalCode=Validator::int(($body["address"])["postalCode"]);
@@ -69,11 +71,11 @@ class FirmController
         $name = Validator::name($body["name"]);
         $address=new Address($line1,$line2,$postalCode,$city);
 
-        $this->addressService.create($address,$countryId);
+        $this->addressService->create($address,$countryId);
 
         $typeId = Validator::float($body["typeId"]);
 
-        $firm = new Firm($siret, $name);
+        $firm = new Firm($name,$siret);
         $this->firmService->create($firm,$typeId, $address);
 
         return $response->withJson($firm, 201);
@@ -81,14 +83,25 @@ class FirmController
     public function updateFirm(Request $request, Response $response, array $args)
     {
         $this->logger->debug("updating firm from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $firmId = Validator::id($args['id']);
+
         $body = $request->getParsedBody();
         $siret = Validator::name($body["siret"]);
+        $line1= Validator::name(($body["address"])["line1"]);
+        $line2=Validator::name(($body["address"])["line2"]);
+        $postalCode=Validator::int(($body["address"])["postalCode"]);
+        $city=Validator::name(($body["address"])["city"]);
+        $countryId=Validator::name(($body["address"])["countryId"]);
         $name = Validator::name($body["name"]);
-        $addressId= Validator::name($body["addressId"]);
+
+
+        $address=new Address($line1,$line2,$postalCode,$city);
+        $this->addressService->create($address,$countryId);
+
         $typeId = Validator::float($body["typeId"]);
 
-        $firm = new Firm($siret, $name);
-        $this->firmService->update($firm, $addressId,$typeId);
+
+        $firm=$this->firmService->update($firmId,$typeId, $address,$siret,$name);
 
         return $response->withJson($firm, 201);
     }

@@ -48,4 +48,5 @@ class FirmIntegrationTest extends AppTestCase
         $response = $this->app->run(true);
         $this->assertSame($response->getStatusCode(), 400);
     }
+
 }
