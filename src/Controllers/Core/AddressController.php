@@ -45,6 +45,7 @@ class AddressController
         }
         return $response->withJson($address, 200);
     }
+
     /**
      * @return Response containing the created address
      * @throws KerosException if the validation fails or the address cannot be created
@@ -63,6 +64,7 @@ class AddressController
         $this->addressService->create($address, $countryId);
         return $response->withJson($address, 201);
     }
+
     /**
      * @return Response containing a page of addresss
      * @throws KerosException if an unknown error occurs

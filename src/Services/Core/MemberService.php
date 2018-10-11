@@ -7,13 +7,13 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Exception;
-use Keros\Entities\Core\Address;
+use Keros\Entities\Core\Member;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Error\KerosException;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 
-class AddressService
+class MemberService
 {
     /**
      * @var EntityManager
@@ -32,32 +32,38 @@ class AddressService
     {
         $this->logger = $container->get('logger');
         $this->entityManager = $container->get('entityManager');
-        $this->repository = $this->entityManager->getRepository(Address::class);
+        $this->repository = $this->entityManager->getRepository(Member::class);
     }
 
-    public function create(Address $address, int $countryId)
+    public function create(Member $member, int $genderId, int $departmentId, int $addressId)
     {
         $this->entityManager->beginTransaction();
         try {
-            $country = $this->entityManager->getReference('Keros\Entities\Core\Country', $countryId);
-            $address->setCountry($country);
-            $this->entityManager->persist($address);
+            $gender = $this->entityManager->getReference('Keros\Entities\Core\Gender', $genderId);
+            $address = $this->entityManager->getReference('Keros\Entities\Core\Address', $addressId);
+            $department = $this->entityManager->getReference('Keros\Entities\Core\Department', $departmentId);
+
+            $member->setGender($gender);
+            $member->setAddress($address);
+            $member->setDepartment($department);
+
+            $this->entityManager->persist($member);
             $this->entityManager->flush();
             $this->entityManager->commit();
         } catch (Exception $e) {
-            $msg = "Failed to create new address : " . $e->getMessage();
+            $msg = "Failed to create new member : " . $e->getMessage();
             $this->logger->error($msg);
             throw new KerosException($msg, 500);
         }
     }
 
-    public function getOne(int $id): ?Address
+    public function getOne(int $id): ?Member
     {
         try {
-            $address = $this->repository->find($id);
-            return $address;
+            $member = $this->repository->find($id);
+            return $member;
         } catch (Exception $e) {
-            $msg = "Error finding address with ID $id : " . $e->getMessage();
+            $msg = "Error finding member with ID $id : " . $e->getMessage();
             $this->logger->error($msg);
             throw new KerosException($msg, 500);
         }
@@ -67,10 +73,10 @@ class AddressService
     {
         $criteria = $requestParameters->getCriteria();
         try {
-            $addresses = $this->repository->matching($criteria)->getValues();
-            return $addresses;
+            $members = $this->repository->matching($criteria)->getValues();
+            return $members;
         } catch (Exception $e) {
-            $msg = "Error finding page of addresss : " . $e->getMessage();
+            $msg = "Error finding page of members : " . $e->getMessage();
             $this->logger->error($msg);
             throw new KerosException($msg, 500);
         }

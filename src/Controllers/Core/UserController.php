@@ -1,5 +1,6 @@
 <?php
 namespace Keros\Controllers\Core;
+
 use Keros\Entities\core\User;
 use Keros\Entities\Core\Page;
 use Keros\Entities\Core\RequestParameters;
@@ -10,6 +11,7 @@ use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+
 class UserController
 {
     /**
