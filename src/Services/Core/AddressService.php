@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Exception;
 use Keros\Entities\Core\Address;
+use Keros\Entities\Core\Country;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Error\KerosException;
 use Monolog\Logger;
