@@ -8,6 +8,7 @@ use Keros\Controllers\Core\AddressController;
 use Keros\Controllers\Core\CountryController;
 use Keros\Controllers\Core\DepartmentController;
 use Keros\Controllers\Core\GenderController;
+use Keros\Controllers\Core\MemberController;
 use Keros\Controllers\Core\PoleController;
 use Keros\Controllers\Core\PositionController;
 use Keros\Controllers\Core\UserController;
@@ -122,6 +123,12 @@ class KerosApp
                 $this->group('/position', function() {
                     $this->get("", PositionController::class . ':getAllPositions');
                     $this->get("/{id:[0-9]+}", PositionController::class . ':getPosition');
+                });
+
+                $this->group('/member', function() {
+                    $this->get("", MemberController::class . ':getPageAddresses');
+                    $this->get('/{id:[0-9]+}', MemberController::class . ':getAddress');
+                    $this->post("", MemberController::class . ':createMember');
                 });
             });
         });

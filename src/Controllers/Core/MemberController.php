@@ -31,7 +31,7 @@ class MemberController
     {
         $this->logger = $container->get('logger');
         $this->memberService = $container->get(MemberService::class);
-        $this->userService = $container->get(UserService::class);
+        /*$this->userService = $container->get(UserService::class);*/
     }
 
     /**
@@ -62,19 +62,12 @@ class MemberController
         $createdAt = Validator::date($body["createdAt"]);
         $disabled = Validator::bool($body["disabled"]);
         $expiresAt = Validator::date($body["expiresAt"]);
+        $address = $body["address"];
 
-        $line1 = Validator::name($body["line1"]);
-        $line2 = Validator::name($body["line2"]);
-        $postalCode = Validator::float($body["postalCode"]);
-        $city = Validator::name($body["city"]);
-        $countryId = Validator::float($body["countryId"]);
-        $address = new Address($line1, $line2, $postalCode, $city);
-        $this->addressService->create($address, $countryId);
+        /*$member = new User($username, $password, null, $createdAt, $disabled, $expiresAt);
+        $this->memberService->create($member);*/
 
-        $member = new User($username, $password, null, $createdAt, $disabled, $expiresAt);
-        $this->memberService->create($member);
-
-        return $response->withJson($member, 201);
+        return $response->withJson($address, 201);
     }
 
     /**

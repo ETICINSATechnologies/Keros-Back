@@ -7,6 +7,7 @@ use Keros\Services\Core\AddressService;
 use Keros\Services\Core\CountryService;
 use Keros\Services\Core\DepartmentService;
 use Keros\Services\Core\GenderService;
+use Keros\Services\Core\MemberService;
 use Keros\Services\Core\PoleService;
 use Keros\Services\Core\PositionService;
 use Keros\Services\Core\UserService;
@@ -38,6 +39,9 @@ class ServiceRegistrar
         };
         $container[UserService::class] = function ($container) {
             return new UserService($container);
+        };
+        $container[MemberService::class] = function ($container) {
+            return new MemberService($container);
         };
 
         //UA
