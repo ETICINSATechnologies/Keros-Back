@@ -62,9 +62,9 @@ class FirmController
     {
         $this->logger->debug("Creating firm from " . $request->getServerParams()["REMOTE_ADDR"]);
         $body = $request->getParsedBody();
-        $siret = Validator::int($body["siret"]);
+        $siret = $body["siret"];
         $line1= Validator::name(($body["address"])["line1"]);
-        $line2=Validator::name(($body["address"])["line2"]);
+        $line2=($body["address"])["line2"];
         $postalCode=Validator::int(($body["address"])["postalCode"]);
         $city=Validator::name(($body["address"])["city"]);
         $countryId=Validator::name(($body["address"])["countryId"]);
@@ -80,15 +80,19 @@ class FirmController
 
         return $response->withJson($firm, 201);
     }
+    /**
+     * @return Response containing the updated firm
+     * @throws KerosException if the validation fails or the firm cannot be update
+     */
     public function updateFirm(Request $request, Response $response, array $args)
     {
         $this->logger->debug("updating firm from " . $request->getServerParams()["REMOTE_ADDR"]);
         $firmId = Validator::id($args['id']);
 
         $body = $request->getParsedBody();
-        $siret = Validator::name($body["siret"]);
+        $siret = $body["siret"];
         $line1= Validator::name(($body["address"])["line1"]);
-        $line2=Validator::name(($body["address"])["line2"]);
+        $line2=($body["address"])["line2"];
         $postalCode=Validator::int(($body["address"])["postalCode"]);
         $city=Validator::name(($body["address"])["city"]);
         $countryId=Validator::name(($body["address"])["countryId"]);
@@ -98,7 +102,7 @@ class FirmController
         $address=new Address($line1,$line2,$postalCode,$city);
         $this->addressService->create($address,$countryId);
 
-        $typeId = Validator::float($body["typeId"]);
+        $typeId = $body["typeId"];
 
 
         $firm=$this->firmService->update($firmId,$typeId, $address,$siret,$name);
