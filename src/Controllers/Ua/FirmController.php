@@ -107,7 +107,7 @@ class FirmController
 
         $firm=$this->firmService->update($firmId,$typeId, $address,$siret,$name);
 
-        return $response->withJson($firm, 201);
+        return $response->withJson($firm, 200);
     }
     /**
      * @return Response containing a page of firms
