@@ -4,25 +4,26 @@
 namespace Keros;
 
 
-use Keros\Services\Core\AddressService;
-use Keros\Services\ServiceRegistrar;
-use Keros\Services\Ua\FirmTypeService;
-use Psr\Container\ContainerInterface;
-use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface as Request;
-use Keros\Entities\Auth\LoginResponse;
-use Keros\Tools\ConfigLoader;
 use Keros\Controllers\Core\AddressController;
+use Keros\Controllers\Core\CountryController;
+use Keros\Controllers\Core\DepartmentController;
 use Keros\Controllers\Core\GenderController;
 use Keros\Controllers\Core\PoleController;
 use Keros\Controllers\Core\PositionController;
+use Keros\Controllers\Core\UserController;
 use Keros\Controllers\Ua\FirmTypeController;
 use Keros\Controllers\Ua\FirmController;
 use Keros\Controllers\Core\DepartmentController;
 use Keros\Controllers\Core\CountryController;
+use Keros\Entities\Auth\LoginResponse;
 use Keros\Error\ErrorHandler;
+use Keros\Services\ServiceRegistrar;
+use Keros\Tools\ConfigLoader;
 use Keros\Tools\KerosEntityManager;
 use Keros\Tools\Logger;
+use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Class KerosApp - Main class ran by index.php. Used to configure
@@ -108,6 +109,13 @@ class KerosApp
                     $this->get("", CountryController::class . ':getAllCountries');
                     $this->get("/{id:[0-9]+}", CountryController::class . ':getCountry');
                 });
+
+                $this->group('/user', function() {
+                    $this->get("", UserController::class . ':getPageUsers');
+                    $this->get('/{id:[0-9]+}', UserController::class . ':getUser');
+                    $this->post("", UserController::class . ':createUser');
+                });
+
 
                 $this->group('/pole', function() {
                     $this->get("", PoleController::class . ':getAllPoles');

@@ -9,6 +9,7 @@ use Keros\Services\Core\DepartmentService;
 use Keros\Services\Core\GenderService;
 use Keros\Services\Core\PoleService;
 use Keros\Services\Core\PositionService;
+use Keros\Services\Core\UserService;
 use Keros\Services\Ua\FirmTypeService;
 use Keros\Services\Ua\FirmService;
 use Psr\Container\ContainerInterface;
@@ -35,6 +36,9 @@ class ServiceRegistrar
         };
         $container[PositionService::class] = function ($container) {
             return new PositionService($container);
+        };
+        $container[UserService::class] = function ($container) {
+            return new UserService($container);
         };
 
         //UA
