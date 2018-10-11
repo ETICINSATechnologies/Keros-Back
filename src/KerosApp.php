@@ -12,6 +12,9 @@ use Keros\Controllers\Core\PoleController;
 use Keros\Controllers\Core\PositionController;
 use Keros\Controllers\Core\UserController;
 use Keros\Controllers\Ua\FirmTypeController;
+use Keros\Controllers\Ua\FirmController;
+use Keros\Controllers\Core\DepartmentController;
+use Keros\Controllers\Core\CountryController;
 use Keros\Entities\Auth\LoginResponse;
 use Keros\Error\ErrorHandler;
 use Keros\Services\ServiceRegistrar;
@@ -82,6 +85,12 @@ class KerosApp
                     $this->get("", FirmTypeController::class . ':getAllFirmType');
                     $this->get("/{id:[0-9]+}", FirmTypeController::class . ':getFirmType');
                 });
+                $this->group('/firm', function() {
+                    $this->get("", FirmController::class . ':getPageFirms');
+                    $this->get("/{id:[0-9]+}", FirmController::class . ':getFirm');
+                    $this->post("", FirmController::class . ':createFirm');
+                    $this->put("/{id:[0-9]+}", FirmController::class . ':updateFirm');
+                });
             });
 
             $this->group('/core', function () {
@@ -117,6 +126,7 @@ class KerosApp
                     $this->get("", AddressController::class . ':getPageAddresses');
                     $this->get('/{id:[0-9]+}', AddressController::class . ':getAddress');
                     $this->post("", AddressController::class . ':createAddress');
+                    $this->put("", AddressController::class . ':updateAddress');
                 });
 
                 $this->group('/position', function() {
