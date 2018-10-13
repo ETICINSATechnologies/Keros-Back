@@ -53,15 +53,29 @@ class UserController
     {
         $this->logger->debug("Creating user from " . $request->getServerParams()["REMOTE_ADDR"]);
         $body = $request->getParsedBody();
-        $username = Validator::name($body["username"]);
-        $password = Validator::password($body["password"]);
-        $createdAt = Validator::date($body["createdAt"]);
-        $disabled = Validator::bool($body["disabled"]);
-        $expiresAt = Validator::date($body["expiresAt"]);
-        $user = new User($username, $password, null, $createdAt, $disabled, $expiresAt);
-        $this->userService->create($user);
+        $user = $this->SMCreateUser($body);
 
         return $response->withJson($user, 201);
+    }
+
+    /**
+     * @param $body
+     * @return User
+     * @throws KerosException
+     */
+    public function SMCreateUser($body)
+    {
+        $username = Validator::name($body["username"]);
+        $password = Validator::password($body["password"]);
+        $createdAt = Validator::optionalDate($body["createdAt"]);
+        $disabled = Validator::optionalBool($body["disabled"]);
+        $expiresAt = Validator::optionalDate($body["expiresAt"]);
+
+        $user = new User($username, $password, null, $createdAt, $disabled, $expiresAt);
+
+        $this->userService->create($user);
+
+        return $user;
     }
 
     /**

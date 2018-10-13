@@ -35,17 +35,19 @@ class MemberService
         $this->repository = $this->entityManager->getRepository(Member::class);
     }
 
-    public function create(Member $member, int $genderId, int $departmentId, int $addressId)
+    public function create(Member $member, int $userId, int $genderId, int $departmentId, $addressId)
     {
         $this->entityManager->beginTransaction();
         try {
+            $user = $this->entityManager->getReference('Keros\Entities\Core\User', $userId);
             $gender = $this->entityManager->getReference('Keros\Entities\Core\Gender', $genderId);
-            $address = $this->entityManager->getReference('Keros\Entities\Core\Address', $addressId);
             $department = $this->entityManager->getReference('Keros\Entities\Core\Department', $departmentId);
+            $address = $this->entityManager->getReference('Keros\Entities\Core\Address', $addressId);
 
+            $member->setUser($user);
             $member->setGender($gender);
-            $member->setAddress($address);
             $member->setDepartment($department);
+            $member->setAddress($address);
 
             $this->entityManager->persist($member);
             $this->entityManager->flush();

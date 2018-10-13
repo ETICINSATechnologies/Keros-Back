@@ -64,6 +64,14 @@ class Validator
         return $name;
     }
 
+    public static function optionalName(String $name): string
+    {
+        if ($name == null)
+            return "";
+
+        return $name;
+    }
+
     /**
      * @param float $float the float to validate
      * @return float the valid float
@@ -98,6 +106,19 @@ class Validator
     }
 
     /**
+     * @param $bool
+     * @return bool|null
+     * @throws KerosException
+     */
+    public static function optionalBool($bool)
+    {
+        if ($bool == null)
+            return 0;
+
+        return self::bool($bool);
+    }
+
+    /**
      * @param string $password
      * @return string
      * @throws KerosException
@@ -118,22 +139,70 @@ class Validator
      */
     public static function date(string $date): DateTime
     {
-        // check if the string is of type: 'yyyy-dd-mm hh:mm:ss'
-        if (preg_match("/^(\d{4})-(\d{2})-(\d{2}) \d\d:\d\d:\d\d/", $date, $matches))
+        // check if the string is of type: 'yyyy-mm-dd'
+        if (preg_match("/^(\d{4})-(\d{2})-(\d{2})/", $date, $matches))
         {
             // <checkdate> parameters are in sequence the day, the month and the year:
             // - $matches[0]: the entire string
             // - $matches[1]: the year
             // - $matches[2]: the day
             // - $matches[3]: the month
-            if (sizeof($matches) > 3 && checkdate($matches[2], $matches[3], $matches[1]))
+            if (sizeof($matches) > 3 && checkdate($matches[3], $matches[2], $matches[1]))
             {
-                return DateTime::createFromFormat("Y-m-d H:i:s", $date);
+                // check if the time is precised (with the format hh:mm:ss)
+                if (preg_match("/\d{2}:\d{2}:\d{2}$/", $date))
+                    return DateTime::createFromFormat("Y-m-d H:i:s", $date);
+                else
+                    return DateTime::createFromFormat("Y-m-d", $date);
             }
 
             throw new KerosException("The provided date " . $date . " is not valid", 400);
         }
 
         throw new KerosException("The date " . $date . " is not a date", 400);
+    }
+
+    /**
+     * @param string $date
+     * @return DateTime
+     * @throws KerosException
+     */
+    public static function optionalDate($date)
+    {
+        return $date == null || strlen($date) == 0 ? new DateTime("now") : self::date($date);
+    }
+
+    /**
+     * @param string $telephone
+     * @return null|string
+     * @throws KerosException
+     */
+    public static function optionalPhone(string $telephone): String
+    {
+        if ($telephone == null || strlen($telephone) == 0)
+            return null;
+
+        if (!preg_match("/00\d{10}/", $telephone))
+            throw new KerosException("The provided phone number is invalid", 400);
+
+        return $telephone;
+    }
+
+    /**
+     * @param $schoolYear
+     * @return mixed
+     * @throws KerosException
+     */
+    public static function schoolYear(int $schoolYear): int
+    {
+        //$schoolYear = intval($schoolYear);
+
+        if ($schoolYear == null)
+            throw new KerosException("The provided schoolYear cannot be null", 400);
+
+        if (8 < $schoolYear && $schoolYear < 1)
+            throw new KerosException("The provided schoolYear must be between 1 and 8", 400);
+
+        return $schoolYear;
     }
 }

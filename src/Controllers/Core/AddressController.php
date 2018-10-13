@@ -53,16 +53,9 @@ class AddressController
     public function createAddress(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Creating address from " . $request->getServerParams()["REMOTE_ADDR"]);
-        $body = $request->getParsedBody();
-        //$address = $this->SMCreateAddress($request->getParsedBody());
-        $line1 = Validator::name($body["line1"]);
-        $line2 = Validator::name($body["line2"]);
-        $postalCode = Validator::float($body["postalCode"]);
-        $city = Validator::name($body["city"]);
-        $countryId = Validator::float($body["countryId"]);
+        $body =$request->getParsedBody();
+        $address = $this->SMCreateAddress($body);
 
-        $address = new Address($line1, $line2, $postalCode, $city);
-        $this->addressService->create($address, $countryId);
         return $response->withJson($address, 201);
     }
 
@@ -74,12 +67,13 @@ class AddressController
     public function SMCreateAddress($body)
     {
         $line1 = Validator::name($body["line1"]);
-        $line2 = Validator::name($body["line2"]);
+        $line2 = Validator::optionalName($body["line2"]);
         $postalCode = Validator::float($body["postalCode"]);
         $city = Validator::name($body["city"]);
-        $countryId = Validator::float($body["countryId"]);
+        $countryId = Validator::id($body["countryId"]);
 
         $address = new Address($line1, $line2, $postalCode, $city);
+
         $this->addressService->create($address, $countryId);
 
         return $address;

@@ -19,7 +19,7 @@ class Member implements JsonSerializable
 
     /**
      * @OneToOne(targetEntity="User")
-     * @JoinColumn(name="UserId", referencedColumnName="id")
+     * @JoinColumn(name="id", referencedColumnName="id")
      **/
     protected $user;
 
@@ -59,12 +59,30 @@ class Member implements JsonSerializable
      **/
     protected $department;
 
+    /**
+     * Member constructor.
+     * @param $firstName
+     * @param $lastName
+     * @param $birthDate
+     * @param $telephone
+     * @param $email
+     * @param $schoolYear
+     */
+    public function __construct($firstName, $lastName, $birthDate, $telephone, $email, $schoolYear)
+    {
+        $this->firstName = $firstName;
+        $this->lastName = $lastName;
+        $this->birthDate = $birthDate;
+        $this->telephone = $telephone;
+        $this->email = $email;
+        $this->schoolYear = $schoolYear;
+    }
 
     public function jsonSerialize()
     {
         return [
             'id' => $this->getId(),
-            'username' => $this->getUser()->getUsername(),
+            'username' => $this->getUser(),
             'firstName' => $this->getFirstName(),
             'lastName' => $this->getLastName(),
             'genderId' => $this->getGender()->getId(),
@@ -73,7 +91,7 @@ class Member implements JsonSerializable
             'departmentId' => $this->getDepartment()->getId(),
             'schoolYear' => $this->getSchoolYear(),
             'telephone' => $this->getTelephone(),
-            'addressId' => $this->getAddress()->getId(),
+            'addressId' => $this->getAddress(),
             'positionId' => []
         ];
     }

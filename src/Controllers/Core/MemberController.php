@@ -8,6 +8,7 @@ use Keros\Entities\Core\Address;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Error\KerosException;
 use Keros\Services\Core\MemberService;
+use Keros\Controllers\Core\AddressController;
 use Keros\Tools\Validator;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
@@ -31,7 +32,8 @@ class MemberController
     {
         $this->logger = $container->get('logger');
         $this->memberService = $container->get(MemberService::class);
-        /*$this->userService = $container->get(UserService::class);*/
+        $this->adressController = new AddressController($container);
+        $this->userController = new UserController($container);
     }
 
     /**
@@ -57,17 +59,43 @@ class MemberController
     {
         $this->logger->debug("Creating member from " . $request->getServerParams()["REMOTE_ADDR"]);
         $body = $request->getParsedBody();
-        $username = Validator::name($body["username"]);
-        $password = Validator::password($body["password"]);
-        $createdAt = Validator::date($body["createdAt"]);
-        $disabled = Validator::bool($body["disabled"]);
-        $expiresAt = Validator::date($body["expiresAt"]);
-        $address = $body["address"];
 
-        /*$member = new User($username, $password, null, $createdAt, $disabled, $expiresAt);
-        $this->memberService->create($member);*/
+        $member = $this->SMCreateMember($body);
 
-        return $response->withJson($address, 201);
+
+        $member->setUser($user);
+        $member->setAddress($address);
+
+
+
+        return $response->withJson($member, 201);
+    }
+
+    /**
+     * @param $body
+     * @return Member
+     * @throws KerosException
+     */
+    public function SMCreateMember($body)
+    {
+        $firstName = Validator::name($body["firstName"]);
+        $lastName = Validator::name($body["lastName"]);
+        $email = Validator::email($body["email"]);
+        $telephone = Validator::optionalPhone($body["telephone"]);
+        $birthday = Validator::date($body["birthday"]);
+        $schoolYear = Validator::schoolYear($body["schoolYear"]);
+
+        $genderId = Validator::id($body["genderId"]);
+        $departmentId = Validator::id($body["departmentId"]);
+        $addressId = $this->adressController->SMCreateAddress($body["address"])->getId();
+        $userId = $this->userController->SMcreateUser($body)->getId();
+        $this->logger->info($addressId);
+
+        $member = new Member($firstName, $lastName, $birthday, $telephone, $email, $schoolYear);
+
+        $this->memberService->create($member, $userId, $genderId, $departmentId, $addressId);
+
+        return $member;
     }
 
     /**

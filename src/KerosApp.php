@@ -61,7 +61,7 @@ class KerosApp
      */
     public function __construct()
     {
-        $app = new \Slim\App(['settings' => ConfigLoader::getConfig()]);
+        $app = new \Slim\App(['settings' => ['displayErrorDetails' => true]]);
 
         $this->prepareContainer($app->getContainer());
 
