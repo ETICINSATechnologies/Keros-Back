@@ -128,7 +128,7 @@ CREATE TABLE `ua_firm` (
   `siret`     varchar(20) UNIQUE,
   `name`      varchar(64) NOT NULL UNIQUE,
   `addressId` int(11)     NOT NULL UNIQUE,
-  `typeId`    int(11)     NOT NULL UNIQUE,
+  `typeId`    int(11)     NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `ua_firm_address_addressId_fk` FOREIGN KEY (`addressId`) REFERENCES `core_address` (`id`),
   CONSTRAINT `ua_firm_type_typeId_fk` FOREIGN KEY (`typeId`) REFERENCES `ua_firm_type` (`id`)

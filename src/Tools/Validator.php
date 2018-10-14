@@ -91,6 +91,20 @@ class Validator
     }
 
     /**
+     * @param int $int the int to validate
+     * @return int the valid float
+     * @throws KerosException if the int is invalid
+     */
+    public static function int(int $int): int{
+        if($int == null) {
+            throw new KerosException("The provided int cannot be null", 400);
+        }
+        if (!is_int($int)){
+            throw new KerosException("The int provided is not actually a int", 400);
+        }
+        return $int;
+
+    /**
      * @param bool $bool $float the float to validate
      * @return bool the valid bool
      * @throws KerosException if the float is invalid
