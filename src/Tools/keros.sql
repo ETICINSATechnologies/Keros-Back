@@ -50,7 +50,7 @@ CREATE TABLE `core_user` (
   `lastConnectedAt` DATETIME,
   `createdAt`       DATETIME              DEFAULT NOW(),
   `disabled`        BOOLEAN      NOT NULL DEFAULT FALSE,
-  `expiresAt`       DATETIME     NOT NULL,
+  `expiresAt`       DATETIME,
   PRIMARY KEY (`id`),
   KEY `core_user_username_key` (`username`)
 )
