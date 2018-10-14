@@ -52,53 +52,6 @@ class MemberController
     }
 
     /**
-     * @return Response containing the created member
-     * @throws KerosException if the validation fails or the member cannot be created
-     */
-    public function createMember(Request $request, Response $response, array $args)
-    {
-        $this->logger->debug("Creating member from " . $request->getServerParams()["REMOTE_ADDR"]);
-        $body = $request->getParsedBody();
-
-        $member = $this->SMCreateMember($body);
-
-
-        $member->setUser($user);
-        $member->setAddress($address);
-
-
-
-        return $response->withJson($member, 201);
-    }
-
-    /**
-     * @param $body
-     * @return Member
-     * @throws KerosException
-     */
-    public function SMCreateMember($body)
-    {
-        $firstName = Validator::name($body["firstName"]);
-        $lastName = Validator::name($body["lastName"]);
-        $email = Validator::email($body["email"]);
-        $telephone = Validator::optionalPhone($body["telephone"]);
-        $birthday = Validator::date($body["birthday"]);
-        $schoolYear = Validator::schoolYear($body["schoolYear"]);
-
-        $genderId = Validator::id($body["genderId"]);
-        $departmentId = Validator::id($body["departmentId"]);
-        $addressId = $this->adressController->SMCreateAddress($body["address"])->getId();
-        $userId = $this->userController->SMcreateUser($body)->getId();
-        $this->logger->info($addressId);
-
-        $member = new Member($firstName, $lastName, $birthday, $telephone, $email, $schoolYear);
-
-        $this->memberService->create($member, $userId, $genderId, $departmentId, $addressId);
-
-        return $member;
-    }
-
-    /**
      * @return Response containing a page of members
      * @throws KerosException if an unknown error occurs
      */
@@ -111,5 +64,49 @@ class MemberController
         $totalCount = $this->memberService->getCount($params);
         $page = new Page($members, $params, $totalCount);
         return $response->withJson($page, 200);
+    }
+
+    /**
+     * @return Response containing the created member
+     * @throws KerosException if the validation fails or the member cannot be created
+     */
+    public function createMember(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Creating member from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $body = $request->getParsedBody();
+
+        $addressId = $this->adressController->SMCreateAddress($body["address"])->getId();
+        $userId = $this->userController->SMcreateUser($body)->getId();
+        $member = $this->SMCreateMember($body, $addressId, $userId);
+
+        return $response->withJson($member, 201);
+    }
+
+    /**
+     * @param $body
+     * @param $addressId
+     * @param $userId
+     * @return Member
+     * @throws KerosException
+     */
+    public function SMCreateMember($body, $addressId, $userId)
+    {
+        $firstName = Validator::name($body["firstName"]);
+        $lastName = Validator::name($body["lastName"]);
+        $email = Validator::email($body["email"]);
+        $telephone = Validator::optionalPhone($body["telephone"]);
+        $birthday = Validator::date($body["birthday"]);
+        $schoolYear = Validator::schoolYear($body["schoolYear"]);
+
+        $genderId = Validator::id($body["genderId"]);
+        $departmentId = Validator::id($body["departmentId"]);
+
+        $this->logger->info($addressId);
+
+        $member = new Member($firstName, $lastName, $birthday, $telephone, $email, $schoolYear);
+
+        $this->memberService->create($member, $userId, $genderId, $departmentId, $addressId);
+
+        return $member;
     }
 }

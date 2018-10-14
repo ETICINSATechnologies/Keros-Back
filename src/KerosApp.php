@@ -126,8 +126,8 @@ class KerosApp
                 });
 
                 $this->group('/member', function() {
-                    $this->get("", MemberController::class . ':getPageAddresses');
-                    $this->get('/{id:[0-9]+}', MemberController::class . ':getAddress');
+                    $this->get("", MemberController::class . ':getPageMembers');
+                    $this->get('/{id:[0-9]+}', MemberController::class . ':getMember');
                     $this->post("", MemberController::class . ':createMember');
                 });
             });

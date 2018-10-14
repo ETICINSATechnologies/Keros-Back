@@ -81,19 +81,23 @@ class Member implements JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'id' => $this->getId(),
-            'username' => $this->getUser(),
+            'id' => $this->getUser()->getId(),
+            'username' => $this->getUser()->getUsername(),
             'firstName' => $this->getFirstName(),
             'lastName' => $this->getLastName(),
             'genderId' => $this->getGender()->getId(),
             'email' => $this->getEmail(),
-            'birthday' => $this->getBirthDate(),
+            'birthday' => $this->getBirthDate()->format('Y-m-d'),
             'departmentId' => $this->getDepartment()->getId(),
             'schoolYear' => $this->getSchoolYear(),
             'telephone' => $this->getTelephone(),
-            'addressId' => $this->getAddress(),
+            'addressId' => $this->getAddress()->getId(),
             'positionId' => []
         ];
+    }
+
+    public static function getSearchFields(): array {
+        return ['username'];
     }
 
     // Getters and setters

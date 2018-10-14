@@ -1,6 +1,7 @@
 <?php
 namespace Keros\Controllers\Core;
 
+use DateTime;
 use Keros\Entities\core\User;
 use Keros\Entities\Core\Page;
 use Keros\Entities\Core\RequestParameters;
@@ -46,6 +47,21 @@ class UserController
     }
 
     /**
+     * @return Response containing a page of users
+     * @throws KerosException if an unknown error occurs
+     */
+    public function getPageUsers(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Get page users from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $queryParams = $request->getQueryParams();
+        $params = new RequestParameters($queryParams, User::getSearchFields());
+        $users = $this->userService->getMany($params);
+        $totalCount = $this->userService->getCount($params);
+        $page = new Page($users, $params, $totalCount);
+        return $response->withJson($page, 200);
+    }
+
+    /**
      * @return Response containing the created user
      * @throws KerosException if the validation fails or the user cannot be created
      */
@@ -67,29 +83,14 @@ class UserController
     {
         $username = Validator::name($body["username"]);
         $password = Validator::password($body["password"]);
-        $createdAt = Validator::optionalDate($body["createdAt"]);
         $disabled = Validator::optionalBool($body["disabled"]);
-        $expiresAt = Validator::optionalDate($body["expiresAt"]);
+        $createdAt = new DateTime("now");
+        $expiresAt = new DateTime("now");
 
         $user = new User($username, $password, null, $createdAt, $disabled, $expiresAt);
 
         $this->userService->create($user);
 
         return $user;
-    }
-
-    /**
-     * @return Response containing a page of users
-     * @throws KerosException if an unknown error occurs
-     */
-    public function getPageUsers(Request $request, Response $response, array $args)
-    {
-        $this->logger->debug("Get page users from " . $request->getServerParams()["REMOTE_ADDR"]);
-        $queryParams = $request->getQueryParams();
-        $params = new RequestParameters($queryParams, User::getSearchFields());
-        $users = $this->userService->getMany($params);
-        $totalCount = $this->userService->getCount($params);
-        $page = new Page($users, $params, $totalCount);
-        return $response->withJson($page, 200);
     }
 }
