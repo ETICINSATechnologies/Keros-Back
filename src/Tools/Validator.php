@@ -66,9 +66,6 @@ class Validator
 
     public static function optionalName(String $name): string
     {
-        if ($name == null)
-            return "";
-
         return $name;
     }
 
