@@ -77,7 +77,7 @@ class MemberIntegrationTest extends AppTestCase
             "postalCode"=>69100,
             "countryId"=>1
         );
-        $positionIds=array(1,2);
+
         $post_body = array(
             "username" => "username",
             "firstName"=>"firstname",
@@ -87,11 +87,11 @@ class MemberIntegrationTest extends AppTestCase
             "birthday"=>"1975-12-01",
             "telephone"=>"0033675385495",
             "address"=>$address,
-            "positionIds" => $positionIds,
+
             "schoolYear"=>1,
             "departmentId"=>1,
-            "password"=>"password"
-
+            "password"=>"password",
+            "disabled"=>null
         );
         $env = Environment::mock([
             'REQUEST_METHOD' => 'POST',
@@ -107,7 +107,7 @@ class MemberIntegrationTest extends AppTestCase
 
         $body = json_decode($response->getBody());
         $this->assertSame("username", $body->username);
-        $this->assertSame("lastname", $body->lastname);
+        $this->assertSame("lastname", $body->lastName);
     }
     public function testPutMemberShouldReturn200()
     {
@@ -146,6 +146,6 @@ class MemberIntegrationTest extends AppTestCase
 
         $body = json_decode($response->getBody());
         $this->assertSame("username", $body->username);
-        $this->assertSame("lastname", $body->lastname);
+        $this->assertSame("lastname", $body->lastName);
     }
 }
