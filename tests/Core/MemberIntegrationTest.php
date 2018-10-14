@@ -21,16 +21,16 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame($response->getStatusCode(), 200);
 
         $body = json_decode($response->getBody());
-        $this->assertEquals(5, count($body->content));
+        $this->assertEquals(3, count($body->content));
         $this->assertNotNull(strlen($body->content[0]->id));
         $this->assertNotNull(strlen($body->content[0]->username));
-        $this->assertNotNull(strlen($body->content[0]->firstname));
-        $this->assertNotNull(strlen($body->content[0]->lastname));
+        $this->assertNotNull(strlen($body->content[0]->firstName));
+        $this->assertNotNull(strlen($body->content[0]->lastName));
         $this->assertNotNull(strlen($body->content[0]->genderId));
         $this->assertNotNull(strlen($body->content[0]->email));
         $this->assertNotNull(strlen($body->content[0]->birthday));
         $this->assertNotNull(strlen($body->content[0]->addressId));
-        $this->assertNotNull(strlen($body->content[0]->positionIds));
+
     }
 
     public function testGetMemberShouldReturn200()
@@ -47,13 +47,13 @@ class MemberIntegrationTest extends AppTestCase
 
         $body = json_decode($response->getBody());
         $this->assertSame($body->id, 1);
-        $this->assertSame($body->genderId, "1");
-        $this->assertSame($body->firstname, "Conor");
-        $this->assertSame($body->lastname, "breeze");
-        $this->assertSame($body->birthday, 1975-12-25);
+        $this->assertSame($body->genderId, 1);
+        $this->assertSame($body->firstName, "Conor");
+        $this->assertSame($body->lastName, "Breeze");
+        $this->assertSame($body->birthday, "1975-12-25");
         $this->assertSame($body->telephone, "+332541254");
         $this->assertSame($body->email, "fake.mail@fake.com");
-        $this->assertSame($body->adressId, "2");
+        $this->assertSame($body->addressId, 2);
     }
 
     public function testGetMemberShouldReturn400()
