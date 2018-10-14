@@ -86,4 +86,39 @@ class AddressService
         }
         return $count;
     }
+
+    /**
+     * @param $addressId
+     * @param $line1
+     * @param $line2
+     * @param $postalCode
+     * @param $city
+     * @param $countryId
+     * @return bool|\Doctrine\Common\Proxy\Proxy|null|object
+     * @throws KerosException
+     */
+    function update($addressId, $line1, $line2, $postalCode, $city, $countryId)
+    {
+        $this->entityManager->beginTransaction();
+        try {
+            $address = $this->entityManager->getReference('Keros\Entities\Core\Address', $addressId);
+            $country = $this->entityManager->getReference('Keros\Entities\Core\Country', $countryId);
+
+            $address->setLine1($line1);
+            $address->setLine2($line2);
+            $address->setCity($city);
+            $address->setPostalCode($postalCode);
+            $address->setCountry($country);
+
+            $this->entityManager->persist($address);
+            $this->entityManager->flush();
+            $this->entityManager->commit();
+
+            return $address;
+        } catch (Exception $e) {
+            $msg = "Failed to update address : " . $e->getMessage();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
+    }
 }

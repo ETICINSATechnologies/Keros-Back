@@ -129,6 +129,7 @@ class KerosApp
                     $this->get("", MemberController::class . ':getPageMembers');
                     $this->get('/{id:[0-9]+}', MemberController::class . ':getMember');
                     $this->post("", MemberController::class . ':createMember');
+                    $this->put("/{id:[0-9]+}", MemberController::class . ':updateMember');
                 });
             });
         });

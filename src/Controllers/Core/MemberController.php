@@ -1,4 +1,5 @@
 <?php
+
 namespace Keros\Controllers\Core;
 
 use Keros\Entities\core\Member;
@@ -32,7 +33,7 @@ class MemberController
     {
         $this->logger = $container->get('logger');
         $this->memberService = $container->get(MemberService::class);
-        $this->adressController = new AddressController($container);
+        $this->addressController = new AddressController($container);
         $this->userController = new UserController($container);
     }
 
@@ -45,7 +46,8 @@ class MemberController
         $this->logger->debug("Getting member by ID from " . $request->getServerParams()["REMOTE_ADDR"]);
         $id = Validator::id($args['id']);
         $member = $this->memberService->getOne($id);
-        if (!$member) {
+        if (!$member)
+        {
             throw new KerosException("The member could not be found", 400);
         }
         return $response->withJson($member, 200);
@@ -75,12 +77,30 @@ class MemberController
         $this->logger->debug("Creating member from " . $request->getServerParams()["REMOTE_ADDR"]);
         $body = $request->getParsedBody();
 
-        $addressId = $this->adressController->SMCreateAddress($body["address"])->getId();
+        $addressId = $this->addressController->SMCreateAddress($body["address"])->getId();
         $userId = $this->userController->SMcreateUser($body)->getId();
         $member = $this->SMCreateMember($body, $addressId, $userId);
 
         return $response->withJson($member, 201);
     }
+
+    /**
+     * @return Response containing the created member
+     * @throws KerosException if the validation fails or the member cannot be created
+     */
+    public function updateMember(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Creating member from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $body = $request->getParsedBody();
+
+        $member = $this->SMUpdateMember($body);
+        $this->addressController->SMUpdateAddress($member->getAddress()->getId(), $body["address"]);
+        $this->userController->SMUpdateUser($member->getId(), $body);
+
+        return $response->withJson($member, 201);
+    }
+
+    /* ================= SMA ================*/
 
     /**
      * @param $body
@@ -108,5 +128,27 @@ class MemberController
         $this->memberService->create($member, $userId, $genderId, $departmentId, $addressId);
 
         return $member;
+    }
+
+    /**
+     * @param $body
+     * @return bool|\Doctrine\Common\Proxy\Proxy|null|object
+     * @throws KerosException
+     */
+    private function SMUpdateMember($body)
+    {
+        $memberId = Validator::id($body["id"]);
+        $firstName = Validator::name($body["firstName"]);
+        $lastName = Validator::name($body["lastName"]);
+        $email = Validator::email($body["email"]);
+        $telephone = Validator::optionalPhone($body["telephone"]);
+        $birthday = Validator::date($body["birthday"]);
+        $schoolYear = Validator::schoolYear($body["schoolYear"]);
+
+        $genderId = Validator::id($body["genderId"]);
+        $departmentId = Validator::id($body["departmentId"]);
+
+        return $this->memberService->update(
+            $memberId, $genderId, $departmentId, $firstName, $lastName, $birthday, $telephone, $email, $schoolYear);
     }
 }

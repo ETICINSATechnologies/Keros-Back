@@ -60,6 +60,24 @@ class AddressController
     }
 
     /**
+     * @return Response containing a page of addresss
+     * @throws KerosException if an unknown error occurs
+     */
+    public function getPageAddresses(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Get page addresses from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $queryParams = $request->getQueryParams();
+        $params = new RequestParameters($queryParams, Address::getSearchFields());
+        $addresses = $this->addressService->getMany($params);
+        $totalCount = $this->addressService->getCount($params);
+        $page = new Page($addresses, $params, $totalCount);
+
+        return $response->withJson($page, 200);
+    }
+
+    /* ================= SMA ================*/
+
+    /**
      * @param $body
      * @return Address $address containing the created address
      * @throws KerosException if the validation fails or the address cannot be created
@@ -80,17 +98,19 @@ class AddressController
     }
 
     /**
-     * @return Response containing a page of addresss
-     * @throws KerosException if an unknown error occurs
+     * @param $addressId
+     * @param $body
+     * @return bool|\Doctrine\Common\Proxy\Proxy|null|object
+     * @throws KerosException
      */
-    public function getPageAddresses(Request $request, Response $response, array $args)
+    public function SMUpdateAddress($addressId, $body)
     {
-        $this->logger->debug("Get page addresses from " . $request->getServerParams()["REMOTE_ADDR"]);
-        $queryParams = $request->getQueryParams();
-        $params = new RequestParameters($queryParams, Address::getSearchFields());
-        $addresses = $this->addressService->getMany($params);
-        $totalCount = $this->addressService->getCount($params);
-        $page = new Page($addresses, $params, $totalCount);
-        return $response->withJson($page, 200);
+        $line1 = Validator::name($body["line1"]);
+        $line2 = Validator::optionalName($body["line2"]);
+        $postalCode = Validator::float($body["postalCode"]);
+        $city = Validator::name($body["city"]);
+        $countryId = Validator::id($body["countryId"]);
+
+        return $this->addressService->update($addressId, $line1, $line2, $postalCode, $city, $countryId);
     }
 }

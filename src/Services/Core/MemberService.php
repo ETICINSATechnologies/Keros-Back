@@ -35,6 +35,14 @@ class MemberService
         $this->repository = $this->entityManager->getRepository(Member::class);
     }
 
+    /**
+     * @param Member $member
+     * @param int $userId
+     * @param int $genderId
+     * @param int $departmentId
+     * @param $addressId
+     * @throws KerosException
+     */
     public function create(Member $member, int $userId, int $genderId, int $departmentId, $addressId)
     {
         $this->entityManager->beginTransaction();
@@ -59,6 +67,11 @@ class MemberService
         }
     }
 
+    /**
+     * @param int $id
+     * @return Member|null
+     * @throws KerosException
+     */
     public function getOne(int $id): ?Member
     {
         try {
@@ -71,6 +84,11 @@ class MemberService
         }
     }
 
+    /**
+     * @param RequestParameters $requestParameters
+     * @return array
+     * @throws KerosException
+     */
     public function getMany(RequestParameters $requestParameters): array
     {
         $criteria = $requestParameters->getCriteria();
@@ -93,5 +111,47 @@ class MemberService
             $count = $this->repository->matching(Criteria::create())->count();
         }
         return $count;
+    }
+
+    /**
+     * @param $memberId
+     * @param $genderId
+     * @param $departmentId
+     * @param $firstName
+     * @param $lastName
+     * @param $birthday
+     * @param $telephone
+     * @param $email
+     * @param $schoolYear
+     * @return bool|\Doctrine\Common\Proxy\Proxy|null|object
+     * @throws KerosException
+     */
+    public function update($memberId, $genderId, $departmentId, $firstName, $lastName, $birthday, $telephone, $email, $schoolYear)
+    {
+        $this->entityManager->beginTransaction();
+        try {
+            $gender = $this->entityManager->getReference('Keros\Entities\Core\Gender', $genderId);
+            $department = $this->entityManager->getReference('Keros\Entities\Core\Department', $departmentId);
+            $member = $this->entityManager->getReference('Keros\Entities\Core\Member', $memberId);
+
+            $member->setGender($gender);
+            $member->setDepartment($department);
+            $member->setFirstName($firstName);
+            $member->setLastName($lastName);
+            $member->setBirthDate($birthday);
+            $member->setTelephone($telephone);
+            $member->setEmail($email);
+            $member->setSchoolYear($schoolYear);
+
+            $this->entityManager->persist($member);
+            $this->entityManager->flush();
+            $this->entityManager->commit();
+
+            return $member;
+        } catch (Exception $e) {
+            $msg = "Failed to update member : " . $e->getMessage();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
     }
 }

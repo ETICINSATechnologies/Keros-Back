@@ -74,6 +74,8 @@ class UserController
         return $response->withJson($user, 201);
     }
 
+    /* ================= SMA ================*/
+
     /**
      * @param $body
      * @return User
@@ -92,5 +94,18 @@ class UserController
         $this->userService->create($user);
 
         return $user;
+    }
+
+    /**
+     * @param $userId
+     * @param $body
+     * @throws KerosException
+     */
+    public function SMUpdateUser($userId, $body)
+    {
+        $username = Validator::name($body["username"]);
+        $password = Validator::password($body["password"]);
+
+        $this->userService->update($userId, $username, $password);
     }
 }
