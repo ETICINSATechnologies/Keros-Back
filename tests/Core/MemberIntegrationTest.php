@@ -1,4 +1,4 @@
-<?php
+!<?php
 
 namespace KerosTest\Member;
 
@@ -118,8 +118,9 @@ class MemberIntegrationTest extends AppTestCase
             "postalCode"=>69100,
             "countryId"=>1
         );
-        $positionIds=array(1,2);
+        //$positionIds=array(1,2);
         $post_body = array(
+            "id" => 1,
             "username" => "username",
             "firstName"=>"firstname",
             "lastName"=>"lastname",
@@ -128,7 +129,7 @@ class MemberIntegrationTest extends AppTestCase
             "birthday"=>"1975-12-01",
             "telephone"=>"0033675385495",
             "address"=>$address,
-            "positionIds" => $positionIds,
+            //"positionIds" => $positionIds,
             "schoolYear"=>1,
             "departmentId"=>1,
         );

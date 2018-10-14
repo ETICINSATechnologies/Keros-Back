@@ -94,7 +94,7 @@ class MemberController
         $this->addressController->SMUpdateAddress($member->getAddress()->getId(), $body["address"]);
         $this->userController->SMUpdateUser($member->getId(), $body);
 
-        return $response->withJson($member, 201);
+        return $response->withJson($member, 200);
     }
 
     /* ================= SMA ================*/
