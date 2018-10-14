@@ -118,8 +118,6 @@ class MemberController
         $genderId = Validator::id($body["genderId"]);
         $departmentId = Validator::id($body["departmentId"]);
 
-        $this->logger->info($addressId);
-
         $member = new Member($firstName, $lastName, $birthday, $telephone, $email, $schoolYear);
 
         $this->memberService->create($member, $userId, $genderId, $departmentId, $addressId);

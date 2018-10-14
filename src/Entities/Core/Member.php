@@ -92,12 +92,12 @@ class Member implements JsonSerializable
             'schoolYear' => $this->getSchoolYear(),
             'telephone' => $this->getTelephone(),
             'addressId' => $this->getAddress()->getId(),
-            'positionId' => []
+            'positionIds' => []
         ];
     }
 
     public static function getSearchFields(): array {
-        return ['username'];
+        return ['username', 'firstName', 'lastName', 'email'];
     }
 
     // Getters and setters

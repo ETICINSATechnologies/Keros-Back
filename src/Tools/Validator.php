@@ -181,16 +181,6 @@ class Validator
     }
 
     /**
-     * @param string $date
-     * @return DateTime
-     * @throws KerosException
-     */
-    public static function optionalDate($date)
-    {
-        return $date == null || strlen($date) == 0 ? new DateTime("now") : self::date($date);
-    }
-
-    /**
      * @param string $telephone
      * @return null|string
      * @throws KerosException

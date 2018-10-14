@@ -87,7 +87,7 @@ class UserController
         $password = Validator::password($body["password"]);
         $disabled = Validator::optionalBool($body["disabled"]);
         $createdAt = new DateTime("now");
-        $expiresAt = new DateTime("now");
+        $expiresAt = null;
 
         $user = new User($username, $password, null, $createdAt, $disabled, $expiresAt);
 
