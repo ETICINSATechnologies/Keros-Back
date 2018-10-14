@@ -35,6 +35,11 @@ class AddressService
         $this->repository = $this->entityManager->getRepository(Address::class);
     }
 
+    /**
+     * @param Address $address
+     * @param int $countryId
+     * @throws KerosException
+     */
     public function create(Address $address, int $countryId)
     {
         $this->entityManager->beginTransaction();
@@ -51,6 +56,11 @@ class AddressService
         }
     }
 
+    /**
+     * @param int $id
+     * @return Address|null
+     * @throws KerosException
+     */
     public function getOne(int $id): ?Address
     {
         try {
@@ -63,6 +73,11 @@ class AddressService
         }
     }
 
+    /**
+     * @param RequestParameters $requestParameters
+     * @return array
+     * @throws KerosException
+     */
     public function getMany(RequestParameters $requestParameters): array
     {
         $criteria = $requestParameters->getCriteria();

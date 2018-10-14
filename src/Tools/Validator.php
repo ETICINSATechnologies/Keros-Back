@@ -95,14 +95,18 @@ class Validator
      * @return int the valid float
      * @throws KerosException if the int is invalid
      */
-    public static function int(int $int): int{
-        if($int == null) {
+    public static function int(int $int): int
+    {
+        if ($int == null)
+        {
             throw new KerosException("The provided int cannot be null", 400);
         }
-        if (!is_int($int)){
+        if (!is_int($int))
+        {
             throw new KerosException("The int provided is not actually a int", 400);
         }
         return $int;
+    }
 
     /**
      * @param bool $bool $float the float to validate
@@ -159,9 +163,9 @@ class Validator
             // <checkdate> parameters are in sequence the day, the month and the year:
             // - $matches[0]: the entire string
             // - $matches[1]: the year
-            // - $matches[2]: the day
-            // - $matches[3]: the month
-            if (sizeof($matches) > 3 && checkdate($matches[3], $matches[2], $matches[1]))
+            // - $matches[2]: the month
+            // - $matches[3]: the day
+            if (sizeof($matches) > 3 && checkdate($matches[2], $matches[3], $matches[1]))
             {
                 // check if the time is precised (with the format hh:mm:ss)
                 if (preg_match("/\d{2}:\d{2}:\d{2}$/", $date))

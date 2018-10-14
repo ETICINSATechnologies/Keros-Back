@@ -3,13 +3,10 @@
 namespace Keros\Controllers\Core;
 
 use Keros\Entities\core\Member;
-use Keros\Entities\core\User;
 use Keros\Entities\Core\Page;
-use Keros\Entities\Core\Address;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Error\KerosException;
 use Keros\Services\Core\MemberService;
-use Keros\Controllers\Core\AddressController;
 use Keros\Tools\Validator;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
