@@ -165,7 +165,7 @@ class MemberService
     {
         $this->entityManager->beginTransaction();
         try {
-            $member = $this->entityManager->getReference('Keros\Entities\Core\Member', $memberId);
+            $member = $this->repository->find($memberId);
             $member->deleteAllPositions();
 
             foreach ($positionIds as $positionId)

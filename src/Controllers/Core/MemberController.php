@@ -77,7 +77,6 @@ class MemberController
         $addressId = $this->addressController->SMCreateAddress($body["address"])->getId();
         $userId = $this->userController->SMcreateUser($body)->getId();
         $member = $this->SMCreateMember($body, $addressId, $userId);
-        $this->logger->info($member->getId());
 
         return $response->withJson($member, 201);
     }
@@ -123,7 +122,7 @@ class MemberController
         $member = new Member($firstName, $lastName, $birthday, $telephone, $email, $schoolYear);
 
         $this->memberService->create($member, $userId, $genderId, $departmentId, $addressId);
-        //$this->memberService->updatePosition($member->getId(), $positionsId);
+        $this->memberService->updatePosition($member->getUser()->getId(), $positionsId);
 
         return $member;
     }

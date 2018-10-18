@@ -12,12 +12,6 @@ class Member implements JsonSerializable
 {
     /**
      * @Id
-     * @Column(type="integer")
-     * @GeneratedValue
-     */
-    protected $id;
-
-    /**
      * @OneToOne(targetEntity="User")
      * @JoinColumn(name="id", referencedColumnName="id")
      **/
@@ -116,7 +110,7 @@ class Member implements JsonSerializable
      */
     public function getId()
     {
-        return $this->id;
+        return $this->getUser()->getId();
     }
 
     /**
@@ -124,7 +118,7 @@ class Member implements JsonSerializable
      */
     public function setId($id): void
     {
-        $this->id = $id;
+        $this->getUser()->setId($id);
     }
 
     /**
