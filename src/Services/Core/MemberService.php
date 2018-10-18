@@ -154,4 +154,35 @@ class MemberService
             throw new KerosException($msg, 500);
         }
     }
+
+    /**
+     * @param $memberId
+     * @param $positionIds
+     * @return bool|\Doctrine\Common\Proxy\Proxy|null|object
+     * @throws KerosException
+     */
+    public function updatePosition($memberId, $positionIds)
+    {
+        $this->entityManager->beginTransaction();
+        try {
+            $member = $this->entityManager->getReference('Keros\Entities\Core\Member', $memberId);
+            $member->deleteAllPositions();
+
+            foreach ($positionIds as $positionId)
+            {
+                $position = $this->entityManager->getReference('Keros\Entities\Core\Position', $positionId);
+                $member->addPosition($position);
+            }
+
+            $this->entityManager->persist($member);
+            $this->entityManager->flush();
+            $this->entityManager->commit();
+
+            return $member;
+        } catch (Exception $e) {
+            $msg = "Failed to update member position : " . $e->getMessage();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
+    }
 }

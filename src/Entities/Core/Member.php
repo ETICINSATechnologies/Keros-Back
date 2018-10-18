@@ -1,8 +1,8 @@
 <?php
 
 namespace Keros\Entities\Core;
+use Doctrine\Common\Collections\ArrayCollection;
 use JsonSerializable;
-use Keros\Tools\Searchable;
 
 /**
  * @Entity
@@ -60,6 +60,15 @@ class Member implements JsonSerializable
     protected $department;
 
     /**
+     * @ManyToMany(targetEntity="Position")
+     * @JoinTable(name="core_member_position",
+     *      joinColumns={@JoinColumn(name="memberId", referencedColumnName="id")},
+     *      inverseJoinColumns={@JoinColumn(name="positionId", referencedColumnName="id")}
+     *      )
+     */
+    protected $positions;
+
+    /**
      * Member constructor.
      * @param $firstName
      * @param $lastName
@@ -76,6 +85,7 @@ class Member implements JsonSerializable
         $this->telephone = $telephone;
         $this->email = $email;
         $this->schoolYear = $schoolYear;
+        $this->positions = new ArrayCollection();
     }
 
     public function jsonSerialize()
@@ -92,7 +102,7 @@ class Member implements JsonSerializable
             'schoolYear' => $this->getSchoolYear(),
             'telephone' => $this->getTelephone(),
             'addressId' => $this->getAddress()->getId(),
-            'positionIds' => []
+            'positionIds' => $this->getPositionIds()
         ];
     }
 
@@ -276,4 +286,34 @@ class Member implements JsonSerializable
     {
         $this->department = $department;
     }
+
+    private function getPosition()
+    {
+        return $this->positions;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPositionIds()
+    {
+        $positionIds = [];
+        foreach ($this->getPosition() as $position)
+        {
+            $positionIds[] = $position->getId();
+        }
+
+        return $positionIds;
+    }
+
+    public function addPosition($position): void
+    {
+        $this->positions[] = $position;
+    }
+
+    public function deleteAllPositions()
+    {
+        $this->positions = new ArrayCollection();
+    }
+
 }

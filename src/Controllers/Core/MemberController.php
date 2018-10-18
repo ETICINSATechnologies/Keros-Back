@@ -77,6 +77,7 @@ class MemberController
         $addressId = $this->addressController->SMCreateAddress($body["address"])->getId();
         $userId = $this->userController->SMcreateUser($body)->getId();
         $member = $this->SMCreateMember($body, $addressId, $userId);
+        $this->logger->info($member->getId());
 
         return $response->withJson($member, 201);
     }
@@ -90,7 +91,7 @@ class MemberController
         $this->logger->debug("Creating member from " . $request->getServerParams()["REMOTE_ADDR"]);
         $body = $request->getParsedBody();
 
-        $member = $this->SMUpdateMember($body);
+        $member = $this->SMUpdateMember($body, $args);
         $this->addressController->SMUpdateAddress($member->getAddress()->getId(), $body["address"]);
         $this->userController->SMUpdateUser($member->getId(), $body);
 
@@ -117,22 +118,25 @@ class MemberController
 
         $genderId = Validator::id($body["genderId"]);
         $departmentId = Validator::id($body["departmentId"]);
+        $positionsId = $body["positionIds"];
 
         $member = new Member($firstName, $lastName, $birthday, $telephone, $email, $schoolYear);
 
         $this->memberService->create($member, $userId, $genderId, $departmentId, $addressId);
+        //$this->memberService->updatePosition($member->getId(), $positionsId);
 
         return $member;
     }
 
     /**
      * @param $body
+     * @param $args
      * @return bool|\Doctrine\Common\Proxy\Proxy|null|object
      * @throws KerosException
      */
-    private function SMUpdateMember($body)
+    private function SMUpdateMember($body, $args)
     {
-        $memberId = Validator::id($body["id"]);
+        $memberId = Validator::id($args["id"]);
         $firstName = Validator::name($body["firstName"]);
         $lastName = Validator::name($body["lastName"]);
         $email = Validator::email($body["email"]);
@@ -142,6 +146,9 @@ class MemberController
 
         $genderId = Validator::id($body["genderId"]);
         $departmentId = Validator::id($body["departmentId"]);
+        $positionsId = $body["positionIds"];
+
+        $this->memberService->updatePosition($memberId, $positionsId);
 
         return $this->memberService->update(
             $memberId, $genderId, $departmentId, $firstName, $lastName, $birthday, $telephone, $email, $schoolYear);

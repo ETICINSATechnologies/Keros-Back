@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Keros;
-
 
 use Keros\Controllers\Core\AddressController;
 use Keros\Controllers\Core\CountryController;
