@@ -50,7 +50,7 @@ CREATE TABLE `core_user` (
   `lastConnectedAt` DATETIME,
   `createdAt`       DATETIME              DEFAULT NOW(),
   `disabled`        BOOLEAN      NOT NULL DEFAULT FALSE,
-  `expiresAt`       DATETIME     NOT NULL,
+  `expiresAt`       DATETIME,
   PRIMARY KEY (`id`),
   KEY `core_user_username_key` (`username`)
 )
@@ -88,7 +88,7 @@ CREATE TABLE `core_member` (
   `firstName`    varchar(100) NOT NULL,
   `lastName`     varchar(100) NOT NULL,
   `birthdate`    date        DEFAULT NULL,
-  `telephone`    varchar(20) DEFAULT NULL UNIQUE,
+  `telephone`    varchar(20) DEFAULT NULL,
   `email`        varchar(255) NOT NULL UNIQUE,
   `addressId`    int(11)      NOT NULL UNIQUE,
   `schoolYear`   int(11)     DEFAULT NULL,

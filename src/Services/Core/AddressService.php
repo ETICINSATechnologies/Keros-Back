@@ -8,7 +8,6 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Exception;
 use Keros\Entities\Core\Address;
-use Keros\Entities\Core\Country;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Error\KerosException;
 use Monolog\Logger;
@@ -36,6 +35,11 @@ class AddressService
         $this->repository = $this->entityManager->getRepository(Address::class);
     }
 
+    /**
+     * @param Address $address
+     * @param int $countryId
+     * @throws KerosException
+     */
     public function create(Address $address, int $countryId)
     {
         $this->entityManager->beginTransaction();
@@ -52,6 +56,11 @@ class AddressService
         }
     }
 
+    /**
+     * @param int $id
+     * @return Address|null
+     * @throws KerosException
+     */
     public function getOne(int $id): ?Address
     {
         try {
@@ -64,6 +73,11 @@ class AddressService
         }
     }
 
+    /**
+     * @param RequestParameters $requestParameters
+     * @return array
+     * @throws KerosException
+     */
     public function getMany(RequestParameters $requestParameters): array
     {
         $criteria = $requestParameters->getCriteria();
@@ -86,5 +100,40 @@ class AddressService
             $count = $this->repository->matching(Criteria::create())->count();
         }
         return $count;
+    }
+
+    /**
+     * @param $addressId
+     * @param $line1
+     * @param $line2
+     * @param $postalCode
+     * @param $city
+     * @param $countryId
+     * @return bool|\Doctrine\Common\Proxy\Proxy|null|object
+     * @throws KerosException
+     */
+    function update($addressId, $line1, $line2, $postalCode, $city, $countryId)
+    {
+        $this->entityManager->beginTransaction();
+        try {
+            $address = $this->entityManager->getReference('Keros\Entities\Core\Address', $addressId);
+            $country = $this->entityManager->getReference('Keros\Entities\Core\Country', $countryId);
+
+            $address->setLine1($line1);
+            $address->setLine2($line2);
+            $address->setCity($city);
+            $address->setPostalCode($postalCode);
+            $address->setCountry($country);
+
+            $this->entityManager->persist($address);
+            $this->entityManager->flush();
+            $this->entityManager->commit();
+
+            return $address;
+        } catch (Exception $e) {
+            $msg = "Failed to update address : " . $e->getMessage();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
     }
 }

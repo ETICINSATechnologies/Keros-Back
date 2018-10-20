@@ -26,8 +26,7 @@ class PoleIntegrationTest extends AppTestCase
         $this->assertNotNull(strlen($body->content[0]->line1));
         $this->assertNotNull(strlen($body->content[0]->line2));
         $this->assertNotNull(strlen($body->content[0]->postalCode));
-        $this->assertNotNull(strlen($body->content[0]->country->id));
-        $this->assertNotNull(strlen($body->content[0]->country->label));
+        $this->assertNotNull(strlen($body->content[0]->countryId));
     }
 
     public function testGetAddressShouldReturn200()
@@ -48,8 +47,7 @@ class PoleIntegrationTest extends AppTestCase
         $this->assertSame($body->line2, null);
         $this->assertSame($body->postalCode, 69100);
         $this->assertSame($body->city, "lyon");
-        $this->assertSame($body->country->id, 1);
-        $this->assertSame($body->country->label, "Afghanistan");
+        $this->assertSame($body->countryId, 1);
     }
 
     public function testGetAddressShouldReturn400()
