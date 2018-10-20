@@ -39,6 +39,7 @@ class MemberIntegrationTest extends AppTestCase
             'REQUEST_METHOD' => 'GET',
             'REQUEST_URI' => '/api/v1/core/member/1',
         ]);
+
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(true);
@@ -68,31 +69,34 @@ class MemberIntegrationTest extends AppTestCase
 
         $this->assertSame($response->getStatusCode(), 400);
     }
+
     public function testPostMemberShouldReturn200()
     {
-        $address=array(
-            "line1"=>"20 avenue albert Eistein",
-            "line2"=>"residence g",
-            "city"=>"lyon",
-            "postalCode"=>69100,
-            "countryId"=>1
-        );
-
         $post_body = array(
             "username" => "username",
-            "firstName"=>"firstname",
-            "lastName"=>"lastname",
-            "genderId"=>1,
-            "email"=>"fakeEmail@gmail.com",
-            "birthday"=>"1975-12-01",
-            "telephone"=>"0033675385495",
-            "address"=>$address,
-
-            "schoolYear"=>1,
-            "departmentId"=>1,
-            "password"=>"password",
-            "disabled"=>null
+            "password" => "password",
+            "firstName" => "firstname",
+            "lastName" => "lastname",
+            "genderId" => 1,
+            "email" => "fakeEmail@gmail.com",
+            "birthday" => "1975-12-01",
+            "telephone" => "0033675385495",
+            "departmentId" => 1,
+            "schoolYear" => 1,
+            "address" => [
+                "line1" => "20 avenue albert Eistein",
+                "line2" => "residence g",
+                "city" => "lyon",
+                "postalCode" => 69100,
+                "countryId" => 1
+            ],
+            "disabled" => null,
+            "positionIds" => [
+                1,
+                2
+            ]
         );
+
         $env = Environment::mock([
             'REQUEST_METHOD' => 'POST',
             'REQUEST_URI' => '/api/v1/core/member',
@@ -106,33 +110,46 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame($response->getStatusCode(), 201);
 
         $body = json_decode($response->getBody());
+        $this->assertNotNull($body->id);
         $this->assertSame("username", $body->username);
         $this->assertSame("lastname", $body->lastName);
+        $this->assertSame(1, $body->genderId);
+        $this->assertSame("fakeEmail@gmail.com", $body->email);
+        $this->assertSame("1975-12-01", $body->birthday);
+        $this->assertSame(1, $body->departmentId);
+        $this->assertSame(1, $body->schoolYear);
+        $this->assertSame("0033675385495", $body->telephone);
+        $this->assertNotNull($body->addressId);
+        $this->assertContains(1, $body->positionIds);
+        $this->assertContains(2, $body->positionIds);
     }
     public function testPutMemberShouldReturn200()
     {
-        $address=array(
-            "line1"=>"20 avenue albert Eistein",
-            "line2"=>"residence g",
-            "city"=>"lyon",
-            "postalCode"=>69100,
-            "countryId"=>1
-        );
-        //$positionIds=array(1,2);
         $post_body = array(
             "id" => 1,
             "username" => "username",
-            "firstName"=>"firstname",
-            "lastName"=>"lastname",
-            "genderId"=>1,
-            "email"=>"fakeEmail@gmail.com",
-            "birthday"=>"1975-12-01",
-            "telephone"=>"0033675385495",
-            "address"=>$address,
-            //"positionIds" => $positionIds,
-            "schoolYear"=>1,
-            "departmentId"=>1,
+            "password" => "password",
+            "firstName" => "firstName",
+            "lastName" => "lastName",
+            "genderId" => 1,
+            "email" => "fakeEmail@gmail.com",
+            "birthday" => "1975-12-01",
+            "telephone" => "0033675385495",
+            "address" => [
+                "line1" => "20 avenue albert Einstein",
+                "line2" => "residence g",
+                "city" => "lyon",
+                "postalCode" => 69100,
+                "countryId" => 1
+            ],
+            "schoolYear" => 1,
+            "departmentId" => 1,
+            "positionIds" => [
+                1,
+                3
+            ]
         );
+
         $env = Environment::mock([
             'REQUEST_METHOD' => 'PUT',
             'REQUEST_URI' => '/api/v1/core/member/1',
@@ -143,10 +160,22 @@ class MemberIntegrationTest extends AppTestCase
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(true);
 
-        $this->assertSame($response->getStatusCode(), 201);
+        $this->assertSame($response->getStatusCode(), 200);
 
         $body = json_decode($response->getBody());
+
+        $this->assertNotNull($body->id);
         $this->assertSame("username", $body->username);
-        $this->assertSame("lastname", $body->lastName);
+        $this->assertSame("firstName", $body->firstName);
+        $this->assertSame("lastName", $body->lastName);
+        $this->assertSame(1, $body->genderId);
+        $this->assertSame("fakeEmail@gmail.com", $body->email);
+        $this->assertSame("1975-12-01", $body->birthday);
+        $this->assertSame(1, $body->departmentId);
+        $this->assertSame(1, $body->schoolYear);
+        $this->assertSame("0033675385495", $body->telephone);
+        $this->assertNotNull($body->addressId);
+        $this->assertContains(1, $body->positionIds);
+        $this->assertContains(3, $body->positionIds);
     }
 }
