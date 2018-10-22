@@ -58,16 +58,16 @@ class FirmService
             throw new KerosException($msg, 500);
         }
     }
-    public function update(int $firmId,int $typeId, Address $address,$siret,$name): ?Firm
+    public function update(int $firmId,int $typeId, $name, $siret): ?Firm
     {
 
         $this->entityManager->beginTransaction();
         try {
             $type = $this->entityManager->getReference('Keros\Entities\Ua\FirmType', $typeId);
-            $firm = $this->repository->find($firmId);
+            $firm=$this->entityManager->getReference('Keros\Entities\Ua\Firm', $firmId);
+
             $firm->setName($name);
             $firm->setSiret($siret);
-            $firm->setAddress($address);
             $firm->setType($type);
             $this->entityManager->persist($firm);
             $this->entityManager->flush();

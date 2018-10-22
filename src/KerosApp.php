@@ -11,7 +11,7 @@ use Keros\Controllers\Core\PoleController;
 use Keros\Controllers\Core\PositionController;
 use Keros\Controllers\Core\UserController;
 use Keros\Controllers\Ua\FirmTypeController;
-
+use Keros\Controllers\Ua\FirmController;
 use Keros\Entities\Auth\LoginResponse;
 use Keros\Error\ErrorHandler;
 use Keros\Services\ServiceRegistrar;

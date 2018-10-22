@@ -7,7 +7,7 @@ use Keros\Entities\Core\RequestParameters;
 use Keros\Error\KerosException;
 use Keros\Services\Core\AddressService;
 use Keros\Services\Ua\FirmService;
-
+use Keros\Controllers\Core\AddressController;
 use Keros\Entities\Core\Address;
 use Keros\Tools\Validator;
 use Monolog\Logger;
@@ -60,26 +60,7 @@ class FirmController
      */
     public function createFirm(Request $request, Response $response, array $args)
     {
-        /*$this->logger->debug("Creating firm from " . $request->getServerParams()["REMOTE_ADDR"]);
-        $body = $request->getParsedBody();
-        $siret = $body["siret"];
-        $line1= Validator::name(($body["address"])["line1"]);
-        $line2=($body["address"])["line2"];
-        $postalCode=Validator::int(($body["address"])["postalCode"]);
-        $city=Validator::name(($body["address"])["city"]);
-        $countryId=Validator::name(($body["address"])["countryId"]);
-        $name = Validator::name($body["name"]);
-        $address=new Address($line1,$line2,$postalCode,$city);
 
-        $this->addressService->create($address,$countryId);
-
-        $typeId = Validator::float($body["typeId"]);
-
-        $firm = new Firm($name,$siret);
-        $this->firmService->create($firm,$typeId, $address);
-
-        return $response->withJson($firm, 201);
-        */
         $this->logger->debug("Creating firm from " . $request->getServerParams()["REMOTE_ADDR"]);
         $body = $request->getParsedBody();
         $addressId = $this->addressController->SMCreateAddress($body["address"])->getId();
@@ -93,28 +74,13 @@ class FirmController
      */
     public function updateFirm(Request $request, Response $response, array $args)
     {
-        $this->logger->debug("updating firm from " . $request->getServerParams()["REMOTE_ADDR"]);
-        $firmId = Validator::id($args['id']);
 
+        $this->logger->debug("Updating firm from " . $request->getServerParams()["REMOTE_ADDR"]);
         $body = $request->getParsedBody();
-        $siret = $body["siret"];
-        $line1= Validator::name(($body["address"])["line1"]);
-        $line2=($body["address"])["line2"];
-        $postalCode=Validator::int(($body["address"])["postalCode"]);
-        $city=Validator::name(($body["address"])["city"]);
-        $countryId=Validator::name(($body["address"])["countryId"]);
-        $name = Validator::name($body["name"]);
+        $firm = $this->SMUpdateFirm($body,$args['id']);
+        $this->addressController->SMUpdateAddress($firm->getAddress()->getId(), $body["address"]);
 
-
-        $address=new Address($line1,$line2,$postalCode,$city);
-        $this->addressService->create($address,$countryId);
-
-        $typeId = $body["typeId"];
-
-
-        $firm=$this->firmService->update($firmId,$typeId, $address,$siret,$name);
-
-        return $response->withJson($firm, 200);
+        return $response->withJson($firm,200);
     }
     /**
      * @return Response containing a page of firms
@@ -135,7 +101,7 @@ class FirmController
     /**
      * @param $body
      * @param $addressId
-     * @return $firm
+     * @return Firm
      * @throws KerosException
      */
     public function SMCreateFirm($body, $addressId)
@@ -154,23 +120,16 @@ class FirmController
 
     /**
      * @param $body
-     * @return bool|\Doctrine\Common\Proxy\Proxy|null|object
+     * @return Firm
      * @throws KerosException
      */
-    private function SMUpdateMember($body)
+    private function SMUpdateFirm($body,$id)
     {
-        $memberId = Validator::id($body["id"]);
-        $firstName = Validator::name($body["firstName"]);
-        $lastName = Validator::name($body["lastName"]);
-        $email = Validator::email($body["email"]);
-        $telephone = Validator::optionalPhone($body["telephone"]);
-        $birthday = Validator::date($body["birthday"]);
-        $schoolYear = Validator::schoolYear($body["schoolYear"]);
-
-        $genderId = Validator::id($body["genderId"]);
-        $departmentId = Validator::id($body["departmentId"]);
-
-        return $this->memberService->update(
-            $memberId, $genderId, $departmentId, $firstName, $lastName, $birthday, $telephone, $email, $schoolYear);
+        $firmId = Validator::id($id);
+        $name = Validator::name($body["name"]);
+        $siret = $body["siret"];
+        $typeId = Validator::float($body["typeId"]);
+        return $this->firmService->update(
+            $firmId,$typeId, $name, $siret);
     }
 }
