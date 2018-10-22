@@ -33,7 +33,7 @@ class FirmController
     {
         $this->logger = $container->get('logger');
         $this->addressService=$container->get(AddressService::class);
-
+        $this->addressController = new AddressController($container);
 
         $this->firmService = $container->get(FirmService::class);
     }
@@ -60,7 +60,7 @@ class FirmController
      */
     public function createFirm(Request $request, Response $response, array $args)
     {
-        $this->logger->debug("Creating firm from " . $request->getServerParams()["REMOTE_ADDR"]);
+        /*$this->logger->debug("Creating firm from " . $request->getServerParams()["REMOTE_ADDR"]);
         $body = $request->getParsedBody();
         $siret = $body["siret"];
         $line1= Validator::name(($body["address"])["line1"]);
@@ -79,6 +79,13 @@ class FirmController
         $this->firmService->create($firm,$typeId, $address);
 
         return $response->withJson($firm, 201);
+        */
+        $this->logger->debug("Creating firm from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $body = $request->getParsedBody();
+        $addressId = $this->addressController->SMCreateAddress($body["address"])->getId();
+        $firm= $this->SMCreateFirm($body, $addressId);
+
+        return $response->withJson($firm,201);
     }
     /**
      * @return Response containing the updated firm
@@ -122,5 +129,48 @@ class FirmController
         $totalCount = $this->firmService->getCount($params);
         $page = new Page($firms, $params, $totalCount);
         return $response->withJson($page, 200);
+    }
+    /* ================= SMA ================*/
+
+    /**
+     * @param $body
+     * @param $addressId
+     * @return $firm
+     * @throws KerosException
+     */
+    public function SMCreateFirm($body, $addressId)
+    {
+
+
+        $name = Validator::name($body["name"]);
+        $siret = $body["siret"];
+        $typeId = Validator::float($body["typeId"]);
+        $firm = new Firm($name,$siret);
+
+        $this->firmService->create($firm, $typeId,$addressId);
+
+        return $firm;
+    }
+
+    /**
+     * @param $body
+     * @return bool|\Doctrine\Common\Proxy\Proxy|null|object
+     * @throws KerosException
+     */
+    private function SMUpdateMember($body)
+    {
+        $memberId = Validator::id($body["id"]);
+        $firstName = Validator::name($body["firstName"]);
+        $lastName = Validator::name($body["lastName"]);
+        $email = Validator::email($body["email"]);
+        $telephone = Validator::optionalPhone($body["telephone"]);
+        $birthday = Validator::date($body["birthday"]);
+        $schoolYear = Validator::schoolYear($body["schoolYear"]);
+
+        $genderId = Validator::id($body["genderId"]);
+        $departmentId = Validator::id($body["departmentId"]);
+
+        return $this->memberService->update(
+            $memberId, $genderId, $departmentId, $firstName, $lastName, $birthday, $telephone, $email, $schoolYear);
     }
 }
