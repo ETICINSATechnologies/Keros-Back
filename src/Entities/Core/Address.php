@@ -44,12 +44,13 @@ class Address implements JsonSerializable, Searchable
      * @param $postalCode
      * @param $city
      */
-    public function __construct($line1, $line2, $postalCode, $city)
+    public function __construct($line1, $line2, $postalCode, $city, $country)
     {
         $this->line1 = $line1;
         $this->line2 = $line2;
         $this->postalCode = $postalCode;
         $this->city = $city;
+        $this->country = $country;
     }
 
     public function jsonSerialize()

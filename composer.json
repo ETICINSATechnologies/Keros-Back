@@ -23,9 +23,11 @@
     }
   },
   "require": {
-    "php": "^7.1",
+    "php": "^7.2",
     "slim/slim": "^3.10",
     "monolog/monolog": "^1.23",
-    "doctrine/orm": "^2.6"
+    "doctrine/orm": "^2.6",
+    "ext-json": "^1.6",
+    "ext-PDO": "^7.2"
   }
 }

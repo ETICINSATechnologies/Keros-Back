@@ -1,138 +1,80 @@
 <?php
 
+
 namespace Keros\Services\Core;
 
-
-use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
-use Exception;
-use Keros\Entities\Core\User;
+use DateTime;
+use Keros\DataServices\Core\UserDataService;
 use Keros\Entities\Core\RequestParameters;
+use Keros\Entities\Core\User;
 use Keros\Error\KerosException;
-use Monolog\Logger;
+use Keros\Tools\Validator;
 use Psr\Container\ContainerInterface;
 
 class UserService
 {
     /**
-     * @var EntityManager
+     * @var UserDataService
      */
-    private $entityManager;
-    /**
-     * @var Logger
-     */
-    private $logger;
-    /**
-     * @var EntityRepository
-     */
-    private $repository;
+    private $userDataService;
 
     public function __construct(ContainerInterface $container)
     {
-        $this->logger = $container->get('logger');
-        $this->entityManager = $container->get('entityManager');
-        $this->repository = $this->entityManager->getRepository(User::class);
+        $this->userDataService = $container->get(UserDataService::class);
     }
 
-    /**
-     * @param User $user
-     * @throws KerosException
-     */
-    public function create(User $user)
+    public function create(array $fields): User
     {
-        $this->entityManager->beginTransaction();
-        try
-        {
-            $this->entityManager->persist($user);
-            $this->entityManager->flush();
-            $this->entityManager->commit();
-        } catch (Exception $e)
-        {
-            $msg = "Failed to create new user : " . $e->getMessage();
-            $this->logger->error($msg);
-            throw new KerosException($msg, 500);
-        }
+        $username = Validator::requiredString($fields["username"]);
+        $password = Validator::requiredPassword($fields["password"]);
+        $disabled = Validator::optionalBool($fields["disabled"]);
+        $createdAt = new DateTime("now");
+
+        $user = new User($username, $password, null, $createdAt, $disabled, null);
+
+        $this->userDataService->persist($user);
+
+        return $user;
     }
 
-    /**
-     * @param int $id
-     * @return User|null
-     * @throws KerosException
-     */
-    public function getOne(int $id): ?User
+    public function getOne(int $id): User
     {
-        try
-        {
-            $user = $this->repository->find($id);
-            return $user;
-        } catch (Exception $e)
-        {
-            $msg = "Error finding user with ID $id : " . $e->getMessage();
-            $this->logger->error($msg);
-            throw new KerosException($msg, 500);
+        $id = Validator::requiredId($id);
+
+        $user = $this->userDataService->getOne($id);
+        if (!$user) {
+            throw new KerosException("The user could not be found", 404);
         }
+        return $user;
     }
 
-    /**
-     * @param RequestParameters $requestParameters
-     * @return array
-     * @throws KerosException
-     */
-    public function getMany(RequestParameters $requestParameters): array
+    public function getPage(RequestParameters $requestParameters): array
     {
-        $criteria = $requestParameters->getCriteria();
-        try
-        {
-            $users = $this->repository->matching($criteria)->getValues();
-            return $users;
-        } catch (Exception $e)
-        {
-            $msg = "Error finding page of users : " . $e->getMessage();
-            $this->logger->error($msg);
-            throw new KerosException($msg, 500);
-        }
+        return $this->userDataService->getPage($requestParameters);
     }
 
-    public function getCount(?RequestParameters $requestParameters): int
+    public function getCount(RequestParameters $requestParameters): int
     {
-        if ($requestParameters != null)
-        {
-            $countCriteria = $requestParameters->getCountCriteria();
-            $count = $this->repository->matching($countCriteria)->count();
-        }
-        else
-        {
-            $count = $this->repository->matching(Criteria::create())->count();
-        }
-        return $count;
+        return $this->userDataService->getCount($requestParameters);
     }
 
-    /**
-     * @param $userId
-     * @param $username
-     * @param $password
-     * @return bool|\Doctrine\Common\Proxy\Proxy|null|object
-     * @throws KerosException
-     */
-    function update($userId, $username, $password)
+    public function update(int $id, ?array $fields): User
     {
-        $this->entityManager->beginTransaction();
-        try {
-            $user = $this->entityManager->getReference('Keros\Entities\Core\User', $userId);
+        $id = Validator::requiredId($id);
+        $user = $this->getOne($id);
 
+        if (isset($fields["username"])) {
+            $username = Validator::requiredString($fields["username"]);
             $user->setUsername($username);
-            $user->setPassword($password);
-
-            $this->entityManager->persist($user);
-            $this->entityManager->flush();
-            $this->entityManager->commit();
-
-            return $user;
-        } catch (Exception $e) {
-            $msg = "Failed to update user : " . $e->getMessage();
-            $this->logger->error($msg);
-            throw new KerosException($msg, 500);
         }
+
+        if (isset($fields["password"])) {
+            $password = Validator::requiredString($fields["password"]);
+            $user->setPassword($password);
+        }
+
+        $this->userDataService->persist($user);
+
+        return $user;
     }
 }

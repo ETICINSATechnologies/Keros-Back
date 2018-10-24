@@ -1,118 +1,98 @@
 <?php
 
+
 namespace Keros\Services\Ua;
 
-
-use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
-use Exception;
-use Keros\Entities\Core\Address;
-use Keros\Entities\Ua\Firm;
-use Keros\Services\Core\AddressService;
+use Keros\DataServices\Ua\FirmDataService;
 use Keros\Entities\Core\RequestParameters;
+use Keros\Entities\Ua\Firm;
 use Keros\Error\KerosException;
-use Monolog\Logger;
+use Keros\Services\Core\AddressService;
+use Keros\Tools\Validator;
 use Psr\Container\ContainerInterface;
 
 class FirmService
 {
-
     /**
-     * @var EntityManager
+     * @var AddressService
      */
-    private $entityManager;
+    private $addressService;
     /**
-     * @var Logger
+     * @var FirmTypeService
      */
-    private $logger;
+    private $firmTypeService;
     /**
-     * @var EntityRepository
+     * @var FirmDataService
      */
-    private $repository;
-
-
+    private $firmDataService;
 
     public function __construct(ContainerInterface $container)
     {
-        $this->logger = $container->get('logger');
-        $this->entityManager = $container->get('entityManager');
-        $this->repository = $this->entityManager->getRepository(Firm::class);
+        $this->addressService = $container->get(AddressService::class);
+        $this->firmTypeService = $container->get(FirmTypeService::class);
+        $this->firmDataService = $container->get(FirmDataService::class);
     }
 
-    public function create(Firm $firm,int $typeId, int $addressId)
+    public function create(array $fields): Firm
     {
-        $this->entityManager->beginTransaction();
-        try {
+        $name = Validator::requiredString($fields["name"]);
+        $siret = Validator::requiredString($fields["siret"]);
+        $typeId = Validator::requiredId($fields["typeId"]);
 
-            $type = $this->entityManager->getReference('Keros\Entities\Ua\FirmType', $typeId);
-            $address = $this->entityManager->getReference('Keros\Entities\Core\Address', $addressId);
-            $firm->setAddress($address);
-            $firm->setType($type);
-            $this->entityManager->persist($firm);
-            $this->entityManager->flush();
-            $this->entityManager->commit();
-        } catch (Exception $e) {
-            $msg = "Failed to create new firm : " . $e->getMessage();
-            $this->logger->error($msg);
-            throw new KerosException($msg, 500);
+        $address = $this->addressService->create($fields["address"]);
+        $firmType = $this->firmTypeService->getOne($typeId);
+        $firm = new Firm($name, $siret, $address, $firmType);
+
+        $this->firmDataService->persist($firm);
+
+        return $firm;
+    }
+
+    public function getOne(int $id): Firm
+    {
+        $id = Validator::requiredId($id);
+
+        $firm = $this->firmDataService->getOne($id);
+        if (!$firm) {
+            throw new KerosException("The firm could not be found", 404);
         }
+        return $firm;
     }
-    public function update(int $firmId,int $typeId, $name, $siret): ?Firm
+
+    public function getPage(RequestParameters $requestParameters): array
     {
+        return $this->firmDataService->getPage($requestParameters);
+    }
 
-        $this->entityManager->beginTransaction();
-        try {
-            $type = $this->entityManager->getReference('Keros\Entities\Ua\FirmType', $typeId);
-            $firm=$this->entityManager->getReference('Keros\Entities\Ua\Firm', $firmId);
+    public function getCount(RequestParameters $requestParameters): int
+    {
+        return $this->firmDataService->getCount($requestParameters);
+    }
 
+    public function update(int $id, ?array $fields): Firm
+    {
+        $id = Validator::requiredId($id);
+        $firm = $this->getOne($id);
+
+        if (isset($fields["name"])) {
+            $name = Validator::requiredString($fields["name"]);
             $firm->setName($name);
+        }
+        if (isset($fields["siret"])) {
+            $siret = Validator::requiredString($fields["siret"]);
             $firm->setSiret($siret);
+        }
+        if (isset($fields["typeId"])) {
+            $typeId = Validator::requiredInt($fields["typeId"]);
+            $type = $this->firmTypeService->getOne($typeId);
             $firm->setType($type);
-            $this->entityManager->persist($firm);
-            $this->entityManager->flush();
-            $this->entityManager->commit();
-            return $firm;
-        } catch (Exception $e) {
-            $msg = "Failed to update new firm : " . $e->getMessage();
-            $this->logger->error($msg);
-            throw new KerosException($msg, 500);
         }
-    }
 
-    public function getOne(int $id): ?Firm
-    {
-        try {
-            $firm = $this->repository->find($id);
-            return $firm;
-        } catch (Exception $e) {
-            $msg = "Error finding firm with ID $id : " . $e->getMessage();
-            $this->logger->error($msg);
-            throw new KerosException($msg, 500);
+        if (isset($fields["address"])) {
+            $this->addressService->update($firm->getAddress()->getId(), $fields["address"]);
         }
-    }
+        $this->firmDataService->persist($firm);
 
-    public function getMany(RequestParameters $requestParameters): array
-    {
-        $criteria = $requestParameters->getCriteria();
-        try {
-            $firms = $this->repository->matching($criteria)->getValues();
-            return $firms;
-        } catch (Exception $e) {
-            $msg = "Error finding page of firms : " . $e->getMessage();
-            $this->logger->error($msg);
-            throw new KerosException($msg, 500);
-        }
-    }
-
-    public function getCount(?RequestParameters $requestParameters): int
-    {
-        if ($requestParameters != null) {
-            $countCriteria = $requestParameters->getCountCriteria();
-            $count = $this->repository->matching($countCriteria)->count();
-        } else {
-            $count = $this->repository->matching(Criteria::create())->count();
-        }
-        return $count;
+        return $firm;
     }
 }

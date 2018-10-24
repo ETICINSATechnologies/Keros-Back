@@ -1,139 +1,100 @@
 <?php
 
+
 namespace Keros\Services\Core;
 
-
-use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
-use Exception;
+use Keros\DataServices\Core\AddressDataService;
 use Keros\Entities\Core\Address;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Error\KerosException;
-use Monolog\Logger;
+use Keros\Tools\Validator;
 use Psr\Container\ContainerInterface;
 
 class AddressService
 {
     /**
-     * @var EntityManager
+     * @var AddressDataService
      */
-    private $entityManager;
+    private $addressDataService;
     /**
-     * @var Logger
+     * @var CountryService
      */
-    private $logger;
-    /**
-     * @var EntityRepository
-     */
-    private $repository;
+    private $countryService;
 
     public function __construct(ContainerInterface $container)
     {
-        $this->logger = $container->get('logger');
-        $this->entityManager = $container->get('entityManager');
-        $this->repository = $this->entityManager->getRepository(Address::class);
+        $this->addressDataService = $container->get(AddressDataService::class);
+        $this->countryService = $container->get(CountryService::class);
     }
 
-    /**
-     * @param Address $address
-     * @param int $countryId
-     * @throws KerosException
-     */
-    public function create(Address $address, int $countryId)
+    public function create(array $fields): Address
     {
-        $this->entityManager->beginTransaction();
-        try {
-            $country = $this->entityManager->getReference('Keros\Entities\Core\Country', $countryId);
-            $address->setCountry($country);
-            $this->entityManager->persist($address);
-            $this->entityManager->flush();
-            $this->entityManager->commit();
-        } catch (Exception $e) {
-            $msg = "Failed to create new address : " . $e->getMessage();
-            $this->logger->error($msg);
-            throw new KerosException($msg, 500);
-        }
+        $line1 = Validator::requiredString($fields["line1"]);
+        $line2 = Validator::optionalString($fields["line2"]);
+        $postalCode = Validator::requiredString($fields["postalCode"]);
+        $city = Validator::requiredString($fields["city"]);
+        $countryId = Validator::requiredId($fields["countryId"]);
+
+        $country = $this->countryService->getOne($countryId);
+
+        $address = new Address($line1, $line2, $postalCode, $city, $country);
+        $this->addressDataService->persist($address);
+
+        return $address;
     }
 
-    /**
-     * @param int $id
-     * @return Address|null
-     * @throws KerosException
-     */
-    public function getOne(int $id): ?Address
+    public function update(int $id, ?array $fields)
     {
-        try {
-            $address = $this->repository->find($id);
-            return $address;
-        } catch (Exception $e) {
-            $msg = "Error finding address with ID $id : " . $e->getMessage();
-            $this->logger->error($msg);
-            throw new KerosException($msg, 500);
-        }
-    }
+        $id = Validator::requiredId($id);
+        $address = $this->getOne($id);
 
-    /**
-     * @param RequestParameters $requestParameters
-     * @return array
-     * @throws KerosException
-     */
-    public function getMany(RequestParameters $requestParameters): array
-    {
-        $criteria = $requestParameters->getCriteria();
-        try {
-            $addresses = $this->repository->matching($criteria)->getValues();
-            return $addresses;
-        } catch (Exception $e) {
-            $msg = "Error finding page of addresss : " . $e->getMessage();
-            $this->logger->error($msg);
-            throw new KerosException($msg, 500);
-        }
-    }
-
-    public function getCount(?RequestParameters $requestParameters): int
-    {
-        if ($requestParameters != null) {
-            $countCriteria = $requestParameters->getCountCriteria();
-            $count = $this->repository->matching($countCriteria)->count();
-        } else {
-            $count = $this->repository->matching(Criteria::create())->count();
-        }
-        return $count;
-    }
-
-    /**
-     * @param $addressId
-     * @param $line1
-     * @param $line2
-     * @param $postalCode
-     * @param $city
-     * @param $countryId
-     * @return bool|\Doctrine\Common\Proxy\Proxy|null|object
-     * @throws KerosException
-     */
-    function update($addressId, $line1, $line2, $postalCode, $city, $countryId)
-    {
-        $this->entityManager->beginTransaction();
-        try {
-            $address = $this->entityManager->getReference('Keros\Entities\Core\Address', $addressId);
-            $country = $this->entityManager->getReference('Keros\Entities\Core\Country', $countryId);
-
+        if ($line1 = $fields["line1"]) {
+            $line1 = Validator::requiredString($fields["line1"]);
             $address->setLine1($line1);
-            $address->setLine2($line2);
-            $address->setCity($city);
-            $address->setPostalCode($postalCode);
-            $address->setCountry($country);
-
-            $this->entityManager->persist($address);
-            $this->entityManager->flush();
-            $this->entityManager->commit();
-
-            return $address;
-        } catch (Exception $e) {
-            $msg = "Failed to update address : " . $e->getMessage();
-            $this->logger->error($msg);
-            throw new KerosException($msg, 500);
         }
+        if ($line2 = $fields["line2"]) {
+            $line2 = Validator::requiredString($fields["line2"]);
+            $address->setLine2($line2);
+        }
+        if ($postalCode = $fields["postalCode"]) {
+            $postalCode = Validator::requiredString($fields["postalCode"]);
+            $address->setPostalCode($postalCode);
+        }
+        if ($city = $fields["city"]) {
+            $city = Validator::requiredString($fields["city"]);
+            $address->setCity($city);
+        }
+        if ($countryId = $fields["countryId"]) {
+            $countryId = Validator::requiredString($fields["countryId"]);
+            $country = $this->countryService->getOne($countryId);
+            $address->setCountry($country);
+        }
+
+        $this->addressDataService->persist($address);
+
+        return $address;
     }
+
+    public function getOne(int $id): Address
+    {
+        $id = Validator::requiredId($id);
+
+        $address = $this->addressDataService->getOne($id);
+        if (!$address) {
+            throw new KerosException("The address could not be found", 404);
+        }
+        return $address;
+    }
+
+    public function getPage(RequestParameters $requestParameters): array
+    {
+        return $this->addressDataService->getPage($requestParameters);
+    }
+
+    public function getCount(RequestParameters $requestParameters): int
+    {
+        return $this->addressDataService->getCount($requestParameters);
+    }
+
+
 }

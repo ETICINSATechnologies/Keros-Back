@@ -17,9 +17,9 @@ class DepartmentIntegrationTest extends AppTestCase
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(true);
+        $response = $this->app->run(false);
 
-        $this->assertSame($response->getStatusCode(), 200);
+        $this->assertSame(200, $response->getStatusCode());
 
         $body = json_decode($response->getBody());
         $this->assertEquals(13, sizeof($body));
@@ -32,16 +32,16 @@ class DepartmentIntegrationTest extends AppTestCase
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(true);
+        $response = $this->app->run(false);
 
-        $this->assertSame($response->getStatusCode(), 200);
+        $this->assertSame(200, $response->getStatusCode());
 
         $body = json_decode($response->getBody());
-        $this->assertSame($body->id, 1);
-        $this->assertSame($body->label, "BB");
-        $this->assertSame($body->name, "Biochimie et Biotechnologies");
+        $this->assertSame(1, $body->id);
+        $this->assertSame("BB", $body->label);
+        $this->assertSame("Biochimie et Biotechnologies", $body->name);
     }
-    public function testGetDepartmentShouldReturn400()
+    public function testGetDepartmentShouldReturn404()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
@@ -49,8 +49,8 @@ class DepartmentIntegrationTest extends AppTestCase
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(true);
+        $response = $this->app->run(false);
 
-        $this->assertSame($response->getStatusCode(), 400);
+        $this->assertSame(404, $response->getStatusCode());
     }
 }

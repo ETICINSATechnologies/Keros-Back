@@ -16,9 +16,9 @@ class MemberIntegrationTest extends AppTestCase
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(true);
+        $response = $this->app->run(false);
 
-        $this->assertSame($response->getStatusCode(), 200);
+        $this->assertSame(200, $response->getStatusCode());
 
         $body = json_decode($response->getBody());
         $this->assertEquals(3, count($body->content));
@@ -42,22 +42,22 @@ class MemberIntegrationTest extends AppTestCase
 
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(true);
+        $response = $this->app->run(false);
 
-        $this->assertSame($response->getStatusCode(), 200);
+        $this->assertSame(200, $response->getStatusCode());
 
         $body = json_decode($response->getBody());
-        $this->assertSame($body->id, 1);
-        $this->assertSame($body->genderId, 1);
-        $this->assertSame($body->firstName, "Conor");
-        $this->assertSame($body->lastName, "Breeze");
-        $this->assertSame($body->birthday, "1975-12-25");
-        $this->assertSame($body->telephone, "+332541254");
-        $this->assertSame($body->email, "fake.mail@fake.com");
-        $this->assertSame($body->addressId, 2);
+        $this->assertSame(1, $body->id);
+        $this->assertSame(1, $body->genderId);
+        $this->assertSame("Conor", $body->firstName);
+        $this->assertSame("Breeze", $body->lastName);
+        $this->assertSame("1975-12-25", $body->birthday);
+        $this->assertSame("+332541254", $body->telephone);
+        $this->assertSame("fake.mail@fake.com", $body->email);
+        $this->assertSame(2, $body->addressId);
     }
 
-    public function testGetMemberShouldReturn400()
+    public function testGetMemberShouldReturn404()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
@@ -65,9 +65,9 @@ class MemberIntegrationTest extends AppTestCase
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(true);
+        $response = $this->app->run(false);
 
-        $this->assertSame($response->getStatusCode(), 400);
+        $this->assertSame(404, $response->getStatusCode());
     }
 
     public function testPostMemberShouldReturn200()
@@ -105,9 +105,9 @@ class MemberIntegrationTest extends AppTestCase
         $req = Request::createFromEnvironment($env);
         $req = $req->withParsedBody($post_body);
         $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(true);
+        $response = $this->app->run(false);
 
-        $this->assertSame($response->getStatusCode(), 201);
+        $this->assertSame(201, $response->getStatusCode());
 
         $body = json_decode($response->getBody());
         $this->assertNotNull($body->id);
@@ -158,9 +158,9 @@ class MemberIntegrationTest extends AppTestCase
         $req = Request::createFromEnvironment($env);
         $req = $req->withParsedBody($post_body);
         $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(true);
+        $response = $this->app->run(false);
 
-        $this->assertSame($response->getStatusCode(), 200);
+        $this->assertSame(200, $response->getStatusCode());
 
         $body = json_decode($response->getBody());
 
@@ -177,5 +177,18 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertNotNull($body->addressId);
         $this->assertContains(1, $body->positionIds);
         $this->assertContains(3, $body->positionIds);
+    }
+
+    public function testPutMemberEmptyBodyShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'PUT',
+            'REQUEST_URI' => '/api/v1/core/member/1',
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
     }
 }

@@ -1,188 +1,152 @@
 <?php
 
+
 namespace Keros\Services\Core;
 
-
-use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
-use Exception;
+use Keros\DataServices\Core\MemberDataService;
 use Keros\Entities\Core\Member;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Error\KerosException;
-use Monolog\Logger;
+use Keros\Tools\Validator;
 use Psr\Container\ContainerInterface;
 
 class MemberService
 {
     /**
-     * @var EntityManager
+     * @var AddressService
      */
-    private $entityManager;
+    private $addressService;
     /**
-     * @var Logger
+     * @var GenderService
      */
-    private $logger;
+    private $genderService;
     /**
-     * @var EntityRepository
+     * @var UserService
      */
-    private $repository;
+    private $userService;
+    /**
+     * @var DepartmentService
+     */
+    private $departmentService;
+    /**
+     * @var PositionService
+     */
+    private $positionService;
+    /**
+     * @var MemberDataService
+     */
+    private $memberDataService;
 
     public function __construct(ContainerInterface $container)
     {
-        $this->logger = $container->get('logger');
-        $this->entityManager = $container->get('entityManager');
-        $this->repository = $this->entityManager->getRepository(Member::class);
+        $this->addressService = $container->get(AddressService::class);
+        $this->genderService = $container->get(GenderService::class);
+        $this->departmentService = $container->get(DepartmentService::class);
+        $this->positionService = $container->get(PositionService::class);
+        $this->userService = $container->get(UserService::class);
+        $this->memberDataService = $container->get(MemberDataService::class);
     }
 
-    /**
-     * @param Member $member
-     * @param int $userId
-     * @param int $genderId
-     * @param int $departmentId
-     * @param $addressId
-     * @throws KerosException
-     */
-    public function create(Member $member, int $userId, int $genderId, int $departmentId, $addressId)
+    public function create(array $fields): Member
     {
-        $this->entityManager->beginTransaction();
-        try {
-            $user = $this->entityManager->getReference('Keros\Entities\Core\User', $userId);
-            $gender = $this->entityManager->getReference('Keros\Entities\Core\Gender', $genderId);
-            $department = $this->entityManager->getReference('Keros\Entities\Core\Department', $departmentId);
-            $address = $this->entityManager->getReference('Keros\Entities\Core\Address', $addressId);
+        $firstName = Validator::requiredString($fields["firstName"]);
+        $lastName = Validator::requiredString($fields["lastName"]);
+        $email = Validator::requiredEmail($fields["email"]);
+        $telephone = Validator::optionalPhone($fields["telephone"]);
+        $birthday = Validator::requiredDate($fields["birthday"]);
+        $schoolYear = Validator::requiredSchoolYear($fields["schoolYear"]);
 
-            $member->setUser($user);
-            $member->setGender($gender);
-            $member->setDepartment($department);
-            $member->setAddress($address);
+        $genderId = Validator::requiredId($fields["genderId"]);
+        $gender = $this->genderService->getOne($genderId);
+        $departmentId = Validator::requiredId($fields["departmentId"]);
+        $department = $this->departmentService->getOne($departmentId);
+        $positionIds = $fields["positionIds"];
+        $positions = $this->positionService->getSome($positionIds);
 
-            $this->entityManager->persist($member);
-            $this->entityManager->flush();
-            $this->entityManager->commit();
-        } catch (Exception $e) {
-            $msg = "Failed to create new member : " . $e->getMessage();
-            $this->logger->error($msg);
-            throw new KerosException($msg, 500);
+        $member = new Member($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $positions);
+
+        $user = $this->userService->create($fields);
+        $member->setUser($user);
+        $address = $this->addressService->create($fields["address"]);
+        $member->setAddress($address);
+        $this->memberDataService->persist($member);
+
+        return $member;
+    }
+
+    public function getOne(int $id): Member
+    {
+        $id = Validator::requiredId($id);
+
+        $member = $this->memberDataService->getOne($id);
+        if (!$member) {
+            throw new KerosException("The member could not be found", 404);
         }
+        return $member;
     }
 
-    /**
-     * @param int $id
-     * @return Member|null
-     * @throws KerosException
-     */
-    public function getOne(int $id): ?Member
+    public function getPage(RequestParameters $requestParameters): array
     {
-        try {
-            $member = $this->repository->find($id);
-            return $member;
-        } catch (Exception $e) {
-            $msg = "Error finding member with ID $id : " . $e->getMessage();
-            $this->logger->error($msg);
-            throw new KerosException($msg, 500);
-        }
+        return $this->memberDataService->getPage($requestParameters);
     }
 
-    /**
-     * @param RequestParameters $requestParameters
-     * @return array
-     * @throws KerosException
-     */
-    public function getMany(RequestParameters $requestParameters): array
+    public function getCount(RequestParameters $requestParameters): int
     {
-        $criteria = $requestParameters->getCriteria();
-        try {
-            $members = $this->repository->matching($criteria)->getValues();
-            return $members;
-        } catch (Exception $e) {
-            $msg = "Error finding page of members : " . $e->getMessage();
-            $this->logger->error($msg);
-            throw new KerosException($msg, 500);
-        }
+        return $this->memberDataService->getCount($requestParameters);
     }
 
-    public function getCount(?RequestParameters $requestParameters): int
+    public function update(int $id, ?array $fields): Member
     {
-        if ($requestParameters != null) {
-            $countCriteria = $requestParameters->getCountCriteria();
-            $count = $this->repository->matching($countCriteria)->count();
-        } else {
-            $count = $this->repository->matching(Criteria::create())->count();
-        }
-        return $count;
-    }
+        $id = Validator::requiredId($id);
+        $member = $this->getOne($id);
 
-    /**
-     * @param $memberId
-     * @param $genderId
-     * @param $departmentId
-     * @param $firstName
-     * @param $lastName
-     * @param $birthday
-     * @param $telephone
-     * @param $email
-     * @param $schoolYear
-     * @return bool|\Doctrine\Common\Proxy\Proxy|null|object
-     * @throws KerosException
-     */
-    public function update($memberId, $genderId, $departmentId, $firstName, $lastName, $birthday, $telephone, $email, $schoolYear)
-    {
-        $this->entityManager->beginTransaction();
-        try {
-            $gender = $this->entityManager->getReference('Keros\Entities\Core\Gender', $genderId);
-            $department = $this->entityManager->getReference('Keros\Entities\Core\Department', $departmentId);
-            $member = $this->entityManager->getReference('Keros\Entities\Core\Member', $memberId);
-
-            $member->setGender($gender);
-            $member->setDepartment($department);
+        if (isset($fields["firstName"])) {
+            $firstName = Validator::requiredString($fields["firstName"]);
             $member->setFirstName($firstName);
+        }
+        if (isset($fields["lastName"])) {
+            $lastName = Validator::requiredString($fields["lastName"]);
             $member->setLastName($lastName);
-            $member->setBirthDate($birthday);
-            $member->setTelephone($telephone);
+        }
+        if (isset($fields["email"])) {
+            $email = Validator::requiredEmail($fields["email"]);
             $member->setEmail($email);
+        }
+        if (isset($fields["telephone"])) {
+            $telephone = Validator::requiredString($fields["telephone"]);
+            $member->setTelephone($telephone);
+        }
+        if (isset($fields["birthday"])) {
+            $birthday = Validator::requiredDate($fields["birthday"]);
+            $member->setBirthday($birthday);
+        }
+        if (isset($fields["schoolYear"])) {
+            $schoolYear = Validator::requiredSchoolYear($fields["schoolYear"]);
             $member->setSchoolYear($schoolYear);
-
-            $this->entityManager->persist($member);
-            $this->entityManager->flush();
-            $this->entityManager->commit();
-
-            return $member;
-        } catch (Exception $e) {
-            $msg = "Failed to update member : " . $e->getMessage();
-            $this->logger->error($msg);
-            throw new KerosException($msg, 500);
         }
+        if (isset($fields["genderId"])) {
+            $genderId = Validator::requiredInt($fields["genderId"]);
+            $gender = $this->genderService->getOne($genderId);
+            $member->setGender($gender);
+        }
+        if (isset($fields["departmentId"])) {
+            $departmentId = Validator::requiredInt($fields["departmentId"]);
+            $department = $this->departmentService->getOne($departmentId);
+            $member->setDepartment($department);
+        }
+        if (isset($fields["positionIds"])) {
+            $positionIds = Validator::requiredArray($fields["positionIds"]);
+            $positions = $this->positionService->getSome($positionIds);
+            $member->setPositions($positions);
+        }
+
+        if (isset($fields["address"])) {
+            $this->addressService->update($member->getAddress()->getId(), $fields["address"]);
+        }
+        $this->userService->update($member->getId(), $fields);
+        $this->memberDataService->persist($member);
+
+        return $member;
     }
 
-    /**
-     * @param $memberId
-     * @param $positionIds
-     * @return bool|\Doctrine\Common\Proxy\Proxy|null|object
-     * @throws KerosException
-     */
-    public function updatePosition($memberId, $positionIds)
-    {
-        $this->entityManager->beginTransaction();
-        try {
-            $member = $this->repository->find($memberId);
-            $member->deleteAllPositions();
-
-            foreach ($positionIds as $positionId)
-            {
-                $position = $this->entityManager->getReference('Keros\Entities\Core\Position', $positionId);
-                $member->addPosition($position);
-            }
-
-            $this->entityManager->persist($member);
-            $this->entityManager->flush();
-            $this->entityManager->commit();
-
-            return $member;
-        } catch (Exception $e) {
-            $msg = "Failed to update member position : " . $e->getMessage();
-            $this->logger->error($msg);
-            throw new KerosException($msg, 500);
-        }
-    }
 }

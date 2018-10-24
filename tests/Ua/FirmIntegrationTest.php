@@ -13,8 +13,8 @@ class FirmIntegrationTest extends AppTestCase
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(true);
-        $this->assertSame($response->getStatusCode(), 200);
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
         $body = json_decode($response->getBody());
         $this->assertEquals(2, count($body->content));
     }
@@ -26,13 +26,13 @@ class FirmIntegrationTest extends AppTestCase
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(true);
-        $this->assertSame($response->getStatusCode(), 200);
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
         $body = json_decode($response->getBody());
-        $this->assertSame($body->id, 1);
-        $this->assertSame($body->name, "Cool Inc.");
+        $this->assertSame(1, $body->id);
+        $this->assertSame("Cool Inc.", $body->name);
     }
-    public function testGetFirmShouldReturn400()
+    public function testGetFirmShouldReturn404()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
@@ -40,8 +40,8 @@ class FirmIntegrationTest extends AppTestCase
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(true);
-        $this->assertSame($response->getStatusCode(), 400);
+        $response = $this->app->run(false);
+        $this->assertSame(404, $response->getStatusCode());
     }
     public function testPostFirmShouldReturn201()
     {
@@ -65,13 +65,13 @@ class FirmIntegrationTest extends AppTestCase
         $req = Request::createFromEnvironment($env);
         $req = $req->withParsedBody($post_body);
         $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(true);
-        $this->assertSame($response->getStatusCode(), 201);
+        $response = $this->app->run(false);
+        $this->assertSame(201, $response->getStatusCode());
         $body = json_decode($response->getBody());
         $this->assertSame("013456789", $body->siret);
         $this->assertSame("Google company", $body->name);
     }
-    public function testPutUserShouldReturn200()
+    public function testPutFirmShouldReturn200()
     {
         $address=array(
             "line1"=>"20 avenue albert Eistein",
@@ -93,9 +93,20 @@ class FirmIntegrationTest extends AppTestCase
         $req = Request::createFromEnvironment($env);
         $req = $req->withParsedBody($post_body);
         $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(true);
-        $this->assertSame($response->getStatusCode(), 200);
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
         $body = json_decode($response->getBody());
         $this->assertSame("Google company", $body->name);
+    }
+    public function testPutFirmWithEmptyBodyShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'PUT',
+            'REQUEST_URI' => '/api/v1/ua/firm/1',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
     }
 }

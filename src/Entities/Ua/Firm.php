@@ -1,5 +1,7 @@
 <?php
+
 namespace Keros\Entities\Ua;
+
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
@@ -7,6 +9,7 @@ use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
 use JsonSerializable;
 use Keros\Tools\Searchable;
+
 /**
  * @Entity
  * @Table(name="ua_firm")
@@ -33,16 +36,15 @@ class Firm implements JsonSerializable, Searchable
      * @JoinColumn(name="typeId", referencedColumnName="id")
      **/
     protected $type;
-    /**
-     * Firm constructor.
-     * @param $name
-     * @param $siret
-     */
-    public function __construct($name, $siret)
+
+    public function __construct($name, $siret, $address, $type)
     {
         $this->name = $name;
         $this->siret = $siret;
+        $this->address = $address;
+        $this->type = $type;
     }
+
     public function jsonSerialize()
     {
         return [
@@ -53,10 +55,13 @@ class Firm implements JsonSerializable, Searchable
             'typeId' => ($this->getType())->getId(),
         ];
     }
-    public static function getSearchFields(): array {
+
+    public static function getSearchFields(): array
+    {
         return ['siret', 'name'];
     }
     // Getters and setters
+
     /**
      * @return mixed
      */
@@ -64,6 +69,7 @@ class Firm implements JsonSerializable, Searchable
     {
         return $this->id;
     }
+
     /**
      * @return mixed
      */
@@ -71,6 +77,7 @@ class Firm implements JsonSerializable, Searchable
     {
         return $this->name;
     }
+
     /**
      * @param mixed $name
      */
@@ -78,6 +85,7 @@ class Firm implements JsonSerializable, Searchable
     {
         $this->name = $name;
     }
+
     /**
      * @return mixed
      */
@@ -85,6 +93,7 @@ class Firm implements JsonSerializable, Searchable
     {
         return $this->siret;
     }
+
     /**
      * @param mixed $siret
      */
@@ -92,6 +101,7 @@ class Firm implements JsonSerializable, Searchable
     {
         $this->siret = $siret;
     }
+
     /**
      * @return mixed
      */
@@ -99,6 +109,7 @@ class Firm implements JsonSerializable, Searchable
     {
         return $this->address;
     }
+
     /**
      * @param mixed $address
      */
@@ -116,6 +127,7 @@ class Firm implements JsonSerializable, Searchable
     {
         return $this->type;
     }
+
     /**
      * @param mixed $type
      */

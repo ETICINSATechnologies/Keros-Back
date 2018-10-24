@@ -16,9 +16,9 @@ class PositionIntegrationTest extends AppTestCase
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(true);
+        $response = $this->app->run(false);
 
-        $this->assertSame($response->getStatusCode(), 200);
+        $this->assertSame(200, $response->getStatusCode());
 
         $body = json_decode($response->getBody());
         $this->assertEquals(22, count($body));
@@ -34,13 +34,13 @@ class PositionIntegrationTest extends AppTestCase
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(true);
+        $response = $this->app->run(false);
 
-        $this->assertSame($response->getStatusCode(), 200);
+        $this->assertSame(200, $response->getStatusCode());
 
         $body = json_decode($response->getBody());
-        $this->assertSame($body->id, 1);
-        $this->assertSame($body->label, "Ancien membre");
+        $this->assertSame(1, $body->id);
+        $this->assertSame("Ancien membre", $body->label);
         $this->assertNull($body->poleId);
     }
 
@@ -52,17 +52,17 @@ class PositionIntegrationTest extends AppTestCase
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(true);
+        $response = $this->app->run(false);
 
-        $this->assertSame($response->getStatusCode(), 200);
+        $this->assertSame(200, $response->getStatusCode());
 
         $body = json_decode($response->getBody());
-        $this->assertSame($body->id, 3);
-        $this->assertSame($body->label, "Chargé d'affaires");
-        $this->assertSame($body->poleId, 10);
+        $this->assertSame(3, $body->id);
+        $this->assertSame("Chargé d'affaires", $body->label);
+        $this->assertSame(10, $body->poleId);
     }
 
-    public function testGetPositionShouldReturn400()
+    public function testGetPositionShouldReturn404()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
@@ -70,8 +70,8 @@ class PositionIntegrationTest extends AppTestCase
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(true);
+        $response = $this->app->run(false);
 
-        $this->assertSame($response->getStatusCode(), 400);
+        $this->assertSame(404, $response->getStatusCode());
     }
 }

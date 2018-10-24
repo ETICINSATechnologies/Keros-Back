@@ -7,12 +7,12 @@ use Keros\Services\Core\AddressService;
 use Keros\Services\Core\CountryService;
 use Keros\Services\Core\DepartmentService;
 use Keros\Services\Core\GenderService;
-use Keros\Services\Core\MemberService;
 use Keros\Services\Core\PoleService;
 use Keros\Services\Core\PositionService;
+use Keros\Services\Core\MemberService;
 use Keros\Services\Core\UserService;
-use Keros\Services\Ua\FirmTypeService;
 use Keros\Services\Ua\FirmService;
+use Keros\Services\Ua\FirmTypeService;
 use Psr\Container\ContainerInterface;
 
 class ServiceRegistrar
@@ -20,11 +20,11 @@ class ServiceRegistrar
     public static function registerServices(ContainerInterface $container)
     {
         // Core
-        $container[AddressService::class] = function ($container) {
-            return new AddressService($container);
-        };
         $container[CountryService::class] = function ($container) {
             return new CountryService($container);
+        };
+        $container[AddressService::class] = function ($container) {
+            return new AddressService($container);
         };
         $container[DepartmentService::class] = function ($container) {
             return new DepartmentService($container);
@@ -52,7 +52,5 @@ class ServiceRegistrar
         $container[FirmService::class] = function ($container) {
             return new FirmService($container);
         };
-
-
     }
 }
