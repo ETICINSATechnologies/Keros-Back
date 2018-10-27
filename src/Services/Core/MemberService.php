@@ -47,6 +47,11 @@ class MemberService
         $this->memberDataService = $container->get(MemberDataService::class);
     }
 
+    /**
+     * @param array $fields
+     * @return Member
+     * @throws KerosException
+     */
     public function create(array $fields): Member
     {
         $firstName = Validator::requiredString($fields["firstName"]);

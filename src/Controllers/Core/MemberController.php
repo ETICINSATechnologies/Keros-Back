@@ -21,18 +21,12 @@ class MemberController
      * @var MemberService
      */
     private $memberService;
-    /**
-     * @var AddressService
-     */
-    private $addressService;
-    /**
-     * @var UserService
-     */
-    private $userService;
+
     /**
      * @var Logger
      */
     private $logger;
+
     /**
      * @var EntityManager
      */
@@ -43,8 +37,6 @@ class MemberController
         $this->logger = $container->get('logger');
         $this->entityManager = $container->get('entityManager');
         $this->memberService = $container->get(MemberService::class);
-        $this->addressService = $container->get(AddressService::class);
-        $this->userService = $container->get(UserService::class);
     }
 
     public function getMember(Request $request, Response $response, array $args)
