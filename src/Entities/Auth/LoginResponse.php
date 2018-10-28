@@ -2,42 +2,66 @@
 
 namespace Keros\Entities\Auth;
 
-use JsonSerializable;
 
-class LoginResponse implements JsonSerializable
+use Keros\Error\KerosException;
+
+class LoginResponse
 {
+    protected static $secretKey = "weAreTheBestDevsIn3tic";
 
-    protected $token;
+    protected static $alg = "sha256";
 
     /**
-     * LoginResponse constructor.
-     * @param $token
+     * @var array|string
      */
-    public function __construct($token)
-    {
-        $this->token = $token;
-    }
-
-    public function jsonSerialize()
-    {
-        return [
-            'token' => $this->getToken(),
+    protected static $header =
+        [
+            "alg" => "HS256",
+            "typ" => "JWT"
         ];
+
+    public static function encodeBase64($data)
+    {
+        return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($data));
     }
 
-    /**
-     * @return mixed
-     */
-    public function getToken()
+    public static function decodeBase64($data)
     {
-        return $this->token;
+        return base64_decode($data);
     }
 
-    /**
-     * @param mixed $token
-     */
-    public function setToken($token): void
+    public static function encode(array $payload)
     {
-        $this->token = $token;
+        // transform header and payload array into json
+        $header = json_encode(self::$header);
+        $payload = json_encode($payload);
+
+        // encode the header and the payload
+        $base64UrlHeader = self::encodeBase64($header);
+        $base64UrlPayload = self::encodeBase64($payload);
+
+        // create signature
+        $signature = hash_hmac(self::$alg, $base64UrlHeader . "." . $base64UrlPayload, self::$secretKey, true);
+
+        // encode signature
+        $base64UrlSignature = self::encodeBase64($signature);
+
+        // Create JWT
+        return
+            [
+                "token" => $base64UrlHeader . "." . $base64UrlPayload . "." . $base64UrlSignature
+            ];
+    }
+
+    public static function decode(String $jwt)
+    {
+        [$base64UrlHeader, $base64UrlPayload, $base64UrlSignature] = explode('.', $jwt);
+        $signature = hash_hmac(self::$alg, $base64UrlHeader . "." . $base64UrlPayload, self::$secretKey, true);
+        if ($base64UrlSignature == self::encodeBase64($signature))
+        {
+            return json_decode(self::decodeBase64($base64UrlPayload));
+        }
+
+        throw new KerosException("The JWT is invalid", 404);
     }
 }

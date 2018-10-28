@@ -2,6 +2,7 @@
 
 namespace Keros;
 
+use Keros\Controllers\Auth\LoginController;
 use Keros\Controllers\Core\AddressController;
 use Keros\Controllers\Core\CountryController;
 use Keros\Controllers\Core\DepartmentController;
@@ -79,12 +80,9 @@ class KerosApp
                 return $response;
             });
 
-            // TODO set up real authentication
-            $this->post("/auth/login", function (Request $request, Response $response, array $args) {
-                $body = $request->getParsedBody();
-                $username = $body["username"];
-                return $response->withJson(new LoginResponse($username), 200);
-            });
+            $this->post("/auth/login", LoginController::class . ':login');
+
+            $this->post("/auth/jwt", LoginController::class . ':checkJWT');
 
             $this->group('/ua', function () {
                 $this->group('/firm-type', function () {

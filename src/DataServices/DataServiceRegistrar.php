@@ -3,6 +3,7 @@
 
 namespace Keros\DataServices;
 
+use Keros\DataServices\Auth\LoginDataService;
 use Keros\DataServices\Core\AddressDataService;
 use Keros\DataServices\Core\CountryDataService;
 use Keros\DataServices\Core\DepartmentDataService;
@@ -19,6 +20,11 @@ class DataServiceRegistrar
 {
     public static function registerServices(ContainerInterface $container)
     {
+        // Auth
+        $container[LoginDataService::class] = function ($container) {
+            return new LoginDataService($container);
+        };
+
         // Core
         $container[AddressDataService::class] = function ($container) {
             return new AddressDataService($container);
