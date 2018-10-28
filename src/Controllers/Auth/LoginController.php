@@ -45,13 +45,4 @@ class LoginController
 
         return $response->withJson(LoginResponse::encode($payload), 200);
     }
-
-    public function checkJWT(Request $request, Response $response, array $args)
-    {
-        $this->logger->debug("Checking JWT from " . $request->getServerParams()["REMOTE_ADDR"]);
-
-        $body = $request->getParsedBody();
-        $jwt = $body["jwt"];
-        return $response->withJson(LoginResponse::decode($jwt), 200);
-    }
 }

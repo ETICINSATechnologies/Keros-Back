@@ -80,7 +80,6 @@ class KerosApp
 
             $this->group("/auth", function () {
                 $this->post("/login", LoginController::class . ':login');
-                $this->post("/jwt", LoginController::class . ':checkJWT');
             });
 
             $this->group('/ua', function () {
