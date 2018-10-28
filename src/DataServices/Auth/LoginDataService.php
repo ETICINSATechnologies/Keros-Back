@@ -40,8 +40,12 @@ class LoginDataService
                 "username" => $username,
                 "password" => $password
             ];
-            $user = $this->repository->findBy($criteria)[0];
-            return $user;
+            $users = $this->repository->findBy($criteria);
+
+            // check if we get one and only one instance of user
+            if (sizeof($users) == 1)
+                return $users[0];
+            return null;
         } catch (Exception $e) {
             $msg = "Error logging user: " . $e->getMessage();
             $this->logger->error($msg);

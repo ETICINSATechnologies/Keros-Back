@@ -10,11 +10,9 @@ use Keros\Controllers\Core\GenderController;
 use Keros\Controllers\Core\MemberController;
 use Keros\Controllers\Core\PoleController;
 use Keros\Controllers\Core\PositionController;
-use Keros\Controllers\Core\UserController;
 use Keros\Controllers\Ua\FirmController;
 use Keros\Controllers\Ua\FirmTypeController;
 use Keros\DataServices\DataServiceRegistrar;
-use Keros\Entities\Auth\LoginResponse;
 use Keros\Error\ErrorHandler;
 use Keros\Error\PhpErrorHandler;
 use Keros\Services\ServiceRegistrar;
@@ -80,15 +78,17 @@ class KerosApp
                 return $response;
             });
 
-            $this->post("/auth/login", LoginController::class . ':login');
-
-            $this->post("/auth/jwt", LoginController::class . ':checkJWT');
+            $this->group("/auth", function () {
+                $this->post("/login", LoginController::class . ':login');
+                $this->post("/jwt", LoginController::class . ':checkJWT');
+            });
 
             $this->group('/ua', function () {
                 $this->group('/firm-type', function () {
                     $this->get("", FirmTypeController::class . ':getAllFirmType');
                     $this->get("/{id:[0-9]+}", FirmTypeController::class . ':getFirmType');
                 });
+
                 $this->group('/firm', function () {
                     $this->get("", FirmController::class . ':getPageFirms');
                     $this->get("/{id:[0-9]+}", FirmController::class . ':getFirm');
@@ -113,13 +113,6 @@ class KerosApp
                     $this->get("", CountryController::class . ':getAllCountries');
                     $this->get("/{id:[0-9]+}", CountryController::class . ':getCountry');
                 });
-
-                $this->group('/user', function () {
-                    $this->get("", UserController::class . ':getPageUsers');
-                    $this->get('/{id:[0-9]+}', UserController::class . ':getUser');
-                    $this->post("", UserController::class . ':createUser');
-                });
-
 
                 $this->group('/pole', function () {
                     $this->get("", PoleController::class . ':getAllPoles');
