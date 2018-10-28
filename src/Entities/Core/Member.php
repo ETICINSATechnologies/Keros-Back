@@ -30,7 +30,7 @@ class Member implements JsonSerializable
     protected $lastName;
 
     /** @Column(type="datetime") */
-    protected $birthDate;
+    protected $birthday;
 
     /** @Column(type="string", length=20) */
     protected $telephone;
@@ -66,20 +66,22 @@ class Member implements JsonSerializable
      * Member constructor.
      * @param $firstName
      * @param $lastName
-     * @param $birthDate
+     * @param $birthday
      * @param $telephone
      * @param $email
      * @param $schoolYear
      */
-    public function __construct($firstName, $lastName, $birthDate, $telephone, $email, $schoolYear)
+    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $positions)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
-        $this->birthDate = $birthDate;
+        $this->birthday = $birthday;
         $this->telephone = $telephone;
         $this->email = $email;
         $this->schoolYear = $schoolYear;
-        $this->positions = new ArrayCollection();
+        $this->positions = $positions;
+        $this->gender = $gender;
+        $this->department = $department;
     }
 
     public function jsonSerialize()
@@ -91,7 +93,7 @@ class Member implements JsonSerializable
             'lastName' => $this->getLastName(),
             'genderId' => $this->getGender()->getId(),
             'email' => $this->getEmail(),
-            'birthday' => $this->getBirthDate()->format('Y-m-d'),
+            'birthday' => $this->getBirthday()->format('Y-m-d'),
             'departmentId' => $this->getDepartment()->getId(),
             'schoolYear' => $this->getSchoolYear(),
             'telephone' => $this->getTelephone(),
@@ -111,14 +113,6 @@ class Member implements JsonSerializable
     public function getId()
     {
         return $this->getUser()->getId();
-    }
-
-    /**
-     * @param mixed $id
-     */
-    public function setId($id): void
-    {
-        $this->getUser()->setId($id);
     }
 
     /**
@@ -188,17 +182,17 @@ class Member implements JsonSerializable
     /**
      * @return mixed
      */
-    public function getBirthDate()
+    public function getBirthday()
     {
-        return $this->birthDate;
+        return $this->birthday;
     }
 
     /**
-     * @param mixed $birthDate
+     * @param mixed $birthday
      */
-    public function setBirthDate($birthDate): void
+    public function setBirthday($birthday): void
     {
-        $this->birthDate = $birthDate;
+        $this->birthday = $birthday;
     }
 
     /**
@@ -281,9 +275,17 @@ class Member implements JsonSerializable
         $this->department = $department;
     }
 
-    private function getPosition()
+    private function getPositions()
     {
         return $this->positions;
+    }
+
+    /**
+     * @param mixed $positions
+     */
+    public function setPositions($positions): void
+    {
+        $this->positions = $positions;
     }
 
     /**
@@ -292,7 +294,7 @@ class Member implements JsonSerializable
     public function getPositionIds()
     {
         $positionIds = [];
-        foreach ($this->getPosition() as $position)
+        foreach ($this->getPositions() as $position)
         {
             $positionIds[] = $position->getId();
         }

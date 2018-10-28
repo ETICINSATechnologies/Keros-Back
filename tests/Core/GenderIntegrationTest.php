@@ -16,9 +16,9 @@ class GenderIntegrationTest extends AppTestCase
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(true);
+        $response = $this->app->run(false);
 
-        $this->assertSame($response->getStatusCode(), 200);
+        $this->assertSame(200, $response->getStatusCode());
 
         $body = json_decode($response->getBody());
         $this->assertEquals(4, sizeof($body));
@@ -32,15 +32,15 @@ class GenderIntegrationTest extends AppTestCase
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(true);
+        $response = $this->app->run(false);
 
-        $this->assertSame($response->getStatusCode(), 200);
+        $this->assertSame(200, $response->getStatusCode());
 
         $body = json_decode($response->getBody());
-        $this->assertSame($body->id, 1);
-        $this->assertSame($body->label, 'M');
+        $this->assertSame(1, $body->id);
+        $this->assertSame('M', $body->label);
     }
-    public function testGetGenderShouldReturn400()
+    public function testGetGenderShouldReturn404()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
@@ -48,8 +48,8 @@ class GenderIntegrationTest extends AppTestCase
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(true);
+        $response = $this->app->run(false);
 
-        $this->assertSame($response->getStatusCode(), 400);
+        $this->assertSame(404, $response->getStatusCode());
     }
 }

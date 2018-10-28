@@ -16,9 +16,9 @@ class PoleIntegrationTest extends AppTestCase
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(true);
+        $response = $this->app->run(false);
 
-        $this->assertSame($response->getStatusCode(), 200);
+        $this->assertSame(200, $response->getStatusCode());
 
         $body = json_decode($response->getBody());
         $this->assertEquals(5, count($body->content));
@@ -37,20 +37,20 @@ class PoleIntegrationTest extends AppTestCase
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(true);
+        $response = $this->app->run(false);
 
-        $this->assertSame($response->getStatusCode(), 200);
+        $this->assertSame(200, $response->getStatusCode());
 
         $body = json_decode($response->getBody());
-        $this->assertSame($body->id, 1);
-        $this->assertSame($body->line1, "13 rue renard");
-        $this->assertSame($body->line2, null);
-        $this->assertSame($body->postalCode, 69100);
-        $this->assertSame($body->city, "lyon");
-        $this->assertSame($body->countryId, 1);
+        $this->assertSame(1, $body->id);
+        $this->assertSame("13 rue renard", $body->line1);
+        $this->assertSame(null, $body->line2);
+        $this->assertSame(69100, $body->postalCode);
+        $this->assertSame("lyon", $body->city);
+        $this->assertSame(1, $body->countryId);
     }
 
-    public function testGetAddressShouldReturn400()
+    public function testGetAddressShouldReturn404()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
@@ -58,8 +58,8 @@ class PoleIntegrationTest extends AppTestCase
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(true);
+        $response = $this->app->run(false);
 
-        $this->assertSame($response->getStatusCode(), 400);
+        $this->assertSame(404, $response->getStatusCode());
     }
 }
