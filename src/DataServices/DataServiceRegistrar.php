@@ -20,11 +20,6 @@ class DataServiceRegistrar
 {
     public static function registerServices(ContainerInterface $container)
     {
-        // Auth
-        $container[LoginDataService::class] = function ($container) {
-            return new LoginDataService($container);
-        };
-
         // Core
         $container[AddressDataService::class] = function ($container) {
             return new AddressDataService($container);
