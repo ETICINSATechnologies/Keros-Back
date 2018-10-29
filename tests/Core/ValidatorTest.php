@@ -11,7 +11,7 @@ final class ValidatorTest extends TestCase
     public function testValidEmailShouldReturnSame(): void
     {
         $this->assertEquals(
-            Validator::email("test@test.com"),
+            Validator::requiredEmail("test@test.com"),
             "test@test.com"
         );
     }
@@ -20,14 +20,14 @@ final class ValidatorTest extends TestCase
     {
         $this->expectException(KerosException::class);
 
-        Validator::email('invalid');
+        Validator::requiredEmail('invalid');
     }
 
     public function testEmailWithWhitespaceShouldTrimmed(): void
     {
         $this->assertEquals(
             'user@example.com',
-            Validator::email('   user@example.com   ')
+            Validator::requiredEmail('   user@example.com   ')
         );
     }
 }

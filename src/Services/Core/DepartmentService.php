@@ -1,79 +1,38 @@
 <?php
 
+
 namespace Keros\Services\Core;
-use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
-use Exception;
-use Keros\Entities\Core\RequestParameters;
+
+use Keros\DataServices\Core\DepartmentDataService;
 use Keros\Entities\Core\Department;
 use Keros\Error\KerosException;
-use Monolog\Logger;
+use Keros\Tools\Validator;
 use Psr\Container\ContainerInterface;
 
 class DepartmentService
 {
     /**
-     * @var EntityManager
+     * @var DepartmentDataService
      */
-    private $entityManager;
-    /**
-     * @var Logger
-     */
-    private $logger;
-    /**
-     * @var EntityRepository
-     */
-    private $repository;
+    private $departmentDataService;
 
     public function __construct(ContainerInterface $container)
     {
-        $this->logger = $container->get('logger');
-        $this->entityManager = $container->get('entityManager');
-        $this->repository = $this->entityManager->getRepository(Department::class);
+        $this->departmentDataService = $container->get(DepartmentDataService::class);
     }
 
-
-
-
-    public function getOne(int $id): ?Department
+    public function getOne(int $id): Department
     {
-        try {
-            $department = $this->repository->find($id);
-            return $department;
-        } catch (Exception $e) {
-            $msg = "Error finding Department with ID $id : " . $e->getMessage();
-            $this->logger->error($msg);
-            throw new KerosException($msg, 500);
+        $id = Validator::requiredId($id);
+        $department = $this->departmentDataService->getOne($id);
+        if (!$department) {
+            throw new KerosException("The department could not be found", 404);
         }
+        return $department;
     }
 
-    public function getAll(RequestParameters $requestParameters): array
+    public function getAll(): array
     {
-        $criteria = $requestParameters->getCriteria();
-        try {
-            $departments = $this->repository->matching($criteria)->getValues();
-            return $departments;
-        } catch (Exception $e) {
-            $msg = "Error finding departments : " . $e->getMessage();
-            $this->logger->error($msg);
-            throw new KerosException($msg, 500);
-        }
+        return $this->departmentDataService->getAll();
     }
-
-
-    public function getCount(?RequestParameters $requestParameters): int
-    {
-        if ($requestParameters != null) {
-            $countCriteria = $requestParameters->getCountCriteria();
-            $count = $this->repository->matching($countCriteria)->count();
-        } else {
-            $count = $this->repository->matching(Criteria::create())->count();
-        }
-        return $count;
-    }
-
-
-
-
 }

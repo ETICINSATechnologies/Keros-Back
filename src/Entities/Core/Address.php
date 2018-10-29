@@ -2,13 +2,6 @@
 
 namespace Keros\Entities\Core;
 
-use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\GeneratedValue;
-use Doctrine\ORM\Mapping\Id;
-use Doctrine\ORM\Mapping\OneToMany;
-use Doctrine\ORM\Mapping\JoinColumn;
-use Doctrine\ORM\Mapping\Table;
 use JsonSerializable;
 use Keros\Tools\Searchable;
 
@@ -51,12 +44,13 @@ class Address implements JsonSerializable, Searchable
      * @param $postalCode
      * @param $city
      */
-    public function __construct($line1, $line2, $postalCode, $city)
+    public function __construct($line1, $line2, $postalCode, $city, $country)
     {
         $this->line1 = $line1;
         $this->line2 = $line2;
         $this->postalCode = $postalCode;
         $this->city = $city;
+        $this->country = $country;
     }
 
     public function jsonSerialize()
@@ -67,7 +61,7 @@ class Address implements JsonSerializable, Searchable
             'line2' => $this->getLine2(),
             'postalCode' => $this->getPostalCode(),
             'city' => $this->getCity(),
-            'country' => $this->getCountry()
+            'countryId' => ($this->getCountry())->getId()
         ];
     }
 

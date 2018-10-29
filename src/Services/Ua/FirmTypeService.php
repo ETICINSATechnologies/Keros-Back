@@ -3,66 +3,38 @@
 
 namespace Keros\Services\Ua;
 
-use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
-use Exception;
-
+use Keros\DataServices\Ua\FirmTypeDataService;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Ua\FirmType;
 use Keros\Error\KerosException;
-use Monolog\Logger;
+use Keros\Tools\Validator;
 use Psr\Container\ContainerInterface;
+
 class FirmTypeService
 {
     /**
-     * @var EntityManager
+     * @var FirmTypeDataService
      */
-    private $entityManager;
-    /**
-     * @var Logger
-     */
-    private $logger;
-    /**
-     * @var EntityRepository
-     */
-    private $repository;
+    private $firmTypeDataService;
 
     public function __construct(ContainerInterface $container)
     {
-        $this->logger = $container->get('logger');
-        $this->entityManager = $container->get('entityManager');
-        $this->repository = $this->entityManager->getRepository(FirmType::class);
+        $this->firmTypeDataService = $container->get(FirmTypeDataService::class);
     }
 
-
-
-
-    public function getOne(int $id): ?FirmType
+    public function getOne(int $id): FirmType
     {
-        try {
-            $firmType = $this->repository->find($id);
-            return $firmType;
-        } catch (Exception $e) {
-            $msg = "Error finding Firm_type with ID $id : " . $e->getMessage();
-            $this->logger->error($msg);
-            throw new KerosException($msg, 500);
+        $id = Validator::requiredId($id);
+        $firmType = $this->firmTypeDataService->getOne($id);
+        if (!$firmType) {
+            throw new KerosException("The FirmType could not be found", 404);
         }
+        return $firmType;
     }
 
-    public function getMany(RequestParameters $requestParameters): array
+    public function getPage(RequestParameters $requestParameters): array
     {
-        $criteria = $requestParameters->getCriteria();
-        try {
-            $firmTypes = $this->repository->matching($criteria)->getValues();
-            return $firmTypes;
-        } catch (Exception $e) {
-            $msg = "Error finding Firm Types : " . $e->getMessage();
-            $this->logger->error($msg);
-            throw new KerosException($msg, 500);
-        }
+        $firmTypes = $this->firmTypeDataService->getPage($requestParameters);
+        return $firmTypes;
     }
-
-
-
 }

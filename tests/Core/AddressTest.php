@@ -12,14 +12,12 @@ final class AddressTest extends TestCase
     public function testNewAddressShouldBeInstanceOfAddress()
     {
         $this->assertInstanceOf(Address::class,
-                                new Address("18 rue du master", "", 69100, "Lyon"));
+                                new Address("18 rue du master", "", 69100, "Lyon", new Country("Eldorado")));
     }
 
     public function testAddressShouldCreateWithParams()
     {
-        $address = new Address("18 rue du master", "", 69000, "Lyon");
-        $country = new Country("Eldorado");
-        $address->setCountry($country);
+        $address = new Address("18 rue du master", "", 69000, "Lyon", new Country("Eldorado"));
 
         $this->assertInstanceOf(Address::class, $address);
         $this->assertEquals("18 rue du master", $address->getLine1());

@@ -1,61 +1,53 @@
 <?php
 
+
 namespace Keros\Services\Core;
 
-
-use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
-use Exception;
+use Keros\DataServices\Core\PositionDataService;
 use Keros\Entities\Core\Position;
-use Keros\Entities\Core\RequestParameters;
 use Keros\Error\KerosException;
-use Monolog\Logger;
+use Keros\Tools\Validator;
 use Psr\Container\ContainerInterface;
 
 class PositionService
 {
     /**
-     * @var EntityManager
+     * @var PositionDataService
      */
-    private $entityManager;
-    /**
-     * @var Logger
-     */
-    private $logger;
-    /**
-     * @var EntityRepository
-     */
-    private $repository;
+    private $positionDataService;
 
     public function __construct(ContainerInterface $container)
     {
-        $this->logger = $container->get('logger');
-        $this->entityManager = $container->get('entityManager');
-        $this->repository = $this->entityManager->getRepository(Position::class);
+        $this->positionDataService = $container->get(PositionDataService::class);
     }
 
-    public function getOne(int $id): ?Position
+    public function getOne(int $id): Position
     {
-        try {
-            $position = $this->repository->find($id);
-            return $position;
-        } catch (Exception $e) {
-            $msg = "Error finding position with ID $id : " . $e->getMessage();
-            $this->logger->error($msg);
-            throw new KerosException($msg, 500);
+        $id = Validator::requiredId($id);
+        $position = $this->positionDataService->getOne($id);
+        if (!$position) {
+            throw new KerosException("The position could not be found", 404);
         }
+        return $position;
     }
 
-    public function getMany(RequestParameters $requestParameters): array
+    public function getSome(array $ids): array
     {
-        try {
-            $positions = $this->repository->findAll();
-            return $positions;
-        } catch (Exception $e) {
-            $msg = "Error finding page of positions : " . $e->getMessage();
-            $this->logger->error($msg);
-            throw new KerosException($msg, 500);
+        $positions = [];
+        foreach ($ids as $id) {
+            $id = Validator::requiredId($id);
+            $position = $this->positionDataService->getOne($id);
+            if (!$position) {
+                throw new KerosException("The position could not be found", 404);
+            }
+            $positions[] = $position;
         }
+
+        return $positions;
+    }
+
+    public function getAll(): array
+    {
+        return $this->positionDataService->getAll();
     }
 }

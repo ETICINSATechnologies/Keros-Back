@@ -2,16 +2,6 @@ SET AUTOCOMMIT = 0;
 SET FOREIGN_KEY_CHECKS = 0;
 SET UNIQUE_CHECKS = 0;
 
-DROP TABLE IF EXISTS cat;
-CREATE TABLE cat (
-  id     int NOT NULL AUTO_INCREMENT,
-  name   varchar(255),
-  height float(5, 2),
-  PRIMARY KEY (id)
-)
-  ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
-
 DROP TABLE IF EXISTS core_pole;
 CREATE TABLE `core_pole` (
   `id`    int(5) AUTO_INCREMENT,
@@ -60,7 +50,7 @@ CREATE TABLE `core_user` (
   `lastConnectedAt` DATETIME,
   `createdAt`       DATETIME              DEFAULT NOW(),
   `disabled`        BOOLEAN      NOT NULL DEFAULT FALSE,
-  `expiresAt`       DATETIME     NOT NULL,
+  `expiresAt`       DATETIME,
   PRIMARY KEY (`id`),
   KEY `core_user_username_key` (`username`)
 )
@@ -97,8 +87,8 @@ CREATE TABLE `core_member` (
   `genderId`     int(1)       NOT NULL,
   `firstName`    varchar(100) NOT NULL,
   `lastName`     varchar(100) NOT NULL,
-  `birthdate`    date        DEFAULT NULL,
-  `telephone`    varchar(20) DEFAULT NULL UNIQUE,
+  `birthday`    date        DEFAULT NULL,
+  `telephone`    varchar(20) DEFAULT NULL,
   `email`        varchar(255) NOT NULL UNIQUE,
   `addressId`    int(11)      NOT NULL UNIQUE,
   `schoolYear`   int(11)     DEFAULT NULL,
@@ -126,7 +116,7 @@ CREATE TABLE `core_member_position` (
 DROP TABLE IF EXISTS ua_firm_type;
 CREATE TABLE `ua_firm_type` (
   `id`    int(2) AUTO_INCREMENT,
-  `label` varchar(15) NOT NULL UNIQUE,
+  `label` varchar(20) NOT NULL UNIQUE,
   PRIMARY KEY (`id`)
 )
   ENGINE = InnoDB
@@ -138,7 +128,7 @@ CREATE TABLE `ua_firm` (
   `siret`     varchar(20) UNIQUE,
   `name`      varchar(64) NOT NULL UNIQUE,
   `addressId` int(11)     NOT NULL UNIQUE,
-  `typeId`    int(11)     NOT NULL UNIQUE,
+  `typeId`    int(11)     NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `ua_firm_address_addressId_fk` FOREIGN KEY (`addressId`) REFERENCES `core_address` (`id`),
   CONSTRAINT `ua_firm_type_typeId_fk` FOREIGN KEY (`typeId`) REFERENCES `ua_firm_type` (`id`)
@@ -225,8 +215,8 @@ INSERT INTO `core_country` (id, label) VALUES
   (193, 'Viêt Nam'), (194, 'Yémen'), (195, 'Zambie'), (196, 'Zimbabwe');
 
 INSERT INTO ua_firm_type (id, label) VALUES
-  (1, 'Administration'), (2, 'Autres'), (3, 'Grand groupe'), (4, 'Grossiste'), (5, 'Particulier'), (6, 'PME/PMI'),
-  (7, 'Revendeur'), (8, 'Start-up'), (9, 'TPE');
+  (1, 'Particulier'), (2, 'TPE/start-up'), (3, 'PME'), (4, 'Grand Groupe'), (5, 'Administration'), (6, 'Association'),
+  (7, 'Junior-Entreprise');
 
 INSERT INTO core_gender (id, label) VALUES (1, 'M'), (2, 'F'), (3, 'A'), (4, 'I');
 

@@ -3,60 +3,39 @@
 
 namespace Keros\Services\Core;
 
-use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
-use Exception;
+use Keros\DataServices\Core\CountryDataService;
+use Keros\DataServices\Core\GenderDataService;
+use Keros\Entities\Core\Country;
 use Keros\Entities\Core\Gender;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Error\KerosException;
-use Monolog\Logger;
+use Keros\Tools\Validator;
 use Psr\Container\ContainerInterface;
-
 
 class GenderService
 {
     /**
-     * @var EntityManager
+     * @var GenderDataService
      */
-    private $entityManager;
-    /**
-     * @var Logger
-     */
-    private $logger;
-    /**
-     * @var EntityRepository
-     */
-    private $repository;
+    private $genderDataService;
 
     public function __construct(ContainerInterface $container)
     {
-        $this->logger = $container->get('logger');
-        $this->entityManager = $container->get('entityManager');
-        $this->repository = $this->entityManager->getRepository(Gender::class);
+        $this->genderDataService = $container->get(GenderDataService::class);
     }
 
-    public function getOne(int $id): ?Gender
+    public function getOne(int $id): Gender
     {
-        try {
-            $gender = $this->repository->find($id);
-            return $gender;
-        } catch (Exception $e) {
-            $msg = "Error finding Gender with ID $id : " . $e->getMessage();
-            $this->logger->error($msg);
-            throw new KerosException($msg, 500);
+        $id = Validator::requiredId($id);
+        $gender = $this->genderDataService->getOne($id);
+        if (!$gender) {
+            throw new KerosException("The gender could not be found", 404);
         }
+        return $gender;
     }
-    public function getAll(RequestParameters $requestParameters): array
+
+    public function getAll(): array
     {
-        $criteria = $requestParameters->getCriteria();
-        try {
-            $genders = $this->repository->matching($criteria)->getValues();
-            return $genders;
-        } catch (Exception $e) {
-            $msg = "Error finding genders : " . $e->getMessage();
-            $this->logger->error($msg);
-            throw new KerosException($msg, 500);
-        }
+        return $this->genderDataService->getAll();
     }
 }
