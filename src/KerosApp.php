@@ -20,6 +20,7 @@ use Keros\Tools\ConfigLoader;
 use Keros\Tools\JwtCodec;
 use Keros\Tools\KerosEntityManager;
 use Keros\Tools\Logger;
+use Keros\Tools\PasswordEncryption;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -81,6 +82,18 @@ class KerosApp
 
             $this->group("/auth", function () {
                 $this->post("/login", LoginController::class . ':login');
+                $this->get("/password", function (Request $request, Response $response, array $args) {
+                    $queryParams = $request->getQueryParams();
+                    $password = $queryParams["password"];
+                    $validate = $queryParams["validate"];
+                    $hash = PasswordEncryption::encrypt($password);
+                    $same = PasswordEncryption::verify($validate, '$2y$10$RicJAohUXxd092zkEcmv3.2sh.Jz5eSRKGPVMdg8Cze9M.Rd585QG');
+                   return $response-> withJson(
+                       [
+                           "password" => $hash,
+                           "same" => $same
+                       ]);
+                });
             });
 
             $this->group('/ua', function () {
