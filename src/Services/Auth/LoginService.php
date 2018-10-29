@@ -45,14 +45,4 @@ class LoginService
 
         throw new KerosException("Authentication failed", 401);
     }
-
-    public function encode(array $payload)
-    {
-
-    }
-
-    public function decode(String $jwt)
-    {
-
-    }
 }
