@@ -3,6 +3,7 @@
 
 namespace Keros\DataServices;
 
+use Keros\DataServices\Auth\LoginDataService;
 use Keros\DataServices\Core\AddressDataService;
 use Keros\DataServices\Core\CountryDataService;
 use Keros\DataServices\Core\DepartmentDataService;

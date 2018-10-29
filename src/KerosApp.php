@@ -2,6 +2,7 @@
 
 namespace Keros;
 
+use Keros\Controllers\Auth\LoginController;
 use Keros\Controllers\Core\AddressController;
 use Keros\Controllers\Core\CountryController;
 use Keros\Controllers\Core\DepartmentController;
@@ -9,15 +10,14 @@ use Keros\Controllers\Core\GenderController;
 use Keros\Controllers\Core\MemberController;
 use Keros\Controllers\Core\PoleController;
 use Keros\Controllers\Core\PositionController;
-use Keros\Controllers\Core\UserController;
 use Keros\Controllers\Ua\FirmController;
 use Keros\Controllers\Ua\FirmTypeController;
 use Keros\DataServices\DataServiceRegistrar;
-use Keros\Entities\Auth\LoginResponse;
 use Keros\Error\ErrorHandler;
 use Keros\Error\PhpErrorHandler;
 use Keros\Services\ServiceRegistrar;
 use Keros\Tools\ConfigLoader;
+use Keros\Tools\JwtCodec;
 use Keros\Tools\KerosEntityManager;
 use Keros\Tools\Logger;
 use Psr\Container\ContainerInterface;
@@ -79,11 +79,8 @@ class KerosApp
                 return $response;
             });
 
-            // TODO set up real authentication
-            $this->post("/auth/login", function (Request $request, Response $response, array $args) {
-                $body = $request->getParsedBody();
-                $username = $body["username"];
-                return $response->withJson(new LoginResponse($username), 200);
+            $this->group("/auth", function () {
+                $this->post("/login", LoginController::class . ':login');
             });
 
             $this->group('/ua', function () {
@@ -91,6 +88,7 @@ class KerosApp
                     $this->get("", FirmTypeController::class . ':getAllFirmType');
                     $this->get("/{id:[0-9]+}", FirmTypeController::class . ':getFirmType');
                 });
+
                 $this->group('/firm', function () {
                     $this->get("", FirmController::class . ':getPageFirms');
                     $this->get("/{id:[0-9]+}", FirmController::class . ':getFirm');
@@ -115,13 +113,6 @@ class KerosApp
                     $this->get("", CountryController::class . ':getAllCountries');
                     $this->get("/{id:[0-9]+}", CountryController::class . ':getCountry');
                 });
-
-                $this->group('/user', function () {
-                    $this->get("", UserController::class . ':getPageUsers');
-                    $this->get('/{id:[0-9]+}', UserController::class . ':getUser');
-                    $this->post("", UserController::class . ':createUser');
-                });
-
 
                 $this->group('/pole', function () {
                     $this->get("", PoleController::class . ':getAllPoles');

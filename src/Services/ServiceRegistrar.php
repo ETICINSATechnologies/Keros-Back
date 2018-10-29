@@ -3,6 +3,7 @@
 
 namespace Keros\Services;
 
+use Keros\Services\Auth\LoginService;
 use Keros\Services\Core\AddressService;
 use Keros\Services\Core\CountryService;
 use Keros\Services\Core\DepartmentService;
@@ -19,6 +20,11 @@ class ServiceRegistrar
 {
     public static function registerServices(ContainerInterface $container)
     {
+        // Auth
+        $container[LoginService::class] = function ($container) {
+            return new LoginService($container);
+        };
+
         // Core
         $container[CountryService::class] = function ($container) {
             return new CountryService($container);
