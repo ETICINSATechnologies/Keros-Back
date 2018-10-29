@@ -82,4 +82,24 @@ class UserDataService
         }
         return $count;
     }
+
+    public function checkLogin(String $username, String $password): ?User
+    {
+        try {
+            $criteria = [
+                "username" => $username,
+                "password" => $password
+            ];
+            $users = $this->repository->findBy($criteria);
+
+            // check if we get one and only one instance of user
+            if (sizeof($users) == 1)
+                return $users[0];
+            return null;
+        } catch (Exception $e) {
+            $msg = "Error logging user: " . $e->getMessage();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
+    }
 }

@@ -17,6 +17,7 @@ use Keros\Error\ErrorHandler;
 use Keros\Error\PhpErrorHandler;
 use Keros\Services\ServiceRegistrar;
 use Keros\Tools\ConfigLoader;
+use Keros\Tools\JwtCodec;
 use Keros\Tools\KerosEntityManager;
 use Keros\Tools\Logger;
 use Psr\Container\ContainerInterface;

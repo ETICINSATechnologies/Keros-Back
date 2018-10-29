@@ -40,14 +40,14 @@ class JwtCodec
     public static function decode(String $jwt)
     {
         $kerosConfig = ConfigLoader::getConfig();
-        $alg = $kerosConfig["ALG"];
+        $hash = $kerosConfig["HASH"];
         $secretKey = $kerosConfig["SECRET_KEY"];
 
         [$base64UrlHeader, $base64UrlPayload, $base64UrlSignature] = explode('.', $jwt);
-        $signature = hash_hmac($alg, $base64UrlHeader . "." . $base64UrlPayload, $secretKey, true);
+        $signature = hash_hmac($hash, $base64UrlHeader . "." . $base64UrlPayload, $secretKey, false);
 
         // check if the $signature is the same as expected
-        if ($signature == self::decodeBase64($base64UrlSignature))
+        if ($base64UrlSignature == self::encodeBase64($signature ))
         {
             return json_decode(self::decodeBase64($base64UrlPayload));
         }

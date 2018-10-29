@@ -2,10 +2,8 @@
 
 namespace Keros\Controllers\Auth;
 
-use Keros\Entities\Auth\LoginResponse;
 use Keros\Services\Auth\LoginService;
 use Doctrine\ORM\EntityManager;
-use Keros\Tools\JwtCodec;
 use Keros\Tools\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -41,20 +39,8 @@ class LoginController
         $this->logger->debug("Login user from " . $request->getServerParams()["REMOTE_ADDR"]);
 
         $body = $request->getParsedBody();
-        $user = $this->loginService->checkLogin($body);
+        $loginResponse = $this->loginService->checkLogin($body);
 
-        // the token will expire in exactly in one day
-        $exp = time() + 24 * 3600;
-
-        // creation of the payload
-        $payload = array(
-            "username" => $user->getUsername(),
-            "exp" => $exp
-        );
-
-        // create the token from the payload
-        $token = JwtCodec::encode($payload);
-
-        return $response->withJson(new LoginResponse($token, $exp), 200);
+        return $response->withJson($loginResponse, 200);
     }
 }
