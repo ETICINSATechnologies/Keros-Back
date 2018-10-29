@@ -31,4 +31,14 @@ class LoginService
 
         return $user;
     }
+
+    public function encode(array $payload)
+    {
+
+    }
+
+    public function decode(String $jwt)
+    {
+
+    }
 }

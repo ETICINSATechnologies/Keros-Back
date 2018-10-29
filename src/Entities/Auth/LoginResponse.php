@@ -3,65 +3,56 @@
 namespace Keros\Entities\Auth;
 
 
-use Keros\Error\KerosException;
+use JsonSerializable;
 
-class LoginResponse
+class LoginResponse implements JsonSerializable
 {
-    protected static $secretKey = "weAreTheBestDevsIn3tic";
+    protected $token;
 
-    protected static $alg = "sha256";
+    protected $expiresAt;
+
+    public function __construct(String $token, int $expiresAt)
+    {
+        $this->token = $token;
+        $this->expiresAt = $expiresAt;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'token' => $this->getToken(),
+        ];
+    }
 
     /**
-     * @var array|string
+     * @return String
      */
-    protected static $header =
-        [
-            "alg" => "HS256",
-            "typ" => "JWT"
-        ];
-
-    public static function encodeBase64($data)
+    public function getToken(): String
     {
-        return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($data));
+        return $this->token;
     }
 
-    public static function decodeBase64($data)
+    /**
+     * @param String $token
+     */
+    public function setToken(String $token): void
     {
-        return base64_decode($data);
+        $this->token = $token;
     }
 
-    public static function encode(array $payload)
+    /**
+     * @return int
+     */
+    public function getExpiresAt(): int
     {
-        // transform header and payload array into json
-        $header = json_encode(self::$header);
-        $payload = json_encode($payload);
-
-        // encode the header and the payload
-        $base64UrlHeader = self::encodeBase64($header);
-        $base64UrlPayload = self::encodeBase64($payload);
-
-        // create signature
-        $signature = hash_hmac(self::$alg, $base64UrlHeader . "." . $base64UrlPayload, self::$secretKey, true);
-
-        // encode signature
-        $base64UrlSignature = self::encodeBase64($signature);
-
-        // Create JWT
-        return
-            [
-                "token" => $base64UrlHeader . "." . $base64UrlPayload . "." . $base64UrlSignature
-            ];
+        return $this->expiresAt;
     }
 
-    public static function decode(String $jwt)
+    /**
+     * @param int $expiresAt
+     */
+    public function setExpiresAt(int $expiresAt): void
     {
-        [$base64UrlHeader, $base64UrlPayload, $base64UrlSignature] = explode('.', $jwt);
-        $signature = hash_hmac(self::$alg, $base64UrlHeader . "." . $base64UrlPayload, self::$secretKey, true);
-        if ($base64UrlSignature == self::encodeBase64($signature))
-        {
-            return json_decode(self::decodeBase64($base64UrlPayload));
-        }
-
-        throw new KerosException("The JWT is invalid", 404);
+        $this->expiresAt = $expiresAt;
     }
 }
