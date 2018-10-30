@@ -10,6 +10,7 @@ class PasswordEncryption
         $encryptedPassword = password_hash($password, PASSWORD_DEFAULT);
 
         return $encryptedPassword;
+
     }
 
     public static function verify(String $password, String $hash): bool

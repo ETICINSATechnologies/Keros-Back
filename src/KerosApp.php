@@ -85,13 +85,10 @@ class KerosApp
                 $this->get("/password", function (Request $request, Response $response, array $args) {
                     $queryParams = $request->getQueryParams();
                     $password = $queryParams["password"];
-                    $validate = $queryParams["validate"];
                     $hash = PasswordEncryption::encrypt($password);
-                    $same = PasswordEncryption::verify($validate, '$2y$10$RicJAohUXxd092zkEcmv3.2sh.Jz5eSRKGPVMdg8Cze9M.Rd585QG');
                    return $response-> withJson(
                        [
                            "password" => $hash,
-                           "same" => $same
                        ]);
                 });
             });

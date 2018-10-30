@@ -17,7 +17,7 @@ class LoginIntegrationTest extends AppTestCase
 
         $postBody = array(
             "username" => "cbreeze",
-            "password" => "hunter11suudsgsugus"
+            "password" => "hunter11"
         );
 
         $req = Request::createFromEnvironment($env);
