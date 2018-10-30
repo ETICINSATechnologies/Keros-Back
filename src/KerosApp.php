@@ -82,15 +82,6 @@ class KerosApp
 
             $this->group("/auth", function () {
                 $this->post("/login", LoginController::class . ':login');
-                $this->get("/password", function (Request $request, Response $response, array $args) {
-                    $queryParams = $request->getQueryParams();
-                    $password = $queryParams["password"];
-                    $hash = PasswordEncryption::encrypt($password);
-                   return $response-> withJson(
-                       [
-                           "password" => $hash,
-                       ]);
-                });
             });
 
             $this->group('/ua', function () {
