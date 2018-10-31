@@ -147,22 +147,6 @@ class Address implements JsonSerializable, Searchable
     /**
      * @return mixed
      */
-    public function getCountryId()
-    {
-        return $this->country_id;
-    }
-
-    /**
-     * @param mixed $country_id
-     */
-    public function setCountryId($country_id): void
-    {
-        $this->country_id = $country_id;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getCountry()
     {
         return $this->country;
