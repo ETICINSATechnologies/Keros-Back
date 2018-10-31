@@ -7,6 +7,7 @@ use Keros\DataServices\Core\UserDataService;
 use Keros\Entities\Auth\LoginResponse;
 use Keros\Error\KerosException;
 use Keros\Tools\JwtCodec;
+use Keros\Tools\PasswordEncryption;
 use Keros\Tools\Validator;
 use Psr\Container\ContainerInterface;
 
@@ -27,7 +28,7 @@ class LoginService
 
         $user = $this->loginDataService->checkLogin($username, $password);
 
-        if ($user) {
+        if (PasswordEncryption::verify($password, $user->getPassword())) {
             // the token will expire in exactly in one day
             $exp = time() + 24 * 3600;
 

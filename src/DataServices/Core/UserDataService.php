@@ -10,6 +10,7 @@ use Exception;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Core\User;
 use Keros\Error\KerosException;
+use Keros\Tools\PasswordEncryption;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 
@@ -87,8 +88,7 @@ class UserDataService
     {
         try {
             $criteria = [
-                "username" => $username,
-                "password" => $password
+                "username" => $username
             ];
             $users = $this->repository->findBy($criteria);
 
