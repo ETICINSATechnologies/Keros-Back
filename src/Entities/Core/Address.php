@@ -61,7 +61,7 @@ class Address implements JsonSerializable, Searchable
             'line2' => $this->getLine2(),
             'postalCode' => $this->getPostalCode(),
             'city' => $this->getCity(),
-            'countryId' => ($this->getCountry())->getId()
+            'country' => $this->getCountry()
         ];
     }
 
@@ -142,22 +142,6 @@ class Address implements JsonSerializable, Searchable
     public function setCity($city): void
     {
         $this->city = $city;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCountryId()
-    {
-        return $this->country_id;
-    }
-
-    /**
-     * @param mixed $country_id
-     */
-    public function setCountryId($country_id): void
-    {
-        $this->country_id = $country_id;
     }
 
     /**

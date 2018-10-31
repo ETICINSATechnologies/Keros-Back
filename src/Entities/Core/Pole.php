@@ -28,6 +28,13 @@ class Pole implements JsonSerializable, Searchable
     /** @Column(type="string", length=64) */
     protected $label;
 
+    public function __construct(int $id, string $name, string $label)
+    {
+        $this->id = $id;
+        $this->name = $name;
+        $this->label = $label;
+    }
+
     public function jsonSerialize()
     {
         return [
