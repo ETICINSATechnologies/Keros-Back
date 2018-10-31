@@ -26,10 +26,10 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertNotNull(strlen($body->content[0]->username));
         $this->assertNotNull(strlen($body->content[0]->firstName));
         $this->assertNotNull(strlen($body->content[0]->lastName));
-        $this->assertNotNull(strlen($body->content[0]->genderId));
+        $this->assertNotNull(strlen($body->content[0]->gender->id));
         $this->assertNotNull(strlen($body->content[0]->email));
         $this->assertNotNull(strlen($body->content[0]->birthday));
-        $this->assertNotNull(strlen($body->content[0]->addressId));
+        $this->assertNotNull(strlen($body->content[0]->address->id));
 
     }
 
@@ -48,13 +48,13 @@ class MemberIntegrationTest extends AppTestCase
 
         $body = json_decode($response->getBody());
         $this->assertSame(1, $body->id);
-        $this->assertSame(1, $body->genderId);
+        $this->assertSame(1, $body->gender->id);
         $this->assertSame("Conor", $body->firstName);
         $this->assertSame("Breeze", $body->lastName);
         $this->assertSame("1975-12-25", $body->birthday);
         $this->assertSame("+332541254", $body->telephone);
         $this->assertSame("fake.mail@fake.com", $body->email);
-        $this->assertSame(2, $body->addressId);
+        $this->assertSame(2, $body->address->id);
     }
 
     public function testGetMemberShouldReturn404()
@@ -113,15 +113,15 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertNotNull($body->id);
         $this->assertSame("username", $body->username);
         $this->assertSame("lastname", $body->lastName);
-        $this->assertSame(1, $body->genderId);
+        $this->assertSame(1, $body->gender->id);
         $this->assertSame("fakeEmail@gmail.com", $body->email);
         $this->assertSame("1975-12-01", $body->birthday);
-        $this->assertSame(1, $body->departmentId);
+        $this->assertSame(1, $body->department->id);
         $this->assertSame(1, $body->schoolYear);
         $this->assertSame("0033675385495", $body->telephone);
-        $this->assertNotNull($body->addressId);
-        $this->assertContains(1, $body->positionIds);
-        $this->assertContains(2, $body->positionIds);
+        $this->assertNotNull($body->address->id);
+        $this->assertSame(1, $body->positions[0]->id);
+        $this->assertSame(2, $body->positions[1]->id);
     }
     public function testPutMemberShouldReturn200()
     {
@@ -168,15 +168,15 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame("username", $body->username);
         $this->assertSame("firstName", $body->firstName);
         $this->assertSame("lastName", $body->lastName);
-        $this->assertSame(1, $body->genderId);
+        $this->assertSame(1, $body->gender->id);
         $this->assertSame("fakeEmail@gmail.com", $body->email);
         $this->assertSame("1975-12-01", $body->birthday);
-        $this->assertSame(1, $body->departmentId);
+        $this->assertSame(1, $body->department->id);
         $this->assertSame(1, $body->schoolYear);
         $this->assertSame("0033675385495", $body->telephone);
-        $this->assertNotNull($body->addressId);
-        $this->assertContains(1, $body->positionIds);
-        $this->assertContains(3, $body->positionIds);
+        $this->assertNotNull($body->address->id);
+        $this->assertSame(1, $body->positions[0]->id);
+        $this->assertSame(3, $body->positions[1]->id);
     }
 
     public function testPutMemberEmptyBodyShouldReturn200()

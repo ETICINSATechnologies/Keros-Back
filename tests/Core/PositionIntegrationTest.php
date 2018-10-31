@@ -2,6 +2,7 @@
 
 namespace KerosTest\position;
 
+use Keros\Entities\Core\Pole;
 use KerosTest\AppTestCase;
 use Slim\Http\Environment;
 use Slim\Http\Request;
@@ -41,7 +42,7 @@ class PositionIntegrationTest extends AppTestCase
         $body = json_decode($response->getBody());
         $this->assertSame(1, $body->id);
         $this->assertSame("Ancien membre", $body->label);
-        $this->assertNull($body->poleId);
+        $this->assertNull($body->pole);
     }
 
     public function testGetPositionWithPoleShouldReturn200()
@@ -59,7 +60,7 @@ class PositionIntegrationTest extends AppTestCase
         $body = json_decode($response->getBody());
         $this->assertSame(3, $body->id);
         $this->assertSame("Chargé d'affaires", $body->label);
-        $this->assertSame(10, $body->poleId);
+        $this->assertEquals(10, $body->pole->id);
     }
 
     public function testGetPositionShouldReturn404()

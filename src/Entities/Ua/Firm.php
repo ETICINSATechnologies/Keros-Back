@@ -51,8 +51,8 @@ class Firm implements JsonSerializable, Searchable
             'id' => $this->getId(),
             'siret' => $this->getSiret(),
             'name' => $this->getName(),
-            'addressId' => ($this->getAddress())->getId(),
-            'typeId' => ($this->getType())->getId(),
+            'address' => $this->getAddress(),
+            'type' => $this->getType(),
         ];
     }
 

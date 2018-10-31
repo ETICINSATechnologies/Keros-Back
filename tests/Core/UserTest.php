@@ -5,7 +5,7 @@ namespace KerosTest\Core;
 use Keros\Entities\Core\User;
 use PHPUnit\Framework\TestCase;
 
-final class UserTest extends TestCase
+class UserTest extends TestCase
 {
     public function testNewUserShouldBeInstanceOfUser()
     {
