@@ -2,6 +2,7 @@ SET AUTOCOMMIT = 0;
 SET FOREIGN_KEY_CHECKS = 0;
 SET UNIQUE_CHECKS = 0;
 
+/* Passwords are, in order : hunter11 - hunter12 - hunter13 */
 TRUNCATE TABLE core_user;
 INSERT INTO core_user (id, username, password, expiresAt) VALUES
   (1, 'cbreeze', '$2y$10$bYKeDwHZTzecEiTkNNkCgumi8mHgGQ97QtOSveAXRiogr.a2sxN5W' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')),

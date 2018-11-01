@@ -9,16 +9,20 @@ use Keros\Error\KerosException;
 use Keros\Tools\JwtCodec;
 use Keros\Tools\PasswordEncryption;
 use Keros\Tools\Validator;
+use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 
 
 class LoginService
 {
-    private $loginDataService;
+    /**
+     * @var UserDataService
+     */
+    private $userDataService;
 
     public function __construct(ContainerInterface $container)
     {
-        $this->loginDataService = $container->get(UserDataService::class);
+        $this->userDataService = $container->get(UserDataService::class);
     }
 
     public function checkLogin(array $fields): ?LoginResponse
@@ -26,7 +30,11 @@ class LoginService
         $username = Validator::requiredString($fields["username"]);
         $password = Validator::requiredPassword($fields["password"]);
 
-        $user = $this->loginDataService->checkLogin($username, $password);
+        $user = $this->userDataService->findByUsername($username);
+
+        if (is_null($user)) {
+            throw new KerosException("Authentication failed", 401);
+        }
 
         if (PasswordEncryption::verify($password, $user->getPassword())) {
             // the token will expire in exactly in one day
@@ -34,6 +42,7 @@ class LoginService
 
             // creation of the payload
             $payload = array(
+                "id" => $user->getId(),
                 "username" => $user->getUsername(),
                 "exp" => $exp
             );
