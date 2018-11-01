@@ -84,7 +84,7 @@ class UserDataService
         return $count;
     }
 
-    public function checkLogin(String $username, String $password): ?User
+    public function findByUsername(String $username): ?User
     {
         try {
             $criteria = [

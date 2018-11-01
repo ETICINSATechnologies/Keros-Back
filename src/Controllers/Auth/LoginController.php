@@ -4,7 +4,7 @@ namespace Keros\Controllers\Auth;
 
 use Keros\Services\Auth\LoginService;
 use Doctrine\ORM\EntityManager;
-use Keros\Tools\Logger;
+use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
