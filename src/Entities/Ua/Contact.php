@@ -62,8 +62,9 @@ class Contact implements JsonSerializable
      * @param $email
      * @param $telephone
      * @param $cellphone
+     * @param $old
      */
-    public function __construct($firstName, $lastName, $gender, $firm, $email, $telephone, $cellphone)
+    public function __construct($firstName, $lastName, $gender, $firm, $email, $telephone, $cellphone, $old)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -72,6 +73,7 @@ class Contact implements JsonSerializable
         $this->email = $email;
         $this->telephone = $telephone;
         $this->cellphone = $cellphone;
+        $this->old = $old;
     }
 
     public function jsonSerialize()
@@ -101,7 +103,7 @@ class Contact implements JsonSerializable
      */
     public function getId()
     {
-        return $this->getId();
+        return $this->id;
     }
 
     /**

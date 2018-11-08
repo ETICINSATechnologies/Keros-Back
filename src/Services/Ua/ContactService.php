@@ -70,21 +70,21 @@ class ContactService
         $firmId = Validator::requiredId($fields["firmId"]);
         $firm = $this->firmService->getOne($firmId);
 
-        $contact = new Contact($firstName, $lastName, $gender, $firm, $email, $telephone, $cellphone);
+        $contact = new Contact($firstName, $lastName, $gender, $firm, $email, $telephone, $cellphone, false);
 
         if (isset($fields["position"])) {
             $position = Validator::requiredString($fields["position"]);
-            $contact->setFirstName($position);
+            $contact->setPosition($position);
         }
 
         if (isset($fields["notes"])) {
             $notes = Validator::requiredString($fields["notes"]);
-            $contact->setFirstName($notes);
+            $contact->setNotes($notes);
         }
 
         if (isset($fields["old"])) {
             $old = Validator::requiredBool($fields["old"]);
-            $contact->setFirstName($old);
+            $contact->setOld($old);
         }
 
         $this->contactDataService->persist($contact);
@@ -146,19 +146,19 @@ class ContactService
         }
         if (isset($fields["cellphone"])) {
             $cellphone = Validator::requiredString($fields["cellphone"]);
-            $contact->setTelephone($cellphone);
+            $contact->setCellphone($cellphone);
         }
         if (isset($fields["position"])) {
             $position = Validator::requiredString($fields["position"]);
-            $contact->setFirstName($position);
+            $contact->setPosition($position);
         }
         if (isset($fields["notes"])) {
             $notes = Validator::requiredString($fields["notes"]);
-            $contact->setFirstName($notes);
+            $contact->setNotes($notes);
         }
         if (isset($fields["old"])) {
             $old = Validator::requiredBool($fields["old"]);
-            $contact->setFirstName($old);
+            $contact->setOld($old);
         }
 
         $this->userService->update($contact->getId(), $fields);

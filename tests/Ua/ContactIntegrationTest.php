@@ -1,15 +1,18 @@
 <?php
+
 namespace KerosTest\Ua;
+
 use KerosTest\AppTestCase;
 use Slim\Http\Environment;
 use Slim\Http\Request;
+
 class ContactIntegrationTest extends AppTestCase
 {
     public function testGetAllContactShouldReturn200()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/api/v1/ua/Contact',
+            'REQUEST_URI' => '/api/v1/ua/contact',
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
@@ -18,11 +21,12 @@ class ContactIntegrationTest extends AppTestCase
         $body = json_decode($response->getBody());
         $this->assertEquals(5, count($body->content));
     }
+
     public function testGetContactShouldReturn200()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/api/v1/ua/Contact/1',
+            'REQUEST_URI' => '/api/v1/ua/contact/1',
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
@@ -42,29 +46,31 @@ class ContactIntegrationTest extends AppTestCase
         $this->assertEquals("rien a signaler", $body->getNotes);
         $this->assertEquals(true, $body->getOld());
     }
+
     public function testGetContactShouldReturn404()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/api/v1/ua/Contact/6',
+            'REQUEST_URI' => '/api/v1/ua/contact/6',
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
         $this->assertSame(404, $response->getStatusCode());
     }
+
     public function testPostContactOnlyWithOnlyRequiredParamsShouldReturn201()
     {
         $post_body = array(
-            "firstName"=>"lolo",
-            "lastName"=>"momo",
-            "genderId"=>1,
-            "firmId"=>2,
-            "email"=>"lolo.momo@gmail.com",
+            "firstName" => "lolo",
+            "lastName" => "momo",
+            "genderId" => 1,
+            "firmId" => 2,
+            "email" => "lolo.momo@gmail.com",
         );
         $env = Environment::mock([
             'REQUEST_METHOD' => 'POST',
-            'REQUEST_URI' => '/api/v1/ua/Contact',
+            'REQUEST_URI' => '/api/v1/ua/contact',
         ]);
         $req = Request::createFromEnvironment($env);
         $req = $req->withParsedBody($post_body);
@@ -80,16 +86,16 @@ class ContactIntegrationTest extends AppTestCase
     {
 
         $post_body = array(
-            "firstName"=>"lolo",
-            "lastName"=>"momo",
-            "genderId"=>1,
-            "firmId"=>2,
-            "email"=>"lolo.momo@gmail.com",
-            "telephone"=>"0675985495",
-            "cellphone"=>"0175985495",
-            "position"=>"chef de projet",
-            "notes"=>"RAS",
-            "old"=>true
+            "firstName" => "lolo",
+            "lastName" => "momo",
+            "genderId" => 1,
+            "firmId" => 2,
+            "email" => "lolo.momo@gmail.com",
+            "telephone" => "0675985495",
+            "cellphone" => "0175985495",
+            "position" => "chef de projet",
+            "notes" => "RAS",
+            "old" => true
         );
         $env = Environment::mock([
             'REQUEST_METHOD' => 'PUT',
@@ -103,11 +109,12 @@ class ContactIntegrationTest extends AppTestCase
         $body = json_decode($response->getBody());
         $this->assertSame("lolo", $body->firstName);
     }
+
     public function testPutContactWithEmptyBodyShouldReturn200()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'PUT',
-            'REQUEST_URI' => '/api/v1/ua/Contact/1',
+            'REQUEST_URI' => '/api/v1/ua/contact/1',
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
