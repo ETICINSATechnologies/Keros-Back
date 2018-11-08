@@ -80,14 +80,14 @@ CREATE TABLE `core_address` (
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
-# L'ID de core_member est le même le core_user qui lui est attaché
+# L'ID de core_member est le même que celui de core_user qui lui est attaché
 DROP TABLE IF EXISTS core_member;
 CREATE TABLE `core_member` (
   `id`           int(11)      NOT NULL,
   `genderId`     int(1)       NOT NULL,
   `firstName`    varchar(100) NOT NULL,
   `lastName`     varchar(100) NOT NULL,
-  `birthday`    date        DEFAULT NULL,
+  `birthday`     date        DEFAULT NULL,
   `telephone`    varchar(20) DEFAULT NULL,
   `email`        varchar(255) NOT NULL UNIQUE,
   `addressId`    int(11)      NOT NULL UNIQUE,
@@ -136,6 +136,126 @@ CREATE TABLE `ua_firm` (
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
+# L'ID de ua_contact est le même que celui de core_user qui lui est attaché
+DROP TABLE IF EXISTS ua_contact;
+CREATE TABLE `ua_contact` (
+  `id`           int(11)      NOT NULL,
+  `firstName`    varchar(100) NOT NULL,
+  `lastName`     varchar(100) NOT NULL,
+  `genderId`     int(1)       NOT NULL,
+  `firmId`       int(11)      NOT NULL,
+  `email`        varchar(255) NOT NULL UNIQUE,
+  `telephone`    varchar(20),
+  `cellphone`    varchar(20),
+  `position`     varchar(255),
+  `notes`        varchar(255),
+  `old`          BOOLEAN      NOT NULL DEFAULT FALSE,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `ua_contact_userId_fk` FOREIGN KEY (`id`) REFERENCES `core_user` (`id`),
+  CONSTRAINT `ua_contact_genderId_fk` FOREIGN KEY (`genderId`) REFERENCES `core_gender` (`id`),
+  CONSTRAINT `ua_contact_firmId_fk` FOREIGN KEY (`firmId`) REFERENCES `ua_firm` (`id`)
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+
+DROP TABLE IF EXISTS ua_field;
+CREATE TABLE `ua_field` (
+  `id`           int(11)      NOT NULL,
+  `label`        varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+
+DROP TABLE IF EXISTS ua_provenance;
+CREATE TABLE `ua_provenance` (
+  `id`           int(11)      NOT NULL,
+  `label`        varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+
+DROP TABLE IF EXISTS ua_status;
+CREATE TABLE `ua_status` (
+  `id`           int(11)      NOT NULL,
+  `label`        varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+
+DROP TABLE IF EXISTS ua_study;
+CREATE TABLE `ua_study` (
+  `id`           int(11)      NOT NULL,
+  `number`       int(11)      NOT NULL,
+  `name`         varchar(100) NOT NULL,
+  `descrption`   varchar(255) NOT NULL,
+  `fieldId`      int(11)      NOT NULL,
+  `provenanceId` int(11),
+  `statusId`     int(11)      NOT NULL,
+  `signDate`     date,
+  `endDate`      date,
+  `managementFee` int(11),
+  `realizationFee` int(11),
+  `rebilledFee`  int(11),
+  `ecoparticipationFee` int(11),
+  `outsourcingFee` int(11),
+  `archivedDate` date,
+  `firmId`      int(11)      NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `ua_study_fieldId_fk` FOREIGN KEY (`fieldId`) REFERENCES `ua_field` (`id`),
+  CONSTRAINT `ua_study_provenanceId_fk` FOREIGN KEY (`provenanceId`) REFERENCES `ua_provenance` (`id`),
+  CONSTRAINT `ua_study_statusId_fk` FOREIGN KEY (`statusId`) REFERENCES `ua_status` (`id`),
+  CONSTRAINT `ua_study_firmId_fk` FOREIGN KEY (`firmId`) REFERENCES `ua_firm` (`id`)
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+
+
+DROP TABLE IF EXISTS ua_study_contact;
+CREATE TABLE `ua_study_contact` (
+  `contactId`   int(11) NOT NULL,
+  `studyId`     int(11) NOT NULL,
+  PRIMARY KEY (`contactId`, `studyId`),
+  CONSTRAINT `ua_study_contact_studyId_fk` FOREIGN KEY (`studyId`) REFERENCES `ua_study` (`id`),
+  CONSTRAINT `ua_study_contact_contactId_fk` FOREIGN KEY (`contactId`) REFERENCES `ua_contact` (`id`)
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+
+DROP TABLE IF EXISTS ua_study_leader;
+CREATE TABLE ua_study_leader (
+  `memberId`   int(11) NOT NULL,
+  `studyId`     int(11) NOT NULL,
+  PRIMARY KEY (`memberId`, `studyId`),
+  CONSTRAINT `ua_study_leader_studyId_fk` FOREIGN KEY (`studyId`) REFERENCES `ua_study` (`id`),
+    CONSTRAINT `ua_study_leader_memberId_fk` FOREIGN KEY (`memberId`) REFERENCES `core_member` (`id`)
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+
+DROP TABLE IF EXISTS ua_study_consultant;
+CREATE TABLE ua_study_consultant (
+  `memberId`   int(11) NOT NULL,
+  `studyId`     int(11) NOT NULL,
+  PRIMARY KEY (`memberId`, `studyId`),
+  CONSTRAINT `ua_study_consultant_studyId_fk` FOREIGN KEY (`studyId`) REFERENCES `ua_study` (`id`),
+    CONSTRAINT `ua_study_consultant_memberId_fk` FOREIGN KEY (`memberId`) REFERENCES `core_member` (`id`)
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+
+DROP TABLE IF EXISTS ua_study_qualityManager;
+CREATE TABLE ua_study_qualityManager (
+  `memberId`   int(11) NOT NULL,
+  `studyId`     int(11) NOT NULL,
+  PRIMARY KEY (`memberId`, `studyId`),
+  CONSTRAINT `ua_study_qualityManager_studyId_fk` FOREIGN KEY (`studyId`) REFERENCES `ua_study` (`id`),
+    CONSTRAINT `ua_study_qualityManager_memberId_fk` FOREIGN KEY (`memberId`) REFERENCES `core_member` (`id`)
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
 
 SET AUTOCOMMIT = 1;
 SET FOREIGN_KEY_CHECKS = 1;
