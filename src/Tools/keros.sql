@@ -139,7 +139,7 @@ CREATE TABLE `ua_firm` (
 # L'ID de ua_contact est le même que celui de core_user qui lui est attaché
 DROP TABLE IF EXISTS ua_contact;
 CREATE TABLE `ua_contact` (
-  `id`           int(11)      NOT NULL,
+  `id`           int(11) AUTO_INCREMENT,
   `firstName`    varchar(100) NOT NULL,
   `lastName`     varchar(100) NOT NULL,
   `genderId`     int(1)       NOT NULL,
@@ -186,7 +186,7 @@ CREATE TABLE `ua_status` (
 
 DROP TABLE IF EXISTS ua_study;
 CREATE TABLE `ua_study` (
-  `id`           int(11)      NOT NULL,
+  `id`           int(11) AUTO_INCREMENT,
   `number`       int(11)      NOT NULL,
   `name`         varchar(100) NOT NULL,
   `descrption`   varchar(255) NOT NULL,
