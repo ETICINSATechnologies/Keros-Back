@@ -17,9 +17,11 @@ class ContactIntegrationTest extends AppTestCase
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
-        $this->assertSame(200, $response->getStatusCode());
+
+        $this->assertSame($response->getStatusCode(), 200);
         $body = json_decode($response->getBody());
-        $this->assertEquals(5, count($body->content));
+
+        $this->assertEquals(count($body->content), 4);
     }
 
     public function testGetContactShouldReturn200()
@@ -31,20 +33,21 @@ class ContactIntegrationTest extends AppTestCase
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
+
         $this->assertSame(200, $response->getStatusCode());
         $body = json_decode($response->getBody());
 
-        $this->assertEquals("Marah", $body->getFirstName);
-        $this->assertEquals("Tainturier", $body->getLastName);
-        $this->assertEquals(1, $body->getGenderId);
-        $this->assertEquals(1, $body->getFirmId);
-        $this->assertEquals("marah.laurent@gmail.com", $body->getEmail);
+        $this->assertEquals($body->firstName, "Alexandre");
+        $this->assertEquals($body->lastName, "Lang");
+        $this->assertNotNull($body->gender);
+        $this->assertNotNull($body->firm);
+        $this->assertEquals($body->email, "alexandre.lang@etic.com");
 
-        $this->assertEquals("0658984503", $body->getTelephone);
-        $this->assertEquals("0175389516", $body->getCellphone);
-        $this->assertEquals("chef de projet", $body->getPosition);
-        $this->assertEquals("rien a signaler", $body->getNotes);
-        $this->assertEquals(true, $body->getOld());
+        $this->assertNull($body->telephone);
+        $this->assertEquals($body->cellphone, "0033111111111");
+        $this->assertEquals($body->position,"C'est une bonne position, ça scribe?");
+        $this->assertEquals($body->notes, "this is a note");
+        $this->assertEquals($body->old, true);
     }
 
     public function testGetContactShouldReturn404()
@@ -99,7 +102,7 @@ class ContactIntegrationTest extends AppTestCase
         );
         $env = Environment::mock([
             'REQUEST_METHOD' => 'PUT',
-            'REQUEST_URI' => '/api/v1/ua/Contact/1',
+            'REQUEST_URI' => '/api/v1/ua/contact/1',
         ]);
         $req = Request::createFromEnvironment($env);
         $req = $req->withParsedBody($post_body);

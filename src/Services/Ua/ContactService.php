@@ -161,7 +161,6 @@ class ContactService
             $contact->setOld($old);
         }
 
-        $this->userService->update($contact->getId(), $fields);
         $this->contactDataService->persist($contact);
 
         return $contact;
