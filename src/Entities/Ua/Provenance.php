@@ -2,13 +2,6 @@
 
 namespace Keros\Entities\Ua;
 
-use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\GeneratedValue;
-use Doctrine\ORM\Mapping\Id;
-use Doctrine\ORM\Mapping\Table;
-use JsonSerializable;
-use Keros\Tools\Searchable;
 
 /**
  * @Entity
