@@ -48,7 +48,6 @@ class Department implements JsonSerializable, Searchable
             'id' => $this->getId(),
             'label' => $this->getLabel(),
             'name' => $this->getName()
-
         ];
     }
 

@@ -7,7 +7,7 @@ use Keros\Entities\Core\Country;
 use PHPUnit\Framework\TestCase;
 
 
-final class AddressTest extends TestCase
+class AddressTest extends TestCase
 {
     public function testNewAddressShouldBeInstanceOfAddress()
     {
