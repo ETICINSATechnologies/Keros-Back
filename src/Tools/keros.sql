@@ -139,7 +139,7 @@ CREATE TABLE `ua_firm` (
 # L'ID de ua_contact est le même que celui de core_user qui lui est attaché
 DROP TABLE IF EXISTS ua_contact;
 CREATE TABLE `ua_contact` (
-  `id`           int(11)      NOT NULL,
+  `id`           int(11) AUTO_INCREMENT,
   `firstName`    varchar(100) NOT NULL,
   `lastName`     varchar(100) NOT NULL,
   `genderId`     int(1)       NOT NULL,
@@ -151,7 +151,6 @@ CREATE TABLE `ua_contact` (
   `notes`        varchar(255),
   `old`          BOOLEAN      NOT NULL DEFAULT FALSE,
   PRIMARY KEY (`id`),
-  CONSTRAINT `ua_contact_userId_fk` FOREIGN KEY (`id`) REFERENCES `core_user` (`id`),
   CONSTRAINT `ua_contact_genderId_fk` FOREIGN KEY (`genderId`) REFERENCES `core_gender` (`id`),
   CONSTRAINT `ua_contact_firmId_fk` FOREIGN KEY (`firmId`) REFERENCES `ua_firm` (`id`)
 )
@@ -187,7 +186,7 @@ CREATE TABLE `ua_status` (
 
 DROP TABLE IF EXISTS ua_study;
 CREATE TABLE `ua_study` (
-  `id`           int(11)      NOT NULL,
+  `id`           int(11) AUTO_INCREMENT,
   `number`       int(11)      NOT NULL,
   `name`         varchar(100) NOT NULL,
   `descrption`   varchar(255) NOT NULL,

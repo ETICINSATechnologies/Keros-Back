@@ -36,4 +36,5 @@ INSERT INTO ua_firm (id, siret, name, addressId, typeId) VALUES
   (1, '215437645', 'Cool Inc.', 4, 3),
   (2, '471245896', 'Swagger', 5, 1);
 
+
 COMMIT;
