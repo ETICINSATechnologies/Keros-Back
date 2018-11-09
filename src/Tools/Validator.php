@@ -180,6 +180,14 @@ class Validator
         return $telephone;
     }
 
+    public static function requiredPhone($telephone): ?string
+    {
+        if (!preg_match("/00\d{11}/", $telephone))
+            throw new KerosException("The provided phone number is invalid", 400);
+
+        return $telephone;
+    }
+
     public static function requiredSchoolYear($schoolYear): int
     {
         if ($schoolYear == null)

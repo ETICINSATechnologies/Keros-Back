@@ -60,19 +60,15 @@ class Contact implements JsonSerializable
      * @param $gender
      * @param $firm
      * @param $email
-     * @param $telephone
-     * @param $cellphone
      * @param $old
      */
-    public function __construct($firstName, $lastName, $gender, $firm, $email, $telephone, $cellphone, $old)
+    public function __construct($firstName, $lastName, $gender, $firm, $email, $old)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->gender = $gender;
         $this->firm = $firm;
         $this->email = $email;
-        $this->telephone = $telephone;
-        $this->cellphone = $cellphone;
         $this->old = $old;
     }
 

@@ -81,8 +81,8 @@ class ContactIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
         $this->assertSame(201, $response->getStatusCode());
         $body = json_decode($response->getBody());
-        $this->assertSame("lolo", $body->firstName);
-        $this->assertSame("momo", $body->lasttName);
+        $this->assertSame($body->firstName,"lolo");
+        $this->assertSame($body->lastName, "momo");
     }
 
     public function testPutContactShouldReturn200()
@@ -93,9 +93,9 @@ class ContactIntegrationTest extends AppTestCase
             "lastName" => "momo",
             "genderId" => 1,
             "firmId" => 2,
-            "email" => "lolo.momo@gmail.com",
-            "telephone" => "0675985495",
-            "cellphone" => "0175985495",
+            "email" => "lolomomo@gmail.com",
+            "telephone" => "0033675985495",
+            "cellphone" => "0033175985495",
             "position" => "chef de projet",
             "notes" => "RAS",
             "old" => true

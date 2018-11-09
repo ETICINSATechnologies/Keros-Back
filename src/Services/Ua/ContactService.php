@@ -62,15 +62,25 @@ class ContactService
         $firstName = Validator::requiredString($fields["firstName"]);
         $lastName = Validator::requiredString($fields["lastName"]);
         $email = Validator::requiredEmail($fields["email"]);
-        $telephone = Validator::optionalPhone($fields["telephone"]);
-        $cellphone = Validator::optionalPhone($fields["cellphone"]);
+        //$telephone = Validator::optionalPhone($fields["telephone"]);
+        //$cellphone = Validator::optionalPhone($fields["cellphone"]);
 
         $genderId = Validator::requiredId($fields["genderId"]);
         $gender = $this->genderService->getOne($genderId);
         $firmId = Validator::requiredId($fields["firmId"]);
         $firm = $this->firmService->getOne($firmId);
 
-        $contact = new Contact($firstName, $lastName, $gender, $firm, $email, $telephone, $cellphone, false);
+        $contact = new Contact($firstName, $lastName, $gender, $firm, $email, false);
+
+        if (isset($fields["telephone"])) {
+            $telephone = Validator::requiredPhone($fields["telephone"]);
+            $contact->setTelephone($telephone);
+        }
+
+        if (isset($fields["cellphone"])) {
+            $cellphone = Validator::requiredPhone($fields["cellphone"]);
+            $contact->setCellphone($cellphone);
+        }
 
         if (isset($fields["position"])) {
             $position = Validator::requiredString($fields["position"]);
@@ -141,11 +151,11 @@ class ContactService
             $contact->setEmail($email);
         }
         if (isset($fields["telephone"])) {
-            $telephone = Validator::requiredString($fields["telephone"]);
+            $telephone = Validator::requiredPhone($fields["telephone"]);
             $contact->setTelephone($telephone);
         }
         if (isset($fields["cellphone"])) {
-            $cellphone = Validator::requiredString($fields["cellphone"]);
+            $cellphone = Validator::requiredPhone($fields["cellphone"]);
             $contact->setCellphone($cellphone);
         }
         if (isset($fields["position"])) {
