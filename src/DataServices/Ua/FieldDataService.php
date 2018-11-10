@@ -50,7 +50,7 @@ class FieldDataService
     {
         try {
             $field = $this->repository->findAll();
-            return $$field;
+            return $field;
         } catch (Exception $e) {
             $msg = "Error finding page of field : " . $e->getMessage();
             $this->logger->error($msg);

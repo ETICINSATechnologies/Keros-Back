@@ -112,6 +112,18 @@ class KerosApp
                     $this->post("", StudyController::class . ':createStudy');
                     $this->put("/{id:[0-9]+}", StudyController::class . ':updateStudy');
                 });
+                $this->group('/provenance', function () {
+                    $this->get("", StudyController::class . ':getAllProvenances');
+                    $this->get("/{id:[0-9]+}", StudyController::class . ':getProvenance');
+                });
+                $this->group('/field', function () {
+                    $this->get("", StudyController::class . ':getAllFields');
+                    $this->get("/{id:[0-9]+}", StudyController::class . ':getField');
+                });
+                $this->group('/status', function () {
+                    $this->get("", StudyController::class . ':getAllStatus');
+                    $this->get("/{id:[0-9]+}", StudyController::class . ':getStatus');
+                });
             });
 
             $this->group('/core', function () {

@@ -6,6 +6,9 @@ use Doctrine\ORM\EntityManager;
 use Keros\Entities\Core\Page;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Ua\Study;
+use Keros\Services\Ua\FieldService;
+use Keros\Services\Ua\ProvenanceService;
+use Keros\Services\Ua\StatusService;
 use Keros\Services\Ua\StudyService;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
@@ -30,11 +33,27 @@ class StudyController
      */
     private $entityManager;
 
+    /**
+     * @var ProvenanceService
+     */
+    private $provenanceService;
+    /**
+     * @var FieldService
+     */
+    private $fieldService;
+    /**
+     * @var StatusService
+     */
+    private $statusService;
+
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get('logger');
         $this->entityManager = $container->get('entityManager');
         $this->studyService = $container->get(StudyService::class);
+        $this->provenanceService = $container->get(ProvenanceService::class);
+        $this->fieldService = $container->get(FieldService::class);
+        $this->statusService = $container->get(StatusService::class);
     }
 
     public function getStudy(Request $request, Response $response, array $args)
@@ -80,5 +99,59 @@ class StudyController
         $this->entityManager->commit();
 
         return $response->withJson($study, 200);
+    }
+
+    public function getProvenance(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Getting provenance by ID from " . $request->getServerParams()["REMOTE_ADDR"]);
+
+        $provenance = $this->provenanceService->getOne($args["id"]);
+
+        return $response->withJson($provenance, 200);
+    }
+
+    public function getAllProvenances(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Get provenances " . $request->getServerParams()["REMOTE_ADDR"]);
+
+        $provenances = $this->provenanceService->getAll();
+
+        return $response->withJson($provenances, 200);
+    }
+
+    public function getField(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Getting field by ID from " . $request->getServerParams()["REMOTE_ADDR"]);
+
+        $field = $this->fieldService->getOne($args["id"]);
+
+        return $response->withJson($field, 200);
+    }
+
+    public function getAllFields(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Get fields " . $request->getServerParams()["REMOTE_ADDR"]);
+
+        $fields = $this->fieldService->getAll();
+
+        return $response->withJson($fields, 200);
+    }
+
+    public function getStatus(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Getting status by ID from " . $request->getServerParams()["REMOTE_ADDR"]);
+
+        $status = $this->statusService->getOne($args["id"]);
+
+        return $response->withJson($status, 200);
+    }
+
+    public function getAllStatus(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Get status " . $request->getServerParams()["REMOTE_ADDR"]);
+
+        $status = $this->statusService->getAll();
+
+        return $response->withJson($status, 200);
     }
 }
