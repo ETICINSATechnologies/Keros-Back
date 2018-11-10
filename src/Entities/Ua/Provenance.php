@@ -2,12 +2,13 @@
 
 namespace Keros\Entities\Ua;
 
+use JsonSerializable;
 
 /**
  * @Entity
  * @Table(name="ua_provenance")
  */
-class Provenance
+class Provenance implements JsonSerializable
 {
     /**
      * @Id
@@ -24,6 +25,13 @@ class Provenance
         $this->label = $label;
     }
 
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getId(),
+            'label' => $this->getLabel(),
+        ];
+    }
 
     /**
      * @return mixed

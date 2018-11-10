@@ -46,6 +46,18 @@ class StudyService
      */
     private $memberService;
     /**
+     * @var FieldService
+     */
+    private $fieldService;
+    /**
+     * @var StatusService
+     */
+    private $statusService;
+    /**
+     * @var
+     */
+    private $provenanceService;
+    /**
      * @var StudyDataService
      */
     private $studyDataService;
@@ -59,6 +71,9 @@ class StudyService
         $this->userService = $container->get(UserService::class);
         $this->contactService = $container->get(ContactService::class);
         $this->memberService = $container->get(MemberService::class);
+        $this->fieldService = $container->get(FieldService::class);
+        $this->statusService = $container->get(StatusService::class);
+        $this->provenanceService = $container->get(ProvenanceService::class);
         $this->studyDataService = $container->get(StudyDataService::class);
     }
 
@@ -73,11 +88,11 @@ class StudyService
         $name = Validator::requiredString($fields["name"]);
         $description = Validator::requiredString($fields["description"]);
         
-//        $fieldId = Validator::requiredId($fields["fieldId"]);
-//        $field = $this->fieldService->getOne($fieldId);
+        $fieldId = Validator::requiredId($fields["fieldId"]);
+        $field = $this->fieldService->getOne($fieldId);
 
-//        $statusId = Validator::requiredId($fields["statusId"]);
-//        $status = $this->statusService->getOne($statusId);
+        $statusId = Validator::requiredId($fields["statusId"]);
+        $status = $this->statusService->getOne($statusId);
         
         $firmId = Validator::requiredId($fields["firmId"]);
         $firm = $this->firmService->getOne($firmId);
@@ -94,15 +109,14 @@ class StudyService
         $qualityManagerIds = $fields["qualityManagerIds"];
         $qualityManagers = $this->memberService->getSome($qualityManagerIds);
 
-        $study = new Study($number, $name, $description, $firm, $contacts, $leaders, $consultants, $qualityManagers);
+        $study = new Study(
+            $number, $name, $description, $field, $status, $firm, $contacts, $leaders, $consultants, $qualityManagers);
 
-        /*
         if (isset($fields["provenanceId"])) {
             $provenanceId = Validator::requiredId($fields["provenanceId"]);
             $provenance = $this->provenanceService->getOne($provenanceId);
             $study->setProvenance($provenance);
         }
-        */
 
         if (isset($fields["signDate"])) {
             $signDate = Validator::requiredDate($fields["signDate"]);
@@ -190,7 +204,6 @@ class StudyService
             $study->setDescription($description);
         }
 
-        /*
         if (isset($fields["fieldId"])) {
             $fieldId = Validator::requiredId($fields["fieldId"]);
             $field = $this->fieldService->getOne($fieldId);
@@ -208,8 +221,7 @@ class StudyService
             $status = $this->statusService->getOne($statusId);
             $study->setStatus($status);
         }
-        */
-        
+
         if (isset($fields["signDate"])) {
             $signDate = Validator::requiredDate($fields["signDate"]);
             $study->setSignDate($signDate);

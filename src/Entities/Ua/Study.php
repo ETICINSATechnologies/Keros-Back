@@ -26,23 +26,23 @@ class Study implements JsonSerializable
     /** @Column(type="string", length=255) */
     protected $description;
 
-//    /**
-//     * @ManyToOne(targetEntity="Field")
-//     * @JoinColumn(name="FieldId", referencedColumnName="id")
-//     **/
-//    protected $field;
-//
-//    /**
-//     * @ManyToOne(targetEntity="Provenance")
-//     * @JoinColumn(name="ProvenanceId", referencedColumnName="id")
-//     **/
-//    protected $provenance;
-//
-//    /**
-//     * @ManyToOne(targetEntity="Status")
-//     * @JoinColumn(name="StatusId", referencedColumnName="id")
-//     **/
-//    protected $status;
+    /**
+     * @ManyToOne(targetEntity="Field")
+     * @JoinColumn(name="FieldId", referencedColumnName="id")
+     **/
+    protected $field;
+
+    /**
+     * @ManyToOne(targetEntity="Provenance")
+     * @JoinColumn(name="ProvenanceId", referencedColumnName="id")
+     **/
+    protected $provenance;
+
+    /**
+     * @ManyToOne(targetEntity="Status")
+     * @JoinColumn(name="StatusId", referencedColumnName="id")
+     **/
+    protected $status;
 
     /** @Column(type="datetime") */
     protected $signDate;
@@ -115,17 +115,21 @@ class Study implements JsonSerializable
      * @param $number
      * @param $name
      * @param $description
+     * @param $field
+     * @param $status
      * @param $firm
      * @param $contacts
      * @param $leaders
      * @param $qualityManagers
      * @param $consultants
      */
-    public function __construct($number, $name, $description, $firm, $contacts, $leaders, $qualityManagers, $consultants)
+    public function __construct($number, $name, $description, $field, $status, $firm, $contacts, $leaders, $qualityManagers, $consultants)
     {
         $this->number = $number;
         $this->name = $name;
         $this->description = $description;
+        $this->field = $field;
+        $this->status = $status;
         $this->firm = $firm;
         $this->contacts = $contacts;
         $this->leaders = $leaders;
@@ -140,9 +144,9 @@ class Study implements JsonSerializable
             'number' => $this->getNumber(),
             'name' => $this->getName(),
             'description' => $this->getDescription(),
-//            'field' => $this->getField(),
-//            'status' => $this->getStatus(),
-//            'provenance' => $this->getProvenance(),
+            'field' => $this->getField(),
+            'status' => $this->getStatus(),
+            'provenance' => $this->getProvenance(),
             'signDate' => $this->getSignDate()->format('Y-m-d'),
             'endDate' => $this->getEndDate()->format('Y-m-d'),
             'managementFee' => $this->getManagementFee(),
@@ -228,45 +232,45 @@ class Study implements JsonSerializable
         $this->description = $description;
     }
 
-//    /**
-//     * @return mixed
-//     */
-//    public function getField()
-//    {
-//        return $this->field;
-//    }
-//
-//    /**
-//     * @param mixed $field
-//     */
-//    public function setField($field): void
-//    {
-//        $this->field = $field;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getProvenance()
-//    {
-//        return $this->provenance;
-//    }
-//
-//    /**
-//     * @param mixed $provenance
-//     */
-//    public function setProvenance($provenance): void
-//    {
-//        $this->provenance = $provenance;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getStatus()
-//    {
-//        return $this->status;
-//    }
+    /**
+     * @return mixed
+     */
+    public function getField()
+    {
+        return $this->field;
+    }
+
+    /**
+     * @param mixed $field
+     */
+    public function setField($field): void
+    {
+        $this->field = $field;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProvenance()
+    {
+        return $this->provenance;
+    }
+
+    /**
+     * @param mixed $provenance
+     */
+    public function setProvenance($provenance): void
+    {
+        $this->provenance = $provenance;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
 
     /**
      * @param mixed $status

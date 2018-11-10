@@ -11,11 +11,6 @@ use Psr\Container\ContainerInterface;
 
 class ProvenanceService
 {
-
-    /**
-     * @var ProvenanceService
-     */
-    private $provenanceService;
     /**
      * @var ProvenanceDataService
      */
@@ -23,8 +18,6 @@ class ProvenanceService
 
     public function __construct(ContainerInterface $container)
     {
-
-        $this->provenanceService = $container->get(ProvenanceService::class);
         $this->provenanceDataService = $container->get(ProvenanceDataService::class);
     }
 
