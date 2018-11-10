@@ -147,14 +147,14 @@ class Study implements JsonSerializable
             'field' => $this->getField(),
             'status' => $this->getStatus(),
             'provenance' => $this->getProvenance(),
-            'signDate' => $this->getSignDate()->format('Y-m-d'),
-            'endDate' => $this->getEndDate()->format('Y-m-d'),
+            'signDate' => $this->getSignDateFormatted(),
+            'endDate' => $this->getEndDateFormatted(),
             'managementFee' => $this->getManagementFee(),
             'realizationFee' => $this->getRealizationFee(),
             'rebilledFee' => $this->getRebilledFee(),
             'ecoparticipationFee' => $this->getEcoparticipationFee(),
             'outsourcingFee' => $this->getOutsourcingFee(),
-            'archivedDate' => $this->getArchivedDate()->format('Y-m-d'),
+            'archivedDate' => $this->getArchivedDateFormatted(),
             'firm' => $this->getFirm(),
             'contacts' => $this->getContactsArray(),
             'leaders' => $this->getLeadersArray(),
@@ -289,6 +289,17 @@ class Study implements JsonSerializable
     }
 
     /**
+     * @return mixed
+     */
+    public function getSignDateFormatted()
+    {
+        if ($this->getSignDate() == null)
+            return null;
+        
+        return $this->getsignDate()->format('Y-m-d');
+    }
+
+    /**
      * @param mixed $signDate
      */
     public function setSignDate($signDate): void
@@ -302,6 +313,17 @@ class Study implements JsonSerializable
     public function getEndDate()
     {
         return $this->endDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEndDateFormatted()
+    {
+        if ($this->getEndDate() == null)
+            return null;
+
+        return $this->getEndDate()->format('Y-m-d');
     }
 
     /**
@@ -398,6 +420,17 @@ class Study implements JsonSerializable
     public function getArchivedDate()
     {
         return $this->archivedDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getArchivedDateFormatted()
+    {
+        if ($this->getarchivedDate() == null)
+            return null;
+
+        return $this->getarchivedDate()->format('Y-m-d');
     }
 
     /**
