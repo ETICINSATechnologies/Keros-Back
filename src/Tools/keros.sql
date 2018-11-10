@@ -339,4 +339,41 @@ INSERT INTO ua_firm_type (id, label) VALUES
 
 INSERT INTO core_gender (id, label) VALUES (1, 'M'), (2, 'F'), (3, 'A'), (4, 'I');
 
+INSERT INTO `ua_status` (`id`, `label`) VALUES
+  (1, 'En cours d\'exécution'),
+  (2, 'En clôture'),
+  (3, 'Clôturée'),
+  (4, 'En rupture'),
+  (5, 'Rompue');
+
+INSERT INTO `ua_provenance` (`id`, `label`) VALUES
+  (1, 'Site Web'),
+  (2, 'Ancien Client'),
+  (3, 'Kiwi'),
+  (4, 'Dev\'Co'),
+  (5, 'Appel'),
+  (6, 'Partenariat EM'),
+  (7, 'Junior-Entreprise'),
+  (8, 'INSA'),
+  (9, 'Appel d\'offre'),
+  (10, 'Phoning'),
+  (11, 'Mailing'),
+  (12, 'Mail'),
+  (13, 'Autre');
+
+INSERT INTO `ua_field` (`id`, `label`) VALUES
+  (1, 'Web'),
+  (2, 'Appli mobile'),
+  (3, 'Dév logiciel'),
+  (4, 'Mécanique'),
+  (5, 'Électronique'),
+  (6, 'SGM'),
+  (7, 'Biosciences'),
+  (8, 'GCU'),
+  (9, 'Energétique'),
+  (10, 'Études de marché'),
+  (11, 'Benchmark'),
+  (12, 'Productique'),
+  (13, 'Traduction');
+
 COMMIT;
