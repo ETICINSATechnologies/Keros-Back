@@ -12,7 +12,7 @@ use Keros\Tools\Searchable;
 
 /**
  * @Entity
- * @Table(name="ua_Field")
+ * @Table(name="ua_field")
  */
 class Field
 {
