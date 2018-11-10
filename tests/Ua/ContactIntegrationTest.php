@@ -44,8 +44,8 @@ class ContactIntegrationTest extends AppTestCase
         $this->assertEquals($body->email, "alexandre.lang@etic.com");
 
         $this->assertNull($body->telephone);
-        $this->assertEquals($body->cellphone, "0033111111111");
-        $this->assertEquals($body->position,"C'est une bonne position, ça scribe?");
+        $this->assertEquals($body->cellphone, "0033175985495");
+        $this->assertEquals($body->position,"C'est une bonne situation, ça scribe ?");
         $this->assertEquals($body->notes, "RAS");
         $this->assertEquals($body->old, true);
     }
