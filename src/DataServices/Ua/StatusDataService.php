@@ -37,8 +37,8 @@ class StatusDataService
     public function getOne(int $id): ?Status
     {
         try {
-            $Status = $this->repository->find($id);
-            return $Status;
+            $status = $this->repository->find($id);
+            return $status;
         } catch (Exception $e) {
             $msg = "Error finding Status with ID $id : " . $e->getMessage();
             $this->logger->error($msg);

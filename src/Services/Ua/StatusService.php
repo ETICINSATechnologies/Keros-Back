@@ -4,7 +4,6 @@
 namespace Keros\Services\Ua;
 
 use Keros\DataServices\Ua\StatusDataService;
-use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Ua\Status;
 use Keros\Error\KerosException;
 use Keros\Tools\Validator;
