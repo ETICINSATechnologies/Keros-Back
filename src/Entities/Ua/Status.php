@@ -12,7 +12,7 @@ use Keros\Tools\Searchable;
 
 /**
  * @Entity
- * @Table(name="ua_Status")
+ * @Table(name="ua_status")
  */
 class Status
 {

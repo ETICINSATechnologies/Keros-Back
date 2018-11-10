@@ -2,7 +2,7 @@
 
 namespace KerosTest\Status;
 
-use Keros\Entities\ua\Status;
+use Keros\Entities\Ua\Status;
 
 use PHPUnit\Framework\TestCase;
 
