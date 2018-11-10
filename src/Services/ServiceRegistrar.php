@@ -12,6 +12,7 @@ use Keros\Services\Core\PoleService;
 use Keros\Services\Core\PositionService;
 use Keros\Services\Core\MemberService;
 use Keros\Services\Core\UserService;
+use Keros\Services\Ua\ContactService;
 use Keros\Services\Ua\FirmService;
 use Keros\Services\Ua\FirmTypeService;
 use Psr\Container\ContainerInterface;
@@ -57,6 +58,9 @@ class ServiceRegistrar
         };
         $container[FirmService::class] = function ($container) {
             return new FirmService($container);
+        };
+        $container[ContactService::class] = function ($container) {
+            return new ContactService($container);
         };
     }
 }

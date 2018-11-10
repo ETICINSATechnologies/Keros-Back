@@ -12,6 +12,7 @@ use Keros\DataServices\Core\MemberDataService;
 use Keros\DataServices\Core\PoleDataService;
 use Keros\DataServices\Core\PositionDataService;
 use Keros\DataServices\Core\UserDataService;
+use Keros\DataServices\Ua\ContactDataService;
 use Keros\DataServices\Ua\FirmTypeDataService;
 use Keros\DataServices\Ua\FirmDataService;
 use Psr\Container\ContainerInterface;
@@ -54,6 +55,9 @@ class DataServiceRegistrar
             return new FirmDataService($container);
         };
 
+        $container[ContactDataService::class] = function ($container) {
+            return new ContactDataService($container);
+        };
 
     }
 }

@@ -35,7 +35,7 @@ class Member implements JsonSerializable
     /** @Column(type="string", length=20) */
     protected $telephone;
 
-    /** @Column(type="string", length=20) */
+    /** @Column(type="string", length=255) */
     protected $email;
 
     /**

@@ -10,6 +10,7 @@ use Keros\Controllers\Core\GenderController;
 use Keros\Controllers\Core\MemberController;
 use Keros\Controllers\Core\PoleController;
 use Keros\Controllers\Core\PositionController;
+use Keros\Controllers\Ua\ContactController;
 use Keros\Controllers\Ua\FirmController;
 use Keros\Controllers\Ua\FirmTypeController;
 use Keros\DataServices\DataServiceRegistrar;
@@ -95,6 +96,13 @@ class KerosApp
                     $this->get("/{id:[0-9]+}", FirmController::class . ':getFirm');
                     $this->post("", FirmController::class . ':createFirm');
                     $this->put("/{id:[0-9]+}", FirmController::class . ':updateFirm');
+                });
+
+                $this->group('/contact', function () {
+                    $this->get("", ContactController::class . ':getPageContact');
+                    $this->get("/{id:[0-9]+}", ContactController::class . ':getContact');
+                    $this->post("", ContactController::class . ':createContact');
+                    $this->put("/{id:[0-9]+}", ContactController::class . ':updateContact');
                 });
             });
 
