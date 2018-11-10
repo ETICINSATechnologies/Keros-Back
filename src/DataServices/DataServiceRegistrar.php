@@ -60,8 +60,10 @@ class DataServiceRegistrar
         $container[ContactDataService::class] = function ($container) {
             return new ContactDataService($container);
         };
-        $container[FieldDataService::class] = function ($container) {
+        $container[FieldDataService::class] = function ($container)
+        {
             return new FieldDataService($container);
+        };
         $container[StatusDataService::class] = function ($container) {
             return new StatusDataService($container);
         };

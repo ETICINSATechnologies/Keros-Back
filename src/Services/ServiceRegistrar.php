@@ -64,8 +64,10 @@ class ServiceRegistrar
         $container[ContactService::class] = function ($container) {
             return new ContactService($container);
         };
-        $container[FieldService::class] = function ($container) {
+        $container[FieldService::class] = function ($container)
+        {
             return new FieldService($container);
+        };
         $container[StatusService::class] = function ($container) {
             return new StatusService($container);
         };
