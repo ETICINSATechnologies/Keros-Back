@@ -15,6 +15,7 @@ use Keros\Services\Core\UserService;
 use Keros\Services\Ua\ContactService;
 use Keros\Services\Ua\FirmService;
 use Keros\Services\Ua\FirmTypeService;
+use Keros\Services\Ua\FieldService;
 use Keros\Services\Ua\StatusService;
 use Psr\Container\ContainerInterface;
 
@@ -62,6 +63,10 @@ class ServiceRegistrar
         };
         $container[ContactService::class] = function ($container) {
             return new ContactService($container);
+        };
+        $container[FieldService::class] = function ($container)
+        {
+            return new FieldService($container);
         };
         $container[StatusService::class] = function ($container) {
             return new StatusService($container);
