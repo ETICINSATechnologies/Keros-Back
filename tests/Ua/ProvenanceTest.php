@@ -2,7 +2,7 @@
 
 namespace KerosTest\Provenance;
 
-use Keros\Entities\ua\Provenance;
+use Keros\Entities\Ua\Provenance;
 
 use PHPUnit\Framework\TestCase;
 
