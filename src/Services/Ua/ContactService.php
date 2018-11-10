@@ -62,9 +62,6 @@ class ContactService
         $firstName = Validator::requiredString($fields["firstName"]);
         $lastName = Validator::requiredString($fields["lastName"]);
         $email = Validator::requiredEmail($fields["email"]);
-        //$telephone = Validator::optionalPhone($fields["telephone"]);
-        //$cellphone = Validator::optionalPhone($fields["cellphone"]);
-
         $genderId = Validator::requiredId($fields["genderId"]);
         $gender = $this->genderService->getOne($genderId);
         $firmId = Validator::requiredId($fields["firmId"]);

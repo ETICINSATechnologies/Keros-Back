@@ -37,17 +37,16 @@ class ContactIntegrationTest extends AppTestCase
         $this->assertSame(200, $response->getStatusCode());
         $body = json_decode($response->getBody());
 
-        $this->assertEquals($body->firstName, "Alexandre");
-        $this->assertEquals($body->lastName, "Lang");
+        $this->assertEquals("Alexandre", $body->firstName);
+        $this->assertEquals("Lang", $body->lastName);
         $this->assertNotNull($body->gender);
         $this->assertNotNull($body->firm);
-        $this->assertEquals($body->email, "alexandre.lang@etic.com");
-
+        $this->assertEquals("alexandre.lang@etic.com", $body->email);
         $this->assertNull($body->telephone);
-        $this->assertEquals($body->cellphone, "0033175985495");
-        $this->assertEquals($body->position,"C'est une bonne situation, ça scribe ?");
-        $this->assertEquals($body->notes, "RAS");
-        $this->assertEquals($body->old, true);
+        $this->assertEquals("0033175985495", $body->cellphone);
+        $this->assertEquals("C'est une bonne situation, ça scribe ?", $body->position);
+        $this->assertEquals("RAS", $body->notes);
+        $this->assertEquals(true, $body->old);
     }
 
     public function testGetContactShouldReturn404()
@@ -59,6 +58,7 @@ class ContactIntegrationTest extends AppTestCase
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
+
         $this->assertSame(404, $response->getStatusCode());
     }
 
@@ -81,8 +81,9 @@ class ContactIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
         $this->assertSame(201, $response->getStatusCode());
         $body = json_decode($response->getBody());
-        $this->assertSame($body->firstName,"lolo");
-        $this->assertSame($body->lastName, "momo");
+
+        $this->assertSame("lolo", $body->firstName);
+        $this->assertSame("momo", $body->lastName);
     }
 
     public function testPutContactShouldReturn200()
@@ -110,6 +111,7 @@ class ContactIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
         $this->assertSame(200, $response->getStatusCode());
         $body = json_decode($response->getBody());
+
         $this->assertSame("lolo", $body->firstName);
     }
 
@@ -122,6 +124,7 @@ class ContactIntegrationTest extends AppTestCase
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
+
         $this->assertSame(200, $response->getStatusCode());
     }
 }
