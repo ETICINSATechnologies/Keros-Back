@@ -3,6 +3,7 @@
 
 namespace Keros\Services;
 
+use Keros\Services\Ua\ProvenanceService;
 use Keros\Services\Auth\LoginService;
 use Keros\Services\Core\AddressService;
 use Keros\Services\Core\CountryService;
@@ -61,6 +62,9 @@ class ServiceRegistrar
         };
         $container[ContactService::class] = function ($container) {
             return new ContactService($container);
+        };
+        $container[ProvenanceService::class] = function ($container) {
+            return new ProvenanceService($container);
         };
     }
 }
