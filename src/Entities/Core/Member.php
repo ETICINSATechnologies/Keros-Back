@@ -1,7 +1,7 @@
 <?php
 
 namespace Keros\Entities\Core;
-use Doctrine\Common\Collections\ArrayCollection;
+
 use JsonSerializable;
 
 /**

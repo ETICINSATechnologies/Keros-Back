@@ -189,7 +189,7 @@ CREATE TABLE `ua_study` (
   `id`           int(11) AUTO_INCREMENT,
   `number`       int(11)      NOT NULL,
   `name`         varchar(100) NOT NULL,
-  `descrption`   varchar(255) NOT NULL,
+  `description`   varchar(255) NOT NULL,
   `fieldId`      int(11)      NOT NULL,
   `provenanceId` int(11),
   `statusId`     int(11)      NOT NULL,
