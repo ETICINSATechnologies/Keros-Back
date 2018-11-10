@@ -2,7 +2,7 @@
 
 namespace KerosTest\Field;
 
-use Keros\Entities\ua\Field;
+use Keros\Entities\Ua\Field;
 
 use PHPUnit\Framework\TestCase;
 
