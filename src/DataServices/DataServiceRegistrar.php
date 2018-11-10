@@ -16,6 +16,8 @@ use Keros\DataServices\Ua\ContactDataService;
 use Keros\DataServices\Ua\FirmTypeDataService;
 use Keros\DataServices\Ua\FirmDataService;
 use Keros\DataServices\Ua\ProvenanceDataService;
+use Keros\DataServices\Ua\FieldDataService;
+use Keros\DataServices\Ua\StatusDataService;
 use Psr\Container\ContainerInterface;
 
 class DataServiceRegistrar
@@ -61,6 +63,13 @@ class DataServiceRegistrar
         };
         $container[ProvenanceDataService::class] = function ($container) {
             return new ProvenanceDataService($container);
+        };
+        $container[FieldDataService::class] = function ($container)
+        {
+            return new FieldDataService($container);
+        };
+        $container[StatusDataService::class] = function ($container) {
+            return new StatusDataService($container);
         };
 
     }
