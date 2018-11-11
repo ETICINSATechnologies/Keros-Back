@@ -13,6 +13,7 @@ use Keros\Controllers\Core\PositionController;
 use Keros\Controllers\Ua\ContactController;
 use Keros\Controllers\Ua\FirmController;
 use Keros\Controllers\Ua\FirmTypeController;
+use Keros\Controllers\Ua\StudyController;
 use Keros\DataServices\DataServiceRegistrar;
 use Keros\Error\ErrorHandler;
 use Keros\Error\PhpErrorHandler;
@@ -103,6 +104,25 @@ class KerosApp
                     $this->get("/{id:[0-9]+}", ContactController::class . ':getContact');
                     $this->post("", ContactController::class . ':createContact');
                     $this->put("/{id:[0-9]+}", ContactController::class . ':updateContact');
+                });
+
+                $this->group('/study', function () {
+                    $this->get("", StudyController::class . ':getPageStudy');
+                    $this->get("/{id:[0-9]+}", StudyController::class . ':getStudy');
+                    $this->post("", StudyController::class . ':createStudy');
+                    $this->put("/{id:[0-9]+}", StudyController::class . ':updateStudy');
+                });
+                $this->group('/provenance', function () {
+                    $this->get("", StudyController::class . ':getAllProvenances');
+                    $this->get("/{id:[0-9]+}", StudyController::class . ':getProvenance');
+                });
+                $this->group('/field', function () {
+                    $this->get("", StudyController::class . ':getAllFields');
+                    $this->get("/{id:[0-9]+}", StudyController::class . ':getField');
+                });
+                $this->group('/status', function () {
+                    $this->get("", StudyController::class . ':getAllStatus');
+                    $this->get("/{id:[0-9]+}", StudyController::class . ':getStatus');
                 });
             });
 

@@ -50,7 +50,7 @@ class StatusDataService
     {
         try {
             $status = $this->repository->findAll();
-            return $$status;
+            return $status;
         } catch (Exception $e) {
             $msg = "Error finding page of status : " . $e->getMessage();
             $this->logger->error($msg);

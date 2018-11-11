@@ -120,6 +120,21 @@ class ContactService
         return $this->contactDataService->getCount($requestParameters);
     }
 
+    public function getSome(array $ids): array
+    {
+        $contacts = [];
+        foreach ($ids as $id) {
+            $id = Validator::requiredId($id);
+            $contact = $this->contactDataService->getOne($id);
+            if (!$contact) {
+                throw new KerosException("The contact could not be found", 404);
+            }
+            $contacts[] = $contact;
+        }
+
+        return $contacts;
+    }
+
     public function update(int $id, ?array $fields): Contact
     {
         $id = Validator::requiredId($id);

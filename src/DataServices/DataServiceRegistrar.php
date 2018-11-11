@@ -3,7 +3,6 @@
 
 namespace Keros\DataServices;
 
-use Keros\DataServices\Auth\LoginDataService;
 use Keros\DataServices\Core\AddressDataService;
 use Keros\DataServices\Core\CountryDataService;
 use Keros\DataServices\Core\DepartmentDataService;
@@ -18,6 +17,7 @@ use Keros\DataServices\Ua\FirmDataService;
 use Keros\DataServices\Ua\ProvenanceDataService;
 use Keros\DataServices\Ua\FieldDataService;
 use Keros\DataServices\Ua\StatusDataService;
+use Keros\DataServices\Ua\StudyDataService;
 use Psr\Container\ContainerInterface;
 
 class DataServiceRegistrar
@@ -57,7 +57,6 @@ class DataServiceRegistrar
         $container[FirmDataService::class] = function ($container) {
             return new FirmDataService($container);
         };
-
         $container[ContactDataService::class] = function ($container) {
             return new ContactDataService($container);
         };
@@ -71,6 +70,8 @@ class DataServiceRegistrar
         $container[StatusDataService::class] = function ($container) {
             return new StatusDataService($container);
         };
-
+        $container[StudyDataService::class] = function ($container) {
+            return new StudyDataService($container);
+        };
     }
 }

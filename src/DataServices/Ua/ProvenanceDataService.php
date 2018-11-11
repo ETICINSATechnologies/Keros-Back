@@ -50,7 +50,7 @@ class ProvenanceDataService
     {
         try {
             $provenance = $this->repository->findAll();
-            return $$provenance;
+            return $provenance;
         } catch (Exception $e) {
             $msg = "Error finding page of provenance : " . $e->getMessage();
             $this->logger->error($msg);

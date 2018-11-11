@@ -11,11 +11,6 @@ use Psr\Container\ContainerInterface;
 
 class FieldService
 {
-
-    /**
-     * @var FieldService
-     */
-    private $fieldService;
     /**
      * @var FieldDataService
      */
@@ -23,8 +18,6 @@ class FieldService
 
     public function __construct(ContainerInterface $container)
     {
-
-        $this->fieldService = $container->get(FieldService::class);
         $this->fieldDataService = $container->get(FieldDataService::class);
     }
 

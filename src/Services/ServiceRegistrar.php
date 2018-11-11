@@ -18,6 +18,7 @@ use Keros\Services\Ua\FirmService;
 use Keros\Services\Ua\FirmTypeService;
 use Keros\Services\Ua\FieldService;
 use Keros\Services\Ua\StatusService;
+use Keros\Services\Ua\StudyService;
 use Psr\Container\ContainerInterface;
 
 class ServiceRegistrar
@@ -72,8 +73,12 @@ class ServiceRegistrar
         {
             return new FieldService($container);
         };
-        $container[StatusService::class] = function ($container) {
+        $container[StatusService::class] = function ($container)
+        {
             return new StatusService($container);
+        };
+        $container[StudyService::class] = function ($container) {
+            return new StudyService($container);
         };
     }
 }

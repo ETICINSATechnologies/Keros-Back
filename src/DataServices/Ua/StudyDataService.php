@@ -7,14 +7,13 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Exception;
-use Keros\Entities\Core\Member;
 use Keros\Entities\Core\RequestParameters;
-use Keros\Entities\Ua\Contact;
+use Keros\Entities\Ua\Study;
 use Keros\Error\KerosException;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 
-class ContactDataService
+class StudyDataService
 {
     /**
      * @var EntityManager
@@ -33,28 +32,28 @@ class ContactDataService
     {
         $this->logger = $container->get('logger');
         $this->entityManager = $container->get('entityManager');
-        $this->repository = $this->entityManager->getRepository(Contact::class);
+        $this->repository = $this->entityManager->getRepository(Study::class);
     }
 
-    public function persist(Contact $contact): void
+    public function persist(Study $study): void
     {
         try {
-            $this->entityManager->persist($contact);
+            $this->entityManager->persist($study);
             $this->entityManager->flush();
         } catch (Exception $e) {
-            $msg = "Failed to persist contact : " . $e->getMessage();
+            $msg = "Failed to persist study : " . $e->getMessage();
             $this->logger->error($msg);
             throw new KerosException($msg, 500);
         }
     }
 
-    public function getOne(int $id): ?Contact
+    public function getOne(int $id): ?Study
     {
         try {
-            $contact = $this->repository->find($id);
-            return $contact;
+            $study = $this->repository->find($id);
+            return $study;
         } catch (Exception $e) {
-            $msg = "Error finding contact with ID $id : " . $e->getMessage();
+            $msg = "Error finding study with ID $id : " . $e->getMessage();
             $this->logger->error($msg);
             throw new KerosException($msg, 500);
         }
@@ -64,10 +63,10 @@ class ContactDataService
     {
         try {
             $criteria = $requestParameters->getCriteria();
-            $members = $this->repository->matching($criteria)->getValues();
-            return $members;
+            $studys = $this->repository->matching($criteria)->getValues();
+            return $studys;
         } catch (Exception $e) {
-            $msg = "Error finding page of contacts : " . $e->getMessage();
+            $msg = "Error finding page of studys : " . $e->getMessage();
             $this->logger->error($msg);
             throw new KerosException($msg, 500);
         }

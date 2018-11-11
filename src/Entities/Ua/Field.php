@@ -2,19 +2,13 @@
 
 namespace Keros\Entities\Ua;
 
-use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\GeneratedValue;
-use Doctrine\ORM\Mapping\Id;
-use Doctrine\ORM\Mapping\Table;
 use JsonSerializable;
-use Keros\Tools\Searchable;
 
 /**
  * @Entity
  * @Table(name="ua_field")
  */
-class Field
+class Field implements JsonSerializable
 {
     /**
      * @Id
@@ -22,15 +16,22 @@ class Field
      * @GeneratedValue
      */
     protected $id;
+
     /** @Column(type="string", length=100) */
     protected $label;
-
 
     public function __construct($label)
     {
         $this->label = $label;
     }
 
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getId(),
+            'label' => $this->getLabel(),
+        ];
+    }
 
     /**
      * @return mixed

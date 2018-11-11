@@ -11,11 +11,6 @@ use Psr\Container\ContainerInterface;
 
 class StatusService
 {
-
-    /**
-     * @var StatusService
-     */
-    private $statusService;
     /**
      * @var StatusDataService
      */
@@ -23,8 +18,6 @@ class StatusService
 
     public function __construct(ContainerInterface $container)
     {
-
-        $this->statusService = $container->get(StatusService::class);
         $this->statusDataService = $container->get(StatusDataService::class);
     }
 
