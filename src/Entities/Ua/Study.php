@@ -94,7 +94,7 @@ class Study implements JsonSerializable
 
     /**
      * @ManyToMany(targetEntity="Keros\Entities\Core\Member")
-     * @JoinTable(name="ua_study_qualitymanager",
+     * @JoinTable(name="ua_study_qualityManager",
      *      joinColumns={@JoinColumn(name="studyId", referencedColumnName="id")},
      *      inverseJoinColumns={@JoinColumn(name="memberId", referencedColumnName="id")}
      *      )

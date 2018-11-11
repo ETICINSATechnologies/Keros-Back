@@ -41,7 +41,7 @@ class StudyDataService
             $this->entityManager->persist($study);
             $this->entityManager->flush();
         } catch (Exception $e) {
-            $msg = "Failed to persist member : " . $e->getMessage();
+            $msg = "Failed to persist study : " . $e->getMessage();
             $this->logger->error($msg);
             throw new KerosException($msg, 500);
         }
@@ -63,10 +63,10 @@ class StudyDataService
     {
         try {
             $criteria = $requestParameters->getCriteria();
-            $members = $this->repository->matching($criteria)->getValues();
-            return $members;
+            $studys = $this->repository->matching($criteria)->getValues();
+            return $studys;
         } catch (Exception $e) {
-            $msg = "Error finding page of members : " . $e->getMessage();
+            $msg = "Error finding page of studys : " . $e->getMessage();
             $this->logger->error($msg);
             throw new KerosException($msg, 500);
         }
