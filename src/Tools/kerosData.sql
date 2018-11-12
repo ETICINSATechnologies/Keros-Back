@@ -2,11 +2,12 @@ SET AUTOCOMMIT = 0;
 SET FOREIGN_KEY_CHECKS = 0;
 SET UNIQUE_CHECKS = 0;
 
+/* Passwords are, in order : hunter11 - hunter12 - hunter13 */
 TRUNCATE TABLE core_user;
 INSERT INTO core_user (id, username, password, expiresAt) VALUES
-  (1, 'cbreeze', 'hunter11' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')),
-  (2, 'mcool', 'hunter12' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')),
-  (3, 'lswollo', 'hunter13' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'));
+  (1, 'cbreeze', '$2y$10$bYKeDwHZTzecEiTkNNkCgumi8mHgGQ97QtOSveAXRiogr.a2sxN5W' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')),
+  (2, 'mcool', '$2y$10$fWnWMRQKKWInygzk.FNIP.BsnTp8e8XvDwj5YdGgVuIFXsz/XvVgm' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')),
+  (3, 'lswollo', '$2y$10$9R4lfhp18.iVzsP8amDL5e7eumi48DmPPkoa5YLAm/thAZWIHaOtW' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'));
 
 TRUNCATE TABLE core_address;
 INSERT INTO core_address (id, line1, line2, postalCode, city, countryId) VALUES
@@ -34,5 +35,16 @@ TRUNCATE TABLE ua_firm;
 INSERT INTO ua_firm (id, siret, name, addressId, typeId) VALUES
   (1, '215437645', 'Cool Inc.', 4, 3),
   (2, '471245896', 'Swagger', 5, 1);
+
+TRUNCATE TABLE ua_contact;
+INSERT INTO `ua_contact` (`id`, `firstName`, `lastName`, `genderId`, `firmId`, `email`, `telephone`, `cellphone`, `position`, `notes`, `old`) VALUES
+  (1, 'Alexandre', 'Lang', 1, 2, 'alexandre.lang@etic.com', NULL, '0033175985495', 'C\'est une bonne situation, ça scribe ?', 'RAS', 1),
+  (2, 'Conor', 'Ryan', 1, 1, 'conor.ryan@etic.com', '0033666666666', '0033666666666', 'Is it a good position?', 'this is a note', 1),
+  (3, 'Laurent', 'Tainturier', 1, 1, 'laurent.tainturier@etic.com', '0033333333333', '0033222222222', 'Moi vous savez je ne pense pas qu\'il y ait de bonne ou de mauvaise situation', 'this is a note', 1),
+  (4, 'Marah', 'Galy Adam', 1, 1, 'marah.galy@etic-insa.com', '0033646786532', NULL, NULL, NULL, 0);
+
+TRUNCATE TABLE ua_study;
+INSERT INTO `ua_study` (`id`, `number`, `name`, `description`, `fieldId`, `provenanceId`, `statusId`, `signDate`, `endDate`, `managementFee`, `realizationFee`, `rebilledFee`, `ecoparticipationFee`, `outsourcingFee`, `archivedDate`, `firmId`) VALUES
+  (1, 12, 'Google', 'This is a big company', 1, 1, 2, '2018-11-10', '2018-11-10', 12000000, 123, 12345, 12, 12324454, '2018-11-10', 1);
 
 COMMIT;

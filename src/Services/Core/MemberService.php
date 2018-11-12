@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Keros\Services\Core;
 
 use Keros\DataServices\Core\MemberDataService;
@@ -98,6 +97,21 @@ class MemberService
     public function getCount(RequestParameters $requestParameters): int
     {
         return $this->memberDataService->getCount($requestParameters);
+    }
+
+    public function getSome(array $ids): array
+    {
+        $members = [];
+        foreach ($ids as $id) {
+            $id = Validator::requiredId($id);
+            $member = $this->memberDataService->getOne($id);
+            if (!$member) {
+                throw new KerosException("The member could not be found", 404);
+            }
+            $members[] = $member;
+        }
+
+        return $members;
     }
 
     public function update(int $id, ?array $fields): Member

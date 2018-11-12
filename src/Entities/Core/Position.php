@@ -1,14 +1,16 @@
 <?php
 
 namespace Keros\Entities\Core;
+
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
 use JsonSerializable;
 use Keros\Tools\Searchable;
-use phpDocumentor\Reflection\Types\Array_;
 
 /**
  * @Entity
@@ -43,24 +45,20 @@ class Position implements JsonSerializable, Searchable
 
     public function jsonSerialize()
     {
-        $serializePosition = array(
+        return [
             'id' => $this->getId(),
             'label' => $this->getLabel(),
-        );
-
-        if ($this->getPole() == null)
-            $serializePosition["poleId"] = null;
-        else
-            $serializePosition["poleId"] = $this->getPole()->getId();
-
-        return $serializePosition;
+            'pole' => $this->getPole()
+        ];
     }
 
-    public static function getSearchFields(): array {
+    public static function getSearchFields(): array
+    {
         return ['label'];
     }
 
     // Getters and setters
+
     /**
      * @return mixed
      */

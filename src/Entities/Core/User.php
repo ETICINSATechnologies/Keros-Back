@@ -8,7 +8,7 @@ use Keros\Tools\Searchable;
  * @Entity
  * @Table(name="core_user")
  */
-class User implements JsonSerializable, Searchable
+class User implements Searchable
 {
     /**
      * @Id
@@ -52,19 +52,6 @@ class User implements JsonSerializable, Searchable
         $this->createdAt = $createdAt;
         $this->disabled = $disabled;
         $this->expiresAt = $expiresAt;
-    }
-
-    public function jsonSerialize()
-    {
-        return [
-            'id' => $this->getId(),
-            'username' => $this->getUsername(),
-            'password' => $this->getPassword(),
-            'lastConnectedAt' => $this->getLastConnectedAt(),
-            'createdAt' => $this->getCreatedAt(),
-            'disabled' => $this->getDisabled(),
-            'expiresAt' => $this->getExpiresAt(),
-        ];
     }
 
     public static function getSearchFields(): array {

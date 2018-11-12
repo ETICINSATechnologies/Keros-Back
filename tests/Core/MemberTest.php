@@ -10,7 +10,7 @@ use Keros\Entities\Core\Position;
 use PHPUnit\Framework\TestCase;
 
 
-final class MemberTest extends TestCase
+class MemberTest extends TestCase
 {
     public function testNewMemberShouldBeInstanceOfMember()
     {

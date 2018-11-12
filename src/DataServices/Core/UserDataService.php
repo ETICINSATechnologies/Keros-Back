@@ -10,6 +10,7 @@ use Exception;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Core\User;
 use Keros\Error\KerosException;
+use Keros\Tools\PasswordEncryption;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 
@@ -81,5 +82,24 @@ class UserDataService
             $count = $this->repository->matching(Criteria::create())->count();
         }
         return $count;
+    }
+
+    public function findByUsername(String $username): ?User
+    {
+        try {
+            $criteria = [
+                "username" => $username
+            ];
+            $users = $this->repository->findBy($criteria);
+
+            // check if we get one and only one instance of user
+            if (sizeof($users) == 1)
+                return $users[0];
+            return null;
+        } catch (Exception $e) {
+            $msg = "Error logging user: " . $e->getMessage();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
     }
 }

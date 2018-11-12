@@ -6,7 +6,7 @@ use Keros\Error\KerosException;
 use Keros\Tools\Validator;
 use PHPUnit\Framework\TestCase;
 
-final class ValidatorTest extends TestCase
+class ValidatorTest extends TestCase
 {
     public function testValidEmailShouldReturnSame(): void
     {

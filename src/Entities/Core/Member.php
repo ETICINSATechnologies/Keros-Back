@@ -1,7 +1,7 @@
 <?php
 
 namespace Keros\Entities\Core;
-use Doctrine\Common\Collections\ArrayCollection;
+
 use JsonSerializable;
 
 /**
@@ -35,7 +35,7 @@ class Member implements JsonSerializable
     /** @Column(type="string", length=20) */
     protected $telephone;
 
-    /** @Column(type="string", length=20) */
+    /** @Column(type="string", length=255) */
     protected $email;
 
     /**
@@ -61,16 +61,7 @@ class Member implements JsonSerializable
      *      )
      */
     protected $positions;
-
-    /**
-     * Member constructor.
-     * @param $firstName
-     * @param $lastName
-     * @param $birthday
-     * @param $telephone
-     * @param $email
-     * @param $schoolYear
-     */
+    
     public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $positions)
     {
         $this->firstName = $firstName;
@@ -91,14 +82,14 @@ class Member implements JsonSerializable
             'username' => $this->getUser()->getUsername(),
             'firstName' => $this->getFirstName(),
             'lastName' => $this->getLastName(),
-            'genderId' => $this->getGender()->getId(),
+            'gender' => $this->getGender(),
             'email' => $this->getEmail(),
             'birthday' => $this->getBirthday()->format('Y-m-d'),
-            'departmentId' => $this->getDepartment()->getId(),
+            'department' => $this->getDepartment(),
             'schoolYear' => $this->getSchoolYear(),
             'telephone' => $this->getTelephone(),
-            'addressId' => $this->getAddress()->getId(),
-            'positionIds' => $this->getPositionIds()
+            'address' => $this->getAddress(),
+            'positions' => $this->getPositionsArray()
         ];
     }
 
@@ -291,25 +282,14 @@ class Member implements JsonSerializable
     /**
      * @return array
      */
-    public function getPositionIds()
+    public function getPositionsArray()
     {
-        $positionIds = [];
+        $positions = [];
         foreach ($this->getPositions() as $position)
         {
-            $positionIds[] = $position->getId();
+            $positions[] = $position;
         }
 
-        return $positionIds;
+        return $positions;
     }
-
-    public function addPosition($position): void
-    {
-        $this->positions[] = $position;
-    }
-
-    public function deleteAllPositions()
-    {
-        $this->positions = new ArrayCollection();
-    }
-
 }

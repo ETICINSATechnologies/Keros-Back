@@ -6,7 +6,7 @@ use KerosTest\AppTestCase;
 use Slim\Http\Environment;
 use Slim\Http\Request;
 
-class PoleIntegrationTest extends AppTestCase
+class AddressIntegrationTest extends AppTestCase
 {
     public function testGetAllAddressesShouldReturn200()
     {
@@ -26,7 +26,7 @@ class PoleIntegrationTest extends AppTestCase
         $this->assertNotNull(strlen($body->content[0]->line1));
         $this->assertNotNull(strlen($body->content[0]->line2));
         $this->assertNotNull(strlen($body->content[0]->postalCode));
-        $this->assertNotNull(strlen($body->content[0]->countryId));
+        $this->assertNotNull(strlen($body->content[0]->country->label));
     }
 
     public function testGetAddressShouldReturn200()
@@ -47,7 +47,7 @@ class PoleIntegrationTest extends AppTestCase
         $this->assertSame(null, $body->line2);
         $this->assertSame(69100, $body->postalCode);
         $this->assertSame("lyon", $body->city);
-        $this->assertSame(1, $body->countryId);
+        $this->assertSame(1, $body->country->id);
     }
 
     public function testGetAddressShouldReturn404()
