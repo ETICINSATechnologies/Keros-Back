@@ -1,13 +1,27 @@
 <?php
 
-namespace Keros\Tools;
+namespace Keros\Tools\Authorization;
 
 
 use Keros\Error\KerosException;
+use Keros\Tools\ConfigLoader;
+use Monolog\Logger;
+use Psr\Container\ContainerInterface;
 
 class JwtCodec
 {
-    public static function encode(array $payload): String
+
+    /**
+     * @var \Monolog\Logger
+     */
+    private $logger;
+
+    function __construct(ContainerInterface $container)
+    {
+        $this->logger = $container->get(Logger::class);
+    }
+
+    public function encode(array $payload): String
     {
         $kerosConfig = ConfigLoader::getConfig();
         $alg = $kerosConfig["ALG"];
@@ -24,8 +38,8 @@ class JwtCodec
         $payload = json_encode($payload);
 
         // encode the header and the payload
-        $base64UrlHeader = self::encodeBase64($header);
-        $base64UrlPayload = self::encodeBase64($payload);
+        $base64UrlHeader = $this->encodeBase64($header);
+        $base64UrlPayload = $this->encodeBase64($payload);
 
         // create signature
         $signature = hash_hmac($hash, $base64UrlHeader . "." . $base64UrlPayload, $secretKey, true);
@@ -37,30 +51,29 @@ class JwtCodec
         return $base64UrlHeader . "." . $base64UrlPayload . "." . $base64UrlSignature;
     }
 
-    public static function decode(String $jwt)
+    public function decode(String $jwt)
     {
         $kerosConfig = ConfigLoader::getConfig();
         $hash = $kerosConfig["HASH"];
         $secretKey = $kerosConfig["SECRET_KEY"];
 
         [$base64UrlHeader, $base64UrlPayload, $base64UrlSignature] = explode('.', $jwt);
-        $signature = hash_hmac($hash, $base64UrlHeader . "." . $base64UrlPayload, $secretKey, false);
+        $signature = hash_hmac($hash, $base64UrlHeader . "." . $base64UrlPayload, $secretKey, true);
 
         // check if the $signature is the same as expected
-        if ($base64UrlSignature == self::encodeBase64($signature ))
-        {
-            return json_decode(self::decodeBase64($base64UrlPayload));
+        if ($base64UrlSignature == $this->encodeBase64($signature)) {
+            return json_decode($this->decodeBase64($base64UrlPayload));
         }
 
-        throw new KerosException("The JWT is invalid", 404);
+        throw new KerosException("The JWT is invalid", 400);
     }
 
-    public static function encodeBase64($data)
+    public function encodeBase64($data)
     {
         return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($data));
     }
 
-    public static function decodeBase64($data)
+    public function decodeBase64($data)
     {
         return base64_decode($data);
     }

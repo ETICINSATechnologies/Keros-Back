@@ -7,7 +7,6 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Exception;
-use Keros\Entities\Core\Member;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Ua\Contact;
 use Keros\Error\KerosException;
@@ -31,8 +30,8 @@ class ContactDataService
 
     public function __construct(ContainerInterface $container)
     {
-        $this->logger = $container->get('logger');
-        $this->entityManager = $container->get('entityManager');
+        $this->logger = $container->get(Logger::class);
+        $this->entityManager = $container->get(EntityManager::class);
         $this->repository = $this->entityManager->getRepository(Contact::class);
     }
 

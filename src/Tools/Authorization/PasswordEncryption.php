@@ -1,6 +1,6 @@
 <?php
 
-namespace Keros\Tools;
+namespace Keros\Tools\Authorization;
 
 
 class PasswordEncryption

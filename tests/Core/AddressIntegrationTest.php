@@ -43,7 +43,7 @@ class AddressIntegrationTest extends AppTestCase
 
         $body = json_decode($response->getBody());
         $this->assertSame(1, $body->id);
-        $this->assertSame("13 rue renard", $body->line1);
+        $this->assertSame("13 Rue du renard", $body->line1);
         $this->assertSame(null, $body->line2);
         $this->assertSame(69100, $body->postalCode);
         $this->assertSame("lyon", $body->city);

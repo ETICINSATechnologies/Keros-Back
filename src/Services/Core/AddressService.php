@@ -48,28 +48,19 @@ class AddressService
         $id = Validator::requiredId($id);
         $address = $this->getOne($id);
 
-        if ($line1 = $fields["line1"]) {
-            $line1 = Validator::requiredString($fields["line1"]);
-            $address->setLine1($line1);
-        }
-        if ($line2 = $fields["line2"]) {
-            $line2 = Validator::requiredString($fields["line2"]);
-            $address->setLine2($line2);
-        }
-        if ($postalCode = $fields["postalCode"]) {
-            $postalCode = Validator::requiredString($fields["postalCode"]);
-            $address->setPostalCode($postalCode);
-        }
-        if ($city = $fields["city"]) {
-            $city = Validator::requiredString($fields["city"]);
-            $address->setCity($city);
-        }
-        if ($countryId = $fields["countryId"]) {
-            $countryId = Validator::requiredString($fields["countryId"]);
-            $country = $this->countryService->getOne($countryId);
-            $address->setCountry($country);
-        }
+        $line1 = Validator::requiredString($fields["line1"]);
+        $line2 = Validator::optionalString($fields["line2"]);
+        $postalCode = Validator::requiredString($fields["postalCode"]);
+        $city = Validator::requiredString($fields["city"]);
+        $countryId = Validator::requiredId($fields["countryId"]);
 
+        $country = $this->countryService->getOne($countryId);
+
+        $address->setLine1($line1);
+        $address->setLine2($line2);
+        $address->setPostalCode($postalCode);
+        $address->setCity($city);
+        $address->setCountry($country);
         $this->addressDataService->persist($address);
 
         return $address;

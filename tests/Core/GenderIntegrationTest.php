@@ -38,7 +38,7 @@ class GenderIntegrationTest extends AppTestCase
 
         $body = json_decode($response->getBody());
         $this->assertSame(1, $body->id);
-        $this->assertSame('M', $body->label);
+        $this->assertSame('H', $body->label);
     }
     public function testGetGenderShouldReturn404()
     {

@@ -36,7 +36,7 @@ class FirmService
     public function create(array $fields): Firm
     {
         $name = Validator::requiredString($fields["name"]);
-        $siret = Validator::requiredString($fields["siret"]);
+        $siret = Validator::optionalString(isset($fields["siret"]) ? $fields["siret"] : null);
         $typeId = Validator::requiredId($fields["typeId"]);
 
         $address = $this->addressService->create($fields["address"]);
@@ -74,23 +74,18 @@ class FirmService
         $id = Validator::requiredId($id);
         $firm = $this->getOne($id);
 
-        if (isset($fields["name"])) {
-            $name = Validator::requiredString($fields["name"]);
-            $firm->setName($name);
-        }
-        if (isset($fields["siret"])) {
-            $siret = Validator::requiredString($fields["siret"]);
-            $firm->setSiret($siret);
-        }
-        if (isset($fields["typeId"])) {
-            $typeId = Validator::requiredInt($fields["typeId"]);
-            $type = $this->firmTypeService->getOne($typeId);
-            $firm->setType($type);
-        }
+        $name = Validator::requiredString($fields["name"]);
+        $siret = Validator::optionalString(isset($fields["siret"]) ? $fields["siret"] : null);
+        $typeId = Validator::requiredId($fields["typeId"]);
 
-        if (isset($fields["address"])) {
-            $this->addressService->update($firm->getAddress()->getId(), $fields["address"]);
-        }
+        $firmType = $this->firmTypeService->getOne($typeId);
+
+        $firm->setName($name);
+        $firm->setSiret($siret);
+        $firm->setType($firmType);
+
+        $this->addressService->update($firm->getAddress()->getId(), $fields["address"]);
+
         $this->firmDataService->persist($firm);
 
         return $firm;

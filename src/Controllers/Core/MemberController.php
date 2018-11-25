@@ -6,9 +6,8 @@ use Doctrine\ORM\EntityManager;
 use Keros\Entities\core\Member;
 use Keros\Entities\Core\Page;
 use Keros\Entities\Core\RequestParameters;
-use Keros\Services\Core\AddressService;
 use Keros\Services\Core\MemberService;
-use Keros\Services\Core\UserService;
+use Keros\Tools\Authorization\JwtCodec;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -26,16 +25,19 @@ class MemberController
      * @var Logger
      */
     private $logger;
-
     /**
      * @var EntityManager
      */
     private $entityManager;
+    /**
+     * @var JwtCodec
+     */
+    private $jwtCodec;
 
     public function __construct(ContainerInterface $container)
     {
-        $this->logger = $container->get('logger');
-        $this->entityManager = $container->get('entityManager');
+        $this->logger = $container->get(Logger::class);
+        $this->entityManager = $container->get(EntityManager::class);
         $this->memberService = $container->get(MemberService::class);
     }
 
@@ -47,6 +49,16 @@ class MemberController
 
         return $response->withJson($member, 200);
     }
+
+    public function getConnectedUser(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Getting connected user from " . $request->getServerParams()["REMOTE_ADDR"]);
+
+        $member = $this->memberService->getOne($request->getAttribute("userId"));
+
+        return $response->withJson($member, 200);
+    }
+
 
     public function getPageMembers(Request $request, Response $response, array $args)
     {

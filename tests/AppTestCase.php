@@ -25,7 +25,7 @@ class AppTestCase extends \PHPUnit\Framework\TestCase
      */
     public static function setUpBeforeClass()
     {
-        AppTestCase::$dbDataFileLocation = join(DIRECTORY_SEPARATOR, [__DIR__, '..', 'src', 'Tools', 'kerosData.sql']);
+        AppTestCase::$dbDataFileLocation = join(DIRECTORY_SEPARATOR, [__DIR__, '..', 'src', 'Tools', 'Database', 'kerosData.sql']);
 
         $config = ConfigLoader::getConfig();
         $host = $config['DB_HOST'];

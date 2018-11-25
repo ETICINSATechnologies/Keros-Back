@@ -21,7 +21,7 @@ class PoleController
 
     public function __construct(ContainerInterface $container)
     {
-        $this->logger = $container->get('logger');
+        $this->logger = $container->get(Logger::class);
         $this->poleService = $container->get(PoleService::class);
     }
 

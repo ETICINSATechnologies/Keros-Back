@@ -91,10 +91,21 @@ class Validator
         if ($float == null) {
             throw new KerosException("The provided float cannot be null", 400);
         }
+        if (is_int($float)) {
+            $float = floatval($float);
+        }
         if (!is_float($float)) {
             throw new KerosException("The float provided is not actually a float", 400);
         }
         return $float;
+    }
+
+    public static function optionalFloat($float): ?float
+    {
+        if ($float == null || empty($float)) {
+            return null;
+        }
+        return self::requiredFloat($float);
     }
 
     public static function requiredInt($int): int
@@ -110,7 +121,7 @@ class Validator
 
     public static function requiredBool($bool): bool
     {
-        if ($bool == null) {
+        if (!isset($bool)) {
             throw new KerosException("The provided boolean cannot be null", 400);
         }
         if (!is_bool($bool)) {
@@ -140,6 +151,14 @@ class Validator
             throw new KerosException("The password is too short", 400);
         }
         return $password;
+    }
+
+    public static function optionalDate($date): ?DateTime
+    {
+        if($date == null || empty($date)){
+            return null;
+        }
+        return self::requiredDate($date);
     }
 
     public static function requiredDate($date): DateTime
@@ -174,7 +193,7 @@ class Validator
         if (strlen($telephone) == 0) {
             return null;
         }
-        if (!preg_match("/00\d{10}/", $telephone))
+        if (!preg_match("/00\d{11}/", $telephone))
             throw new KerosException("The provided phone number is invalid", 400);
 
         return $telephone;
@@ -192,6 +211,19 @@ class Validator
     {
         if ($schoolYear == null)
             throw new KerosException("The provided schoolYear cannot be null", 400);
+        if (!is_int($schoolYear)) {
+            throw new KerosException("The schoolYear provided is not actually an int", 400);
+        }
+        if (8 < $schoolYear || $schoolYear < 1)
+            throw new KerosException("The provided schoolYear must be between 1 and 8", 400);
+
+        return $schoolYear;
+    }
+
+    public static function optionalSchoolYear($schoolYear): ?int
+    {
+        if ($schoolYear == null)
+            return null;
         if (!is_int($schoolYear)) {
             throw new KerosException("The schoolYear provided is not actually an int", 400);
         }

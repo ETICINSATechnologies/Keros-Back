@@ -66,33 +66,17 @@ class ContactService
         $gender = $this->genderService->getOne($genderId);
         $firmId = Validator::requiredId($fields["firmId"]);
         $firm = $this->firmService->getOne($firmId);
+        $telephone = Validator::optionalPhone(isset($fields["telephone"]) ? $fields["telephone"] : null);
+        $cellphone = Validator::optionalPhone(isset($fields["cellphone"]) ? $fields["cellphone"] : null);
+        $position = Validator::optionalString(isset($fields["position"]) ? $fields["position"] : null);
+        $notes = Validator::optionalString(isset($fields["notes"]) ? $fields["notes"] : null);
+        $old = Validator::optionalBool(isset($fields["old"]) ? $fields["old"] : false);
 
-        $contact = new Contact($firstName, $lastName, $gender, $firm, $email, false);
-
-        if (isset($fields["telephone"])) {
-            $telephone = Validator::requiredPhone($fields["telephone"]);
-            $contact->setTelephone($telephone);
-        }
-
-        if (isset($fields["cellphone"])) {
-            $cellphone = Validator::requiredPhone($fields["cellphone"]);
-            $contact->setCellphone($cellphone);
-        }
-
-        if (isset($fields["position"])) {
-            $position = Validator::requiredString($fields["position"]);
-            $contact->setPosition($position);
-        }
-
-        if (isset($fields["notes"])) {
-            $notes = Validator::requiredString($fields["notes"]);
-            $contact->setNotes($notes);
-        }
-
-        if (isset($fields["old"])) {
-            $old = Validator::requiredBool($fields["old"]);
-            $contact->setOld($old);
-        }
+        $contact = new Contact($firstName, $lastName, $gender, $firm, $email, $old);
+        $contact->setTelephone($telephone);
+        $contact->setCellphone($cellphone);
+        $contact->setPosition($position);
+        $contact->setNotes($notes);
 
         $this->contactDataService->persist($contact);
 
@@ -140,48 +124,29 @@ class ContactService
         $id = Validator::requiredId($id);
         $contact = $this->getOne($id);
 
-        if (isset($fields["firstName"])) {
-            $firstName = Validator::requiredString($fields["firstName"]);
-            $contact->setFirstName($firstName);
-        }
-        if (isset($fields["lastName"])) {
-            $lastName = Validator::requiredString($fields["lastName"]);
-            $contact->setLastName($lastName);
-        }
-        if (isset($fields["genderId"])) {
-            $genderId = Validator::requiredId($fields["genderId"]);
-            $gender = $this->genderService->getOne($genderId);
-            $contact->setGender($gender);
-        }
-        if (isset($fields["firmId"])) {
-            $firmId = Validator::requiredId($fields["firmId"]);
-            $firm = $this->firmService->getOne($firmId);
-            $contact->setFirm($firm);
-        }
-        if (isset($fields["email"])) {
-            $email = Validator::requiredEmail($fields["email"]);
-            $contact->setEmail($email);
-        }
-        if (isset($fields["telephone"])) {
-            $telephone = Validator::requiredPhone($fields["telephone"]);
-            $contact->setTelephone($telephone);
-        }
-        if (isset($fields["cellphone"])) {
-            $cellphone = Validator::requiredPhone($fields["cellphone"]);
-            $contact->setCellphone($cellphone);
-        }
-        if (isset($fields["position"])) {
-            $position = Validator::requiredString($fields["position"]);
-            $contact->setPosition($position);
-        }
-        if (isset($fields["notes"])) {
-            $notes = Validator::requiredString($fields["notes"]);
-            $contact->setNotes($notes);
-        }
-        if (isset($fields["old"])) {
-            $old = Validator::requiredBool($fields["old"]);
-            $contact->setOld($old);
-        }
+        $firstName = Validator::requiredString($fields["firstName"]);
+        $lastName = Validator::requiredString($fields["lastName"]);
+        $email = Validator::requiredEmail($fields["email"]);
+        $genderId = Validator::requiredId($fields["genderId"]);
+        $gender = $this->genderService->getOne($genderId);
+        $firmId = Validator::requiredId($fields["firmId"]);
+        $firm = $this->firmService->getOne($firmId);
+        $telephone = Validator::optionalPhone(isset($fields["telephone"]) ? $fields["telephone"] : null);
+        $cellphone = Validator::optionalPhone(isset($fields["cellphone"]) ? $fields["cellphone"] : null);
+        $position = Validator::optionalString(isset($fields["position"]) ? $fields["position"] : null);
+        $notes = Validator::optionalString(isset($fields["notes"]) ? $fields["notes"] : null);
+        $old = Validator::optionalBool(isset($fields["old"]) ? $fields["old"] : false);
+
+        $contact->setFirstName($firstName);
+        $contact->setLastName($lastName);
+        $contact->setEmail($email);
+        $contact->setGender($gender);
+        $contact->setFirm($firm);
+        $contact->setTelephone($telephone);
+        $contact->setCellphone($cellphone);
+        $contact->setPosition($position);
+        $contact->setNotes($notes);
+        $contact->setOld($old);
 
         $this->contactDataService->persist($contact);
 

@@ -16,8 +16,8 @@ class LoginIntegrationTest extends AppTestCase
         ]);
 
         $postBody = array(
-            "username" => "cbreeze",
-            "password" => "hunter11"
+            "username" => "username",
+            "password" => "password"
         );
 
         $req = Request::createFromEnvironment($env);
@@ -39,8 +39,8 @@ class LoginIntegrationTest extends AppTestCase
         ]);
 
         $postBody = array(
-            "username" => "cbreeze",
-            "password" => "hunter12"
+            "username" => "username",
+            "password" => "wrongpassword"
         );
 
         $req = Request::createFromEnvironment($env);

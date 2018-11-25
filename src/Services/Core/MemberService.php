@@ -7,6 +7,7 @@ use Keros\Entities\Core\Member;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Error\KerosException;
 use Keros\Tools\Validator;
+use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 
 class MemberService
@@ -35,9 +36,14 @@ class MemberService
      * @var MemberDataService
      */
     private $memberDataService;
+    /**
+     * @var Logger
+     */
+    private $logger;
 
     public function __construct(ContainerInterface $container)
     {
+        $this->logger = $container->get(Logger::class);
         $this->addressService = $container->get(AddressService::class);
         $this->genderService = $container->get(GenderService::class);
         $this->departmentService = $container->get(DepartmentService::class);
@@ -56,14 +62,17 @@ class MemberService
         $firstName = Validator::requiredString($fields["firstName"]);
         $lastName = Validator::requiredString($fields["lastName"]);
         $email = Validator::requiredEmail($fields["email"]);
-        $telephone = Validator::optionalPhone($fields["telephone"]);
+        $telephone = Validator::optionalPhone(isset($fields["telephone"]) ? $fields["telephone"] : null);
         $birthday = Validator::requiredDate($fields["birthday"]);
-        $schoolYear = Validator::requiredSchoolYear($fields["schoolYear"]);
+        $schoolYear = Validator::optionalSchoolYear(isset($fields["schoolYear"]) ? $fields["schoolYear"] : null);
 
         $genderId = Validator::requiredId($fields["genderId"]);
         $gender = $this->genderService->getOne($genderId);
-        $departmentId = Validator::requiredId($fields["departmentId"]);
-        $department = $this->departmentService->getOne($departmentId);
+        $department = null;
+        $departmentId = Validator::optionalId(isset($fields["departmentId"]) ? $fields["departmentId"] : null);
+        if (isset($departmentId)) {
+            $department = $this->departmentService->getOne($departmentId);
+        }
         $positionIds = $fields["positionIds"];
         $positions = $this->positionService->getSome($positionIds);
 
@@ -71,6 +80,7 @@ class MemberService
 
         $user = $this->userService->create($fields);
         $member->setUser($user);
+
         $address = $this->addressService->create($fields["address"]);
         $member->setAddress($address);
         $this->memberDataService->persist($member);
@@ -119,49 +129,35 @@ class MemberService
         $id = Validator::requiredId($id);
         $member = $this->getOne($id);
 
-        if (isset($fields["firstName"])) {
-            $firstName = Validator::requiredString($fields["firstName"]);
-            $member->setFirstName($firstName);
-        }
-        if (isset($fields["lastName"])) {
-            $lastName = Validator::requiredString($fields["lastName"]);
-            $member->setLastName($lastName);
-        }
-        if (isset($fields["email"])) {
-            $email = Validator::requiredEmail($fields["email"]);
-            $member->setEmail($email);
-        }
-        if (isset($fields["telephone"])) {
-            $telephone = Validator::requiredString($fields["telephone"]);
-            $member->setTelephone($telephone);
-        }
-        if (isset($fields["birthday"])) {
-            $birthday = Validator::requiredDate($fields["birthday"]);
-            $member->setBirthday($birthday);
-        }
-        if (isset($fields["schoolYear"])) {
-            $schoolYear = Validator::requiredSchoolYear($fields["schoolYear"]);
-            $member->setSchoolYear($schoolYear);
-        }
-        if (isset($fields["genderId"])) {
-            $genderId = Validator::requiredInt($fields["genderId"]);
-            $gender = $this->genderService->getOne($genderId);
-            $member->setGender($gender);
-        }
-        if (isset($fields["departmentId"])) {
-            $departmentId = Validator::requiredInt($fields["departmentId"]);
-            $department = $this->departmentService->getOne($departmentId);
-            $member->setDepartment($department);
-        }
-        if (isset($fields["positionIds"])) {
-            $positionIds = Validator::requiredArray($fields["positionIds"]);
-            $positions = $this->positionService->getSome($positionIds);
-            $member->setPositions($positions);
-        }
+        $firstName = Validator::requiredString($fields["firstName"]);
+        $lastName = Validator::requiredString($fields["lastName"]);
+        $email = Validator::requiredEmail($fields["email"]);
+        $telephone = Validator::optionalPhone(isset($fields["telephone"]) ? $fields["telephone"] : null);
+        $birthday = Validator::requiredDate($fields["birthday"]);
+        $schoolYear = Validator::optionalSchoolYear(isset($fields["schoolYear"]) ? $fields["schoolYear"] : null);
 
-        if (isset($fields["address"])) {
-            $this->addressService->update($member->getAddress()->getId(), $fields["address"]);
+        $genderId = Validator::requiredId($fields["genderId"]);
+        $gender = $this->genderService->getOne($genderId);
+        $department = null;
+        $departmentId = Validator::optionalId(isset($fields["departmentId"]) ? $fields["departmentId"] : null);
+        if (isset($departmentId)) {
+            $department = $this->departmentService->getOne($departmentId);
         }
+        $positionIds = $fields["positionIds"];
+        $positions = $this->positionService->getSome($positionIds);
+
+        $member->setFirstName($firstName);
+        $member->setLastName($lastName);
+        $member->setEmail($email);
+        $member->setTelephone($telephone);
+        $member->setBirthday($birthday);
+        $member->setSchoolYear($schoolYear);
+        $member->setGender($gender);
+        $member->setDepartment($department);
+        $member->setPositions($positions);
+
+        $this->addressService->update($member->getAddress()->getId(), $fields["address"]);
+
         $this->userService->update($member->getId(), $fields);
         $this->memberDataService->persist($member);
 

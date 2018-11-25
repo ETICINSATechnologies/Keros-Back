@@ -187,19 +187,19 @@ CREATE TABLE `ua_status` (
 DROP TABLE IF EXISTS ua_study;
 CREATE TABLE `ua_study` (
   `id`           int(11) AUTO_INCREMENT,
-  `number`       int(11)      NOT NULL,
+  `projectNumber` int(11)      NOT NULL,
   `name`         varchar(100) NOT NULL,
-  `description`   varchar(255) NOT NULL,
+  `description`   varchar(255),
   `fieldId`      int(11)      NOT NULL,
   `provenanceId` int(11),
   `statusId`     int(11)      NOT NULL,
   `signDate`     date,
   `endDate`      date,
-  `managementFee` int(11),
-  `realizationFee` int(11),
-  `rebilledFee`  int(11),
-  `ecoparticipationFee` int(11),
-  `outsourcingFee` int(11),
+  `managementFee` decimal(12,2),
+  `realizationFee`decimal(12,2),
+  `rebilledFee`  decimal(12,2),
+  `ecoparticipationFee` decimal(12,2),
+  `outsourcingFee` decimal(12,2),
   `archivedDate` date,
   `firmId`      int(11)      NOT NULL,
   PRIMARY KEY (`id`),
@@ -337,7 +337,7 @@ INSERT INTO ua_firm_type (id, label) VALUES
   (1, 'Particulier'), (2, 'TPE/start-up'), (3, 'PME'), (4, 'Grand Groupe'), (5, 'Administration'), (6, 'Association'),
   (7, 'Junior-Entreprise');
 
-INSERT INTO core_gender (id, label) VALUES (1, 'M'), (2, 'F'), (3, 'A'), (4, 'I');
+INSERT INTO core_gender (id, label) VALUES (1, 'H'), (2, 'F'), (3, 'A'), (4, 'I');
 
 INSERT INTO `ua_status` (`id`, `label`) VALUES
   (1, 'En cours d\'exécution'),
