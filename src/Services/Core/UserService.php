@@ -8,7 +8,7 @@ use Keros\DataServices\Core\UserDataService;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Core\User;
 use Keros\Error\KerosException;
-use Keros\Tools\PasswordEncryption;
+use Keros\Tools\Authorization\PasswordEncryption;
 use Keros\Tools\Validator;
 use Psr\Container\ContainerInterface;
 
@@ -65,17 +65,15 @@ class UserService
         $id = Validator::requiredId($id);
         $user = $this->getOne($id);
 
-        if (isset($fields["username"])) {
-            $username = Validator::requiredString($fields["username"]);
-            $user->setUsername($username);
-        }
+        $username = Validator::requiredString($fields["username"]);
+        $user->setUsername($username);
 
         if (isset($fields["password"])) {
             $password = Validator::requiredString($fields["password"]);
             $encryptedPassword = PasswordEncryption::encrypt($password);
             $user->setPassword($encryptedPassword);
-
         }
+
         $this->userDataService->persist($user);
 
         return $user;

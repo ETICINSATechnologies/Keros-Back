@@ -15,7 +15,8 @@ class ConfigLoader
         $dynamicConfig = parse_ini_file(__DIR__ . "/../settings.ini");
         $staticConfig = array(
             "ALG" => "HS256",
-            "HASH" => "sha256"
+            "HASH" => "sha256",
+            "isTesting" => (getenv("ENV") == "test")
         );
 
         return array_merge($dynamicConfig, $staticConfig);

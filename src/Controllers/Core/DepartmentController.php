@@ -26,7 +26,7 @@ class DepartmentController
 
     public function __construct(ContainerInterface $container)
     {
-        $this->logger = $container->get('logger');
+        $this->logger = $container->get(Logger::class);
         $this->departmentService = $container->get(DepartmentService::class);
     }
 

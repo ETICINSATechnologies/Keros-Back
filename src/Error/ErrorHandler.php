@@ -2,11 +2,11 @@
 
 namespace Keros\Error;
 
-use Doctrine\DBAL\ConnectionException;
 use Doctrine\ORM\EntityManager;
 use Error;
 use Exception;
-use Keros\Tools\Logger;
+use Keros\Tools\LoggerBuilder;
+use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -16,7 +16,7 @@ use Psr\Container\ContainerInterface;
 class ErrorHandler
 {
     /**
-     * @var Logger
+     * @var LoggerBuilder
      */
     private $logger;
     /**
@@ -26,8 +26,8 @@ class ErrorHandler
 
     function __construct(ContainerInterface $container)
     {
-        $this->logger = $container->get('logger');
-        $this->entityManager = $container->get('entityManager');
+        $this->logger = $container->get(Logger::class);
+        $this->entityManager = $container->get(EntityManager::class);
     }
 
     /**
@@ -39,7 +39,7 @@ class ErrorHandler
         // Rollback any changes since start of transaction, if there is any
         try {
             $this->entityManager->rollback();
-        } catch (ConnectionException $e) {
+        } catch (Exception $e) {
             // No transaction active, nothing to do
         };
 

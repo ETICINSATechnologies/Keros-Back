@@ -30,7 +30,7 @@ class FirmIntegrationTest extends AppTestCase
         $this->assertSame(200, $response->getStatusCode());
         $body = json_decode($response->getBody());
         $this->assertSame(1, $body->id);
-        $this->assertSame("Cool Inc.", $body->name);
+        $this->assertSame("Google", $body->name);
     }
     public function testGetFirmShouldReturn404()
     {
@@ -98,7 +98,7 @@ class FirmIntegrationTest extends AppTestCase
         $body = json_decode($response->getBody());
         $this->assertSame("Google company", $body->name);
     }
-    public function testPutFirmWithEmptyBodyShouldReturn200()
+    public function testPutFirmWithEmptyBodyShouldReturn400()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'PUT',
@@ -107,6 +107,6 @@ class FirmIntegrationTest extends AppTestCase
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
-        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame(400, $response->getStatusCode());
     }
 }

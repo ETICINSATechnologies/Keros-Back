@@ -18,7 +18,7 @@ class Study implements JsonSerializable
     protected $id;
 
     /** @Column(type="integer") */
-    protected $number;
+    protected $projectNumber;
 
     /** @Column(type="string", length=100) */
     protected $name;
@@ -50,19 +50,19 @@ class Study implements JsonSerializable
     /** @Column(type="datetime") */
     protected $endDate;
 
-    /** @Column(type="integer") */
+    /** @Column(type="decimal", precision=12, scale=2) */
     protected $managementFee;
 
-    /** @Column(type="integer") */
+    /** @Column(type="decimal", precision=12, scale=2) */
     protected $realizationFee;
 
-    /** @Column(type="integer") */
+    /** @Column(type="decimal", precision=12, scale=2) */
     protected $rebilledFee;
 
-    /** @Column(type="integer") */
+    /** @Column(type="decimal", precision=12, scale=2) */
     protected $ecoParticipationFee;
 
-    /** @Column(type="integer") */
+    /** @Column(type="decimal", precision=12, scale=2) */
     protected $outsourcingFee;
 
     /** @Column(type="datetime") */
@@ -112,7 +112,7 @@ class Study implements JsonSerializable
 
     /**
      * Study constructor.
-     * @param $number
+     * @param $projectNumber
      * @param $name
      * @param $description
      * @param $field
@@ -123,9 +123,9 @@ class Study implements JsonSerializable
      * @param $qualityManagers
      * @param $consultants
      */
-    public function __construct($number, $name, $description, $field, $status, $firm, $contacts, $leaders, $qualityManagers, $consultants)
+    public function __construct($projectNumber, $name, $description, $field, $status, $firm, $contacts, $leaders, $qualityManagers, $consultants)
     {
-        $this->number = $number;
+        $this->projectNumber = $projectNumber;
         $this->name = $name;
         $this->description = $description;
         $this->field = $field;
@@ -141,7 +141,7 @@ class Study implements JsonSerializable
     {
         return [
             'id' => $this->getId(),
-            'number' => $this->getNumber(),
+            'projectNumber' => $this->getProjectNumber(),
             'name' => $this->getName(),
             'description' => $this->getDescription(),
             'field' => $this->getField(),
@@ -187,17 +187,17 @@ class Study implements JsonSerializable
     /**
      * @return mixed
      */
-    public function getNumber()
+    public function getProjectNumber()
     {
-        return $this->number;
+        return $this->projectNumber;
     }
 
     /**
-     * @param mixed $number
+     * @param mixed $projectNumber
      */
-    public function setNumber($number): void
+    public function setProjectNumber($projectNumber): void
     {
-        $this->number = $number;
+        $this->projectNumber = $projectNumber;
     }
 
     /**

@@ -73,7 +73,7 @@ class MemberIntegrationTest extends AppTestCase
     public function testPostMemberShouldReturn200()
     {
         $post_body = array(
-            "username" => "username",
+            "username" => "newusername",
             "password" => "password",
             "firstName" => "firstname",
             "lastName" => "lastname",
@@ -111,7 +111,7 @@ class MemberIntegrationTest extends AppTestCase
 
         $body = json_decode($response->getBody());
         $this->assertNotNull($body->id);
-        $this->assertSame("username", $body->username);
+        $this->assertSame("newusername", $body->username);
         $this->assertSame("lastname", $body->lastName);
         $this->assertSame(1, $body->gender->id);
         $this->assertSame("fakeEmail@gmail.com", $body->email);
@@ -126,8 +126,7 @@ class MemberIntegrationTest extends AppTestCase
     public function testPutMemberShouldReturn200()
     {
         $post_body = array(
-            "id" => 1,
-            "username" => "username",
+            "username" => "newusername",
             "password" => "password",
             "firstName" => "firstName",
             "lastName" => "lastName",
@@ -165,7 +164,7 @@ class MemberIntegrationTest extends AppTestCase
         $body = json_decode($response->getBody());
 
         $this->assertNotNull($body->id);
-        $this->assertSame("username", $body->username);
+        $this->assertSame("newusername", $body->username);
         $this->assertSame("firstName", $body->firstName);
         $this->assertSame("lastName", $body->lastName);
         $this->assertSame(1, $body->gender->id);
@@ -179,7 +178,7 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(3, $body->positions[1]->id);
     }
 
-    public function testPutMemberEmptyBodyShouldReturn200()
+    public function testPutMemberEmptyBodyShouldReturn400()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'PUT',
@@ -189,6 +188,6 @@ class MemberIntegrationTest extends AppTestCase
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
-        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame(400, $response->getStatusCode());
     }
 }

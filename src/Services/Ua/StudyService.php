@@ -3,10 +3,10 @@
 
 namespace Keros\Services\Ua;
 
+use Keros\DataServices\Ua\StudyDataService;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Ua\Study;
 use Keros\Error\KerosException;
-use Keros\DataServices\Ua\StudyDataService;
 use Keros\Services\Core\AddressService;
 use Keros\Services\Core\GenderService;
 use Keros\Services\Core\MemberService;
@@ -84,18 +84,30 @@ class StudyService
      */
     public function create(array $fields): Study
     {
-        $number = Validator::requiredInt($fields["number"]);
+        $projectNumber = Validator::requiredInt($fields["projectNumber"]);
         $name = Validator::requiredString($fields["name"]);
-        $description = Validator::requiredString($fields["description"]);
-        
+        $description = Validator::optionalString(isset($fields["description"]) ? $fields["description"] : null);
+
         $fieldId = Validator::requiredId($fields["fieldId"]);
         $field = $this->fieldService->getOne($fieldId);
 
         $statusId = Validator::requiredId($fields["statusId"]);
         $status = $this->statusService->getOne($statusId);
-        
+
         $firmId = Validator::requiredId($fields["firmId"]);
         $firm = $this->firmService->getOne($firmId);
+
+        $signDate = Validator::optionalDate(isset($fields["signDate"]) ? $fields["signDate"] : null);
+
+        $endDate = Validator::optionalDate(isset($fields["endDate"]) ? $fields["endDate"] : null);
+
+        $managementFee = Validator::optionalFloat(isset($fields["managementFee"]) ? $fields["managementFee"] : null);
+        $realizationFee = Validator::optionalFloat(isset($fields["realizationFee"]) ? $fields["realizationFee"] : null);
+        $rebilledFee = Validator::optionalFloat(isset($fields["rebilledFee"]) ? $fields["rebilledFee"] : null);
+        $ecoparticipationFee = Validator::optionalFloat(isset($fields["ecoparticipationFee"]) ? $fields["ecoparticipationFee"] : null);
+        $outsourcingFee = Validator::optionalFloat(isset($fields["outsourcingFee"]) ? $fields["outsourcingFee"] : null);
+
+        $archivedDate = Validator::optionalDate(isset($fields["archivedDate"]) ? $fields["archivedDate"] : null);
 
         $contactIds = $fields["contactIds"];
         $contacts = $this->contactService->getSome($contactIds);
@@ -109,55 +121,23 @@ class StudyService
         $qualityManagerIds = $fields["qualityManagerIds"];
         $qualityManagers = $this->memberService->getSome($qualityManagerIds);
 
-        $study = new Study(
-            $number, $name, $description, $field, $status, $firm, $contacts, $leaders, $consultants, $qualityManagers);
-
-        if (isset($fields["provenanceId"])) {
-            $provenanceId = Validator::requiredId($fields["provenanceId"]);
+        $provenance = null;
+        $provenanceId = Validator::optionalId(isset($fields["provenanceId"]) ? $fields["provenanceId"] : null);
+        if (isset($provenanceId)) {
             $provenance = $this->provenanceService->getOne($provenanceId);
-            $study->setProvenance($provenance);
         }
 
-        if (isset($fields["signDate"])) {
-            $signDate = Validator::requiredDate($fields["signDate"]);
-            $study->setSignDate($signDate);
-        }
+        $study = new Study($projectNumber, $name, $description, $field, $status, $firm, $contacts, $leaders, $consultants, $qualityManagers);
+        $study->setProvenance($provenance);
+        $study->setSignDate($signDate);
+        $study->setEndDate($endDate);
+        $study->setManagementFee($managementFee);
+        $study->setRealizationFee($realizationFee);
+        $study->setRebilledFee($rebilledFee);
+        $study->setEcoparticipationFee($ecoparticipationFee);
+        $study->setOutsourcingFee($outsourcingFee);
+        $study->setArchivedDate($archivedDate);
 
-        if (isset($fields["endDate"])) {
-            $endDate = Validator::requiredDate($fields["endDate"]);
-            $study->setEndDate($endDate);
-        }
-
-        if (isset($fields["managementFee"])) {
-            $managementFee = Validator::requiredInt($fields["managementFee"]);
-            $study->setManagementFee($managementFee);
-        }
-
-        if (isset($fields["realizationFee"])) {
-            $realizationFee = Validator::requiredInt($fields["realizationFee"]);
-            $study->setRealizationFee($realizationFee);
-        }
-
-        if (isset($fields["rebilledFee"])) {
-            $rebilledFee = Validator::requiredInt($fields["rebilledFee"]);
-            $study->setRebilledFee($rebilledFee);
-        }
-
-        if (isset($fields["ecoparticipationFee"])) {
-            $ecoparticipationFee = Validator::requiredInt($fields["ecoparticipationFee"]);
-            $study->setEcoparticipationFee($ecoparticipationFee);
-        }
-
-        if (isset($fields["outsourcingFee"])) {
-            $outsourcingFee = Validator::requiredInt($fields["outsourcingFee"]);
-            $study->setOutsourcingFee($outsourcingFee);
-        }
-
-        if (isset($fields["archivedDate"])) {
-            $archivedDate = Validator::requiredDate($fields["archivedDate"]);
-            $study->setArchivedDate($archivedDate);
-        }
-        
         $this->studyDataService->persist($study);
 
         return $study;
@@ -189,108 +169,69 @@ class StudyService
         $id = Validator::requiredId($id);
         $study = $this->getOne($id);
 
-        if (isset($fields["number"])) {
-            $number = Validator::requiredInt($fields["number"]);
-            $study->setNumber($number);
-        }
+        $projectNumber = Validator::requiredInt($fields["projectNumber"]);
+        $name = Validator::requiredString($fields["name"]);
+        $description = Validator::optionalString(isset($fields["description"]) ? $fields["description"] : null);
 
-        if (isset($fields["name"])) {
-            $name = Validator::requiredString($fields["name"]);
-            $study->setName($name);
-        }
+        $fieldId = Validator::requiredId($fields["fieldId"]);
+        $field = $this->fieldService->getOne($fieldId);
 
-        if (isset($fields["description"])) {
-            $description = Validator::requiredString($fields["description"]);
-            $study->setDescription($description);
-        }
+        $statusId = Validator::requiredId($fields["statusId"]);
+        $status = $this->statusService->getOne($statusId);
 
-        if (isset($fields["fieldId"])) {
-            $fieldId = Validator::requiredId($fields["fieldId"]);
-            $field = $this->fieldService->getOne($fieldId);
-            $study->setField($field);
-        }
-        
-        if (isset($fields["provenanceId"])) {
-            $provenanceId = Validator::requiredId($fields["provenanceId"]);
+        $firmId = Validator::requiredId($fields["firmId"]);
+        $firm = $this->firmService->getOne($firmId);
+
+        $signDate = Validator::optionalDate(isset($fields["signDate"]) ? $fields["signDate"] : null);
+
+        $endDate = Validator::optionalDate(isset($fields["endDate"]) ? $fields["endDate"] : null);
+
+        $managementFee = Validator::optionalFloat(isset($fields["managementFee"]) ? $fields["managementFee"] : null);
+        $realizationFee = Validator::optionalFloat(isset($fields["realizationFee"]) ? $fields["realizationFee"] : null);
+        $rebilledFee = Validator::optionalFloat(isset($fields["rebilledFee"]) ? $fields["rebilledFee"] : null);
+        $ecoparticipationFee = Validator::optionalFloat(isset($fields["ecoparticipationFee"]) ? $fields["ecoparticipationFee"] : null);
+        $outsourcingFee = Validator::optionalFloat(isset($fields["outsourcingFee"]) ? $fields["outsourcingFee"] : null);
+
+        $archivedDate = Validator::optionalDate(isset($fields["archivedDate"]) ? $fields["archivedDate"] : null);
+
+        $contactIds = $fields["contactIds"];
+        $contacts = $this->contactService->getSome($contactIds);
+
+        $leaderIds = $fields["leaderIds"];
+        $leaders = $this->memberService->getSome($leaderIds);
+
+        $consultantIds = $fields["consultantIds"];
+        $consultants = $this->memberService->getSome($consultantIds);
+
+        $qualityManagerIds = $fields["qualityManagerIds"];
+        $qualityManagers = $this->memberService->getSome($qualityManagerIds);
+
+        $provenance = null;
+        $provenanceId = Validator::optionalId(isset($fields["provenanceId"]) ? $fields["provenanceId"] : null);
+        if (isset($provenanceId)) {
             $provenance = $this->provenanceService->getOne($provenanceId);
-            $study->setProvenance($provenance);
-        }
-        
-        if (isset($fields["statusId"])) {
-            $statusId = Validator::requiredId($fields["statusId"]);
-            $status = $this->statusService->getOne($statusId);
-            $study->setStatus($status);
         }
 
-        if (isset($fields["signDate"])) {
-            $signDate = Validator::requiredDate($fields["signDate"]);
-            $study->setSignDate($signDate);
-        }
+        $study->setProjectNumber($projectNumber);
+        $study->setName($name);
+        $study->setDescription($description);
+        $study->setField($field);
+        $study->setStatus($status);
+        $study->setFirm($firm);
+        $study->setContacts($contacts);
+        $study->setLeaders($leaders);
+        $study->setConsultants($consultants);
+        $study->setQualityManagers($qualityManagers);
+        $study->setProvenance($provenance);
+        $study->setSignDate($signDate);
+        $study->setEndDate($endDate);
+        $study->setManagementFee($managementFee);
+        $study->setRealizationFee($realizationFee);
+        $study->setRebilledFee($rebilledFee);
+        $study->setEcoparticipationFee($ecoparticipationFee);
+        $study->setOutsourcingFee($outsourcingFee);
+        $study->setArchivedDate($archivedDate);
 
-        if (isset($fields["endDate"])) {
-            $endDate = Validator::requiredDate($fields["endDate"]);
-            $study->setEndDate($endDate);
-        }
-
-        if (isset($fields["managementFee"])) {
-            $managementFee = Validator::requiredInt($fields["managementFee"]);
-            $study->setManagementFee($managementFee);
-        }
-
-        if (isset($fields["realizationFee"])) {
-            $realizationFee = Validator::requiredInt($fields["realizationFee"]);
-            $study->setRealizationFee($realizationFee);
-        }
-
-        if (isset($fields["rebilledFee"])) {
-            $rebilledFee = Validator::requiredInt($fields["rebilledFee"]);
-            $study->setRebilledFee($rebilledFee);
-        }
-
-        if (isset($fields["ecoparticipationFee"])) {
-            $ecoparticipationFee = Validator::requiredInt($fields["ecoparticipationFee"]);
-            $study->setEcoparticipationFee($ecoparticipationFee);
-        }
-
-        if (isset($fields["outsourcingFee"])) {
-            $outsourcingFee = Validator::requiredInt($fields["outsourcingFee"]);
-            $study->setOutsourcingFee($outsourcingFee);
-        }
-
-        if (isset($fields["archivedDate"])) {
-            $archivedDate = Validator::requiredDate($fields["archivedDate"]);
-            $study->setArchivedDate($archivedDate);
-        }
-
-        if (isset($fields["firmId"])) {
-            $firmId = Validator::requiredId($fields["firmId"]);
-            $firm = $this->firmService->getOne($firmId);
-            $study->setFirm($firm);
-        }
-
-        if (isset($fields["contactIds"])) {
-            $contactIds = $fields["contactIds"];
-            $contacts = $this->contactService->getSome($contactIds);
-            $study->setContacts($contacts);
-        }
-
-        if (isset($fields["leaderIds"])) {
-            $leaderIds = $fields["leaderIds"];
-            $leaders = $this->memberService->getSome($leaderIds);
-            $study->setLeaders($leaders);
-        }
-
-        if (isset($fields["consultantIds"])) {
-            $consultantIds = $fields["consultantIds"];
-            $consultants = $this->memberService->getSome($consultantIds);
-            $study->setConsultants($consultants);
-        }
-
-        if (isset($fields["qualityManagerIds"])) {
-            $qualityManagerIds = $fields["qualityManagerIds"];
-            $qualityManagers = $this->memberService->getSome($qualityManagerIds);
-            $study->setQualityManagers($qualityManagers);
-        }
 
         $this->studyDataService->persist($study);
 

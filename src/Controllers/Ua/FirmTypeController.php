@@ -25,7 +25,7 @@ class FirmTypeController
 
     public function __construct(ContainerInterface $container)
     {
-        $this->logger = $container->get('logger');
+        $this->logger = $container->get(Logger::class);
         $this->firmTypeService = $container->get(FirmTypeService::class);
     }
 

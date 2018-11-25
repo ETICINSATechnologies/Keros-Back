@@ -44,7 +44,7 @@ class ContactIntegrationTest extends AppTestCase
         $this->assertEquals("alexandre.lang@etic.com", $body->email);
         $this->assertNull($body->telephone);
         $this->assertEquals("0033175985495", $body->cellphone);
-        $this->assertEquals("C'est une bonne situation, ça scribe ?", $body->position);
+        $this->assertEquals("Directeur Marketing", $body->position);
         $this->assertEquals("RAS", $body->notes);
         $this->assertEquals(true, $body->old);
     }
@@ -115,7 +115,7 @@ class ContactIntegrationTest extends AppTestCase
         $this->assertSame("lolo", $body->firstName);
     }
 
-    public function testPutContactWithEmptyBodyShouldReturn200()
+    public function testPutContactWithEmptyBodyShouldReturn400()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'PUT',
@@ -125,6 +125,6 @@ class ContactIntegrationTest extends AppTestCase
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 
-        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame(400, $response->getStatusCode());
     }
 }

@@ -22,7 +22,7 @@ use Psr\Container\ContainerInterface;
 
 class DataServiceRegistrar
 {
-    public static function registerServices(ContainerInterface $container)
+    public static function register(ContainerInterface $container)
     {
         // Core
         $container[AddressDataService::class] = function ($container) {

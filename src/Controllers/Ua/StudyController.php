@@ -48,8 +48,8 @@ class StudyController
 
     public function __construct(ContainerInterface $container)
     {
-        $this->logger = $container->get('logger');
-        $this->entityManager = $container->get('entityManager');
+        $this->logger = $container->get(Logger::class);
+        $this->entityManager = $container->get(EntityManager::class);
         $this->studyService = $container->get(StudyService::class);
         $this->provenanceService = $container->get(ProvenanceService::class);
         $this->fieldService = $container->get(FieldService::class);

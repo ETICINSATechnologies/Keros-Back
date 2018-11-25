@@ -1,10 +1,13 @@
 <?php
-namespace Keros\Tools;
+
+namespace Keros\Tools\Database;
+
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Tools\Setup;
+use Keros\Tools\ConfigLoader;
 
-class KerosEntityManager
+class EntityManagerBuilder
 {
     static function getEntityManager()
     {

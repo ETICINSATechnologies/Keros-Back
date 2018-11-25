@@ -4,7 +4,7 @@ namespace Keros\Tools;
 
 use Monolog\Handler\StreamHandler;
 
-class Logger
+class LoggerBuilder
 {
     static function createLogger()
     {

@@ -6,10 +6,9 @@ namespace Keros\Services\Auth;
 use Keros\DataServices\Core\UserDataService;
 use Keros\Entities\Auth\LoginResponse;
 use Keros\Error\KerosException;
-use Keros\Tools\JwtCodec;
-use Keros\Tools\PasswordEncryption;
+use Keros\Tools\Authorization\JwtCodec;
+use Keros\Tools\Authorization\PasswordEncryption;
 use Keros\Tools\Validator;
-use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 
 
@@ -19,9 +18,14 @@ class LoginService
      * @var UserDataService
      */
     private $userDataService;
+    /**
+     * @var JwtCodec
+     */
+    private $jwtCodec;
 
     public function __construct(ContainerInterface $container)
     {
+        $this->jwtCodec = $container->get(JwtCodec::class);
         $this->userDataService = $container->get(UserDataService::class);
     }
 
@@ -48,7 +52,7 @@ class LoginService
             );
 
             // create the token from the payload
-            $token = JwtCodec::encode($payload);
+            $token = $this->jwtCodec->encode($payload);
 
             return new LoginResponse($token, $exp);
         }

@@ -23,7 +23,7 @@ use Psr\Container\ContainerInterface;
 
 class ServiceRegistrar
 {
-    public static function registerServices(ContainerInterface $container)
+    public static function register(ContainerInterface $container)
     {
         // Auth
         $container[LoginService::class] = function ($container) {

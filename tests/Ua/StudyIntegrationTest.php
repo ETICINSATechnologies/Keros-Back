@@ -21,7 +21,7 @@ class StudyIntegrationTest extends AppTestCase
         $this->assertSame(200, $response->getStatusCode());
         $body = json_decode($response->getBody());
 
-        $this->assertEquals(1, count($body->content));
+        $this->assertEquals(2, count($body->content));
     }
 
     public function testGetStudyShouldReturn200()
@@ -37,9 +37,9 @@ class StudyIntegrationTest extends AppTestCase
         $this->assertSame(200, $response->getStatusCode());
         $body = json_decode($response->getBody());
 
-        $this->assertEquals("12", $body->number);
-        $this->assertEquals("Google", $body->name);
-        $this->assertEquals("This is a big company", $body->description);
+        $this->assertEquals("12", $body->projectNumber);
+        $this->assertEquals("Développement IDE", $body->name);
+        $this->assertEquals("Développement d'un IDE pour utilisation interne", $body->description);
         $this->assertEquals("1", $body->field->id);
         $this->assertEquals("Web", $body->field->label);
         $this->assertEquals("2", $body->status->id);
@@ -54,7 +54,7 @@ class StudyIntegrationTest extends AppTestCase
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/api/v1/ua/study/2',
+            'REQUEST_URI' => '/api/v1/ua/study/100',
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
@@ -68,7 +68,7 @@ class StudyIntegrationTest extends AppTestCase
 
         $post_body = array(
             "id" =>2,
-            "number"=>13,
+            "projectNumber"=>13,
             "name"=>"Facebook",
             "description"=>"C est le feu",
             "fieldId"=>1,
@@ -92,7 +92,7 @@ class StudyIntegrationTest extends AppTestCase
         $this->assertSame(201, $response->getStatusCode());
         $body = json_decode($response->getBody());
 
-        $this->assertSame(2, $body->id);
+        $this->assertSame(3, $body->id);
         $this->assertSame("Facebook", $body->name);
     }
 
@@ -100,7 +100,7 @@ class StudyIntegrationTest extends AppTestCase
     {
 
         $post_body = array(
-            "number"=>13,
+            "projectNumber"=>13,
             "name"=>"Twitter",
             "description"=>"C est le feu",
             "fieldId"=>1,
@@ -126,7 +126,7 @@ class StudyIntegrationTest extends AppTestCase
         $this->assertSame("Twitter", $body->name);
     }
 
-    public function testPutStudyWithEmptyBodyShouldReturn200()
+    public function testPutStudyWithEmptyBodyShouldReturn400()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'PUT',
@@ -136,6 +136,6 @@ class StudyIntegrationTest extends AppTestCase
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 
-        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame(400, $response->getStatusCode());
     }
 }

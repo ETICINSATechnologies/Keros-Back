@@ -32,8 +32,8 @@ class ContactController
 
     public function __construct(ContainerInterface $container)
     {
-        $this->logger = $container->get('logger');
-        $this->entityManager = $container->get('entityManager');
+        $this->logger = $container->get(Logger::class);
+        $this->entityManager = $container->get(EntityManager::class);
         $this->contactService = $container->get(ContactService::class);
     }
 

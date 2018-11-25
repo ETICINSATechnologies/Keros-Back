@@ -18,11 +18,13 @@ use Keros\DataServices\DataServiceRegistrar;
 use Keros\Error\ErrorHandler;
 use Keros\Error\PhpErrorHandler;
 use Keros\Services\ServiceRegistrar;
+use Keros\Tools\Authorization\AuthenticationMiddleware;
 use Keros\Tools\ConfigLoader;
 use Keros\Tools\JwtCodec;
 use Keros\Tools\KerosEntityManager;
-use Keros\Tools\Logger;
+use Keros\Tools\LoggerBuilder;
 use Keros\Tools\PasswordEncryption;
+use Keros\Tools\ToolRegistrar;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -47,24 +49,9 @@ class KerosApp
      */
     public function prepareContainer(ContainerInterface $container)
     {
-        $container['entityManager'] = function () {
-            return KerosEntityManager::getEntityManager();
-        };
-
-        $container['logger'] = function () {
-            return Logger::createLogger();
-        };
-
-        $container['errorHandler'] = function ($container) {
-            return new ErrorHandler($container);
-        };
-
-        $container['phpErrorHandler'] = function ($container) {
-            return $container['errorHandler'];
-        };
-
-        DataServiceRegistrar::registerServices($container);
-        ServiceRegistrar::registerServices($container);
+        ToolRegistrar::register($container);
+        DataServiceRegistrar::register($container);
+        ServiceRegistrar::register($container);
     }
 
     /**
@@ -124,7 +111,7 @@ class KerosApp
                     $this->get("", StudyController::class . ':getAllStatus');
                     $this->get("/{id:[0-9]+}", StudyController::class . ':getStatus');
                 });
-            });
+            })->add($this->getContainer()->get(AuthenticationMiddleware::class));
 
             $this->group('/core', function () {
 
@@ -162,13 +149,13 @@ class KerosApp
 
                 $this->group('/member', function () {
                     $this->get("", MemberController::class . ':getPageMembers');
+                    $this->get("/me", MemberController::class . ':getConnectedUser');
                     $this->get('/{id:[0-9]+}', MemberController::class . ':getMember');
                     $this->post("", MemberController::class . ':createMember');
                     $this->put("/{id:[0-9]+}", MemberController::class . ':updateMember');
                 });
-            });
+            })->add($this->getContainer()->get(AuthenticationMiddleware::class));
         });
-
 
         $this->app = $app;
     }
