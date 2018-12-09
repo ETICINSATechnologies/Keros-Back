@@ -143,6 +143,23 @@ class StudyService
         return $study;
     }
 
+    public function delete(int $id, ?array $fields): void
+    {
+        $id = Validator::requiredId($id);
+        $study = $this->getOne($id);
+
+        //on met tout à null
+        $study->getProvenance()->setId(null);
+        $study->getField()->setId(null);
+        $study->getStatus()->setId(null);
+
+        $study->setProvenance(null);
+        $study->setField(null);
+        $study->setStatus(null);
+        $study->setId(null);
+        $study = null;
+
+    }
     public function getOne(int $id): Study
     {
         $id = Validator::requiredId($id);

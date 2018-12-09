@@ -15,6 +15,7 @@ use Keros\Controllers\Ua\FirmController;
 use Keros\Controllers\Ua\FirmTypeController;
 use Keros\Controllers\Ua\StudyController;
 use Keros\DataServices\DataServiceRegistrar;
+use Keros\Entities\Ua\Study;
 use Keros\Error\ErrorHandler;
 use Keros\Error\PhpErrorHandler;
 use Keros\Services\ServiceRegistrar;
@@ -98,6 +99,7 @@ class KerosApp
                     $this->get("/{id:[0-9]+}", StudyController::class . ':getStudy');
                     $this->post("", StudyController::class . ':createStudy');
                     $this->put("/{id:[0-9]+}", StudyController::class . ':updateStudy');
+                    $this->delete("", StudyController::class . 'deleteStudy');
                 });
                 $this->group('/provenance', function () {
                     $this->get("", StudyController::class . ':getAllProvenances');
