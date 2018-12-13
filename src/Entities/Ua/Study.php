@@ -75,7 +75,7 @@ class Study implements JsonSerializable
     protected $firm;
 
     /**
-     * @ManyToMany(targetEntity="Contact")
+     * @ManyToMany(targetEntity="Contact", inversedBy="studies")
      * @JoinTable(name="ua_study_contact",
      *      joinColumns={@JoinColumn(name="studyId", referencedColumnName="id")},
      *      inverseJoinColumns={@JoinColumn(name="contactId", referencedColumnName="id")}

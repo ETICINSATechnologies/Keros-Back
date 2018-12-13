@@ -13,7 +13,9 @@ use Keros\Services\Core\GenderService;
 use Keros\Services\Core\PositionService;
 use Keros\Services\Core\UserService;
 use Keros\Tools\Validator;
+use Monolog\Logger;
 use Psr\Container\ContainerInterface;
+use Keros\Services\Core\StudyService;
 
 class ContactService
 {
@@ -41,6 +43,10 @@ class ContactService
      * @var ContactDataService
      */
     private $contactDataService;
+    /**
+     * @var Logger
+     */
+    private $logger;
 
     public function __construct(ContainerInterface $container)
     {
@@ -50,6 +56,7 @@ class ContactService
         $this->positionService = $container->get(PositionService::class);
         $this->userService = $container->get(UserService::class);
         $this->contactDataService = $container->get(ContactDataService::class);
+        $this->logger = $container->get(logger::class);
     }
 
     /**
@@ -151,6 +158,33 @@ class ContactService
         $this->contactDataService->persist($contact);
 
         return $contact;
+    }
+
+    public function delete(int $id) : void
+    {
+        $contact = $this->contactDataService->getOne($id);
+
+        //$allStudys = $contact->getStudies();
+
+        $studies = $this->contactDataService->getAllStudies($contact);
+
+        //$this->logger->info("test".json_encode($studies));
+
+        foreach ($studies as $studyn)
+        {
+            $contacts = $studyn->getContactsArray();
+            foreach ($contacts as $contactn){
+                if($contactn->getId() == $id)
+                {
+                    $this->contactDataService->delete($contactn);
+                }
+            }
+        }
+
+        /*
+        $contact = $this->getOne($id);
+        $this->contactDataService->delete($contact);
+        */
     }
 
 }

@@ -91,6 +91,7 @@ class KerosApp
                     $this->get("/{id:[0-9]+}", ContactController::class . ':getContact');
                     $this->post("", ContactController::class . ':createContact');
                     $this->put("/{id:[0-9]+}", ContactController::class . ':updateContact');
+                    $this->delete("/{id:[0-9]+}", ContactController::class . ':deleteContact');
                 });
 
                 $this->group('/study', function () {
