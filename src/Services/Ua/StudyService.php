@@ -54,7 +54,7 @@ class StudyService
      */
     private $statusService;
     /**
-     * @var
+     * @var ProvenanceService
      */
     private $provenanceService;
     /**
@@ -143,21 +143,27 @@ class StudyService
         return $study;
     }
 
-    public function delete(int $id, ?array $fields): void
+    public function delete(int $id): void
     {
         $id = Validator::requiredId($id);
         $study = $this->getOne($id);
+        $provenance = $study->getProvenance();
+        if (isset($provenance)==false){
+            echo("provenance null");
+        }
+        $status = $study->getStatus();
+        if (isset($status)==false){
+            echo("status null");
+        }
+        $field = $study->getField();
+        if (isset($field)==false){
+            echo("field null");
+        }
 
-        //on met tout à null
-        $study->getProvenance()->setId(null);
-        $study->getField()->setId(null);
-        $study->getStatus()->setId(null);
-
-        $study->setProvenance(null);
-        $study->setField(null);
-        $study->setStatus(null);
-        $study->setId(null);
-        $study = null;
+        $this->provenanceService->delete($provenance);
+        $this->statusService->delete($status);
+        $this->fieldService->delete($field);
+        $this->studyDataService->delete($study);
 
     }
     public function getOne(int $id): Study

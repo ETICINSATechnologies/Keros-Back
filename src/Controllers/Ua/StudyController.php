@@ -94,10 +94,10 @@ class StudyController
         $this->logger->debug("Deleting study from " . $request->getServerParams()["REMOTE_ADDR"]);
         $body = $request->getParsedBody();
         $this->entityManager->beginTransaction();
-        $study = $this->studyService->delete($body);
+        $this->studyService->delete($args['id']);
         $this->entityManager->commit();
 
-        return $response->withJson($study, 201);
+        return $response->withStatus(204);
     }
 
     public function updateStudy(Request $request, Response $response, array $args)
