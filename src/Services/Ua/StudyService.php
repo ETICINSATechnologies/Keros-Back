@@ -160,10 +160,8 @@ class StudyService
             echo("field null");
         }
 
-        $this->provenanceService->delete($provenance);
-        $this->statusService->delete($status);
-        $this->fieldService->delete($field);
         $this->studyDataService->delete($study);
+
 
     }
     public function getOne(int $id): Study

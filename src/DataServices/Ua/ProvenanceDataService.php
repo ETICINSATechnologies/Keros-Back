@@ -39,7 +39,7 @@ class ProvenanceDataService
 
         $this->entityManager->remove($provenance);
         $this->entityManager->flush();
-        $this->logger->log();
+
     }
     public function getOne(int $id): ?Provenance
     {

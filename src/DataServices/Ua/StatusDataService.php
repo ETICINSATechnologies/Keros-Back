@@ -46,6 +46,14 @@ class StatusDataService
         }
     }
 
+    public function delete(Status $status) : void
+    {
+
+        $this->entityManager->remove($status);
+        $this->entityManager->flush();
+        echo("deleted status");
+    }
+
     public function getAll(): array
     {
         try {
