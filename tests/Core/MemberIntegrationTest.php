@@ -8,7 +8,7 @@ use Slim\Http\Request;
 
 class MemberIntegrationTest extends AppTestCase
 {
-/*
+
     public function testDeleteMembersShouldReturn204()
     {
         $env = Environment::mock([
@@ -22,7 +22,7 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(204, $response->getStatusCode());
 
     }
-*/
+
     public function testGetAllMembersShouldReturn200()
     {
         $env = Environment::mock([
