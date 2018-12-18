@@ -153,6 +153,7 @@ class KerosApp
                     $this->get('/{id:[0-9]+}', MemberController::class . ':getMember');
                     $this->post("", MemberController::class . ':createMember');
                     $this->put("/{id:[0-9]+}", MemberController::class . ':updateMember');
+                    $this->delete("/{id:[0-9]+}", MemberController::class . ':deleteMember');
                 });
             })->add($this->getContainer()->get(AuthenticationMiddleware::class));
         });

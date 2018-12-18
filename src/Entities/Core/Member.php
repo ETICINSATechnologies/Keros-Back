@@ -3,6 +3,7 @@
 namespace Keros\Entities\Core;
 
 use JsonSerializable;
+use Keros\Entities\UA\Study;
 
 /**
  * @Entity
@@ -61,6 +62,21 @@ class Member implements JsonSerializable
      *      )
      */
     protected $positions;
+
+    /**
+     * @ManyToMany(targetEntity="Keros\Entities\UA\Study", mappedBy="qualityManagers")
+     */
+    protected $studiesAsQualityManager;
+
+    /**
+     * @ManyToMany(targetEntity="Keros\Entities\UA\Study", mappedBy="consultants")
+     */
+    protected $studiesAsConsultant;
+
+    /**
+     * @ManyToMany(targetEntity="Keros\Entities\UA\Study", mappedBy="leaders")
+     */
+    protected $studiesAsLeader;
     
     public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $positions)
     {
@@ -104,6 +120,72 @@ class Member implements JsonSerializable
     public function getId()
     {
         return $this->getUser()->getId();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStudiesAsQualityManager()
+    {
+        $studies = [];
+        foreach ($this->studiesAsQualityManager as $study)
+        {
+            $studies[] = $study;
+        }
+
+        return $studies;
+    }
+
+    /**
+     * @param mixed $studiesAsQualityManager
+     */
+    public function setStudiesAsQualityManager($studiesAsQualityManager): void
+    {
+        $this->studiesAsQualityManager = $studiesAsQualityManager;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStudiesAsConsultant()
+    {
+        $studies = [];
+        foreach ($this->studiesAsConsultant as $study)
+        {
+            $studies[] = $study;
+        }
+
+        return $studies;
+    }
+
+    /**
+     * @param mixed $studiesAsConsultant
+     */
+    public function setStudiesAsConsultant($studiesAsConsultant): void
+    {
+        $this->studiesAsConsultant = $studiesAsConsultant;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStudiesAsLeader()
+    {
+        $studies = [];
+        foreach ($this->studiesAsLeader as $study)
+        {
+            $studies[] = $study;
+        }
+
+        return $studies;
+    }
+
+    /**
+     * @param mixed $studiesAsLeader
+     */
+    public function setStudiesAsLeader($studiesAsLeader): void
+    {
+        $this->studiesAsLeader = $studiesAsLeader;
     }
 
     /**
@@ -221,7 +303,7 @@ class Member implements JsonSerializable
     /**
      * @return mixed
      */
-    public function getAddress()
+    public function getAddress() : Address
     {
         return $this->address;
     }

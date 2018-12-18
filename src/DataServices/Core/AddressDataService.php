@@ -82,4 +82,16 @@ class AddressDataService
         }
         return $count;
     }
+
+    public function delete(Address $address): void
+    {
+        try {
+            $this->entityManager->remove($address);
+            $this->entityManager->flush();
+        } catch (Exception $e) {
+            $msg = "Failed to delete address : " . $e->getMessage();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
+    }
 }

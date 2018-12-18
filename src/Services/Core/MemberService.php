@@ -2,6 +2,7 @@
 
 namespace Keros\Services\Core;
 
+
 use Keros\DataServices\Core\MemberDataService;
 use Keros\Entities\Core\Member;
 use Keros\Entities\Core\RequestParameters;
@@ -162,6 +163,25 @@ class MemberService
         $this->memberDataService->persist($member);
 
         return $member;
+    }
+
+    public function delete(int $id): bool
+    {
+        $id = Validator::requiredId($id);
+        $member = $this->getOne($id);
+        $address = $member->getAddress();
+
+        $member->setPositions([]);
+        $member->setStudiesAsQualityManager([]);
+        $member->setStudiesAsLeader([]);
+        $member->setStudiesAsConsultant([]);
+        $this->memberDataService->persist($member);
+
+        $this->memberDataService->delete($member);
+        $this->userService->delete($id);
+        $this->addressService->delete($address->getId());
+
+        return true;
     }
 
 }
