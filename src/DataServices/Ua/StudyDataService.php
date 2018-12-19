@@ -52,7 +52,6 @@ class StudyDataService
 
         $this->entityManager->remove($study);
         $this->entityManager->flush();
-        echo("deleted study");
     }
 
     public function getOne(int $id): ?Study

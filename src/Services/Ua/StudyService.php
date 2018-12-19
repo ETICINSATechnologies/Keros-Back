@@ -147,23 +147,9 @@ class StudyService
     {
         $id = Validator::requiredId($id);
         $study = $this->getOne($id);
-        $provenance = $study->getProvenance();
-        if (isset($provenance)==false){
-            echo("provenance null");
-        }
-        $status = $study->getStatus();
-        if (isset($status)==false){
-            echo("status null");
-        }
-        $field = $study->getField();
-        if (isset($field)==false){
-            echo("field null");
-        }
-
         $this->studyDataService->delete($study);
-
-
     }
+
     public function getOne(int $id): Study
     {
         $id = Validator::requiredId($id);

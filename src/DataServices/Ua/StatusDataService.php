@@ -51,7 +51,6 @@ class StatusDataService
 
         $this->entityManager->remove($status);
         $this->entityManager->flush();
-        echo("deleted status");
     }
 
     public function getAll(): array

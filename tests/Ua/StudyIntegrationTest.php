@@ -20,6 +20,20 @@ class StudyIntegrationTest extends AppTestCase
 
         $this->assertSame(204, $response->getStatusCode());
     }
+
+    public function testDeleteStudyShouldReturn404 ()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'DELETE',
+            'REQUEST_URI' => '/api/v1/ua/study/5',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(404, $response->getStatusCode());
+    }
+
     public function testGetAllStudyShouldReturn200()
     {
         $env = Environment::mock([
