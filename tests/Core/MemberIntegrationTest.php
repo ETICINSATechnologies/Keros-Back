@@ -20,6 +20,19 @@ class MemberIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
 
         $this->assertSame(204, $response->getStatusCode());
+    }
+
+    public function testDeleteInvalidMemberShouldReturn400(){
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'DELETE',
+            'REQUEST_URI' => '/api/v1/core/member/10',
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(400, $response->getStatusCode());
 
     }
 

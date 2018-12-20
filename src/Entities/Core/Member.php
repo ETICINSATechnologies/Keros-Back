@@ -125,72 +125,6 @@ class Member implements JsonSerializable
     /**
      * @return mixed
      */
-    public function getStudiesAsQualityManager()
-    {
-        $studies = [];
-        foreach ($this->studiesAsQualityManager as $study)
-        {
-            $studies[] = $study;
-        }
-
-        return $studies;
-    }
-
-    /**
-     * @param mixed $studiesAsQualityManager
-     */
-    public function setStudiesAsQualityManager($studiesAsQualityManager): void
-    {
-        $this->studiesAsQualityManager = $studiesAsQualityManager;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getStudiesAsConsultant()
-    {
-        $studies = [];
-        foreach ($this->studiesAsConsultant as $study)
-        {
-            $studies[] = $study;
-        }
-
-        return $studies;
-    }
-
-    /**
-     * @param mixed $studiesAsConsultant
-     */
-    public function setStudiesAsConsultant($studiesAsConsultant): void
-    {
-        $this->studiesAsConsultant = $studiesAsConsultant;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getStudiesAsLeader()
-    {
-        $studies = [];
-        foreach ($this->studiesAsLeader as $study)
-        {
-            $studies[] = $study;
-        }
-
-        return $studies;
-    }
-
-    /**
-     * @param mixed $studiesAsLeader
-     */
-    public function setStudiesAsLeader($studiesAsLeader): void
-    {
-        $this->studiesAsLeader = $studiesAsLeader;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getUser()
     {
         return $this->user;
@@ -374,4 +308,72 @@ class Member implements JsonSerializable
 
         return $positions;
     }
+
+
+    /**
+     * @return mixed
+     */
+    public function getStudiesAsQualityManager()
+    {
+        $studies = [];
+        foreach ($this->studiesAsQualityManager as $study)
+        {
+            $studies[] = $study;
+        }
+
+        return $studies;
+    }
+
+    /**
+     * @param mixed $studiesAsQualityManager
+     */
+    public function setStudiesAsQualityManager($studiesAsQualityManager): void
+    {
+        $this->studiesAsQualityManager = $studiesAsQualityManager;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStudiesAsConsultant()
+    {
+        $studies = [];
+        foreach ($this->studiesAsConsultant as $study)
+        {
+            $studies[] = $study;
+        }
+
+        return $studies;
+    }
+
+    /**
+     * @param mixed $studiesAsConsultant
+     */
+    public function setStudiesAsConsultant($studiesAsConsultant): void
+    {
+        $this->studiesAsConsultant = $studiesAsConsultant;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStudiesAsLeader()
+    {
+        $studies = [];
+        foreach ($this->studiesAsLeader as $study)
+        {
+            $studies[] = $study;
+        }
+
+        return $studies;
+    }
+
+    /**
+     * @param mixed $studiesAsLeader
+     */
+    public function setStudiesAsLeader($studiesAsLeader): void
+    {
+        $this->studiesAsLeader = $studiesAsLeader;
+    }
+
 }
