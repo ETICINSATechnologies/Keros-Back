@@ -21,6 +21,11 @@ class StatusService
         $this->statusDataService = $container->get(StatusDataService::class);
     }
 
+    public function delete(Status $status)
+    {
+        $this->statusDataService->delete($status);
+    }
+
     public function getOne(int $id): Status
     {
         $id = Validator::requiredId($id);

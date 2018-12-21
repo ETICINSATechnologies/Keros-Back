@@ -34,6 +34,14 @@ class FieldDataService
         $this->repository = $this->entityManager->getRepository(Field::class);
     }
 
+    public function delete(Field $field) : void
+    {
+
+        $this->entityManager->remove($field);
+        $this->entityManager->flush();
+        echo("deleted field");
+    }
+
     public function getOne(int $id): ?Field
     {
         try {

@@ -47,6 +47,13 @@ class StudyDataService
         }
     }
 
+    public function delete(Study $study) : void
+    {
+
+        $this->entityManager->remove($study);
+        $this->entityManager->flush();
+    }
+
     public function getOne(int $id): ?Study
     {
         try {
