@@ -64,17 +64,17 @@ class Member implements JsonSerializable
     protected $positions;
 
     /**
-     * @ManyToMany(targetEntity="Keros\Entities\UA\Study", mappedBy="qualityManagers")
+     * @ManyToMany(targetEntity="Keros/Entities/Ua/Study", mappedBy="qualityManagers")
      */
     protected $studiesAsQualityManager;
 
     /**
-     * @ManyToMany(targetEntity="Keros\Entities\UA\Study", mappedBy="consultants")
+     * @ManyToMany(targetEntity="Keros/Entities/UA/Study", mappedBy="consultants")
      */
     protected $studiesAsConsultant;
 
     /**
-     * @ManyToMany(targetEntity="Keros\Entities\UA\Study", mappedBy="leaders")
+     * @ManyToMany(targetEntity="Keros/Entities/UA/Study", mappedBy="leaders")
      */
     protected $studiesAsLeader;
     
