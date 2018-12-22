@@ -94,8 +94,6 @@ class AddressService
         $address = $this->getOne($id);
 
         $this->addressDataService->delete($address);
-
-        return true;
     }
 
 }

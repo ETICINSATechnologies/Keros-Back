@@ -165,7 +165,7 @@ class MemberService
         return $member;
     }
 
-    public function delete(int $id): bool
+    public function delete(int $id)
     {
         $id = Validator::requiredId($id);
         $member = $this->getOne($id);
@@ -180,8 +180,6 @@ class MemberService
         $this->memberDataService->delete($member);
         $this->userService->delete($id);
         $this->addressService->delete($address->getId());
-
-        return true;
     }
 
 }
