@@ -22,7 +22,7 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(204, $response->getStatusCode());
     }
 
-    public function testDeleteInvalidMemberShouldReturn400(){
+    public function testDeleteInvalidMemberShouldReturn404(){
         $env = Environment::mock([
             'REQUEST_METHOD' => 'DELETE',
             'REQUEST_URI' => '/api/v1/core/member/10',
@@ -32,7 +32,7 @@ class MemberIntegrationTest extends AppTestCase
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 
-        $this->assertSame(400, $response->getStatusCode());
+        $this->assertSame(404, $response->getStatusCode());
 
     }
 
