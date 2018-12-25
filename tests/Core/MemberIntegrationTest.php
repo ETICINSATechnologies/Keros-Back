@@ -8,6 +8,34 @@ use Slim\Http\Request;
 
 class MemberIntegrationTest extends AppTestCase
 {
+
+    public function testDeleteMembersShouldReturn204()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'DELETE',
+            'REQUEST_URI' => '/api/v1/core/member/1',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(204, $response->getStatusCode());
+    }
+
+    public function testDeleteInvalidMemberShouldReturn404(){
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'DELETE',
+            'REQUEST_URI' => '/api/v1/core/member/10',
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(404, $response->getStatusCode());
+
+    }
+
     public function testGetAllMembersShouldReturn200()
     {
         $env = Environment::mock([

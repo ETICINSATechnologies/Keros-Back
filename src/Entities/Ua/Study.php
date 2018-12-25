@@ -84,7 +84,7 @@ class Study implements JsonSerializable
     protected $contacts;
 
     /**
-     * @ManyToMany(targetEntity="Keros\Entities\Core\Member")
+     * @ManyToMany(targetEntity="Keros\Entities\Core\Member", inversedBy="studiesAsLeader")
      * @JoinTable(name="ua_study_leader",
      *      joinColumns={@JoinColumn(name="studyId", referencedColumnName="id")},
      *      inverseJoinColumns={@JoinColumn(name="memberId", referencedColumnName="id")}
@@ -93,7 +93,7 @@ class Study implements JsonSerializable
     protected $leaders;
 
     /**
-     * @ManyToMany(targetEntity="Keros\Entities\Core\Member")
+     * @ManyToMany(targetEntity="Keros\Entities\Core\Member", inversedBy="studiesAsQualityManager")
      * @JoinTable(name="ua_study_qualityManager",
      *      joinColumns={@JoinColumn(name="studyId", referencedColumnName="id")},
      *      inverseJoinColumns={@JoinColumn(name="memberId", referencedColumnName="id")}
@@ -102,7 +102,7 @@ class Study implements JsonSerializable
     protected $qualityManagers;
 
     /**
-     * @ManyToMany(targetEntity="Keros\Entities\Core\Member")
+     * @ManyToMany(targetEntity="Keros\Entities\Core\Member", inversedBy="studiesAsConsultant")
      * @JoinTable(name="ua_study_consultant",
      *      joinColumns={@JoinColumn(name="studyId", referencedColumnName="id")},
      *      inverseJoinColumns={@JoinColumn(name="memberId", referencedColumnName="id")}

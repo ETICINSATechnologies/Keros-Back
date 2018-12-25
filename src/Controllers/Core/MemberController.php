@@ -96,4 +96,15 @@ class MemberController
 
         return $response->withJson($member, 200);
     }
+
+    public function deleteMember(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Deleting member from " . $request->getServerParams()["REMOTE_ADDR"]);
+
+        $this->entityManager->beginTransaction();
+        $this->memberService->delete($args['id']);
+        $this->entityManager->commit();
+
+        return $response->withStatus(204);
+    }
 }

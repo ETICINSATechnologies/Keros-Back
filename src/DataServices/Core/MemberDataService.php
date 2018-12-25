@@ -83,4 +83,16 @@ class MemberDataService
         }
         return $count;
     }
+
+    public function delete(Member $member): void
+    {
+        try {
+            $this->entityManager->remove($member);
+            $this->entityManager->flush();
+        } catch (Exception $e) {
+            $msg = "Failed to delete member : " . $e->getMessage();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
+    }
 }

@@ -102,4 +102,16 @@ class UserDataService
             throw new KerosException($msg, 500);
         }
     }
+
+    public function delete(User $user)
+    {
+        try {
+            $this->entityManager->remove($user);
+            $this->entityManager->flush();
+        } catch (Exception $e) {
+            $msg = "Failed to delete user : " . $e->getMessage();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
+    }
 }
