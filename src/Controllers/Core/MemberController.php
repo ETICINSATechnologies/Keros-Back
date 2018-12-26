@@ -60,6 +60,19 @@ class MemberController
     }
 
 
+    public function updateConnectedUser(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Getting updated user from " . $request->getServerParams()["REMOTE_ADDR"]);
+
+        $body = $request->getParsedBody();
+
+        $this->entityManager->beginTransaction();
+        $member = $this->memberService->update($request->getAttribute("userId"), $body);
+        $this->entityManager->commit();
+
+        return $response->withJson($member, 200);
+    }
+
     public function getPageMembers(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Get page members from " . $request->getServerParams()["REMOTE_ADDR"]);
