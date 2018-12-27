@@ -85,6 +85,7 @@ class KerosApp
                     $this->get("/{id:[0-9]+}", FirmController::class . ':getFirm');
                     $this->post("", FirmController::class . ':createFirm');
                     $this->put("/{id:[0-9]+}", FirmController::class . ':updateFirm');
+                    $this->delete("/{id:[0-9]+}", FirmController::class . ':deleteFirm');
                 });
 
                 $this->group('/contact', function () {

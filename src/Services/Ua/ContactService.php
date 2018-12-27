@@ -83,6 +83,13 @@ class ContactService
         return $contact;
     }
 
+    public function delete(int $id): void
+    {
+        $id = Validator::requiredId($id);
+        $contact = $this->getOne($id);
+        $this->contactDataService->delete($contact);
+    }
+
     public function getOne(int $id): Contact
     {
         $id = Validator::requiredId($id);

@@ -7,6 +7,7 @@ use Keros\Entities\Core\Page;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Ua\Firm;
 use Keros\Services\Core\AddressService;
+use Keros\Services\Ua\ContactService;
 use Keros\Services\Ua\FirmService;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
@@ -38,6 +39,7 @@ class FirmController
         $this->entityManager = $container->get(EntityManager::class);
         $this->addressService = $container->get(AddressService::class);
         $this->firmService = $container->get(FirmService::class);
+        $this->contactService = $container->get(ContactService::class);
     }
 
     public function getFirm(Request $request, Response $response, array $args)
@@ -59,6 +61,17 @@ class FirmController
         $this->entityManager->commit();
 
         return $response->withJson($firm, 201);
+    }
+
+    public function deleteFirm(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Deleting firm from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $body = $request->getParsedBody();
+        $this->entityManager->beginTransaction();
+        $this->firmService->delete($args['id']);
+        $this->entityManager->commit();
+
+        return $response->withStatus(204);
     }
 
     public function updateFirm(Request $request, Response $response, array $args)

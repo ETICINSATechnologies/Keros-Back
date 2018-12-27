@@ -3,6 +3,7 @@
 
 namespace Keros\Services\Ua;
 
+use Keros\DataServices\Ua\ContactDataService;
 use Keros\DataServices\Ua\FirmDataService;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Ua\Firm;
@@ -25,12 +26,17 @@ class FirmService
      * @var FirmDataService
      */
     private $firmDataService;
+    /**
+     * @var ContactService
+     */
+    private $contactService;
 
     public function __construct(ContainerInterface $container)
     {
         $this->addressService = $container->get(AddressService::class);
         $this->firmTypeService = $container->get(FirmTypeService::class);
         $this->firmDataService = $container->get(FirmDataService::class);
+        $this->contactService = $container->get(ContactService::class);
     }
 
     public function create(array $fields): Firm
@@ -46,6 +52,15 @@ class FirmService
         $this->firmDataService->persist($firm);
 
         return $firm;
+    }
+
+    public function delete(int $id): void
+    {
+        $id = Validator::requiredId($id);
+        $firm = $this->getOne($id);
+        $this->contactService->delete($id);
+        $this->firmDataService->delete($firm);
+        $this->addressService->delete($id);
     }
 
     public function getOne(int $id): Firm

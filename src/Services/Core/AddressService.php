@@ -43,6 +43,13 @@ class AddressService
         return $address;
     }
 
+    public function delete(int $id): void
+    {
+        $id = Validator::requiredId($id);
+        $address = $this->getOne($id);
+        $this->addressDataService->delete($address);
+    }
+
     public function update(int $id, ?array $fields)
     {
         $id = Validator::requiredId($id);
@@ -86,14 +93,4 @@ class AddressService
     {
         return $this->addressDataService->getCount($requestParameters);
     }
-
-
-    public function delete(int $id)
-    {
-        $id = Validator::requiredId($id);
-        $address = $this->getOne($id);
-
-        $this->addressDataService->delete($address);
-    }
-
 }

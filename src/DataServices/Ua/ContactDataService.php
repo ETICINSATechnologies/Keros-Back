@@ -82,4 +82,16 @@ class ContactDataService
         }
         return $count;
     }
+
+    public function delete(Contact $contact)
+    {
+        try {
+            $this->entityManager->remove($contact);
+            $this->entityManager->flush();
+        } catch (Exception $e) {
+            $msg = "Failed to delete firm : " . $e->getMessage();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
+    }
 }

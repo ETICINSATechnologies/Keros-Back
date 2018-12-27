@@ -109,4 +109,27 @@ class FirmIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
         $this->assertSame(400, $response->getStatusCode());
     }
+    public function testDeleteStudyShouldReturn204 ()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'DELETE',
+            'REQUEST_URI' => '/api/v1/ua/firm/2',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(204, $response->getStatusCode());
+    }
+    public function testDeleteFirmShouldReturn404()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'DELETE',
+            'REQUEST_URI' => '/api/v1/ua/firm/3',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(404, $response->getStatusCode());
+    }
 }
