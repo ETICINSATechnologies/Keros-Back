@@ -152,6 +152,7 @@ class KerosApp
                 $this->group('/member', function () {
                     $this->get("", MemberController::class . ':getPageMembers');
                     $this->get("/me", MemberController::class . ':getConnectedUser');
+                    $this->put("/me", MemberController::class . ':updateConnectedUser');
                     $this->get('/{id:[0-9]+}', MemberController::class . ':getMember');
                     $this->post("", MemberController::class . ':createMember');
                     $this->put("/{id:[0-9]+}", MemberController::class . ':updateMember');
