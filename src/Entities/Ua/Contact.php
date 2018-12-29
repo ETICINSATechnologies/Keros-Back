@@ -1,8 +1,11 @@
 <?php
 
 namespace Keros\Entities\Ua;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use JsonSerializable;
+use Keros\Entities\Core\Gender;
+use Keros\Entities\Core\Position;
 use phpDocumentor\Reflection\Types\Array_;
 
 
@@ -97,11 +100,13 @@ class Contact implements JsonSerializable
         ];
     }
 
-    public static function getSearchFields(): array {
+    public static function getSearchFields(): array
+    {
         return ['firstName', 'lastName', 'email'];
     }
 
     // Getters and setters
+
     /**
      * @return mixed
      */
@@ -145,7 +150,7 @@ class Contact implements JsonSerializable
     /**
      * @return mixed
      */
-    public function getGender()
+    public function getGender(): Gender
     {
         return $this->gender;
     }
@@ -161,7 +166,7 @@ class Contact implements JsonSerializable
     /**
      * @return mixed
      */
-    public function getFirm()
+    public function getFirm(): Firm
     {
         return $this->firm;
     }
