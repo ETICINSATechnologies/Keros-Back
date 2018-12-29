@@ -1,6 +1,7 @@
 <?php
 
 namespace Keros\Entities\Ua;
+use Doctrine\Common\Collections\ArrayCollection;
 use JsonSerializable;
 use phpDocumentor\Reflection\Types\Array_;
 
@@ -54,7 +55,6 @@ class Contact implements JsonSerializable
     /** @Column(type="boolean", length=50) */
     protected $old;
 
-
     /**
      * @ManyToMany(targetEntity="Study", mappedBy="contacts")
      */
@@ -69,7 +69,7 @@ class Contact implements JsonSerializable
      * @param $email
      * @param $old
      */
-    public function __construct($firstName, $lastName, $gender, $firm, $email, $old, $studies)
+    public function __construct($firstName, $lastName, $gender, $firm, $email, $old)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -77,7 +77,7 @@ class Contact implements JsonSerializable
         $this->firm = $firm;
         $this->email = $email;
         $this->old = $old;
-        $this->studies = $studies;
+        $this->studies = new ArrayCollection();
     }
 
     public function jsonSerialize()
@@ -161,7 +161,7 @@ class Contact implements JsonSerializable
     /**
      * @return mixed
      */
-    public function getFirm() : Firm
+    public function getFirm()
     {
         return $this->firm;
     }
@@ -286,4 +286,17 @@ class Contact implements JsonSerializable
         $this->studies = $studies;
     }
 
+    /**
+     * @return array
+     */
+    public function getStudiesArray()
+    {
+        $studies = [];
+        foreach ($this->getStudies() as $study)
+        {
+            $studies[] = $study;
+        }
+
+        return $studies;
+    }
 }
