@@ -162,29 +162,8 @@ class ContactService
 
     public function delete(int $id) : void
     {
-        $contact = $this->contactDataService->getOne($id);
-
-        //$allStudys = $contact->getStudies();
-
-        $studies = $this->contactDataService->getAllStudies($contact);
-
-        //$this->logger->info("test".json_encode($studies));
-
-        foreach ($studies as $studyn)
-        {
-            $contacts = $studyn->getContactsArray();
-            foreach ($contacts as $contactn){
-                if($contactn->getId() == $id)
-                {
-                    $this->contactDataService->delete($contactn);
-                }
-            }
-        }
-
-        /*
         $contact = $this->getOne($id);
         $this->contactDataService->delete($contact);
-        */
     }
 
 }
