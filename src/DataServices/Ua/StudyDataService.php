@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Exception;
 use Keros\Entities\Core\RequestParameters;
+use Keros\Entities\Ua\Contact;
 use Keros\Entities\Ua\Study;
 use Keros\Error\KerosException;
 use Monolog\Logger;
@@ -89,4 +90,5 @@ class StudyDataService
         }
         return $count;
     }
+
 }
