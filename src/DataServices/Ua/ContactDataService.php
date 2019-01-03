@@ -10,6 +10,7 @@ use Exception;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Ua\Contact;
 use Keros\Error\KerosException;
+use Keros\Tools\Validator;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 
@@ -35,6 +36,18 @@ class ContactDataService
         $this->repository = $this->entityManager->getRepository(Contact::class);
     }
 
+    public function delete(Contact $contact) : void
+    {
+        try {
+            $this->entityManager->remove($contact);
+            $this->entityManager->flush();
+        } catch (Exception $e) {
+            $msg = "Failed to delete contact : " . $e->getMessage();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
+    }
+
     public function persist(Contact $contact): void
     {
         try {
@@ -42,6 +55,18 @@ class ContactDataService
             $this->entityManager->flush();
         } catch (Exception $e) {
             $msg = "Failed to persist contact : " . $e->getMessage();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
+    }
+
+    public function getAll(): array
+    {
+        try {
+            $contacts = $this->repository->findAll();
+            return $contacts;
+        } catch (Exception $e) {
+            $msg = "Error finding page of contacts : " . $e->getMessage();
             $this->logger->error($msg);
             throw new KerosException($msg, 500);
         }
@@ -83,15 +108,4 @@ class ContactDataService
         return $count;
     }
 
-    public function delete(Contact $contact)
-    {
-        try {
-            $this->entityManager->remove($contact);
-            $this->entityManager->flush();
-        } catch (Exception $e) {
-            $msg = "Failed to delete firm : " . $e->getMessage();
-            $this->logger->error($msg);
-            throw new KerosException($msg, 500);
-        }
-    }
 }

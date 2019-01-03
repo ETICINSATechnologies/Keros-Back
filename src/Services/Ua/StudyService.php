@@ -150,6 +150,18 @@ class StudyService
         $this->studyDataService->delete($study);
     }
 
+    public function deleteStudiesRelatedtoFirm (int $idFirm) : void
+    {
+        /*$firm = $this->firmService->getOne($idFirm);
+        $studies = $this->getAll();
+        foreach ($studies as $study) {
+            $study = Validator::requiredStudy($study);
+            if ($study->getFirm() == $firm){
+                $this->studyDataService->delete($study);
+            }
+        }*/
+    }
+
     public function getOne(int $id): Study
     {
         $id = Validator::requiredId($id);
@@ -159,6 +171,11 @@ class StudyService
             throw new KerosException("The study could not be found", 404);
         }
         return $study;
+    }
+
+    public function getAll(): array
+    {
+        return $this->studyDataService->getAll();
     }
 
     public function getPage(RequestParameters $requestParameters): array

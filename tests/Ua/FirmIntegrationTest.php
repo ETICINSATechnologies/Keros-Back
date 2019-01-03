@@ -109,7 +109,7 @@ class FirmIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
         $this->assertSame(400, $response->getStatusCode());
     }
-    public function testDeleteStudyShouldReturn204 ()
+    public function testDeleteFirmShouldReturn204 ()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'DELETE',

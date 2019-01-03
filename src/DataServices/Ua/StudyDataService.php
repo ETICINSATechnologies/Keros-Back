@@ -60,6 +60,18 @@ class StudyDataService
         }
     }
 
+    public function getAll(): array
+    {
+        try {
+            $studies = $this->repository->findAll();
+            return $studies;
+        } catch (Exception $e) {
+            $msg = "Error finding page of studies : " . $e->getMessage();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
+    }
+
     public function getOne(int $id): ?Study
     {
         try {

@@ -9,6 +9,7 @@ use Keros\Entities\Ua\Firm;
 use Keros\Services\Core\AddressService;
 use Keros\Services\Ua\ContactService;
 use Keros\Services\Ua\FirmService;
+use Keros\Services\Ua\StudyService;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -32,6 +33,14 @@ class FirmController
      * @var EntityManager
      */
     private $entityManager;
+    /**
+     * @var ContactService
+     */
+    private $contactService;
+    /**
+     * @var StudyService
+     */
+    private $studyService;
 
     public function __construct(ContainerInterface $container)
     {
@@ -68,6 +77,8 @@ class FirmController
         $this->logger->debug("Deleting firm from " . $request->getServerParams()["REMOTE_ADDR"]);
         $body = $request->getParsedBody();
         $this->entityManager->beginTransaction();
+        $this->contactService->deleteContactsRelatedtoFirm($args['id']);
+        $this->studyService->deleteStudiesRelatedtoFirm($args['id']);
         $this->firmService->delete($args['id']);
         $this->entityManager->commit();
 

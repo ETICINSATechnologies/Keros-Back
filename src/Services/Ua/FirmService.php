@@ -26,17 +26,12 @@ class FirmService
      * @var FirmDataService
      */
     private $firmDataService;
-    /**
-     * @var ContactService
-     */
-    private $contactService;
 
     public function __construct(ContainerInterface $container)
     {
         $this->addressService = $container->get(AddressService::class);
         $this->firmTypeService = $container->get(FirmTypeService::class);
         $this->firmDataService = $container->get(FirmDataService::class);
-        $this->contactService = $container->get(ContactService::class);
     }
 
     public function create(array $fields): Firm
@@ -58,9 +53,9 @@ class FirmService
     {
         $id = Validator::requiredId($id);
         $firm = $this->getOne($id);
-        $this->contactService->delete($id);
+        $address = $firm->getAddress();
         $this->firmDataService->delete($firm);
-        $this->addressService->delete($id);
+        $this->addressService->delete($address->getId());
     }
 
     public function getOne(int $id): Firm

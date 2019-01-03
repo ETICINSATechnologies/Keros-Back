@@ -90,6 +90,26 @@ class ContactService
         $this->contactDataService->delete($contact);
     }
 
+    public function deleteContactsRelatedtoFirm (int $idFirm) : void
+    {
+        $firm = $this->firmService->getOne($idFirm);
+        //$this->contactDataService->deleteContactsRelatedtoFirm($firm);
+
+        $contacts = $this->getAll();
+        foreach ($contacts as $contact) {
+            $contact = Validator::requiredContact($contact);
+            if ($contact->getFirm() == $firm){
+                $contact->setStudiesAsContacts([]);
+                $this->contactDataService->delete($contact);
+            }
+        }
+    }
+
+    public function getAll(): array
+    {
+        return $this->contactDataService->getAll();
+    }
+
     public function getOne(int $id): Contact
     {
         $id = Validator::requiredId($id);
