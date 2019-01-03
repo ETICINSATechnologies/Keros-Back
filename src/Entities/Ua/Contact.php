@@ -158,7 +158,7 @@ class Contact implements JsonSerializable
     /**
      * @return mixed
      */
-    public function getFirm() : Firm
+    public function getFirm()
     {
         return $this->firm;
     }

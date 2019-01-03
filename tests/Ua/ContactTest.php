@@ -2,7 +2,7 @@
 
 namespace KerosTest\Contact;
 
-use Keros\Entities\ua\Contact;
+use Keros\Entities\Ua\Contact;
 use PHPUnit\Framework\TestCase;
 
 
