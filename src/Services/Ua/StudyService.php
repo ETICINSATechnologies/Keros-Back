@@ -152,14 +152,14 @@ class StudyService
 
     public function deleteStudiesRelatedtoFirm (int $idFirm) : void
     {
-        /*$firm = $this->firmService->getOne($idFirm);
+        $firm = $this->firmService->getOne($idFirm);
         $studies = $this->getAll();
         foreach ($studies as $study) {
             $study = Validator::requiredStudy($study);
             if ($study->getFirm() == $firm){
                 $this->studyDataService->delete($study);
             }
-        }*/
+        }
     }
 
     public function getOne(int $id): Study

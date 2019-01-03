@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Keros\Entities\Core\Page;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Ua\Firm;
+use Keros\Entities\Ua\Study;
 use Keros\Services\Core\AddressService;
 use Keros\Services\Ua\ContactService;
 use Keros\Services\Ua\FirmService;
@@ -49,6 +50,7 @@ class FirmController
         $this->addressService = $container->get(AddressService::class);
         $this->firmService = $container->get(FirmService::class);
         $this->contactService = $container->get(ContactService::class);
+        $this->studyService = $container->get(StudyService::class);
     }
 
     public function getFirm(Request $request, Response $response, array $args)
