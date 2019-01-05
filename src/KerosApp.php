@@ -138,13 +138,6 @@ class KerosApp
                     $this->get("/{id:[0-9]+}", PoleController::class . ':getPole');
                 });
 
-                $this->group('/address', function () {
-                    $this->get("", AddressController::class . ':getPageAddresses');
-                    $this->get('/{id:[0-9]+}', AddressController::class . ':getAddress');
-                    $this->post("", AddressController::class . ':createAddress');
-                    $this->put("", AddressController::class . ':updateAddress');
-                });
-
                 $this->group('/position', function () {
                     $this->get("", PositionController::class . ':getAllPositions');
                     $this->get("/{id:[0-9]+}", PositionController::class . ':getPosition');
