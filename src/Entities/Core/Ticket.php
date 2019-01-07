@@ -20,7 +20,7 @@ class Ticket implements JsonSerializable, Searchable
 
     /**
      * @ManyToOne(targetEntity="Member")
-     * @JoinColumn(name="user_id", referencedColumnName="id")
+     * @JoinColumn(name="userId", referencedColumnName="id")
      **/
     protected $user;
 
