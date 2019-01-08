@@ -2,7 +2,9 @@
 
 namespace KerosTest\Contact;
 
+use Keros\Entities\Core\Gender;
 use Keros\Entities\Ua\Contact;
+use Keros\Entities\Ua\Firm;
 use PHPUnit\Framework\TestCase;
 
 

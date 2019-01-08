@@ -288,4 +288,30 @@ class Contact implements JsonSerializable
     {
         $this->studiesAsContacts = $studiesAsContacts;
     }
+
+    public function getStudies()
+    {
+        return $this->studies;
+    }
+
+    /**
+     * @param mixed $studies
+     */
+    public function setStudies($studies): void
+    {
+        $this->studies = $studies;
+    }
+
+    /**
+     * @return array
+     */
+    public function getStudiesArray()
+    {
+        $studies = [];
+        foreach ($this->getStudies() as $study) {
+            $studies[] = $study;
+        }
+
+        return $studies;
+    }
 }
