@@ -97,7 +97,7 @@ class ContactService
         $this->contactDataService->delete($contact);
     }
 
-    public function deleteContactsRelatedtoFirm (int $idFirm) : void
+    public function deleteContactsRelatedToFirm (int $idFirm) : void
     {
         $firm = $this->firmService->getOne($idFirm);
         //$this->contactDataService->deleteContactsRelatedtoFirm($firm);
@@ -186,11 +186,4 @@ class ContactService
 
         return $contact;
     }
-
-    public function delete(int $id) : void
-    {
-        $contact = $this->getOne($id);
-        $this->contactDataService->delete($contact);
-    }
-
 }
