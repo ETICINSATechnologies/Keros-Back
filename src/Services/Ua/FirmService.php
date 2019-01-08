@@ -3,6 +3,7 @@
 
 namespace Keros\Services\Ua;
 
+use Keros\DataServices\Ua\ContactDataService;
 use Keros\DataServices\Ua\FirmDataService;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Ua\Firm;
@@ -46,6 +47,15 @@ class FirmService
         $this->firmDataService->persist($firm);
 
         return $firm;
+    }
+
+    public function delete(int $id): void
+    {
+        $id = Validator::requiredId($id);
+        $firm = $this->getOne($id);
+        $address = $firm->getAddress();
+        $this->firmDataService->delete($firm);
+        $this->addressService->delete($address->getId());
     }
 
     public function getOne(int $id): Firm
