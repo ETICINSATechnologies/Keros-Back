@@ -54,6 +54,11 @@ class Contact implements JsonSerializable
     protected $old;
 
     /**
+    * @ManyToMany(targetEntity="Study", mappedBy="contacts")
+    */
+    protected $studies;
+
+    /**
      * @ManyToMany(targetEntity="Keros\Entities\Ua\Study", mappedBy="contacts")
      */
     protected $studiesAsContacts;
