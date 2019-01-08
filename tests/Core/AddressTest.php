@@ -2,7 +2,7 @@
 
 namespace KerosTest\Address;
 
-use Keros\Entities\core\Address;
+use Keros\Entities\Core\Address;
 use Keros\Entities\Core\Country;
 use PHPUnit\Framework\TestCase;
 

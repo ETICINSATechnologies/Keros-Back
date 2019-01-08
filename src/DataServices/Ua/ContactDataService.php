@@ -107,6 +107,7 @@ class ContactDataService
         }
         return $count;
     }
+  
     public function getAllStudies(Contact $contact): array
     {
         $studies = [];
