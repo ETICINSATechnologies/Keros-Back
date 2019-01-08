@@ -4,12 +4,14 @@ namespace Keros\Controllers\Ua;
 
 use Doctrine\ORM\EntityManager;
 use Keros\Entities\Core\Page;
+use Keros\Services\Core\MemberService;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Ua\Study;
 use Keros\Services\Ua\FieldService;
 use Keros\Services\Ua\ProvenanceService;
 use Keros\Services\Ua\StatusService;
 use Keros\Services\Ua\StudyService;
+use Keros\Tools\Validator;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -76,6 +78,17 @@ class StudyController
 
         $page = new Page($study, $params, $totalCount);
         return $response->withJson($page, 200);
+    }
+
+    public function getCurrentUserStudies(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Searching for studies related to current user from " . $request->getServerParams()["REMOTE_ADDR"]);
+        //$studies = $this->studyService->get
+        $body = $request->getParsedBody();
+        $member = $this->memberService->update($request->getAttribute("userId"), $body);
+
+
+        $studies = Validator::requiredArray([]);
     }
 
     public function createStudy(Request $request, Response $response, array $args)
