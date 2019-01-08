@@ -1,7 +1,12 @@
 <?php
 
 namespace Keros\Entities\Ua;
+
+use Doctrine\Common\Collections\ArrayCollection;
 use JsonSerializable;
+use Keros\Entities\Core\Gender;
+use Keros\Entities\Core\Position;
+use phpDocumentor\Reflection\Types\Array_;
 
 
 /**
@@ -54,6 +59,11 @@ class Contact implements JsonSerializable
     protected $old;
 
     /**
+     * @ManyToMany(targetEntity="Study", mappedBy="contacts")
+     */
+    protected $studies;
+
+    /**
      * Contact constructor.
      * @param $firstName
      * @param $lastName
@@ -70,6 +80,7 @@ class Contact implements JsonSerializable
         $this->firm = $firm;
         $this->email = $email;
         $this->old = $old;
+        $this->studies = new ArrayCollection();
     }
 
     public function jsonSerialize()
@@ -89,11 +100,13 @@ class Contact implements JsonSerializable
         ];
     }
 
-    public static function getSearchFields(): array {
+    public static function getSearchFields(): array
+    {
         return ['firstName', 'lastName', 'email'];
     }
 
     // Getters and setters
+
     /**
      * @return mixed
      */
@@ -137,7 +150,7 @@ class Contact implements JsonSerializable
     /**
      * @return mixed
      */
-    public function getGender()
+    public function getGender(): Gender
     {
         return $this->gender;
     }
@@ -153,7 +166,7 @@ class Contact implements JsonSerializable
     /**
      * @return mixed
      */
-    public function getFirm()
+    public function getFirm(): Firm
     {
         return $this->firm;
     }
@@ -260,5 +273,35 @@ class Contact implements JsonSerializable
     public function setOld($old): void
     {
         $this->old = $old;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStudies()
+    {
+        return $this->studies;
+    }
+
+    /**
+     * @param mixed $studies
+     */
+    public function setStudies($studies): void
+    {
+        $this->studies = $studies;
+    }
+
+    /**
+     * @return array
+     */
+    public function getStudiesArray()
+    {
+        $studies = [];
+        foreach ($this->getStudies() as $study)
+        {
+            $studies[] = $study;
+        }
+
+        return $studies;
     }
 }

@@ -54,7 +54,7 @@ class StudyService
      */
     private $statusService;
     /**
-     * @var
+     * @var ProvenanceService
      */
     private $provenanceService;
     /**
@@ -141,6 +141,13 @@ class StudyService
         $this->studyDataService->persist($study);
 
         return $study;
+    }
+
+    public function delete(int $id): void
+    {
+        $id = Validator::requiredId($id);
+        $study = $this->getOne($id);
+        $this->studyDataService->delete($study);
     }
 
     public function getOne(int $id): Study

@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Exception;
 use Keros\Entities\Core\RequestParameters;
+use Keros\Entities\Ua\Contact;
 use Keros\Entities\Ua\Study;
 use Keros\Error\KerosException;
 use Monolog\Logger;
@@ -47,6 +48,13 @@ class StudyDataService
         }
     }
 
+    public function delete(Study $study) : void
+    {
+
+        $this->entityManager->remove($study);
+        $this->entityManager->flush();
+    }
+
     public function getOne(int $id): ?Study
     {
         try {
@@ -82,4 +90,5 @@ class StudyDataService
         }
         return $count;
     }
+
 }

@@ -34,6 +34,13 @@ class ProvenanceDataService
         $this->repository = $this->entityManager->getRepository(Provenance::class);
     }
 
+    public function delete(Provenance $provenance) : void
+    {
+
+        $this->entityManager->remove($provenance);
+        $this->entityManager->flush();
+    }
+
     public function getOne(int $id): ?Provenance
     {
         try {

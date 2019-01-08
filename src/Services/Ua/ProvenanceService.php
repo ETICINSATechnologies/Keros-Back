@@ -21,6 +21,11 @@ class ProvenanceService
         $this->provenanceDataService = $container->get(ProvenanceDataService::class);
     }
 
+    public function delete(Provenance $provenance)
+    {
+        $this->provenanceDataService->delete($provenance);
+    }
+
     public function getOne(int $id): Provenance
     {
         $id = Validator::requiredId($id);

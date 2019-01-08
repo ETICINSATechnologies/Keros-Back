@@ -85,4 +85,15 @@ class FirmDataService
         }
         return $count;
     }
+
+    public function delete(Study $study)
+    {
+        try {
+            $this->entityManager->remove($study);
+        } catch (Exception $e) {
+            $msg = "Failed to delete study : " . $e->getMessage();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
+    }
 }

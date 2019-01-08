@@ -47,6 +47,18 @@ class ContactDataService
         }
     }
 
+    public function delete(Contact $contact): void
+    {
+        try {
+            $this->entityManager->remove($contact);
+            $this->entityManager->flush();
+        } catch (Exception $e) {
+            $msg = "Failed to delete contact : " . $e->getMessage();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
+    }
+
     public function getOne(int $id): ?Contact
     {
         try {
@@ -82,4 +94,16 @@ class ContactDataService
         }
         return $count;
     }
+
+    public function getAllStudies(Contact $contact): array
+    {
+        $studies = [];
+        foreach ($contact->getStudies() as $study)
+        {
+            $studies[] = $study;
+        }
+
+        return $studies;
+    }
+
 }

@@ -21,6 +21,11 @@ class FieldService
         $this->fieldDataService = $container->get(FieldDataService::class);
     }
 
+    public function delete(Field $field)
+    {
+        $this->fieldDataService->delete($field);
+    }
+
     public function getOne(int $id): Field
     {
         $id = Validator::requiredId($id);

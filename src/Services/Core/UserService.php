@@ -78,4 +78,14 @@ class UserService
 
         return $user;
     }
+
+    public function delete(int $id)
+    {
+        $id = Validator::requiredId($id);
+        $user = $this->getOne($id);
+
+        $this->userDataService->delete($user);
+    }
+
+
 }

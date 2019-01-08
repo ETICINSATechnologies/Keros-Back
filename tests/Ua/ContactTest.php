@@ -2,7 +2,9 @@
 
 namespace KerosTest\Contact;
 
+use Keros\Entities\Core\Gender;
 use Keros\Entities\ua\Contact;
+use Keros\Entities\Ua\Firm;
 use PHPUnit\Framework\TestCase;
 
 
@@ -17,7 +19,9 @@ class ContactTest extends TestCase
 
     public function testContactShouldCreateWithParams()
     {
-        $Contact = new Contact("Marah", "Tainturier", 1, 1,
+        $gender = new Gender("label");
+        $firm = new Firm("name", "siret", "address", null);
+        $Contact = new Contact("Marah", "Tainturier", $gender, $firm,
                                "marah.laurent@gmail.com",true);
 
         $this->assertInstanceOf(Contact::class, $Contact);

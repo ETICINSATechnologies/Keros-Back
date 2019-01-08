@@ -81,4 +81,15 @@ class ContactController
 
         return $response->withJson($contact, 200);
     }
+
+    public function deleteContact(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Deleting contact ");
+
+        $this->entityManager->beginTransaction();
+        $contact = $this->contactService->delete($args['id']);
+        $this->entityManager->commit();
+
+        return $response->withJson($contact, 204);
+    }
 }

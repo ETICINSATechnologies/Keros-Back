@@ -127,4 +127,18 @@ class ContactIntegrationTest extends AppTestCase
 
         $this->assertSame(400, $response->getStatusCode());
     }
+
+    public function testDeleteContactShouldReturn204()
+    {
+        $env = Environment::mock([
+        'REQUEST_METHOD' => 'DELETE',
+        'REQUEST_URI' => '/api/v1/ua/contact/1',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(204, $response->getStatusCode());
+
+    }
 }

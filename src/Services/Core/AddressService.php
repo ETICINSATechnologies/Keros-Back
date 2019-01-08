@@ -88,4 +88,12 @@ class AddressService
     }
 
 
+    public function delete(int $id)
+    {
+        $id = Validator::requiredId($id);
+        $address = $this->getOne($id);
+
+        $this->addressDataService->delete($address);
+    }
+
 }
