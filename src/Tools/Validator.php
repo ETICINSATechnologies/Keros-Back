@@ -3,6 +3,8 @@
 namespace Keros\Tools;
 
 use DateTime;
+use Keros\Entities\Ua\Contact;
+use Keros\Entities\Ua\Study;
 use Keros\Error\KerosException;
 use Keros\Entities\core\Member;
 
@@ -251,5 +253,23 @@ class Validator
             throw new KerosException("The member could not be found", 400);
         }
         return $member;
+    }
+
+    public static function requiredContact($contact) : Contact
+    {
+        if (!$contact) {
+            throw new KerosException("The contact could not be found", 400);
+        }
+
+        return $contact;
+    }
+
+    public static function requiredStudy($study) : Study
+    {
+        if (!$study) {
+            throw new KerosException("The study could not be found", 400);
+        }
+
+        return $study;
     }
 }

@@ -6,8 +6,11 @@ use Doctrine\ORM\EntityManager;
 use Keros\Entities\Core\Page;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Ua\Firm;
+use Keros\Entities\Ua\Study;
 use Keros\Services\Core\AddressService;
+use Keros\Services\Ua\ContactService;
 use Keros\Services\Ua\FirmService;
+use Keros\Services\Ua\StudyService;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -31,6 +34,14 @@ class FirmController
      * @var EntityManager
      */
     private $entityManager;
+    /**
+     * @var ContactService
+     */
+    private $contactService;
+    /**
+     * @var StudyService
+     */
+    private $studyService;
 
     public function __construct(ContainerInterface $container)
     {
@@ -38,6 +49,8 @@ class FirmController
         $this->entityManager = $container->get(EntityManager::class);
         $this->addressService = $container->get(AddressService::class);
         $this->firmService = $container->get(FirmService::class);
+        $this->contactService = $container->get(ContactService::class);
+        $this->studyService = $container->get(StudyService::class);
     }
 
     public function getFirm(Request $request, Response $response, array $args)
@@ -59,6 +72,19 @@ class FirmController
         $this->entityManager->commit();
 
         return $response->withJson($firm, 201);
+    }
+
+    public function deleteFirm(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Deleting firm from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $body = $request->getParsedBody();
+        $this->entityManager->beginTransaction();
+        $this->contactService->deleteContactsRelatedtoFirm($args['id']);
+        $this->studyService->deleteStudiesRelatedtoFirm($args['id']);
+        $this->firmService->delete($args['id']);
+        $this->entityManager->commit();
+
+        return $response->withStatus(204);
     }
 
     public function updateFirm(Request $request, Response $response, array $args)

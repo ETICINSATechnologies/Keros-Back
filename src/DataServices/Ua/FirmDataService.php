@@ -86,12 +86,13 @@ class FirmDataService
         return $count;
     }
 
-    public function delete(Study $study)
+    public function delete(Firm $firm)
     {
         try {
-            $this->entityManager->remove($study);
+            $this->entityManager->remove($firm);
+            $this->entityManager->flush();
         } catch (Exception $e) {
-            $msg = "Failed to delete study : " . $e->getMessage();
+            $msg = "Failed to delete firm : " . $e->getMessage();
             $this->logger->error($msg);
             throw new KerosException($msg, 500);
         }

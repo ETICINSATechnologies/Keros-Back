@@ -59,9 +59,14 @@ class Contact implements JsonSerializable
     protected $old;
 
     /**
-     * @ManyToMany(targetEntity="Study", mappedBy="contacts")
-     */
+    * @ManyToMany(targetEntity="Study", mappedBy="contacts")
+    */
     protected $studies;
+
+    /**
+     * @ManyToMany(targetEntity="Keros\Entities\Ua\Study", mappedBy="contacts")
+     */
+    protected $studiesAsContacts;
 
     /**
      * Contact constructor.
@@ -278,6 +283,25 @@ class Contact implements JsonSerializable
     /**
      * @return mixed
      */
+    public function getStudiesAsContacts()
+    {
+        $studies = [];
+        foreach ($this->studiesAsContacts as $study)
+        {
+            $studies[] = $study;
+        }
+
+        return $studies;
+    }
+
+    /**
+     * @param mixed $studiesAsQualityManager
+     */
+    public function setStudiesAsContacts($studiesAsContacts): void
+    {
+        $this->studiesAsContacts = $studiesAsContacts;
+    }
+
     public function getStudies()
     {
         return $this->studies;
@@ -297,8 +321,7 @@ class Contact implements JsonSerializable
     public function getStudiesArray()
     {
         $studies = [];
-        foreach ($this->getStudies() as $study)
-        {
+        foreach ($this->getStudies() as $study) {
             $studies[] = $study;
         }
 
