@@ -29,11 +29,11 @@ class TicketService
 
     public function create(array $fields): Ticket
     {
-        $userId = Validator::requiredString($fields["userId"]);
+        $userId = Validator::requiredId($fields["userId"]);
         $title = Validator::requiredString($fields["title"]);
         $message = Validator::requiredString($fields["message"]);
         $type = Validator::requiredString($fields["type"]);
-        $status = Validator::requiredId($fields["status"]);
+        $status = Validator::requiredString($fields["status"]);
 
         $user = $this->userService->getOne($userId);
 

@@ -23,7 +23,7 @@ class TicketIntegrationTest extends AppTestCase
         $body = json_decode($response->getBody());
         $this->assertEquals(1, count($body->content));
         $this->assertNotNull(strlen($body->content[0]->id));
-        $this->assertNotNull(strlen($body->content[0]->user));
+        $this->assertNotNull(strlen($body->content[0]->user->id));
         $this->assertNotNull(strlen($body->content[0]->title));
         $this->assertNotNull(strlen($body->content[0]->message));
         $this->assertNotNull(strlen($body->content[0]->type));
