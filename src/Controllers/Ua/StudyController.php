@@ -101,14 +101,14 @@ class StudyController
         $this->logger->debug("Searching for studies related to current user from " . $request->getServerParams()["REMOTE_ADDR"]);
         $member = $this->memberService->getOne($request->getAttribute("userId"));
         $studies = [];
-        if ($member->getStudiesAsConsultant()){
-            $studies = array_merge($studies, $member->getStudiesAsConsultant());
+        if (!empty($member->getStudiesAsConsultant())){
+            $studies = array_unique(array_merge($studies, $member->getStudiesAsConsultant()), SORT_REGULAR);
         }
-        if ($member->getStudiesAsLeader()){
-            $studies = array_merge($studies, $member->getStudiesAsLeader());
+        if (!empty($member->getStudiesAsLeader())){
+            $studies =  array_unique(array_merge($studies, $member->getStudiesAsLeader()), SORT_REGULAR);
         }
-        if ($member->getStudiesAsQualityManager()){
-            $studies = array_merge($studies, $member->getStudiesAsQualityManager());
+        if (!empty($member->getStudiesAsQualityManager())){
+            $studies = array_unique(array_merge($studies, $member->getStudiesAsQualityManager()), SORT_REGULAR);
         }
 
         return $response->withJson($studies, 200);
