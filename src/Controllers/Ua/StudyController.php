@@ -48,6 +48,11 @@ class StudyController
      */
     private $statusService;
 
+    /**
+     * @var MemberService
+     */
+    private $memberService;
+
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get(Logger::class);
@@ -56,6 +61,7 @@ class StudyController
         $this->provenanceService = $container->get(ProvenanceService::class);
         $this->fieldService = $container->get(FieldService::class);
         $this->statusService = $container->get(StatusService::class);
+        $this->memberService = $container->get(MemberService::class);
     }
 
     public function getStudy(Request $request, Response $response, array $args)
@@ -65,6 +71,15 @@ class StudyController
         $study = $this->studyService->getOne($args["id"]);
 
         return $response->withJson($study, 200);
+    }
+
+    public function getAllStudies(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Get studies " . $request->getServerParams()["REMOTE_ADDR"]);
+
+        $studies = $this->studyService->getAll();
+
+        return $response->withJson($studies, 200);
     }
 
     public function getPageStudy(Request $request, Response $response, array $args)
@@ -77,18 +92,26 @@ class StudyController
         $totalCount = $this->studyService->getCount($params);
 
         $page = new Page($study, $params, $totalCount);
+
         return $response->withJson($page, 200);
     }
 
     public function getCurrentUserStudies(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Searching for studies related to current user from " . $request->getServerParams()["REMOTE_ADDR"]);
-        //$studies = $this->studyService->get
-        $body = $request->getParsedBody();
-        $member = $this->memberService->update($request->getAttribute("userId"), $body);
+        $member = $this->memberService->getOne($request->getAttribute("userId"));
+        $studies = [];
+        if ($member->getStudiesAsConsultant()){
+            $studies = array_merge($studies, $member->getStudiesAsConsultant());
+        }
+        if ($member->getStudiesAsLeader()){
+            $studies = array_merge($studies, $member->getStudiesAsLeader());
+        }
+        if ($member->getStudiesAsQualityManager()){
+            $studies = array_merge($studies, $member->getStudiesAsQualityManager());
+        }
 
-
-        $studies = Validator::requiredArray([]);
+        return $response->withJson($studies, 200);
     }
 
     public function createStudy(Request $request, Response $response, array $args)

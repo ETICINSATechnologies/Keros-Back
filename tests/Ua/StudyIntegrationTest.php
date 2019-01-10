@@ -2,12 +2,58 @@
 
 namespace KerosTest\Ua;
 
+use Keros\Tools\Validator;
 use KerosTest\AppTestCase;
 use Slim\Http\Environment;
 use Slim\Http\Request;
 
 class StudyIntegrationTest extends AppTestCase
 {
+    public function testGetCurrentUserStudiesShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/ua/study/me',
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(200, $response->getStatusCode());
+        $bodies = json_decode($response->getBody());
+
+        $bodies = Validator::requiredArray($bodies);
+        foreach ($bodies as $body) {
+            $this->assertEquals("2", $body->id);
+            $this->assertEquals("12", $body->projectNumber);
+            $this->assertEquals("Tests d'acidité dans le Rhône", $body->name);
+            $this->assertEquals("Créateur de IDE", $body->description);
+            $this->assertEquals("1", $body->field->id);
+            $this->assertEquals("Web", $body->field->label);
+            $this->assertEquals("2", $body->status->id);
+            $this->assertEquals("En clôture", $body->status->label);
+            $this->assertEquals("1", $body->provenance->id);
+            $this->assertEquals("Site Web", $body->provenance->label);
+            $this->assertEquals("2018-11-10", $body->signDate);
+            $this->assertEquals("2", $body->firm->id);
+        }
+    }
+
+    /*public function testGetCurrentUserStudiesShouldReturn400()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/ua/study/me',
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(400, $response->getStatusCode());
+    }*/
+
     public function testDeleteStudyShouldReturn204 ()
     {
         $env = Environment::mock([
