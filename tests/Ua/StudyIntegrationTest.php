@@ -40,20 +40,6 @@ class StudyIntegrationTest extends AppTestCase
         }
     }
 
-    /*public function testGetCurrentUserStudiesShouldReturn400()
-    {
-        $env = Environment::mock([
-            'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/api/v1/ua/study/me',
-        ]);
-
-        $req = Request::createFromEnvironment($env);
-        $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(false);
-
-        $this->assertSame(400, $response->getStatusCode());
-    }*/
-
     public function testDeleteStudyShouldReturn204 ()
     {
         $env = Environment::mock([
