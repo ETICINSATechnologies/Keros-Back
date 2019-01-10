@@ -17,14 +17,14 @@ class TicketService
      */
     private $ticketDataService;
     /**
-     * @var UserService
+     * @var MemberService
      */
-    private $userService;
+    private $memberService;
 
     public function __construct(ContainerInterface $container)
     {
         $this->ticketDataService = $container->get(TicketDataService::class);
-        $this->userService = $container->get(UserService::class);
+        $this->memberService = $container->get(MemberService::class);
     }
 
     public function create(array $fields): Ticket
@@ -35,7 +35,7 @@ class TicketService
         $type = Validator::requiredString($fields["type"]);
         $status = Validator::requiredString($fields["status"]);
 
-        $user = $this->userService->getOne($userId);
+        $user = $this->memberService->getOne($userId);
 
         $ticket = new Ticket($user, $title, $message, $type, $status);
         $this->ticketDataService->persist($ticket);
@@ -65,7 +65,6 @@ class TicketService
         return $this->ticketDataService->getCount($requestParameters);
     }
 
-
     public function delete(int $id)
     {
         $id = Validator::requiredId($id);
@@ -73,5 +72,4 @@ class TicketService
 
         $this->ticketDataService->delete($ticket);
     }
-
 }

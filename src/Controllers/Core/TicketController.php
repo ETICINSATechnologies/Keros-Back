@@ -67,4 +67,15 @@ class TicketController
         $page = new Page($tickets, $params, $totalCount);
         return $response->withJson($page, 200);
     }
+
+    public function deleteTicket(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Deleting ticket from " . $request->getServerParams()["REMOTE_ADDR"]);
+
+        $this->entityManager->beginTransaction();
+        $this->ticketService->delete($args['id']);
+        $this->entityManager->commit();
+
+        return $response->withStatus(204);
+    }
 }

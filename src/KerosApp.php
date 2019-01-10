@@ -165,6 +165,7 @@ class KerosApp
                     $this->get("", TicketController::class . ':getPageTickets');
                     $this->get('/{id:[0-9]+}', TicketController::class . ':getTicket');
                     $this->post("", TicketController::class . ':createTicket');
+                    $this->delete("/{id:[0-9]+}", TicketController::class . ':deleteTicket');
                 });
             })->add($this->getContainer()->get(AuthenticationMiddleware::class));
         });

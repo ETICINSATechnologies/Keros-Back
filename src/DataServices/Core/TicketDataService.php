@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Exception;
+use Keros\Tools\Validator;
 use Keros\Entities\Core\Ticket;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Error\KerosException;
@@ -83,6 +84,18 @@ class TicketDataService
         return $count;
     }
 
+    public function getAll(): array
+    {
+        try {
+            $tickets = $this->repository->findAll();
+            return $tickets;
+        } catch (Exception $e) {
+            $msg = "Error finding page of ticket : " . $e->getMessage();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
+    }
+
     public function delete(Ticket $ticket): void
     {
         try {
@@ -92,6 +105,21 @@ class TicketDataService
             $msg = "Failed to delete ticket : " . $e->getMessage();
             $this->logger->error($msg);
             throw new KerosException($msg, 500);
+        }
+    }
+
+    public function deleteTicketsRelatedToMember(int $idMember)
+    {
+        $idMember = Validator::requiredId($idMember);
+        $tickets = $this->getAll();
+
+        foreach ($tickets as $ticket) {
+            $user = $ticket->getUser();
+            $userId = $user->getId();
+            $userId = Validator::requiredId($userId);
+            if ($userId == $idMember){
+                $this->delete($ticket);
+            }
         }
     }
 }

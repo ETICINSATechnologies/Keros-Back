@@ -89,7 +89,7 @@ CREATE TABLE `core_ticket` (
   `type`    VARCHAR(64) NOT NULL,
   `status`  VARCHAR(64) NOT NULL,
   PRIMARY KEY (`id`),
-  CONSTRAINT `core_ticket_userId_fk` FOREIGN KEY (`userId`) REFERENCES `core_user` (`id`)
+  CONSTRAINT `core_ticket_userId_fk` FOREIGN KEY (`userId`) REFERENCES `core_member` (`id`)
 )
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8;

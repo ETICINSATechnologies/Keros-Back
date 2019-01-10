@@ -3,6 +3,8 @@
 namespace Keros\Tools;
 
 use DateTime;
+use Keros\Entities\Core\Ticket;
+use Keros\Entities\Core\Member;
 use Keros\Error\KerosException;
 
 class Validator
