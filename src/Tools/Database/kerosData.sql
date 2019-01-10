@@ -17,6 +17,10 @@ INSERT INTO core_address (id, line1, line2, postalCode, city, countryId) VALUES
   (4, '11 Backbeat street', 'bat. a', '91004', 'djibouti', 3), # firm 1
   (5, '17 Watcha ave', 'porte 5', '674A4', 'Leicester', 40); # firm 2
 
+TRUNCATE TABLE core_ticket;
+INSERT INTO core_ticket (id, userId, title, message, type, status) VALUES
+  (1, 1, 'Impossible de changer son mot de passe', 'Bonjour, je narrive pas à changer mon mot de passe', 'Problème de compte', 'En cours'); # ticket 1
+
 TRUNCATE TABLE core_member;
 INSERT INTO core_member (id, genderId, firstName, lastName, birthday, telephone, email, addressId, schoolYear, departmentId) VALUES
   (1, 1, 'Conor', 'Breeze', STR_TO_DATE('1975-12-25', '%Y-%m-%d'), '+332541254', 'fake.mail@fake.com', 2, 3, 1),
