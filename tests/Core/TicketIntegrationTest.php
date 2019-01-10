@@ -44,7 +44,7 @@ class TicketIntegrationTest extends AppTestCase
 
         $body = json_decode($response->getBody());
         $this->assertSame(1, $body->id);
-        $this->assertSame(1, $body->user);
+        $this->assertSame(1, $body->user->id);
         $this->assertSame("Impossible de changer son mot de passe", $body->title);
         $this->assertSame("Bonjour, je narrive pas à changer mon mot de passe", $body->message);
         $this->assertSame("Problème de compte", $body->city);
