@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
 use JsonSerializable;
+use Keros\Entities\Core\Address;
 use Keros\Tools\Searchable;
 
 /**
@@ -105,7 +106,7 @@ class Firm implements JsonSerializable, Searchable
     /**
      * @return mixed
      */
-    public function getAddress()
+    public function getAddress() : Address
     {
         return $this->address;
     }
