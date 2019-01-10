@@ -47,7 +47,7 @@ class TicketIntegrationTest extends AppTestCase
         $this->assertSame(1, $body->user->id);
         $this->assertSame("Impossible de changer son mot de passe", $body->title);
         $this->assertSame("Bonjour, je narrive pas à changer mon mot de passe", $body->message);
-        $this->assertSame("Problème de compte", $body->city);
+        $this->assertSame("Problème de compte", $body->type);
         $this->assertSame("En cours", $body->status);
     }
 
