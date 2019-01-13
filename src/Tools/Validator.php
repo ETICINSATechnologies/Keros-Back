@@ -6,6 +6,7 @@ use DateTime;
 use Keros\Entities\Ua\Contact;
 use Keros\Entities\Ua\Study;
 use Keros\Error\KerosException;
+use Keros\Entities\core\Member;
 
 class Validator
 {
@@ -244,6 +245,14 @@ class Validator
             throw new KerosException("The provided array is not actually an array", 400);
         }
         return $array;
+    }
+
+    public static function requiredMember($member) : Member
+    {
+        if (!$member) {
+            throw new KerosException("The member could not be found", 400);
+        }
+        return $member;
     }
 
     public static function requiredContact($contact) : Contact
