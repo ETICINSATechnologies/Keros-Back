@@ -430,4 +430,34 @@ INSERT INTO `ua_field` (`id`, `label`) VALUES
   (12, 'Productique'),
   (13, 'Traduction');
 
+/*
+CREATE TABLE `core_template_type` (
+  `id` int(11) NOT NULL,
+  `label` varchar(64) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `core_template_type`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `core_template_type`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+
+CREATE TABLE `core_template` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `location` varchar(255) NOT NULL,
+  `typeId` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `core_template`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_template_template_type` (`typeId`);
+
+ALTER TABLE `core_template`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+ALTER TABLE `core_template`
+  ADD CONSTRAINT `fk_template_template_type` FOREIGN KEY (`typeId`) REFERENCES `core_template_type` (`id`);
+*/
 COMMIT;

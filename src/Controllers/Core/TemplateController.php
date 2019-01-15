@@ -5,6 +5,7 @@ namespace Keros\Controllers\Core;
 
 use Doctrine\ORM\EntityManager;
 use Keros\DataServices\Core\TemplateDataService;
+use Keros\Entities\Core\Gender;
 use Keros\Entities\Core\Member;
 use Keros\Entities\Ua\Contact;
 use Keros\Entities\Ua\Study;
@@ -58,6 +59,16 @@ class TemplateController
     private $memberService;
 
     /**
+     * @var
+     */
+    private $kerosConfig;
+
+    /**
+     * @var
+     */
+    private $backUrl;
+
+    /**
      * TemplateController constructor.
      * @param ContainerInterface $container
      */
@@ -68,8 +79,11 @@ class TemplateController
         $this->templateService = $container->get(TemplateService::class);
         $this->templateTypeService = $container->get(TemplateDataService::class);
         $this->studyService = $container->get(StudyService::class);
-        $this->temporaryDirectory = $container->get("temporaryDirectory");
         $this->memberService = $container->get(MemberService::class);
+        $this->kerosConfig = ConfigLoader::getConfig();
+        $this->temporaryDirectory = $this->kerosConfig['TEMPORARY_DIRECTORY'];
+        $this->backUrl = $this->kerosConfig['BACK_URL'];
+        $this->logger->info($this->kerosConfig['TEMPLATE_DIRECTORY']);
     }
 
     /**
@@ -106,7 +120,7 @@ class TemplateController
         // TODO valider la requete avant
         $uploadedFile = $request->getUploadedFiles()['file'];
         $body["extension"] = pathinfo($uploadedFile->getClientFileName(), PATHINFO_EXTENSION);
-        $body["typeId"] = intval($body["typeId"]);//TODO a supp, juste pour postman
+        //$body["typeId"] = intval($body["typeId"]);//TODO a supp, juste pour postman
 
         $this->entityManager->beginTransaction();
         $template = $this->templateService->create($body);
@@ -166,14 +180,14 @@ class TemplateController
         $study = $this->studyService->getOne($args["idStudy"]);
         $template = $this->templateService->getOne($args["idTemplate"]);
         $connectedUser = $this->memberService->getOne($request->getAttribute("userId"));
-        //TODO : add column in base in "core_template" to mark if it is for one consultant
         $templateWithOneConsultant = array('ARRM.docx', 'Avenant_Etudiant.docx', 'Demande_BV.docx', 'RM.docx');
+        //TODO : add column in base in "core_template" to mark if it is for one consultant
+
+        //Zip are done if one document per consultant is needed
         $doZip = count($study->getConsultantsArray()) > 1 && in_array($template->getName(), $templateWithOneConsultant);
 
-        $this->logger->info($doZip);
-
-        $this->logger->info(json_encode($doZip));
         if ($doZip) {
+            //generate file name until it doesn't not actually exist
             do {
                 $ziplocation = $this->temporaryDirectory . md5($template->getName() . microtime()) . '.zip';
             } while (file_exists($ziplocation));
@@ -184,29 +198,34 @@ class TemplateController
                 throw new KerosException($msg, 500);
             }
             $files[] = array();
+            //create document for each consultant
             foreach ($study->getConsultantsArray() as $consultant) {
                 $filename = $this->temporaryDirectory . pathinfo($template->getName(), PATHINFO_FILENAME) . '_' . $consultant->getId() . '.' . pathinfo($template->getLocation(), PATHINFO_EXTENSION);
                 $files[] = $filename;
+                //copy template
                 copy($template->getLocation(), $filename);
-                $return = false;
 
+                $return = false;
+                //open document and replace pattern
                 if (pathinfo($template->getLocation(), PATHINFO_EXTENSION) == 'docx')
-                    $return = $this->generateStudyDocx($filename, $study, $connectedUser, $consultant);
+                    $return = $this->generateStudyDocx($filename, $study, $connectedUser, array($consultant));
                 elseif (pathinfo($template->getLocation(), PATHINFO_EXTENSION) == 'pptx')
-                    $return = $this->generateStudyPptx($filename, $study, $connectedUser, $consultant);
+                    $return = $this->generateStudyPptx($filename, $study, $connectedUser, array($consultant));
                 if (!$return) {
                     $msg = "Error generating document with template " . $template->getId() . " and study " . $study->getId();
                     $this->logger->error($msg);
                     throw new KerosException($msg, 500);
                 }
-
+                //move file with replaced pattern in zip archive
                 $zip->addFile($filename, pathinfo($template->getName(), PATHINFO_FILENAME) . DIRECTORY_SEPARATOR . pathinfo($filename, PATHINFO_BASENAME));
             }
             $zip->close();
+            //delete every temporary file
             foreach ($files as $filename)
                 unlink($filename);
             $location = $ziplocation;
-        } else {
+
+        } else {//similar than if statement above
             do {
                 $location = $this->temporaryDirectory . md5($template->getName() . microtime()) . '.' . pathinfo($template->getLocation(), PATHINFO_EXTENSION);
             } while (file_exists($location));
@@ -243,6 +262,7 @@ class TemplateController
      */
     private function generateStudyDocx($location, $study, $connectedUser, $consultant): bool
     {
+        //docx are zip
         $zip = new \ZipArchive();
         $fileToModify = 'word/document.xml';
 
@@ -250,17 +270,12 @@ class TemplateController
         $replacementArray = $this->getReplacementArray($study, $connectedUser, $consultant);
 
         if ($zip->open($location) === TRUE) {
-            //Read contents into memory
             $oldContents = $zip->getFromName($fileToModify);
-
-            //Modify contents:
+            //replace pattern
             $newContents = str_replace($searchArray, $replacementArray, $oldContents);
 
-            //Delete the old...
             $zip->deleteName($fileToModify);
-            //Write the new...
             $zip->addFromString($fileToModify, $newContents);
-            //And write back to the filesystem.
             $return = $zip->close();
             return $return;
         } else {
@@ -278,27 +293,21 @@ class TemplateController
      */
     private function generateStudyPptx($location, $study, $connectedUser, $consultant): bool
     {
+        //pptx are zip. Same things like docx, just multiple xml to parse
         $zip = new \ZipArchive();
-
         $searchArray = $this->getSearchArray();
         $replacementArray = $this->getReplacementArray($study, $connectedUser, $consultant);
 
-
         if (true === $zip->open($location)) {
-            $slide_number = 1; //loop through slide files
+            $slide_number = 1;
             while (($zip->locateName("ppt/slides/slide" . $slide_number . ".xml")) !== false) {
-
-
                 $fileToModify = "ppt/slides/slide" . $slide_number . ".xml";
                 $oldContents = $zip->getFromName("ppt/slides/slide" . $slide_number . ".xml");
 
-
                 $newContents = str_replace($searchArray, $replacementArray, $oldContents);
-
 
                 $zip->deleteName($fileToModify);
                 $zip->addFromString($fileToModify, $newContents);
-
 
                 $slide_number++;
             }
@@ -308,6 +317,7 @@ class TemplateController
     }
 
     /**
+     * To add pattern, add here and in :getReplacementArray AT THE SAME INDEX
      * @return array
      */
     private function getSearchArray(): array
@@ -331,44 +341,41 @@ class TemplateController
             '${CIVILITEINTERVENANT}',
             '${PRENOMINTERVENANT}',
             '${NOMINTERVENANT}',
+            '${MAILINTERVENANT}',
             '${ADRESSEINTERVENANT}',
             '${CPINTERVENANT}',
             '${VILLEINTERVENANT}',
             '${NOMUSER}',
             '${PRENOMUSER}',
-            '${CIVILITEUSER}'
+            '${CIVILITEUSER}',
+            '${IDENTITECONTACT}',
+            '${IDENTITEINTERVENANT}',
+            '${INDENTITEUSER}',
+            '${DATEFIN}'
         );
     }
 
     /**
+     * To add replacement, add here and in :getSearchArray AT THE SAME INDEX
      * @param Study $study
      * @param Member $connectedUser
-     * @param Member $consultant
+     * @param Member[] $consultants
      * @return array
      * @throws \Exception
      */
-    private function getReplacementArray(Study $study, Member $connectedUser, ?Member $consultant): array
+    private function getReplacementArray(Study $study, Member $connectedUser, array $consultants): array
     {
         $contact = $study->getContacts()[0];
         $date = new DateTime();
-        /* $consultantsNum = '';
-         $consultantsFullAddress = '';
-         $consultantsFullName = '';
-         foreach ($study->getConsultantsArray() as $consultant) {
-             $consultantsNum .= $consultant->getId() . " ";
-             if ($consultant->getGender()->getLabel() == 'H')
-                 $consultantsFullName .= 'M. ';
-             elseif ($consultant->getGender()->getLabel() == 'F')
-                 $consultantsFullName .= 'Mme ';
-             else
-                 $consultantsFullName .= '';
-             $consultantsFullName .= $consultant->getFirstName() . " ";
-             $consultantsFullName .= $consultant->getLastName() . ", ";
-             $consultantsFullAddress .= $consultant->getAddress()->getLine1() . " " . $consultant->getAddress()->getLine2() . " ";
-             $consultantsFullAddress .= $consultant->getAddress()->getPostalCode() . " ";
-             $consultantsFullAddress .= $consultant->getAddress()->getCity() . ", ";
-         }*/
 
+        $consultantsIdentity = '';
+        $nbConsultant = 0;
+        //loop to have multiple consultant identity correctly
+        foreach ($study->getConsultantsArray() as $consultant) {
+            $consultantsIdentity .= $this->getStringGender($consultant->getGender()) . ' ' . $consultant->getLastName() . ' ' . $consultant->getFirstName();
+            if (++$nbConsultant !== count($study->getConsultantsArray()))
+                $consultantsIdentity .= ', ';
+        }
         return array(
             $study->getFirm()->getName(),
             $study->getName(),
@@ -379,21 +386,39 @@ class TemplateController
             $study->getDescription(),
             $study->getSignDate()->format('d/m/Y'),
             $contact->getPosition(),
-            $contact->getGender()->getLabel() == 'H' ? "Monsieur" : ($contact->getGender()->getLabel() == 'F' ? "Madame" : ''),
+            $this->getStringGender($contact->getGender()),
             $contact->getFirstName(),
             $contact->getLastName(),
             $contact->getEmail(),
             $date->format('d/m/Y'),
-            ($consultant != null) ? $consultant->getId() : '',
-            ($consultant != null) ? ($consultant->getGender()->getLabel() == 'H' ? "Monsieur" : ($consultant->getGender()->getLabel() == 'F' ? "Madame" : '')) : '',
-            ($consultant != null) ? $consultant->getFirstName() : '',
-            ($consultant != null) ? $consultant->getLastName() : '',
-            ($consultant != null) ? $consultant->getAddress()->getLine1() . ' ' . $consultant->getAddress()->getLine2() : '',
-            ($consultant != null) ? $consultant->getAddress()->getPostalCode() : '',
-            ($consultant != null) ? $consultant->getAddress()->getCity() : '',
+            $consultants[0]->getId(),
+            $this->getStringGender($consultants[0]->getGender()),
+            $consultants[0]->getFirstName(),
+            $consultants[0]->getLastName(),
+            $consultants[0]->getEmail(),
+            $consultants[0]->getAddress()->getLine1() . ' ' . $consultants[0]->getAddress()->getLine2(),
+            $consultants[0]->getAddress()->getPostalCode(),
+            $consultants[0]->getAddress()->getCity(),
             $connectedUser->getLastName(),
             $connectedUser->getFirstName(),
-            $connectedUser->getGender()->getLabel() == 'H' ? "Monsieur" : ($connectedUser->getGender()->getLabel() == 'F' ? "Madame" : '')
+            $this->getStringGender($connectedUser->getGender()),
+            $this->getStringGender($contact->getGender()) . ' ' . $contact->getLastName() . ' ' . $contact->getFirstName(),
+            $consultantsIdentity,
+            $this->getStringGender($connectedUser->getGender()) . ' ' . $connectedUser->getLastName() . ' ' . $connectedUser->getFirstName(),
+            $study->getArchivedDate()->format('d/m/Y')
         );
+    }
+
+    /**
+     * @param Gender $gender
+     * @return string
+     */
+    private function getStringGender(Gender $gender): string
+    {
+        if ($gender->getLabel() == 'H')
+            return 'Monsieur';
+        elseif ($gender->getLabel() == 'F')
+            return 'Madame';
+        return '';
     }
 }

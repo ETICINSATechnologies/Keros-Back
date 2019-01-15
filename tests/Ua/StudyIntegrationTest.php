@@ -53,7 +53,19 @@ class StudyIntegrationTest extends AppTestCase
         $this->assertEquals(2, count($body->documents));
         $this->assertSame(1, $body->documents[0]->id);
         $this->assertSame('testGet', $body->documents[0]->name);
-        //$this->assertSame('http://keros-api-dev.etic-insa.com/api/v1/ua/study/2/template/1', $body->documents[0]->generateLocation);
+        $this->assertSame('http://keros-api-dev.etic-insa.com/api/v1/ua/study/2/template/1', $body->documents[0]->generateLocation);
+    }
+
+    public function testGetAllDocumentsShouldReturn500(){
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/ua/study/1/documents',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(500, $response->getStatusCode());
     }
 
     public function testDeleteStudyShouldReturn204 ()

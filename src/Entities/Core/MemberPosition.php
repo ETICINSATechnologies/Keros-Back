@@ -68,7 +68,7 @@ class MemberPosition implements JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return Position
      */
     public function getPosition()
     {
