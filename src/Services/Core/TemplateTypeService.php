@@ -36,7 +36,7 @@ class TemplateTypeService
         $id = Validator::requiredId($id);
         $templateType = $this->templateTypeDataService->getOne($id);
         if (!$templateType) {
-            throw new KerosException("The FirmType could not be found", 404);
+            throw new KerosException("The TemplateType could not be found", 404);
         }
         return $templateType;
     }

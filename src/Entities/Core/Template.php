@@ -42,7 +42,7 @@ class Template implements JsonSerializable
     public function __construct($id, $nom, $location, $typeId)
     {
         $this->id = $id;
-        $this->nom = $nom;
+        $this->name = $nom;
         $this->location = $location;
         $this->type = $typeId;
     }
