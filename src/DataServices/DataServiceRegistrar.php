@@ -12,6 +12,8 @@ use Keros\DataServices\Core\MemberDataService;
 use Keros\DataServices\Core\MemberPositionDataService;
 use Keros\DataServices\Core\PoleDataService;
 use Keros\DataServices\Core\PositionDataService;
+use Keros\DataServices\Core\TemplateDataService;
+use Keros\DataServices\Core\TemplateTypeDataService;
 use Keros\DataServices\Core\UserDataService;
 use Keros\DataServices\Ua\ContactDataService;
 use Keros\DataServices\Ua\FirmTypeDataService;
@@ -56,6 +58,12 @@ class DataServiceRegistrar
         };
         $container[MemberPositionDataService::class] = function ($container) {
             return new MemberPositionDataService($container);
+        };
+        $container[TemplateDataService::class] = function ($container) {
+            return new TemplateDataService($container);
+        };
+        $container[TemplateTypeDataService::class] = function ($container) {
+            return new TemplateTypeDataService($container);
         };
 
         //UA

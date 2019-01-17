@@ -2,6 +2,7 @@
 
 namespace Keros\Controllers\Core;
 
+use Doctrine\ORM\EntityManager;
 use Keros\Services\Core\TemplateTypeService;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
@@ -15,15 +16,22 @@ class TemplateTypeController
      * @var TemplateTypeService
      */
     private $templateTypeService;
+
     /**
      * @var Logger
      */
     private $logger;
 
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
+
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get(Logger::class);
         $this->templateTypeService = $container->get(TemplateTypeService::class);
+        $this->entityManager = $container->get(EntityManager::class);
     }
 
     public function getTemplateType(Request $request, Response $response, array $args)

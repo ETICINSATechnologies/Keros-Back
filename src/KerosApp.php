@@ -11,6 +11,8 @@ use Keros\Controllers\Core\GenderController;
 use Keros\Controllers\Core\MemberController;
 use Keros\Controllers\Core\PoleController;
 use Keros\Controllers\Core\PositionController;
+use Keros\Controllers\Core\TemplateController;
+use Keros\Controllers\Core\TemplateTypeController;
 use Keros\Controllers\Ua\ContactController;
 use Keros\Controllers\Ua\FirmController;
 use Keros\Controllers\Ua\FirmTypeController;
@@ -164,6 +166,19 @@ class KerosApp
                     $this->post("", TicketController::class . ':createTicket');
                     $this->delete("/{id:[0-9]+}", TicketController::class . ':deleteTicket');
                 });
+
+                $this->group('/template-type', function () {
+                    $this->get("", TemplateTypeController::class . ':getAllTemplateType');
+                    $this->get('/{id:[0-9]+}', TemplateTypeController::class . ':getTemplateType');
+                });
+
+                $this->group('/template', function () {
+                    $this->post("", TemplateController::class . ':createTemplate');
+                    //$this->get("", TemplateController::class . ':getAllTemplate');
+                    $this->get('/{id:[0-9]+}', TemplateController::class . ':getTemplate');
+                    $this->delete("/{id:[0-9]+}", TemplateController::class . ':deleteTemplate');
+                });
+
             })->add($this->getContainer()->get(AuthenticationMiddleware::class));
         });
 

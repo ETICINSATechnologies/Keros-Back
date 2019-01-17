@@ -47,10 +47,11 @@ class TemplateService
     public function create(array $fields): Template
     {
         $name = Validator::requiredString($fields["name"]);
+        $location = Validator::requiredString($fields["location"]);
         $typeId = Validator::requiredId($fields["typeId"]);
 
         $templateType = $this->templateTypeService->getOne($typeId);
-        $template = new Template($name, $siret, $address, $templateType);
+        $template = new Template($name, $location, $templateType);
 
         $this->templateDataService->persist($template);
 

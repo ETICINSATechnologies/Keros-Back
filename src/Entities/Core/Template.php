@@ -10,6 +10,10 @@ namespace Keros\Entities\Core;
 
 use JsonSerializable;
 
+/**
+ * @Entity
+ * @Table(name="core_template")
+ */
 class Template implements JsonSerializable
 {
 
@@ -20,31 +24,29 @@ class Template implements JsonSerializable
      */
     protected $id;
 
-    /** @Column(type="string", length=64) */
+    /** @Column(type="string", length=255) */
     protected $name;
 
-    /** @Column(type="string", length=64) */
+    /** @Column(type="string", length=255) */
     protected $location;
 
     /**
      * @ManyToOne(targetEntity="TemplateType")
      * @JoinColumn(name="typeId", referencedColumnName="id")
      **/
-    protected $type;
+    protected $typeId;
 
     /**
      * Template constructor.
-     * @param $id
-     * @param $nom
+     * @param $name
      * @param $location
      * @param $typeId
      */
-    public function __construct($id, $nom, $location, $typeId)
+    public function __construct($name, $location, $typeId)
     {
-        $this->id = $id;
-        $this->name = $nom;
+        $this->name = $name;
         $this->location = $location;
-        $this->type = $typeId;
+        $this->typeId = $typeId;
     }
 
     public function jsonSerialize()
@@ -53,7 +55,7 @@ class Template implements JsonSerializable
             'id' => $this->getId(),
             'name' => $this->getName(),
             'location' => $this->getLocation(),
-            'type' => $this->getType(),
+            'typeId' => $this->getTypeId(),
         ];
     }
 
@@ -108,17 +110,17 @@ class Template implements JsonSerializable
     /**
      * @return mixed
      */
-    public function getType()
+    public function getTypeId()
     {
-        return $this->type;
+        return $this->typeId;
     }
 
     /**
-     * @param mixed $type
+     * @param mixed $typeId
      */
-    public function setType($type): void
+    public function setTypeId($typeId): void
     {
-        $this->type = $type;
+        $this->typeId = $typeId;
     }
 
 

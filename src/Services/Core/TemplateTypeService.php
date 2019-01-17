@@ -2,7 +2,6 @@
 
 namespace Keros\Services\Core;
 
-
 use Keros\DataServices\Core\TemplateTypeDataService;
 use Keros\Entities\Core\TemplateType;
 use Keros\Error\KerosException;
