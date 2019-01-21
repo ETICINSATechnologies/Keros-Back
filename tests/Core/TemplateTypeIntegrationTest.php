@@ -13,6 +13,7 @@ class TemplateTypeIntegrationTest extends AppTestCase
      * @throws \Slim\Exception\MethodNotAllowedException
      * @throws \Slim\Exception\NotFoundException
      */
+
     public function testGetAllTemplateTypeShouldReturn200()
     {
         $env = Environment::mock([
@@ -32,6 +33,7 @@ class TemplateTypeIntegrationTest extends AppTestCase
      * @throws \Slim\Exception\MethodNotAllowedException
      * @throws \Slim\Exception\NotFoundException
      */
+
     public function testGetTemplateTypeShouldReturn404()
     {
         $env = Environment::mock([
@@ -49,6 +51,7 @@ class TemplateTypeIntegrationTest extends AppTestCase
      * @throws \Slim\Exception\MethodNotAllowedException
      * @throws \Slim\Exception\NotFoundException
      */
+
     public function testGetTemplateTypeShouldReturn200()
     {
         $env = Environment::mock([

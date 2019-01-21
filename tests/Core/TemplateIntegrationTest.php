@@ -12,7 +12,7 @@ class TemplateIntegrationTest extends AppTestCase
      * @throws \Slim\Exception\MethodNotAllowedException
      * @throws \Slim\Exception\NotFoundException
      */
-    public function testPostTemplateShouldReturn201()
+   /* public function testPostTemplateShouldReturn201()
     {
         $post_body = array(
             "name" => "testInsert",
@@ -31,7 +31,7 @@ class TemplateIntegrationTest extends AppTestCase
         $body = json_decode($response->getBody());
         $this->assertSame("testInsert", $body->name);
     }
-
+*/
     public function testGetTemplateShouldReturn200()
     {
         $env = Environment::mock([

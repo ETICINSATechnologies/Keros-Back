@@ -14,6 +14,8 @@ use Keros\Entities\Core\Template;
 use Keros\Error\KerosException;
 use Keros\Tools\Validator;
 use Psr\Container\ContainerInterface;
+use DateTime;
+use Exception;
 
 class TemplateService
 {
@@ -28,6 +30,11 @@ class TemplateService
     private $templateTypeService;
 
     /**
+     * @var string
+     */
+    private $templateDirectory;
+
+    /**
      * TemplateService constructor.
      * @param ContainerInterface $container
      */
@@ -35,22 +42,27 @@ class TemplateService
     {
         $this->templateDataService = $container->get(TemplateDataService::class);
         $this->templateTypeService = $container->get(TemplateTypeService::class);
+        $this->templateDirectory = $container->get("templateDirectory");
     }
 
     /**
      * @param array $fields
      * @return Template
+     * @throws KerosException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Keros\Error\KerosException
+     * @throws Exception
      */
     public function create(array $fields): Template
     {
         $name = Validator::requiredString($fields["name"]);
-        $location = Validator::requiredString($fields["location"]);
-        $typeId = Validator::requiredId($fields["typeId"]);
+        //$typeId = Validator::requiredId($fields["typeId"]); //TODO
+        $extension = Validator::requiredString($fields["extension"]);
 
-        $templateType = $this->templateTypeService->getOne($typeId);
+        $date = new DateTime();
+        $location = $this->templateDirectory . $date->format('d-m-Y_H:i:s:u') . '.' . $extension;
+
+        $templateType = $this->templateTypeService->getOne(1); //TODO $typeId
         $template = new Template($name, $location, $templateType);
 
         $this->templateDataService->persist($template);
@@ -91,7 +103,8 @@ class TemplateService
      * @return array
      * @throws KerosException
      */
-    public function getAll() : array{
+    public function getAll(): array
+    {
         return $this->templateDataService->getAll();
     }
 }
