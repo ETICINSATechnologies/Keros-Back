@@ -106,6 +106,8 @@ DROP TABLE IF EXISTS core_member_position;
 CREATE TABLE `core_member_position` (
   `memberId`   int(11) NOT NULL,
   `positionId` int(11) NOT NULL,
+  `year` int(4) NOT NULL,
+  `isBoard` tinyint(4) NOT NULL,
   PRIMARY KEY (`memberId`, `positionId`),
   CONSTRAINT `core_member_position_memberId_fk` FOREIGN KEY (`memberId`) REFERENCES `core_member` (`id`),
   CONSTRAINT `core_position_position_positionId_fk` FOREIGN KEY (`positionId`) REFERENCES `core_position` (`id`)
@@ -202,6 +204,7 @@ CREATE TABLE `ua_study` (
   `outsourcingFee` decimal(12,2),
   `archivedDate` date,
   `firmId`      int(11)      NOT NULL,
+  `confidential` boolean not null,
   PRIMARY KEY (`id`),
   CONSTRAINT `ua_study_fieldId_fk` FOREIGN KEY (`fieldId`) REFERENCES `ua_field` (`id`),
   CONSTRAINT `ua_study_provenanceId_fk` FOREIGN KEY (`provenanceId`) REFERENCES `ua_provenance` (`id`),

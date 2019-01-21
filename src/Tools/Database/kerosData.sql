@@ -24,12 +24,12 @@ INSERT INTO core_member (id, genderId, firstName, lastName, birthday, telephone,
   (3, 1, 'Laurence', 'Teinturière', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.mail3@fake.com', 3, 5, 2);
 
 TRUNCATE TABLE core_member_position;
-INSERT INTO core_member_position (memberId, positionId) VALUES
-  (1, 3),
-  (2, 3),
-  (3, 1),
-  (3, 2),
-  (3, 3);
+INSERT INTO core_member_position (memberId, positionId, year, isBoard) VALUES
+  (1, 3, 2018, 0),
+  (2, 3, 2018, 0),
+  (3, 1, 2018, 1),
+  (3, 2, 2017, 0),
+  (3, 3, 2017, 0);
 
 TRUNCATE TABLE ua_firm;
 INSERT INTO ua_firm (id, siret, name, addressId, typeId) VALUES
@@ -44,9 +44,9 @@ INSERT INTO `ua_contact` (`id`, `firstName`, `lastName`, `genderId`, `firmId`, `
   (4, 'Marah', 'Galy Adam', 1, 1, 'marah.galy@etic-insa.com', '0033646786532', NULL, NULL, NULL, 0);
 
 TRUNCATE TABLE ua_study;
-INSERT INTO `ua_study` (`id`, `projectNumber`, `name`, `description`, `fieldId`, `provenanceId`, `statusId`, `signDate`, `endDate`, `managementFee`, `realizationFee`, `rebilledFee`, `ecoparticipationFee`, `outsourcingFee`, `archivedDate`, `firmId`) VALUES
-  (1, 12, 'Développement IDE', 'Développement d\'un IDE pour utilisation interne', 1, 1, 2, '2018-11-10', '2018-11-10', 12000000, 123, 12345, 12, 12324454, '2018-11-10', 1),
-  (2, 12, 'Tests d\'acidité dans le Rhône', 'Créateur de IDE', 1, 1, 2, '2018-11-10', '2018-11-10', 12000000, 123, 12345, 12, 12324454, '2018-11-10', 2);
+INSERT INTO `ua_study` (`id`, `projectNumber`, `name`, `description`, `fieldId`, `provenanceId`, `statusId`, `signDate`, `endDate`, `managementFee`, `realizationFee`, `rebilledFee`, `ecoparticipationFee`, `outsourcingFee`, `archivedDate`, `firmId`, `confidential`) VALUES
+  (1, 12, 'Développement IDE', 'Développement d\'un IDE pour utilisation interne', 1, 1, 2, '2018-11-10', '2018-11-10', 12000000, 123, 12345, 12, 12324454, '2018-11-10', 1, true),
+  (2, 12, 'Tests d\'acidité dans le Rhône', 'Créateur de IDE', 1, 1, 2, '2018-11-10', '2018-11-10', 12000000, 123, 12345, 12, 12324454, '2018-11-10', 2, false);
 
 TRUNCATE TABLE ua_study_consultant;
 INSERT INTO `ua_study_consultant` (`memberId`, `studyId`) VALUES

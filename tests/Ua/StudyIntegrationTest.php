@@ -137,6 +137,7 @@ class StudyIntegrationTest extends AppTestCase
             "leaderIds"=>array(),
             "consultantIds"=>array(),
             "qualityManagerIds"=>array(),
+            "confidential"=>true,
 
         );
         $env = Environment::mock([
@@ -169,6 +170,7 @@ class StudyIntegrationTest extends AppTestCase
             "leaderIds"=>array(),
             "consultantIds"=>array(),
             "qualityManagerIds"=>array(),
+            "confidential"=>true,
         );
         $env = Environment::mock([
             'REQUEST_METHOD' => 'PUT',

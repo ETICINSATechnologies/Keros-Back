@@ -127,7 +127,9 @@ class StudyService
             $provenance = $this->provenanceService->getOne($provenanceId);
         }
 
-        $study = new Study($projectNumber, $name, $description, $field, $status, $firm, $contacts, $leaders, $consultants, $qualityManagers);
+        $confidential = $fields["confidential"];
+
+        $study = new Study($projectNumber, $name, $description, $field, $status, $firm, $contacts, $leaders, $consultants, $qualityManagers, $confidential);
         $study->setProvenance($provenance);
         $study->setSignDate($signDate);
         $study->setEndDate($endDate);
@@ -137,6 +139,7 @@ class StudyService
         $study->setEcoparticipationFee($ecoparticipationFee);
         $study->setOutsourcingFee($outsourcingFee);
         $study->setArchivedDate($archivedDate);
+        $study->setConfidential($confidential);
 
         $this->studyDataService->persist($study);
 
@@ -236,6 +239,8 @@ class StudyService
             $provenance = $this->provenanceService->getOne($provenanceId);
         }
 
+        $confidential = $fields["confidential"];
+
         $study->setProjectNumber($projectNumber);
         $study->setName($name);
         $study->setDescription($description);
@@ -255,6 +260,7 @@ class StudyService
         $study->setEcoparticipationFee($ecoparticipationFee);
         $study->setOutsourcingFee($outsourcingFee);
         $study->setArchivedDate($archivedDate);
+        $study->setConfidential($confidential);
 
 
         $this->studyDataService->persist($study);

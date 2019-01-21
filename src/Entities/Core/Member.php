@@ -109,7 +109,7 @@ class Member implements JsonSerializable
     }
 
     public static function getSearchFields(): array {
-        return ['username', 'firstName', 'lastName', 'email'];
+        return ['firstName', 'lastName', 'email'];
     }
 
     // Getters and setters
