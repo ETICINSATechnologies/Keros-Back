@@ -5,6 +5,7 @@ namespace Keros\Services\Core;
 
 use Keros\DataServices\Core\MemberDataService;
 use Keros\Entities\Core\Member;
+use Keros\Entities\Core\MemberPosition;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Error\KerosException;
 use Keros\Tools\Validator;
@@ -37,6 +38,10 @@ class MemberService
      * @var MemberDataService
      */
     private $memberDataService;
+    /**
+     * @var MemberPositionService
+     */
+    private $memberPositionService;
     /**
      * @var Logger
      */
@@ -180,6 +185,19 @@ class MemberService
         $this->memberDataService->delete($member);
         $this->userService->delete($id);
         $this->addressService->delete($address->getId());
+    }
+
+    public function getLatestBoard() : array
+    {
+        $membersPositions = $this-> memberPositionService->getAll();
+        $boardMembers = array();
+
+        foreach ($membersPositions as $membersPosition) {
+            if ($membersPosition->getYear == date('Y') and $membersPosition->getIsBoard == true) {
+                $boardMembers = $membersPosition;
+            }
+        }
+        return $boardMembers;
     }
 
 }

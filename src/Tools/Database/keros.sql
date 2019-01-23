@@ -106,6 +106,8 @@ DROP TABLE IF EXISTS core_member_position;
 CREATE TABLE `core_member_position` (
   `memberId`   int(11) NOT NULL,
   `positionId` int(11) NOT NULL,
+  'isBoard' BOOLEAN,
+  'year' int(11),
   PRIMARY KEY (`memberId`, `positionId`),
   CONSTRAINT `core_member_position_memberId_fk` FOREIGN KEY (`memberId`) REFERENCES `core_member` (`id`),
   CONSTRAINT `core_position_position_positionId_fk` FOREIGN KEY (`positionId`) REFERENCES `core_position` (`id`)

@@ -154,6 +154,7 @@ class KerosApp
                     $this->post("", MemberController::class . ':createMember');
                     $this->put("/{id:[0-9]+}", MemberController::class . ':updateMember');
                     $this->delete("/{id:[0-9]+}", MemberController::class . ':deleteMember');
+                    $this->get("/board/latest", MemberController::class . ':getLatestBoard');
                 });
             })->add($this->getContainer()->get(AuthenticationMiddleware::class));
         });
