@@ -6,6 +6,7 @@ namespace Keros\Controllers\Core;
 use Doctrine\ORM\EntityManager;
 use Keros\DataServices\Core\TemplateDataService;
 use Keros\Entities\Ua\Study;
+use Keros\Error\KerosException;
 use Keros\Services\Core\TemplateService;
 use Keros\Services\Ua\StudyService;
 use Monolog\Logger;
@@ -97,6 +98,7 @@ class TemplateController
 
         $this->entityManager->beginTransaction();
         $template = $this->templateService->create($body);
+        mkdir(pathinfo($template->getLocation(), PATHINFO_DIRNAME), 0777, true);
         $uploadedFile->moveTo($template->getLocation());
         $this->entityManager->commit();
 
@@ -122,86 +124,6 @@ class TemplateController
         return $response->withStatus(204);
     }
 
-    //https://stackoverflow.com/questions/41296206/read-and-replace-contents-in-docx-word-file//TODO a garder
-
-    /**
-     * @param Request $request
-     * @param Response $response
-     * @param array $args
-     * @return Response
-     * @throws \Keros\Error\KerosException
-     * @throws \Exception
-     */
-    public function generateDocument(Request $request, Response $response, array $args)
-    {
-        $this->logger->debug("Generating document from template from " . $request->getServerParams()["REMOTE_ADDR"]);
-        $study = $this->studyService->getOne($args["idStudy"]);
-        $template = $this->templateService->getOne($args["idTemplate"]);
-
-        $date = new DateTime();
-        $location = $this->temporaryDirectory . $date->format('d-m-Y_H:i:s:u') . '.' . pathinfo($template->getLocation(), PATHINFO_EXTENSION);
-
-        copy($template->getLocation(), $location);
-
-        $searchArray = array(
-            '${NOMENTREPRISE}',
-            '${TITREETUDE}',
-            '${ADRESSEENTREPRISE}',
-            '${CPENTREPRISE}',
-            '${VILLEENTREPRISE}',
-            '${SIRETENTREPRISE}',
-            '${DESCRIPTIONETUDE}',
-            '${DATESIGCV}',
-        );
-        $replacementArray = array(
-            $study->getFirm()->getName(),
-            $study->getName(),
-            $study->getFirm()->getAddress()->getLine1() . ", " . $study->getFirm()->getAddress()->getLine2(),
-            $study->getFirm()->getAddress()->getPostalCode(),
-            $study->getFirm()->getAddress()->getCity(),
-            $study->getFirm()->getSiret(),
-            $study->getDescription(),
-            $study->getSignDate()->format('d/m/Y'),
-        );
-
-        //-----
-        $zip = new \ZipArchive();
-
-        //This is the main document in a .docx file.
-        $fileToModify = 'word/document.xml';
-
-        //$file = 'template.docx';//public_path
-
-        if ($zip->open($location) === TRUE) {
-            //Read contents into memory
-            $oldContents = $zip->getFromName($fileToModify);
-
-            //echo $oldContents;
-
-            //Modify contents:
-            $newContents = str_replace($searchArray, $replacementArray, $oldContents);
-
-            //Delete the old...
-            $zip->deleteName($fileToModify);
-            //Write the new...
-            $zip->addFromString($fileToModify, $newContents);
-            //And write back to the filesystem.
-            $return = $zip->close();
-            If ($return == TRUE) {
-                echo "Success!";
-            }
-        } else {
-            echo 'failed';
-        }
-        //-----
-
-
-        //$newLines = str_replace($searchArray, $replacementArray, $lines);
-        //file_put_contents($location, $newLines, FILE_APPEND);
-
-        return $response->withStatus(200);
-    }
-
     /**
      * @param Request $request
      * @param Response $response
@@ -216,5 +138,146 @@ class TemplateController
         $templates = $this->templateService->getAll();
 
         return $response->withJson($templates, 200);
+    }
+
+    //https://stackoverflow.com/questions/19503653/how-to-extract-text-from-word-file-doc-docx-xlsx-pptx-php/19503654#19503654
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     * @throws \Keros\Error\KerosException
+     * @throws \Exception
+     */
+    public function generateDocument(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Generating document with template " . $args["idTemplate"] . " from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $study = $this->studyService->getOne($args["idStudy"]);
+        $template = $this->templateService->getOne($args["idTemplate"]);
+
+        $date = new DateTime();
+        $location = $this->temporaryDirectory . $date->format('d-m-Y_H:i:s:u') . '.' . pathinfo($template->getLocation(), PATHINFO_EXTENSION);
+        mkdir(pathinfo($location, PATHINFO_DIRNAME), 0777, true);
+
+        copy($template->getLocation(), $location);
+
+        $return = false;
+
+        if (pathinfo($template->getLocation(), PATHINFO_EXTENSION) == 'docx')
+            $return = $this->generateStudyDocx($location, $study);
+        elseif (pathinfo($template->getLocation(), PATHINFO_EXTENSION) == 'pptx')
+            $return = $this->generateStudyPptx($location, $study);
+
+        if (!$return) {
+            $msg = "Error generating document with template " . $template->getId() . " and study " . $study->getId();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
+
+        $response = $response->withHeader('Content-Description', 'File Transfer')
+            ->withHeader('Content-Type', 'application/octet-stream')
+            ->withHeader('Content-Disposition', 'attachment;filename="' . pathinfo($location, PATHINFO_BASENAME) . '"')
+            ->withHeader('Expires', '0')
+            ->withHeader('Cache-Control', 'must-revalidate')
+            ->withHeader('Pragma', 'public')
+            ->withHeader('Content-Length', filesize($location));
+        readfile($location);
+
+        return $response->withStatus(302);
+    }
+
+    /**
+     * @param $location
+     * @param $study
+     * @return bool
+     */
+    private function generateStudyDocx($location, $study): bool
+    {
+        $zip = new \ZipArchive();
+        $fileToModify = 'word/document.xml';
+
+        $searchArray = $this->getSearchArray();
+        $replacementArray = $this->getReplacementArray($study);
+
+        if ($zip->open($location) === TRUE) {
+            //Read contents into memory
+            $oldContents = $zip->getFromName($fileToModify);
+
+            //Modify contents:
+            $newContents = str_replace($searchArray, $replacementArray, $oldContents);
+
+            //Delete the old...
+            $zip->deleteName($fileToModify);
+            //Write the new...
+            $zip->addFromString($fileToModify, $newContents);
+            //And write back to the filesystem.
+            $return = $zip->close();
+            return $return;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * @param $location
+     * @param $study
+     * @return bool
+     */
+    function generateStudyPptx($location, $study): bool
+    {
+        $zip = new \ZipArchive();
+
+        $searchArray = $this->getSearchArray();
+        $replacementArray = $this->getReplacementArray($study);
+
+        if (true === $zip->open($location)) {
+            $slide_number = 1; //loop through slide files
+            while (($zip->locateName("ppt/slides/slide" . $slide_number . ".xml")) !== false) {
+
+                $fileToModify = "ppt/slides/slide" . $slide_number . ".xml";
+                $oldContents = $zip->getFromName("ppt/slides/slide" . $slide_number . ".xml");
+                $newContents = str_replace($searchArray, $replacementArray, $oldContents);
+                $zip->deleteName($fileToModify);
+                $zip->addFromString($fileToModify, $newContents);
+                $slide_number++;
+            }
+            return $zip->close();
+        }
+        return false;
+    }
+
+    /**
+     * @return array
+     */
+    private function getSearchArray(): array
+    {
+        return array(
+            '${NOMENTREPRISE}',
+            '${TITREETUDE}',
+            '${ADRESSEENTREPRISE}',
+            '${CPENTREPRISE}',
+            '${VILLEENTREPRISE}',
+            '${SIRETENTREPRISE}',
+            '${DESCRIPTIONETUDE}',
+            '${DATESIGCV}',
+        );
+    }
+
+    /**
+     * @param Study $study
+     * @return array
+     */
+    private function getReplacementArray(Study $study): array
+    {
+        return array(
+            $study->getFirm()->getName(),
+            $study->getName(),
+            $study->getFirm()->getAddress()->getLine1() . ", " . $study->getFirm()->getAddress()->getLine2(),
+            $study->getFirm()->getAddress()->getPostalCode(),
+            $study->getFirm()->getAddress()->getCity(),
+            $study->getFirm()->getSiret(),
+            $study->getDescription(),
+            $study->getSignDate()->format('d/m/Y'),
+        );
     }
 }
