@@ -36,6 +36,8 @@ class MemberPositionService
         $this->logger = $container->get(Logger::class);
         $this->positionService = $container->get(PositionService::class);
         $this->memberDataService = $container->get(MemberDataService::class);
+        $this->memberPositionDataService = $container->get(MemberPositionDataService::class);
+
     }
 
     /**
@@ -57,9 +59,17 @@ class MemberPositionService
         return $memberPosition;
     }
 
-    public function getAll(): array
+    public function getLatestBoard(): array
     {
-        return $this->memberPositionDataService->getAll();
+        $membersPositions = $this->memberPositionDataService->getAll();
+        $boardMembers = array();
+
+        foreach ($membersPositions as $membersPosition) {
+            if ($membersPosition->getYear == date('Y') and $membersPosition->getIsBoard == true) {
+                $boardMembers = $membersPosition;
+            }
+        }
+        return $boardMembers;
     }
 
 

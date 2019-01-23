@@ -51,10 +51,10 @@ class MemberPositionDataService
     public function getAll(): array
     {
         try {
-            $contacts = $this->repository->findAll();
-            return $contacts;
+            $membersPositions = $this->repository->findAll();
+            return $membersPositions;
         } catch (Exception $e) {
-            $msg = "Error finding page of contacts : " . $e->getMessage();
+            $msg = "Error finding page of member positions : " . $e->getMessage();
             $this->logger->error($msg);
             throw new KerosException($msg, 500);
         }

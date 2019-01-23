@@ -8,6 +8,7 @@ use Keros\DataServices\Core\CountryDataService;
 use Keros\DataServices\Core\DepartmentDataService;
 use Keros\DataServices\Core\GenderDataService;
 use Keros\DataServices\Core\MemberDataService;
+use Keros\DataServices\Core\MemberPositionDataService;
 use Keros\DataServices\Core\PoleDataService;
 use Keros\DataServices\Core\PositionDataService;
 use Keros\DataServices\Core\UserDataService;
@@ -48,6 +49,9 @@ class DataServiceRegistrar
         };
         $container[MemberDataService::class] = function ($container) {
             return new MemberDataService($container);
+        };
+        $container[MemberPositionDataService::class] = function ($container) {
+            return new MemberPositionDataService($container);
         };
 
         //UA

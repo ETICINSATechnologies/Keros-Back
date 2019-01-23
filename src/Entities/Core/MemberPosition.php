@@ -11,6 +11,12 @@ use JsonSerializable;
 class MemberPosition implements JsonSerializable
 {
     /**
+     * @Id
+     * @Column(type="integer")
+     * @GeneratedValue
+     */
+    protected $id;
+    /**
      * @ManyToOne(targetEntity="Member")
      * @JoinColumn(name="MemberId", referencedColumnName="id")
      **/
