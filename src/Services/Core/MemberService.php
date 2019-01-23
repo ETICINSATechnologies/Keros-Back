@@ -189,6 +189,14 @@ class MemberService
 
     public function getLatestBoard() : array
     {
-        return $this->memberPositionService->getLatestBoard();
+        $boardMembersPositions =  $this->memberPositionService->getLatestBoard();
+        $boardMembers = array();
+
+        foreach ($boardMembersPositions as $boardMemberPosition) {
+            $memberId = $boardMemberPosition->getMemberId();
+            $boardMembers[] = $memberId;
+        }
+        return $boardMembers;
+
     }
 }

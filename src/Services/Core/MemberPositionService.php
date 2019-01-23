@@ -63,10 +63,11 @@ class MemberPositionService
     {
         $membersPositions = $this->memberPositionDataService->getAll();
         $boardMembers = array();
+        $currentYear = 2018;
 
         foreach ($membersPositions as $membersPosition) {
-            if ($membersPosition->getYear == date('Y') and $membersPosition->getIsBoard == true) {
-                $boardMembers = $membersPosition;
+            if ($membersPosition->getYear() == $currentYear and $membersPosition->getIsBoard() == true) {
+                $boardMembers[] = $membersPosition;
             }
         }
         return $boardMembers;

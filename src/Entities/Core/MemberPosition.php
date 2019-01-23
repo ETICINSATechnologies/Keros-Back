@@ -31,7 +31,7 @@ class MemberPosition implements JsonSerializable
     /** @Column(type="boolean") */
     protected $isBoard;
 
-    /** @Column(type="integer") */
+    /** @Column(type="string", length=20) */
     protected $year;
     
     public function __construct($memberId, $positionId, $isBoard, $year)
