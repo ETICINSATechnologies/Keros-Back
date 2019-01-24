@@ -89,8 +89,8 @@ class StudyDataService
     {
         try {
             $criteria = $requestParameters->getCriteria();
-            $studys = $this->repository->matching($criteria)->getValues();
-            return $studys;
+            $studies = $this->repository->matching($criteria)->getValues();
+            return $studies;
         } catch (Exception $e) {
             $msg = "Error finding page of studys : " . $e->getMessage();
             $this->logger->error($msg);
