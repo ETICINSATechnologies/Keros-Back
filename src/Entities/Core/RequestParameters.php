@@ -47,7 +47,7 @@ class RequestParameters
     {
         // Array of search valuee
         if (isset($params['search']))
-            $this->search = explode(' ',$params['search']);
+            $this->search = explode(" ",$params['search']);
 
         // Search fields
 
@@ -88,10 +88,12 @@ class RequestParameters
     {
         $expr = Criteria::expr();
         $search = Criteria::create();
-        foreach($this->search as $s) {
-            if (isset($s) && isset($this->searchFields)) {
-                foreach ($this->searchFields as $value) {
-                    $search = $search->orWhere($expr->contains($value, $s));
+        if (!empty($this->search)) {
+            foreach ($this->search as $s) {
+                if (isset($s) && isset($this->searchFields)) {
+                    foreach ($this->searchFields as $value) {
+                        $search = $search->orWhere($expr->contains($value, $s));
+                    }
                 }
             }
         }
@@ -108,10 +110,12 @@ class RequestParameters
     {
         $expr = Criteria::expr();
         $search = Criteria::create();
-        foreach ($this->search as $s) {
-            if (isset($s) && isset($this->searchFields)) {
-                foreach ($this->searchFields as $value) {
-                    $search = $search->orWhere($expr->contains($value, $s));
+        if (!empty($this->search)) {
+            foreach ($this->search as $s) {
+                if (isset($s) && isset($this->searchFields)) {
+                    foreach ($this->searchFields as $value) {
+                        $search = $search->orWhere($expr->contains($value, $s));
+                    }
                 }
             }
         }
