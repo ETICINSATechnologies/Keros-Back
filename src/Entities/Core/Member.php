@@ -2,6 +2,7 @@
 
 namespace Keros\Entities\Core;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use JsonSerializable;
 
 /**
@@ -54,13 +55,9 @@ class Member implements JsonSerializable
     protected $department;
 
     /**
-     * @ManyToMany(targetEntity="Position")
-     * @JoinTable(name="core_member_position",
-     *      joinColumns={@JoinColumn(name="memberId", referencedColumnName="id")},
-     *      inverseJoinColumns={@JoinColumn(name="positionId", referencedColumnName="id")}
-     *      )
+     * @OneToMany(targetEntity="MemberPosition", mappedBy="member")
      */
-    protected $positions;
+    protected $memberPositions;
 
     /**
      * @ManyToMany(targetEntity="Keros\Entities\Ua\Study", mappedBy="qualityManagers")
@@ -85,7 +82,7 @@ class Member implements JsonSerializable
         $this->telephone = $telephone;
         $this->email = $email;
         $this->schoolYear = $schoolYear;
-        $this->positions = $positions;
+        $this->memberPositions = $positions;
         $this->gender = $gender;
         $this->department = $department;
     }
@@ -283,15 +280,15 @@ class Member implements JsonSerializable
 
     private function getPositions()
     {
-        return $this->positions;
+        return $this->memberPositions;
     }
 
     /**
-     * @param mixed $positions
+     * @param mixed $memberPositions
      */
-    public function setPositions($positions): void
+    public function setMemberPositions($memberPositions): void
     {
-        $this->positions = $positions;
+        $this->memberPositions = $memberPositions;
     }
 
     /**

@@ -63,7 +63,13 @@ class MemberPositionService
     {
         $membersPositions = $this->memberPositionDataService->getAll();
         $boardMembers = array();
-        $currentYear = 2018;
+        $currentYear = 0;
+
+        foreach ($membersPositions as $membersPosition) {
+            if ($membersPosition->getYear() > $currentYear) {
+                $currentYear = $membersPosition->getYear();
+            }
+        }
 
         foreach ($membersPositions as $membersPosition) {
             if ($membersPosition->getYear() == $currentYear and $membersPosition->getIsBoard() == true) {
@@ -73,5 +79,19 @@ class MemberPositionService
         return $boardMembers;
     }
 
+    public function getSome(array $ids): array
+    {
+        $memberPositions = [];
+        foreach ($ids as $id) {
+            $id = Validator::requiredId($id);
+            $memberPosition = $this->memberPositionDataService->getOne($id);
+            if (!$memberPosition) {
+                throw new KerosException("The member position could not be found", 404);
+            }
+            $memberPositions[] = $memberPosition;
+        }
+
+        return $memberPositions;
+    }
 
 }

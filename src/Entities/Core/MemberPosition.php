@@ -17,14 +17,14 @@ class MemberPosition implements JsonSerializable
      */
     protected $id;
     /**
-     * @ManyToOne(targetEntity="Member")
-     * @JoinColumn(name="MemberId", referencedColumnName="id")
+     * @ManyToOne(targetEntity="Member", inversedBy="memberPositions")
+     * @JoinColumn(name="memberId", referencedColumnName="id")
      **/
-    protected $memberId;
+    protected $member;
 
     /**
      * @ManyToOne(targetEntity="Position")
-     * @JoinColumn(name="PositionId", referencedColumnName="id")
+     * @JoinColumn(name="positionId", referencedColumnName="id")
      **/
     protected $positionId;
 
@@ -34,9 +34,9 @@ class MemberPosition implements JsonSerializable
     /** @Column(type="string", length=20) */
     protected $year;
     
-    public function __construct($memberId, $positionId, $isBoard, $year)
+    public function __construct($positionId, $isBoard, $year)
     {
-        $this->memberId = $memberId;
+
         $this->positionId = $positionId;
         $this->isBoard = $isBoard;
         $this->year = $year;
@@ -45,10 +45,11 @@ class MemberPosition implements JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'memberId' => $this->getMemberId(),
-            'positionId' => $this->getPositionId(),
+            'id' => $this->getPositionId()->getId(),
+            'label' => $this->getPositionId()->getLabel(),
             'isBoard' => $this->getIsBoard(),
             'year' => $this->getYear(),
+            'pole' => $this->getPositionId()->getPole(),
         ];
     }
 
@@ -60,9 +61,9 @@ class MemberPosition implements JsonSerializable
     /**
      * @return mixed
      */
-    public function getMemberId()
+    public function getMember()
     {
-        return $this->memberId;
+        return $this->member;
     }
 
     /**

@@ -29,11 +29,7 @@ class MemberService
      * @var DepartmentService
      */
     private $departmentService;
-    /**
-     * @var PositionService
-     */
-    private $positionService;
-    /**
+        /**
      * @var MemberDataService
      */
     private $memberDataService;
@@ -53,7 +49,6 @@ class MemberService
         $this->memberPositionService = $container->get(MemberPositionService::class);
         $this->genderService = $container->get(GenderService::class);
         $this->departmentService = $container->get(DepartmentService::class);
-        $this->positionService = $container->get(PositionService::class);
         $this->userService = $container->get(UserService::class);
         $this->memberDataService = $container->get(MemberDataService::class);
     }
@@ -79,10 +74,10 @@ class MemberService
         if (isset($departmentId)) {
             $department = $this->departmentService->getOne($departmentId);
         }
-        $positionIds = $fields["positionIds"];
-        $positions = $this->positionService->getSome($positionIds);
+        $memberPositionIds = $fields["memberPositionIds"];
+        $memberPositions = $this->memberPositionService->getSome($memberPositionIds);
 
-        $member = new Member($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $positions);
+        $member = new Member($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $memberPositions);
 
         $user = $this->userService->create($fields);
         $member->setUser($user);
@@ -149,8 +144,8 @@ class MemberService
         if (isset($departmentId)) {
             $department = $this->departmentService->getOne($departmentId);
         }
-        $positionIds = $fields["positionIds"];
-        $positions = $this->positionService->getSome($positionIds);
+        $memberPositionIds = $fields["memberPositionIds"];
+        $memberPositions = $this->memberPositionService->getSome($memberPositionIds);
 
         $member->setFirstName($firstName);
         $member->setLastName($lastName);
@@ -160,7 +155,7 @@ class MemberService
         $member->setSchoolYear($schoolYear);
         $member->setGender($gender);
         $member->setDepartment($department);
-        $member->setPositions($positions);
+        $member->setMemberPositions($memberPositions);
 
         $this->addressService->update($member->getAddress()->getId(), $fields["address"]);
 
@@ -176,7 +171,7 @@ class MemberService
         $member = $this->getOne($id);
         $address = $member->getAddress();
 
-        $member->setPositions([]);
+        $member->setMemberPositions([]);
         $member->setStudiesAsQualityManager([]);
         $member->setStudiesAsLeader([]);
         $member->setStudiesAsConsultant([]);
