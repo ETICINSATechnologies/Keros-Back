@@ -8,30 +8,21 @@ use Slim\Http\Request;
 
 class TemplateIntegrationTest extends AppTestCase
 {
-    /**
-     * @throws \Slim\Exception\MethodNotAllowedException
-     * @throws \Slim\Exception\NotFoundException
-     */
-   /* public function testPostTemplateShouldReturn201()
-    {
-        $post_body = array(
-            "name" => "testInsert",
-            "location" => "ici",
-            "typeId" => 1,
-        );
+
+    public function testGenerationDocumentShouldReturn200(){
         $env = Environment::mock([
-            'REQUEST_METHOD' => 'POST',
-            'REQUEST_URI' => '/api/v1/core/template',
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/core/study/1/template/1',
         ]);
         $req = Request::createFromEnvironment($env);
-        $req = $req->withParsedBody($post_body);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
-        $this->assertSame(201, $response->getStatusCode());
+        $this->assertSame(200, $response->getStatusCode());
         $body = json_decode($response->getBody());
-        $this->assertSame("testInsert", $body->name);
+        $this->assertEquals(1, count($body));
+        $this->assertEquals(1, count($body->location));
     }
-*/
+
     public function testGetTemplateShouldReturn200()
     {
         $env = Environment::mock([
@@ -81,5 +72,20 @@ class TemplateIntegrationTest extends AppTestCase
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
         $this->assertSame(204, $response->getStatusCode());
+    }
+
+    public function testGetAllTemplateShouldReturn200(){
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/core/template',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(200, $response->getStatusCode());
+
+        $body = json_decode($response->getBody());
+        $this->assertEquals(1, count($body));
     }
 }

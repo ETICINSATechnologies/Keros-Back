@@ -5,6 +5,7 @@ namespace Keros\Controllers\Core;
 
 use Doctrine\ORM\EntityManager;
 use Keros\DataServices\Core\TemplateDataService;
+use Keros\Entities\Ua\Contact;
 use Keros\Entities\Ua\Study;
 use Keros\Error\KerosException;
 use Keros\Services\Core\TemplateService;
@@ -140,8 +141,8 @@ class TemplateController
         return $response->withJson($templates, 200);
     }
 
-    //https://stackoverflow.com/questions/19503653/how-to-extract-text-from-word-file-doc-docx-xlsx-pptx-php/19503654#19503654
     /**
+     * https://stackoverflow.com/questions/19503653/how-to-extract-text-from-word-file-doc-docx-xlsx-pptx-php/19503654#19503654
      * @param Request $request
      * @param Response $response
      * @param array $args
@@ -155,14 +156,13 @@ class TemplateController
         $study = $this->studyService->getOne($args["idStudy"]);
         $template = $this->templateService->getOne($args["idTemplate"]);
 
-        $date = new DateTime();
-        $location = $this->temporaryDirectory . $date->format('d-m-Y_H:i:s:u') . '.' . pathinfo($template->getLocation(), PATHINFO_EXTENSION);
+        do{
+            $location = $this->temporaryDirectory . md5($template->getName().microtime()) . '.' . pathinfo($template->getLocation(), PATHINFO_EXTENSION);
+        }while(file_exists($location));
         mkdir(pathinfo($location, PATHINFO_DIRNAME), 0777, true);
-
         copy($template->getLocation(), $location);
 
         $return = false;
-
         if (pathinfo($template->getLocation(), PATHINFO_EXTENSION) == 'docx')
             $return = $this->generateStudyDocx($location, $study);
         elseif (pathinfo($template->getLocation(), PATHINFO_EXTENSION) == 'pptx')
@@ -174,16 +174,7 @@ class TemplateController
             throw new KerosException($msg, 500);
         }
 
-        $response = $response->withHeader('Content-Description', 'File Transfer')
-            ->withHeader('Content-Type', 'application/octet-stream')
-            ->withHeader('Content-Disposition', 'attachment;filename="' . pathinfo($location, PATHINFO_BASENAME) . '"')
-            ->withHeader('Expires', '0')
-            ->withHeader('Cache-Control', 'must-revalidate')
-            ->withHeader('Pragma', 'public')
-            ->withHeader('Content-Length', filesize($location));
-        readfile($location);
-
-        return $response->withStatus(302);
+        return $response->withJson(array ('location' => $location), 200);
     }
 
     /**
@@ -223,22 +214,32 @@ class TemplateController
      * @param $study
      * @return bool
      */
-    function generateStudyPptx($location, $study): bool
+    private function generateStudyPptx($location, $study): bool
     {
         $zip = new \ZipArchive();
 
         $searchArray = $this->getSearchArray();
         $replacementArray = $this->getReplacementArray($study);
 
+
         if (true === $zip->open($location)) {
+
+
             $slide_number = 1; //loop through slide files
             while (($zip->locateName("ppt/slides/slide" . $slide_number . ".xml")) !== false) {
 
+
                 $fileToModify = "ppt/slides/slide" . $slide_number . ".xml";
                 $oldContents = $zip->getFromName("ppt/slides/slide" . $slide_number . ".xml");
+
+
                 $newContents = str_replace($searchArray, $replacementArray, $oldContents);
+
+
                 $zip->deleteName($fileToModify);
                 $zip->addFromString($fileToModify, $newContents);
+
+
                 $slide_number++;
             }
             return $zip->close();
@@ -260,6 +261,11 @@ class TemplateController
             '${SIRETENTREPRISE}',
             '${DESCRIPTIONETUDE}',
             '${DATESIGCV}',
+            '${FCTCONTACT}',
+            '${CIVILITECONTACT}',
+            '${PRENOMCONTACT}',
+            '${NOMCONTACT}',
+            '${MAILCONTACT}'
         );
     }
 
@@ -269,6 +275,8 @@ class TemplateController
      */
     private function getReplacementArray(Study $study): array
     {
+        $contact = $study->getContacts()[0];
+
         return array(
             $study->getFirm()->getName(),
             $study->getName(),
@@ -278,6 +286,11 @@ class TemplateController
             $study->getFirm()->getSiret(),
             $study->getDescription(),
             $study->getSignDate()->format('d/m/Y'),
+            $contact->getPosition(),
+            $contact->getGender()->getLabel(),
+            $contact->getFirstName(),
+            $contact->getLastName(),
+            $contact->getEmail()
         );
     }
 }
