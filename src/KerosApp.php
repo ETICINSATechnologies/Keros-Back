@@ -107,6 +107,7 @@ class KerosApp
                     $this->put("/{id:[0-9]+}", StudyController::class . ':updateStudy');
                     $this->delete("/{id:[0-9]+}", StudyController::class . ':deleteStudy');
                     $this->get("/{idStudy:[0-9]+}/template/{idTemplate:[0-9]+}", TemplateController::class . ':generateDocument');
+                    $this->get("/{id:[0-9]+}/documents", StudyController::class . ':getAllDocuments');
                 });
                 $this->group('/provenance', function () {
                     $this->get("", StudyController::class . ':getAllProvenances');
