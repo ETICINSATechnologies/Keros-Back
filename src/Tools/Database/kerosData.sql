@@ -77,6 +77,7 @@ INSERT INTO `core_template_type` (`id`, `label`) VALUES
 
 TRUNCATE TABLE core_template;
 INSERT INTO `core_template` (`id`, `name`, `location`, `typeId`) VALUES
-  (1, 'testGet', 'null part', 1);
+  (1, 'testGet', 'null part', 1),
+  (2, 'test', 'qlq part', 1);
 
 COMMIT;

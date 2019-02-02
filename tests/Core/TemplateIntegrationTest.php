@@ -9,20 +9,6 @@ use Slim\Http\Request;
 class TemplateIntegrationTest extends AppTestCase
 {
 
-    public function testGenerationDocumentShouldReturn200(){
-        $env = Environment::mock([
-            'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/api/v1/core/study/1/template/1',
-        ]);
-        $req = Request::createFromEnvironment($env);
-        $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(false);
-        $this->assertSame(200, $response->getStatusCode());
-        $body = json_decode($response->getBody());
-        $this->assertEquals(1, count($body));
-        $this->assertEquals(1, count($body->location));
-    }
-
     public function testGetTemplateShouldReturn200()
     {
         $env = Environment::mock([
@@ -84,8 +70,7 @@ class TemplateIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
 
         $this->assertSame(200, $response->getStatusCode());
-
         $body = json_decode($response->getBody());
-        $this->assertEquals(1, count($body));
+        $this->assertEquals(2, count($body));
     }
 }
