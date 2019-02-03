@@ -26,7 +26,6 @@ class StudyIntegrationTest extends AppTestCase
         $bodies = Validator::requiredArray($bodies);
         foreach ($bodies as $body) {
             $this->assertEquals("2", $body->id);
-            $this->assertEquals("12", $body->projectNumber);
             $this->assertEquals("Tests d'acidité dans le Rhône", $body->name);
             $this->assertEquals("Créateur de IDE", $body->description);
             $this->assertEquals("1", $body->field->id);
@@ -95,7 +94,6 @@ class StudyIntegrationTest extends AppTestCase
         $this->assertSame(200, $response->getStatusCode());
         $body = json_decode($response->getBody());
 
-        $this->assertEquals("12", $body->projectNumber);
         $this->assertEquals("Développement IDE", $body->name);
         $this->assertEquals("Développement d'un IDE pour utilisation interne", $body->description);
         $this->assertEquals("1", $body->field->id);
@@ -126,7 +124,6 @@ class StudyIntegrationTest extends AppTestCase
 
         $post_body = array(
             "id" =>2,
-            "projectNumber"=>13,
             "name"=>"Facebook",
             "description"=>"C est le feu",
             "fieldId"=>1,
@@ -158,7 +155,6 @@ class StudyIntegrationTest extends AppTestCase
     {
 
         $post_body = array(
-            "projectNumber"=>13,
             "name"=>"Twitter",
             "description"=>"C est le feu",
             "fieldId"=>1,
