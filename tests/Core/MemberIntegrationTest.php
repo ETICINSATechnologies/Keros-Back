@@ -22,7 +22,7 @@ class MemberIntegrationTest extends AppTestCase
 
         $this->assertSame(200, $response->getStatusCode());
     }
-    
+
     public function testPutConnectedMemberEmptyBodyShouldReturn400()
     {
         $env = Environment::mock([
