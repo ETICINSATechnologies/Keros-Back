@@ -127,7 +127,7 @@ class StudyService
             $provenance = $this->provenanceService->getOne($provenanceId);
         }
 
-        $confidential = $fields["confidential"];
+        $confidential = Validator::optionalBool(isset($fields["confidential"]) ? $fields["confidential"] : null);
 
         $study = new Study($projectNumber, $name, $description, $field, $status, $firm, $contacts, $leaders, $consultants, $qualityManagers, $confidential);
         $study->setProvenance($provenance);
@@ -239,7 +239,7 @@ class StudyService
             $provenance = $this->provenanceService->getOne($provenanceId);
         }
 
-        $confidential = $fields["confidential"];
+        $confidential = Validator::optionalBool(isset($fields["confidential"]) ? $fields["confidential"] : null);
 
         $study->setProjectNumber($projectNumber);
         $study->setName($name);
