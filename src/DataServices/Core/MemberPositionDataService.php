@@ -60,4 +60,16 @@ class MemberPositionDataService
         }
     }
 
+    public function getOne(int $id): ?MemberPosition
+    {
+        try {
+            $address = $this->repository->find($id);
+            return $address;
+        } catch (Exception $e) {
+            $msg = "Error finding member position with ID $id : " . $e->getMessage();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
+    }
+
 }

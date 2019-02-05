@@ -77,8 +77,8 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame("Amazon", $body->company);
         $this->assertSame("http://image.png", $body->profilePicture);
         $this->assertNotNull($body->address->id);
-        $this->assertSame(1, $body->positions[0]->id);
-        $this->assertSame(3, $body->positions[1]->id);
+        $this->assertSame(3, $body->positions[0]->id);
+        $this->assertSame(1, $body->positions[1]->id);
     }
 
     public function testDeleteMembersShouldReturn204()
@@ -282,8 +282,8 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame("Amazon", $body->company);
         $this->assertSame("http://image.png", $body->profilePicture);
         $this->assertNotNull($body->address->id);
-        $this->assertSame(1, $body->positions[0]->id);
-        $this->assertSame(3, $body->positions[1]->id);
+        $this->assertSame(3, $body->positions[0]->id);
+        $this->assertSame(1, $body->positions[1]->id);
     }
 
     public function testPutMemberEmptyBodyShouldReturn400()

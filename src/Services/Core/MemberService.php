@@ -74,7 +74,7 @@ class MemberService
         if (isset($departmentId)) {
             $department = $this->departmentService->getOne($departmentId);
         }
-        $memberPositionIds = $fields["memberPositionIds"];
+        $memberPositionIds = $fields["positionIds"];
         $memberPositions = $this->memberPositionService->getSome($memberPositionIds);
 
         $company = Validator::requiredString($fields["company"]);
@@ -150,7 +150,7 @@ class MemberService
 
         $company = Validator::requiredString($fields["company"]);
         $profilePicture = Validator::requiredString($fields["profilePicture"]);
-        $memberPositionIds = $fields["memberPositionIds"];
+        $memberPositionIds = $fields["positionIds"];
         $memberPositions = $this->memberPositionService->getSome($memberPositionIds);
 
         $member->setFirstName($firstName);

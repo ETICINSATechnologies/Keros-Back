@@ -80,7 +80,7 @@ class Member implements JsonSerializable
      */
     protected $studiesAsLeader;
     
-    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $positions, $company, $profilePicture)
+    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $memberPositions, $company, $profilePicture)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -88,7 +88,7 @@ class Member implements JsonSerializable
         $this->telephone = $telephone;
         $this->email = $email;
         $this->schoolYear = $schoolYear;
-        $this->memberPositions = $positions;
+        $this->memberPositions = $memberPositions;
         $this->gender = $gender;
         $this->department = $department;
         $this->company = $company;

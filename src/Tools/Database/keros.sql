@@ -93,6 +93,8 @@ CREATE TABLE `core_member` (
   `addressId`    int(11)      NOT NULL UNIQUE,
   `schoolYear`   int(11)     DEFAULT NULL,
   `departmentId` int(11)     DEFAULT NULL,
+  `company` varchar(255)     DEFAULT NULL,
+  `profilePicture` varchar(255)     DEFAULT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `core_user_userId_fk` FOREIGN KEY (`id`) REFERENCES `core_user` (`id`),
   CONSTRAINT `core_user_genderId_fk` FOREIGN KEY (`genderId`) REFERENCES `core_gender` (`id`),
