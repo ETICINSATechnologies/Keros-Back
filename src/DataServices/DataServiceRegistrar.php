@@ -4,6 +4,7 @@
 namespace Keros\DataServices;
 
 use Keros\DataServices\Core\AddressDataService;
+use Keros\DataServices\Core\TicketDataService;
 use Keros\DataServices\Core\CountryDataService;
 use Keros\DataServices\Core\DepartmentDataService;
 use Keros\DataServices\Core\GenderDataService;
@@ -27,6 +28,9 @@ class DataServiceRegistrar
         // Core
         $container[AddressDataService::class] = function ($container) {
             return new AddressDataService($container);
+        };
+        $container[TicketDataService::class] = function ($container) {
+            return new TicketDataService($container);
         };
         $container[CountryDataService::class] = function ($container) {
             return new CountryDataService($container);

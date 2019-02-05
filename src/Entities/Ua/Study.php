@@ -17,9 +17,6 @@ class Study implements JsonSerializable
      */
     protected $id;
 
-    /** @Column(type="integer") */
-    protected $projectNumber;
-
     /** @Column(type="string", length=100) */
     protected $name;
 
@@ -115,7 +112,6 @@ class Study implements JsonSerializable
 
     /**
      * Study constructor.
-     * @param $projectNumber
      * @param $name
      * @param $description
      * @param $field
@@ -127,9 +123,9 @@ class Study implements JsonSerializable
      * @param $consultants
      * @param $confidential
      */
-    public function __construct($projectNumber, $name, $description, $field, $status, $firm, $contacts, $leaders, $qualityManagers, $consultants, $confidential)
+
+    public function __construct($name, $description, $field, $status, $firm, $contacts, $leaders, $qualityManagers, $consultants)
     {
-        $this->projectNumber = $projectNumber;
         $this->name = $name;
         $this->description = $description;
         $this->field = $field;
@@ -146,7 +142,6 @@ class Study implements JsonSerializable
     {
         return [
             'id' => $this->getId(),
-            'projectNumber' => $this->getProjectNumber(),
             'name' => $this->getName(),
             'description' => $this->getDescription(),
             'field' => $this->getField(),
@@ -188,22 +183,6 @@ class Study implements JsonSerializable
     public function setId($id): void
     {
         $this->id = $id;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getProjectNumber()
-    {
-        return $this->projectNumber;
-    }
-
-    /**
-     * @param mixed $projectNumber
-     */
-    public function setProjectNumber($projectNumber): void
-    {
-        $this->projectNumber = $projectNumber;
     }
 
     /**
