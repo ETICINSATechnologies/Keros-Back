@@ -80,6 +80,20 @@ CREATE TABLE `core_address` (
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
+DROP TABLE IF EXISTS core_ticket;
+CREATE TABLE `core_ticket` (
+  `id`      int(1) AUTO_INCREMENT,
+  `userId`  int(11)     NOT NULL,
+  `title`   VARCHAR(64) NOT NULL,
+  `message` VARCHAR(64) NOT NULL,
+  `type`    VARCHAR(64) NOT NULL,
+  `status`  VARCHAR(64) NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `core_ticket_userId_fk` FOREIGN KEY (`userId`) REFERENCES `core_member` (`id`)
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+
 # L'ID de core_member est le même que celui de core_user qui lui est attaché
 DROP TABLE IF EXISTS core_member;
 CREATE TABLE `core_member` (

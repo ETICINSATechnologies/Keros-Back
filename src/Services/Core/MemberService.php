@@ -4,6 +4,7 @@ namespace Keros\Services\Core;
 
 
 use Keros\DataServices\Core\MemberDataService;
+use Keros\DataServices\Core\TicketDataService;
 use Keros\Entities\Core\Member;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Error\KerosException;
@@ -34,6 +35,10 @@ class MemberService
      */
     private $positionService;
     /**
+     * @var TicketDataService
+     */
+    private $ticketDataService;
+    /**
      * @var MemberDataService
      */
     private $memberDataService;
@@ -51,6 +56,7 @@ class MemberService
         $this->positionService = $container->get(PositionService::class);
         $this->userService = $container->get(UserService::class);
         $this->memberDataService = $container->get(MemberDataService::class);
+        $this->ticketDataService = $container->get(TicketDataService::class);
     }
 
     /**
@@ -177,9 +183,12 @@ class MemberService
         $member->setStudiesAsConsultant([]);
         $this->memberDataService->persist($member);
 
+        $this->ticketDataService->deleteTicketsRelatedToMember($id);
+
         $this->memberDataService->delete($member);
         $this->userService->delete($id);
         $this->addressService->delete($address->getId());
+
     }
 
 }
