@@ -123,7 +123,7 @@ class StudyIntegrationTest extends AppTestCase
     {
 
         $post_body = array(
-            "id" =>2,
+            "id" =>3,
             "name"=>"Facebook",
             "description"=>"C est le feu",
             "fieldId"=>1,
@@ -134,8 +134,6 @@ class StudyIntegrationTest extends AppTestCase
             "leaderIds"=>array(),
             "consultantIds"=>array(),
             "qualityManagerIds"=>array(),
-            "confidential"=>true,
-
         );
         $env = Environment::mock([
             'REQUEST_METHOD' => 'POST',
@@ -147,7 +145,6 @@ class StudyIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
         $this->assertSame(201, $response->getStatusCode());
         $body = json_decode($response->getBody());
-
         $this->assertSame(3, $body->id);
         $this->assertSame("Facebook", $body->name);
     }
