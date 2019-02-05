@@ -84,7 +84,6 @@ class StudyService
      */
     public function create(array $fields): Study
     {
-        $projectNumber = Validator::requiredInt($fields["projectNumber"]);
         $name = Validator::requiredString($fields["name"]);
         $description = Validator::optionalString(isset($fields["description"]) ? $fields["description"] : null);
 
@@ -129,7 +128,8 @@ class StudyService
 
         $confidential = Validator::optionalBool(isset($fields["confidential"]) ? $fields["confidential"] : null);
 
-        $study = new Study($projectNumber, $name, $description, $field, $status, $firm, $contacts, $leaders, $consultants, $qualityManagers, $confidential);
+        $study = new Study($name, $description, $field, $status, $firm, $contacts, $leaders, $consultants, $qualityManagers, $confidential);
+      
         $study->setProvenance($provenance);
         $study->setSignDate($signDate);
         $study->setEndDate($endDate);
@@ -196,7 +196,6 @@ class StudyService
         $id = Validator::requiredId($id);
         $study = $this->getOne($id);
 
-        $projectNumber = Validator::requiredInt($fields["projectNumber"]);
         $name = Validator::requiredString($fields["name"]);
         $description = Validator::optionalString(isset($fields["description"]) ? $fields["description"] : null);
 
@@ -239,9 +238,9 @@ class StudyService
             $provenance = $this->provenanceService->getOne($provenanceId);
         }
 
+
         $confidential = Validator::optionalBool(isset($fields["confidential"]) ? $fields["confidential"] : null);
 
-        $study->setProjectNumber($projectNumber);
         $study->setName($name);
         $study->setDescription($description);
         $study->setField($field);
@@ -261,7 +260,6 @@ class StudyService
         $study->setOutsourcingFee($outsourcingFee);
         $study->setArchivedDate($archivedDate);
         $study->setConfidential($confidential);
-
 
         $this->studyDataService->persist($study);
 
