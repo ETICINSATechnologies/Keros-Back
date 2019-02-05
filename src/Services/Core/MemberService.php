@@ -77,7 +77,10 @@ class MemberService
         $memberPositionIds = $fields["memberPositionIds"];
         $memberPositions = $this->memberPositionService->getSome($memberPositionIds);
 
-        $member = new Member($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $memberPositions);
+        $company = Validator::requiredString($fields["company"]);
+        $profilePicture = Validator::requiredString($fields["profilePicture"]);
+
+        $member = new Member($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $memberPositions, $company, $profilePicture);
 
         $user = $this->userService->create($fields);
         $member->setUser($user);
@@ -144,6 +147,9 @@ class MemberService
         if (isset($departmentId)) {
             $department = $this->departmentService->getOne($departmentId);
         }
+
+        $company = Validator::requiredString($fields["company"]);
+        $profilePicture = Validator::requiredString($fields["profilePicture"]);
         $memberPositionIds = $fields["memberPositionIds"];
         $memberPositions = $this->memberPositionService->getSome($memberPositionIds);
 
@@ -155,6 +161,8 @@ class MemberService
         $member->setSchoolYear($schoolYear);
         $member->setGender($gender);
         $member->setDepartment($department);
+        $member->setCompany($company);
+        $member->setProfilePicture($profilePicture);
         $member->setMemberPositions($memberPositions);
 
         $this->addressService->update($member->getAddress()->getId(), $fields["address"]);
@@ -188,7 +196,7 @@ class MemberService
         $boardMembers = array();
 
         foreach ($boardMembersPositions as $boardMemberPosition) {
-            $memberId = $boardMemberPosition->getMemberId();
+            $memberId = $boardMemberPosition->getMember();
             $boardMembers[] = $memberId;
         }
         return $boardMembers;

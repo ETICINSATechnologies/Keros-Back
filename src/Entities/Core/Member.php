@@ -59,6 +59,12 @@ class Member implements JsonSerializable
      */
     protected $memberPositions;
 
+    /** @Column(type="string", length=20) */
+    protected $company;
+
+    /** @Column(type="string", length=200) */
+    protected $profilePicture;
+
     /**
      * @ManyToMany(targetEntity="Keros\Entities\Ua\Study", mappedBy="qualityManagers")
      */
@@ -74,7 +80,7 @@ class Member implements JsonSerializable
      */
     protected $studiesAsLeader;
     
-    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $positions)
+    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $positions, $company, $profilePicture)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -85,6 +91,8 @@ class Member implements JsonSerializable
         $this->memberPositions = $positions;
         $this->gender = $gender;
         $this->department = $department;
+        $this->company = $company;
+        $this->profilePicture = $profilePicture;
     }
 
     public function jsonSerialize()
@@ -101,7 +109,9 @@ class Member implements JsonSerializable
             'schoolYear' => $this->getSchoolYear(),
             'telephone' => $this->getTelephone(),
             'address' => $this->getAddress(),
-            'positions' => $this->getPositionsArray()
+            'positions' => $this->getPositionsArray(),
+            'company' => $this->getCompany(),
+            'profilePicture' => $this->getProfilePicture(),
         ];
     }
 
@@ -244,6 +254,38 @@ class Member implements JsonSerializable
     public function setAddress($address): void
     {
         $this->address = $address;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCompany()
+    {
+        return $this->company;
+    }
+
+    /**
+     * @param mixed $company
+     */
+    public function setCompany($company): void
+    {
+        $this->company = $company;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProfilePicture()
+    {
+        return $this->profilePicture;
+    }
+
+    /**
+     * @param mixed $profilePicture
+     */
+    public function setProfilePicture($profilePicture): void
+    {
+        $this->profilePicture = $profilePicture;
     }
 
     /**

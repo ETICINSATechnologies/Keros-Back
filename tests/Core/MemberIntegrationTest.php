@@ -46,7 +46,9 @@ class MemberIntegrationTest extends AppTestCase
             "positionIds" => [
                 1,
                 3
-            ]
+            ],
+            "company" => "Amazon",
+            "profilePicture" => "http://image.png"
         );
 
         $env = Environment::mock([
@@ -72,6 +74,8 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(1, $body->department->id);
         $this->assertSame(1, $body->schoolYear);
         $this->assertSame("0033675385495", $body->telephone);
+        $this->assertSame("Amazon", $body->company);
+        $this->assertSame("http://image.png", $body->profilePicture);
         $this->assertNotNull($body->address->id);
         $this->assertSame(1, $body->positions[0]->id);
         $this->assertSame(3, $body->positions[1]->id);
@@ -190,7 +194,9 @@ class MemberIntegrationTest extends AppTestCase
             "positionIds" => [
                 1,
                 2
-            ]
+            ],
+            "company" => "Amazon",
+            "profilePicture" => "http://image.png"
         );
 
         $env = Environment::mock([
@@ -215,6 +221,8 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(1, $body->department->id);
         $this->assertSame(1, $body->schoolYear);
         $this->assertSame("0033675385495", $body->telephone);
+        $this->assertSame("Amazon", $body->company);
+        $this->assertSame("http://image.png", $body->profilePicture);
         $this->assertNotNull($body->address->id);
         $this->assertSame(1, $body->positions[0]->id);
         $this->assertSame(2, $body->positions[1]->id);
@@ -242,7 +250,9 @@ class MemberIntegrationTest extends AppTestCase
             "positionIds" => [
                 1,
                 3
-            ]
+            ],
+            "company" => "Amazon",
+            "profilePicture" => "http://image.png"
         );
 
         $env = Environment::mock([
@@ -269,6 +279,8 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(1, $body->department->id);
         $this->assertSame(1, $body->schoolYear);
         $this->assertSame("0033675385495", $body->telephone);
+        $this->assertSame("Amazon", $body->company);
+        $this->assertSame("http://image.png", $body->profilePicture);
         $this->assertNotNull($body->address->id);
         $this->assertSame(1, $body->positions[0]->id);
         $this->assertSame(3, $body->positions[1]->id);
