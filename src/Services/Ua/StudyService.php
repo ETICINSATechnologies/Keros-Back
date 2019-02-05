@@ -126,7 +126,10 @@ class StudyService
             $provenance = $this->provenanceService->getOne($provenanceId);
         }
 
-        $study = new Study($name, $description, $field, $status, $firm, $contacts, $leaders, $consultants, $qualityManagers);
+        $confidential = Validator::optionalBool(isset($fields["confidential"]) ? $fields["confidential"] : null);
+
+        $study = new Study($name, $description, $field, $status, $firm, $contacts, $leaders, $consultants, $qualityManagers, $confidential);
+      
         $study->setProvenance($provenance);
         $study->setSignDate($signDate);
         $study->setEndDate($endDate);
@@ -136,6 +139,7 @@ class StudyService
         $study->setEcoparticipationFee($ecoparticipationFee);
         $study->setOutsourcingFee($outsourcingFee);
         $study->setArchivedDate($archivedDate);
+        $study->setConfidential($confidential);
 
         $this->studyDataService->persist($study);
 
@@ -234,6 +238,9 @@ class StudyService
             $provenance = $this->provenanceService->getOne($provenanceId);
         }
 
+
+        $confidential = Validator::optionalBool(isset($fields["confidential"]) ? $fields["confidential"] : null);
+
         $study->setName($name);
         $study->setDescription($description);
         $study->setField($field);
@@ -252,6 +259,7 @@ class StudyService
         $study->setEcoparticipationFee($ecoparticipationFee);
         $study->setOutsourcingFee($outsourcingFee);
         $study->setArchivedDate($archivedDate);
+        $study->setConfidential($confidential);
 
         $this->studyDataService->persist($study);
 

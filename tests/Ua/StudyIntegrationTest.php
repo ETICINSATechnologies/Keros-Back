@@ -134,6 +134,7 @@ class StudyIntegrationTest extends AppTestCase
             "leaderIds"=>array(),
             "consultantIds"=>array(),
             "qualityManagerIds"=>array(),
+            "confidential"=>true,
 
         );
         $env = Environment::mock([

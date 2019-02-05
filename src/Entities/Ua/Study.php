@@ -107,6 +107,9 @@ class Study implements JsonSerializable
      */
     protected $consultants;
 
+    /** @Column(type="boolean") */
+    protected $confidential;
+
     /**
      * Study constructor.
      * @param $name
@@ -118,8 +121,10 @@ class Study implements JsonSerializable
      * @param $leaders
      * @param $qualityManagers
      * @param $consultants
+     * @param $confidential
      */
-    public function __construct($name, $description, $field, $status, $firm, $contacts, $leaders, $qualityManagers, $consultants)
+
+    public function __construct($name, $description, $field, $status, $firm, $contacts, $leaders, $qualityManagers, $consultants, $confidential)
     {
         $this->name = $name;
         $this->description = $description;
@@ -130,6 +135,7 @@ class Study implements JsonSerializable
         $this->leaders = $leaders;
         $this->qualityManagers = $qualityManagers;
         $this->consultants = $consultants;
+        $this->confidential = $confidential;
     }
 
     public function jsonSerialize()
@@ -153,7 +159,8 @@ class Study implements JsonSerializable
             'contacts' => $this->getContactsArray(),
             'leaders' => $this->getLeadersArray(),
             'consultants' => $this->getConsultantsArray(),
-            'qualityManagers' => $this->getQualityManagersArray()
+            'qualityManagers' => $this->getQualityManagersArray(),
+            'confidential' => $this->getConfidential()
         ];
     }
 
@@ -553,5 +560,21 @@ class Study implements JsonSerializable
     public function setConsultants($consultants): void
     {
         $this->consultants = $consultants;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getConfidential()
+    {
+        return $this->confidential;
+    }
+
+    /**
+     * @param boolean $confidential
+     */
+    public function setConfidential($confidential)
+    {
+        $this->confidential = $confidential;
     }
 }
