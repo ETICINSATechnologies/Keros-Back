@@ -2,7 +2,6 @@
 
 namespace Keros\Entities\Core;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use JsonSerializable;
 
 /**
@@ -80,7 +79,7 @@ class Member implements JsonSerializable
      */
     protected $studiesAsLeader;
     
-    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $memberPositions, $company, $profilePicture)
+    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -88,7 +87,6 @@ class Member implements JsonSerializable
         $this->telephone = $telephone;
         $this->email = $email;
         $this->schoolYear = $schoolYear;
-        $this->memberPositions = $memberPositions;
         $this->gender = $gender;
         $this->department = $department;
         $this->company = $company;
@@ -320,7 +318,7 @@ class Member implements JsonSerializable
         $this->department = $department;
     }
 
-    private function getPositions()
+    public function getMemberPositions()
     {
         return $this->memberPositions;
     }
@@ -339,7 +337,7 @@ class Member implements JsonSerializable
     public function getPositionsArray()
     {
         $positions = [];
-        foreach ($this->getPositions() as $position)
+        foreach ($this->getMemberPositions() as $position)
         {
             $positions[] = $position;
         }

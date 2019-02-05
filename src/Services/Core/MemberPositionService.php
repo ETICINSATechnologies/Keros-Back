@@ -4,9 +4,9 @@ namespace Keros\Services\Core;
 
 
 use Keros\DataServices\Core\MemberPositionDataService;
+use Keros\Entities\Core\Member;
 use Keros\Entities\Core\MemberPosition;
 use Keros\DataServices\Core\MemberDataService;
-use Keros\Entities\Core\RequestParameters;
 use Keros\Error\KerosException;
 use Keros\Tools\Validator;
 use Monolog\Logger;
@@ -14,7 +14,7 @@ use Psr\Container\ContainerInterface;
 
 class MemberPositionService
 {
-        /**
+    /**
      * @var PositionService
      */
     private $positionService;
@@ -37,22 +37,24 @@ class MemberPositionService
         $this->positionService = $container->get(PositionService::class);
         $this->memberDataService = $container->get(MemberDataService::class);
         $this->memberPositionDataService = $container->get(MemberPositionDataService::class);
-
     }
 
     /**
+     * @param Member $member
      * @param array $fields
      * @return MemberPosition
      * @throws KerosException
      */
-    public function create(array $fields): MemberPosition
+    public function create(Member $member, array $fields): MemberPosition
     {
-        $memberId = Validator::requiredId($fields["memberId"]);
-        $positionId = Validator::requiredId($fields["positionId"]);
+        $positionId = Validator::requiredId($fields["id"]);
         $isBoard = Validator::requiredBool($fields["isBoard"]);
-        $year = Validator::requiredSchoolYear($fields["year"]);
+        $year = Validator::requiredInt($fields["year"]);
 
-        $memberPosition = new MemberPosition($memberId,$positionId,$isBoard,$year);
+        $position = $this->positionService->getOne($positionId);
+
+        $memberPosition = new MemberPosition($member, $position, $isBoard, $year);
+        $this->logger->debug(json_encode($memberPosition));
 
         $this->memberPositionDataService->persist($memberPosition);
 
@@ -61,17 +63,17 @@ class MemberPositionService
 
     public function getLatestBoard(): array
     {
-        $membersPositions = $this->memberPositionDataService->getAll();
+        $memberPositions = $this->memberPositionDataService->getAll();
         $boardMembers = array();
         $currentYear = 0;
 
-        foreach ($membersPositions as $membersPosition) {
+        foreach ($memberPositions as $membersPosition) {
             if ($membersPosition->getYear() > $currentYear) {
                 $currentYear = $membersPosition->getYear();
             }
         }
 
-        foreach ($membersPositions as $membersPosition) {
+        foreach ($memberPositions as $membersPosition) {
             if ($membersPosition->getYear() == $currentYear and $membersPosition->getIsBoard() == true) {
                 $boardMembers[] = $membersPosition;
             }
@@ -94,4 +96,8 @@ class MemberPositionService
         return $memberPositions;
     }
 
+    public function delete(MemberPosition $memberPosition)
+    {
+        $this->memberPositionDataService->delete($memberPosition);
+    }
 }

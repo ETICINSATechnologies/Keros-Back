@@ -15,7 +15,8 @@ class MemberTest extends TestCase
     public function testNewMemberShouldBeInstanceOfMember()
     {
         $this->assertInstanceOf(Member::class,
-            new Member("Basmah",
+            new Member(
+                "Basmah",
                 "Maiga",
                 new DateTime("11/26/1998"),
                 "0675385495",
@@ -23,7 +24,6 @@ class MemberTest extends TestCase
                 "2018",
                 new Gender("Femme"),
                 new Department(1, "IF", "Informatique"),
-                [new Position("Resp SI")],
                 "Google",
                 "http://photoprofile.jpg"));
     }
@@ -38,7 +38,6 @@ class MemberTest extends TestCase
             "2018",
             new Gender("Femme"),
             new Department(1, "IF", "Informatique"),
-            [new Position("Resp SI")],
             "Google",
             "http://photoprofile.jpg");
 

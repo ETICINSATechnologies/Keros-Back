@@ -74,20 +74,25 @@ class MemberService
         if (isset($departmentId)) {
             $department = $this->departmentService->getOne($departmentId);
         }
-        $memberPositionIds = $fields["positionIds"];
-        $memberPositions = $this->memberPositionService->getSome($memberPositionIds);
 
-        $company = Validator::requiredString($fields["company"]);
-        $profilePicture = Validator::requiredString($fields["profilePicture"]);
+        $company = Validator::optionalString($fields["company"]);
+        $profilePicture = Validator::optionalString($fields["profilePicture"]);
 
-        $member = new Member($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $memberPositions, $company, $profilePicture);
+        $member = new Member($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture);
 
         $user = $this->userService->create($fields);
-        $member->setUser($user);
-
         $address = $this->addressService->create($fields["address"]);
+
+        $member->setUser($user);
         $member->setAddress($address);
+
         $this->memberDataService->persist($member);
+
+        $memberPositions = [];
+        foreach ($fields["positions"] as $position) {
+            $memberPositions[] = $this->memberPositionService->create($member, $position);
+        }
+        $member->setMemberPositions($memberPositions);
 
         return $member;
     }
@@ -148,10 +153,18 @@ class MemberService
             $department = $this->departmentService->getOne($departmentId);
         }
 
-        $company = Validator::requiredString($fields["company"]);
-        $profilePicture = Validator::requiredString($fields["profilePicture"]);
-        $memberPositionIds = $fields["positionIds"];
-        $memberPositions = $this->memberPositionService->getSome($memberPositionIds);
+        $company = Validator::optionalString($fields["company"]);
+        $profilePicture = Validator::optionalString($fields["profilePicture"]);
+
+        $memberPositions = $member->getMemberPositions();
+        foreach ($memberPositions as $memberPosition)
+            $this->memberPositionService->delete($memberPosition);
+
+        $memberPositions = [];
+        foreach ($fields["positions"] as $position) {
+            $memberPositions[] = $this->memberPositionService->create($member, $position);
+        }
+        $member->setMemberPositions($memberPositions);
 
         $member->setFirstName($firstName);
         $member->setLastName($lastName);
@@ -166,8 +179,8 @@ class MemberService
         $member->setMemberPositions($memberPositions);
 
         $this->addressService->update($member->getAddress()->getId(), $fields["address"]);
-
         $this->userService->update($member->getId(), $fields);
+
         $this->memberDataService->persist($member);
 
         return $member;
@@ -178,13 +191,13 @@ class MemberService
         $id = Validator::requiredId($id);
         $member = $this->getOne($id);
         $address = $member->getAddress();
-
-        $member->setMemberPositions([]);
+        $memberPositions = $member->getMemberPositions();
+        foreach ($memberPositions as $memberPosition)
+            $this->memberPositionService->delete($memberPosition);
         $member->setStudiesAsQualityManager([]);
         $member->setStudiesAsLeader([]);
         $member->setStudiesAsConsultant([]);
         $this->memberDataService->persist($member);
-
         $this->memberDataService->delete($member);
         $this->userService->delete($id);
         $this->addressService->delete($address->getId());

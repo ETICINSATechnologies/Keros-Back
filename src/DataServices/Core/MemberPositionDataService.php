@@ -3,12 +3,10 @@
 namespace Keros\DataServices\Core;
 
 
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Exception;
 use Keros\Entities\Core\MemberPosition;
-use Keros\Entities\Core\RequestParameters;
 use Keros\Error\KerosException;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
@@ -72,4 +70,15 @@ class MemberPositionDataService
         }
     }
 
+    public function delete(MemberPosition $memberPosition): void
+    {
+        try {
+            $this->entityManager->remove($memberPosition);
+            $this->entityManager->flush();
+        } catch (Exception $e) {
+            $msg = "Failed to delete member : " . $e->getMessage();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
+    }
 }
