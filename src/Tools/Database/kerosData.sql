@@ -17,11 +17,15 @@ INSERT INTO core_address (id, line1, line2, postalCode, city, countryId) VALUES
   (4, '11 Backbeat street', 'bat. a', '91004', 'djibouti', 3), # firm 1
   (5, '17 Watcha ave', 'porte 5', '674A4', 'Leicester', 40); # firm 2
 
+TRUNCATE TABLE core_ticket;
+INSERT INTO core_ticket (id, userId, title, message, type, status) VALUES
+  (1, 1, 'Impossible de changer son mot de passe', 'Bonjour, je narrive pas à changer mon mot de passe', 'Problème de compte', 'En cours'); # ticket 1
+
 TRUNCATE TABLE core_member;
 INSERT INTO core_member (id, genderId, firstName, lastName, birthday, telephone, email, addressId, schoolYear, departmentId, company, profilePicture) VALUES
   (1, 1, 'Conor', 'Breeze', STR_TO_DATE('1975-12-25', '%Y-%m-%d'), '+332541254', 'fake.mail@fake.com', 2, 3, 1, 'Google', 'http://picture.png'),
   (2, 1, 'Marah', 'Cool', STR_TO_DATE('1976-10-27', '%Y-%m-%d'), '+332541541', 'fake.mail2@fake.com', 1, 3, 1, 'Amazon', NULL),
-  (3, 1, 'Laurence', 'Teinturière', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.mail3@fake.com', 3, 5, 2, NULL, NULL);
+  (3, 1, 'Laurence', 'Tainturière', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.mail3@fake.com', 3, 5, 2, NULL, NULL);
 
 TRUNCATE TABLE core_member_position;
 INSERT INTO core_member_position (id, memberId, positionId, isBoard, year) VALUES
@@ -44,9 +48,9 @@ INSERT INTO `ua_contact` (`id`, `firstName`, `lastName`, `genderId`, `firmId`, `
   (4, 'Marah', 'Galy Adam', 1, 1, 'marah.galy@etic-insa.com', '0033646786532', NULL, NULL, NULL, 0);
 
 TRUNCATE TABLE ua_study;
-INSERT INTO `ua_study` (`id`, `projectNumber`, `name`, `description`, `fieldId`, `provenanceId`, `statusId`, `signDate`, `endDate`, `managementFee`, `realizationFee`, `rebilledFee`, `ecoparticipationFee`, `outsourcingFee`, `archivedDate`, `firmId`) VALUES
-  (1, 12, 'Développement IDE', 'Développement d\'un IDE pour utilisation interne', 1, 1, 2, '2018-11-10', '2018-11-10', 12000000, 123, 12345, 12, 12324454, '2018-11-10', 1),
-  (2, 12, 'Tests d\'acidité dans le Rhône', 'Créateur de IDE', 1, 1, 2, '2018-11-10', '2018-11-10', 12000000, 123, 12345, 12, 12324454, '2018-11-10', 2);
+INSERT INTO `ua_study` (`id`, `name`, `description`, `fieldId`, `provenanceId`, `statusId`, `signDate`, `endDate`, `managementFee`, `realizationFee`, `rebilledFee`, `ecoparticipationFee`, `outsourcingFee`, `archivedDate`, `firmId`, `confidential`) VALUES
+  (1, 'Développement IDE', 'Développement d\'un IDE pour utilisation interne', 1, 1, 2, '2018-11-10', '2018-11-10', 12000000, 123, 12345, 12, 12324454, '2018-11-10', 1, true),
+  (2, 'Tests d\'acidité dans le Rhône', 'Créateur de IDE', 1, 1, 2, '2018-11-10', '2018-11-10', 12000000, 123, 12345, 12, 12324454, '2018-11-10', 2, false);
 
 TRUNCATE TABLE ua_study_consultant;
 INSERT INTO `ua_study_consultant` (`memberId`, `studyId`) VALUES

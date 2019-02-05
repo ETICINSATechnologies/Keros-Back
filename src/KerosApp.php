@@ -4,6 +4,7 @@ namespace Keros;
 
 use Keros\Controllers\Auth\LoginController;
 use Keros\Controllers\Core\AddressController;
+use Keros\Controllers\Core\TicketController;
 use Keros\Controllers\Core\CountryController;
 use Keros\Controllers\Core\DepartmentController;
 use Keros\Controllers\Core\GenderController;
@@ -155,6 +156,13 @@ class KerosApp
                     $this->put("/{id:[0-9]+}", MemberController::class . ':updateMember');
                     $this->delete("/{id:[0-9]+}", MemberController::class . ':deleteMember');
                     $this->get("/board/latest", MemberController::class . ':getLatestBoard');
+                });
+
+                $this->group('/ticket', function () {
+                    $this->get("", TicketController::class . ':getPageTickets');
+                    $this->get('/{id:[0-9]+}', TicketController::class . ':getTicket');
+                    $this->post("", TicketController::class . ':createTicket');
+                    $this->delete("/{id:[0-9]+}", TicketController::class . ':deleteTicket');
                 });
             })->add($this->getContainer()->get(AuthenticationMiddleware::class));
         });

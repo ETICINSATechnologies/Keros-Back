@@ -6,6 +6,7 @@ namespace Keros\Services;
 use Keros\Services\Ua\ProvenanceService;
 use Keros\Services\Auth\LoginService;
 use Keros\Services\Core\AddressService;
+use Keros\Services\Core\TicketService;
 use Keros\Services\Core\CountryService;
 use Keros\Services\Core\DepartmentService;
 use Keros\Services\Core\GenderService;
@@ -37,6 +38,9 @@ class ServiceRegistrar
         };
         $container[AddressService::class] = function ($container) {
             return new AddressService($container);
+        };
+        $container[TicketService::class] = function ($container) {
+            return new TicketService($container);
         };
         $container[DepartmentService::class] = function ($container) {
             return new DepartmentService($container);

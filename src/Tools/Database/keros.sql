@@ -80,6 +80,20 @@ CREATE TABLE `core_address` (
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
+DROP TABLE IF EXISTS core_ticket;
+CREATE TABLE `core_ticket` (
+  `id`      int(1) AUTO_INCREMENT,
+  `userId`  int(11)     NOT NULL,
+  `title`   VARCHAR(64) NOT NULL,
+  `message` VARCHAR(64) NOT NULL,
+  `type`    VARCHAR(64) NOT NULL,
+  `status`  VARCHAR(64) NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `core_ticket_userId_fk` FOREIGN KEY (`userId`) REFERENCES `core_member` (`id`)
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+
 # L'ID de core_member est le même que celui de core_user qui lui est attaché
 DROP TABLE IF EXISTS core_member;
 CREATE TABLE `core_member` (
@@ -192,7 +206,6 @@ CREATE TABLE `ua_status` (
 DROP TABLE IF EXISTS ua_study;
 CREATE TABLE `ua_study` (
   `id`           int(11) AUTO_INCREMENT,
-  `projectNumber` int(11)      NOT NULL,
   `name`         varchar(100) NOT NULL,
   `description`   varchar(255),
   `fieldId`      int(11)      NOT NULL,
@@ -207,6 +220,7 @@ CREATE TABLE `ua_study` (
   `outsourcingFee` decimal(12,2),
   `archivedDate` date,
   `firmId`      int(11)      NOT NULL,
+  `confidential` boolean,
   PRIMARY KEY (`id`),
   CONSTRAINT `ua_study_fieldId_fk` FOREIGN KEY (`fieldId`) REFERENCES `ua_field` (`id`),
   CONSTRAINT `ua_study_provenanceId_fk` FOREIGN KEY (`provenanceId`) REFERENCES `ua_provenance` (`id`),
@@ -345,7 +359,7 @@ INSERT INTO ua_firm_type (id, label) VALUES
 INSERT INTO core_gender (id, label) VALUES (1, 'H'), (2, 'F'), (3, 'A'), (4, 'I');
 
 INSERT INTO `ua_status` (`id`, `label`) VALUES
-  (1, 'En cours d\'exécution'),
+  (1, 'En cours d''exécution'),
   (2, 'En clôture'),
   (3, 'Clôturée'),
   (4, 'En rupture'),
@@ -355,12 +369,12 @@ INSERT INTO `ua_provenance` (`id`, `label`) VALUES
   (1, 'Site Web'),
   (2, 'Ancien Client'),
   (3, 'Kiwi'),
-  (4, 'Dev\'Co'),
+  (4, 'Dev''Co'),
   (5, 'Appel'),
   (6, 'Partenariat EM'),
   (7, 'Junior-Entreprise'),
   (8, 'INSA'),
-  (9, 'Appel d\'offre'),
+  (9, 'Appel d''offre'),
   (10, 'Phoning'),
   (11, 'Mailing'),
   (12, 'Mail'),
