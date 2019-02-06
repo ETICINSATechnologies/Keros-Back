@@ -111,7 +111,7 @@ class MemberController
         }
 
         //Parameter year
-        else
+        elseif (isset($queryParams['year']))
         {
             $params = new RequestParameters($queryParams, MemberPosition::getSearchFieldsYear());
             $membersPosition = $this->memberPositionService->getPage($params);
@@ -124,6 +124,13 @@ class MemberController
                     }
                 }
             }
+        }
+
+        //No parameters : display all members
+        else
+        {
+            $params = new RequestParameters($queryParams, Member::getSearchFields());
+            $members = $this->memberService->getPage($params);
         }
 
         $totalCount = $this->memberService->getCount($params);
