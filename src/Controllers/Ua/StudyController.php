@@ -227,6 +227,6 @@ class StudyController
                 'generateLocation' => "http://keros-api-dev.etic-insa.com/api/v1/ua/study/" . $args["id"] . "/template/" . $template->getId());
         }
 
-        return $response->withJson(array('templates' => $templates), 200);
+        return $response->withJson(array('documents' => $templates), 200);
     }
 }

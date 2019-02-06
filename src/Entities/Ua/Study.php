@@ -3,6 +3,7 @@
 namespace Keros\Entities\Ua;
 
 use JsonSerializable;
+use Keros\Entities\Core\Member;
 
 /**
  * @Entity
@@ -443,7 +444,7 @@ class Study implements JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return Contact[]
      */
     public function getContacts()
     {
@@ -541,7 +542,7 @@ class Study implements JsonSerializable
     }
 
     /**
-     * @return array
+     * @return Member[]
      */
     public function getConsultantsArray()
     {

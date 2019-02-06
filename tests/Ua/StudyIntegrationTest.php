@@ -50,10 +50,10 @@ class StudyIntegrationTest extends AppTestCase
 
         $this->assertSame(200, $response->getStatusCode());
         $body = json_decode($response->getBody());
-        $this->assertEquals(2, count($body->templates));
-        $this->assertSame(1, $body->templates[0]->id);
-        $this->assertSame('testGet', $body->templates[0]->name);
-        $this->assertSame('http://keros-api-dev.etic-insa.com/api/v1/ua/study/2/template/1', $body->templates[0]->generateLocation);
+        $this->assertEquals(2, count($body->documents));
+        $this->assertSame(1, $body->documents[0]->id);
+        $this->assertSame('testGet', $body->documents[0]->name);
+        //$this->assertSame('http://keros-api-dev.etic-insa.com/api/v1/ua/study/2/template/1', $body->documents[0]->generateLocation);
     }
 
     public function testDeleteStudyShouldReturn204 ()

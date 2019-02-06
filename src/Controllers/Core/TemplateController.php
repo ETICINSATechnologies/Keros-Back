@@ -5,11 +5,14 @@ namespace Keros\Controllers\Core;
 
 use Doctrine\ORM\EntityManager;
 use Keros\DataServices\Core\TemplateDataService;
+use Keros\Entities\Core\Member;
 use Keros\Entities\Ua\Contact;
 use Keros\Entities\Ua\Study;
 use Keros\Error\KerosException;
+use Keros\Services\Core\MemberService;
 use Keros\Services\Core\TemplateService;
 use Keros\Services\Ua\StudyService;
+use Keros\Tools\ConfigLoader;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Slim\Http\Request;
@@ -50,6 +53,11 @@ class TemplateController
     private $temporaryDirectory;
 
     /**
+     * @var
+     */
+    private $memberService;
+
+    /**
      * TemplateController constructor.
      * @param ContainerInterface $container
      */
@@ -61,6 +69,7 @@ class TemplateController
         $this->templateTypeService = $container->get(TemplateDataService::class);
         $this->studyService = $container->get(StudyService::class);
         $this->temporaryDirectory = $container->get("temporaryDirectory");
+        $this->memberService = $container->get(MemberService::class);
     }
 
     /**
@@ -155,40 +164,88 @@ class TemplateController
         $this->logger->debug("Generating document with template " . $args["idTemplate"] . " from " . $request->getServerParams()["REMOTE_ADDR"]);
         $study = $this->studyService->getOne($args["idStudy"]);
         $template = $this->templateService->getOne($args["idTemplate"]);
+        $connectedUser = $this->memberService->getOne($request->getAttribute("userId"));
+        $templateWithOneConsultant = array('ARRM.docx', 'Avenant_Etudiant.docx', 'Demande_BV.docx', 'RM.docx');
+        $doZip = count($study->getConsultantsArray()) > 1 && in_array($template->getName(), $templateWithOneConsultant);
 
-        do{
-            $location = $this->temporaryDirectory . md5($template->getName().microtime()) . '.' . pathinfo($template->getLocation(), PATHINFO_EXTENSION);
-        }while(file_exists($location));
-        mkdir(pathinfo($location, PATHINFO_DIRNAME), 0777, true);
-        copy($template->getLocation(), $location);
+        $this->logger->info($doZip);
 
-        $return = false;
-        if (pathinfo($template->getLocation(), PATHINFO_EXTENSION) == 'docx')
-            $return = $this->generateStudyDocx($location, $study);
-        elseif (pathinfo($template->getLocation(), PATHINFO_EXTENSION) == 'pptx')
-            $return = $this->generateStudyPptx($location, $study);
+        $this->logger->info(json_encode($doZip));
+        if ($doZip) {
+            do {
+                $ziplocation = $this->temporaryDirectory . md5($template->getName() . microtime()) . '.zip';
+            } while (file_exists($ziplocation));
+            $zip = new \ZipArchive();
+            if ($zip->open($ziplocation, \ZipArchive::CREATE) !== TRUE) {
+                $msg = "Error creating zip with template " . $template->getId() . " and study " . $study->getId();
+                $this->logger->error($msg);
+                throw new KerosException($msg, 500);
+            }
+            //mkdir($location, 0777, true);
+            $files[] = array();
+            foreach ($study->getConsultantsArray() as $consultant) {
+                $filename = $this->temporaryDirectory . pathinfo($template->getName(), PATHINFO_FILENAME) . '_' . $consultant->getId() . '.' . pathinfo($template->getLocation(), PATHINFO_EXTENSION);
+                $files[] = $filename;
+                copy($template->getLocation(), $filename);
+                $return = false;
 
-        if (!$return) {
-            $msg = "Error generating document with template " . $template->getId() . " and study " . $study->getId();
-            $this->logger->error($msg);
-            throw new KerosException($msg, 500);
+                if (pathinfo($template->getLocation(), PATHINFO_EXTENSION) == 'docx')
+                    $return = $this->generateStudyDocx($filename, $study, $connectedUser, $consultant);
+                elseif (pathinfo($template->getLocation(), PATHINFO_EXTENSION) == 'pptx')
+                    $return = $this->generateStudyPptx($filename, $study, $connectedUser, $consultant);
+                if (!$return) {
+                    $msg = "Error generating document with template " . $template->getId() . " and study " . $study->getId();
+                    $this->logger->error($msg);
+                    throw new KerosException($msg, 500);
+                }
+
+                $zip->addFile($filename, pathinfo($template->getName(), PATHINFO_FILENAME) . DIRECTORY_SEPARATOR . pathinfo($filename, PATHINFO_BASENAME));
+            }
+            $zip->close();
+            foreach ($files as $filename)
+                unlink($filename);
+            $location = $ziplocation;
+        } else {
+            do {
+                $location = $this->temporaryDirectory . md5($template->getName() . microtime()) . '.' . pathinfo($template->getLocation(), PATHINFO_EXTENSION);
+            } while (file_exists($location));
+
+            mkdir(pathinfo($location, PATHINFO_DIRNAME), 0777, true);
+            copy($template->getLocation(), $location);
+
+            $return = false;
+            if (pathinfo($template->getLocation(), PATHINFO_EXTENSION) == 'docx')
+                $return = $this->generateStudyDocx($location, $study, $connectedUser, null);
+            elseif (pathinfo($template->getLocation(), PATHINFO_EXTENSION) == 'pptx')
+                $return = $this->generateStudyPptx($location, $study, $connectedUser, null);
+
+            if (!$return) {
+                $msg = "Error generating document with template " . $template->getId() . " and study " . $study->getId();
+                $this->logger->error($msg);
+                throw new KerosException($msg, 500);
+            }
         }
 
-        return $response->withJson(array ('location' => $location), 200);
+        $kerosConfig = ConfigLoader::getConfig();
+
+        return $response->withJson(array('location' => 'http://'. $kerosConfig['DB_HOST'] . $kerosConfig[PORT] . $location), 200);
     }
 
     /**
      * @param $location
      * @param $study
+     * @param $connectedUser
+     * @param $consultant
      * @return bool
+     * @throws \Exception
      */
-    private function generateStudyDocx($location, $study): bool
+    private function generateStudyDocx($location, $study, $connectedUser, $consultant): bool
     {
         $zip = new \ZipArchive();
         $fileToModify = 'word/document.xml';
 
         $searchArray = $this->getSearchArray();
-        $replacementArray = $this->getReplacementArray($study);
+        $replacementArray = $this->getReplacementArray($study, $connectedUser, $consultant);
 
         if ($zip->open($location) === TRUE) {
             //Read contents into memory
@@ -212,19 +269,20 @@ class TemplateController
     /**
      * @param $location
      * @param $study
+     * @param $connectedUser
+     * @param $consultant
      * @return bool
+     * @throws \Exception
      */
-    private function generateStudyPptx($location, $study): bool
+    private function generateStudyPptx($location, $study, $connectedUser, $consultant): bool
     {
         $zip = new \ZipArchive();
 
         $searchArray = $this->getSearchArray();
-        $replacementArray = $this->getReplacementArray($study);
+        $replacementArray = $this->getReplacementArray($study, $connectedUser, $consultant);
 
 
         if (true === $zip->open($location)) {
-
-
             $slide_number = 1; //loop through slide files
             while (($zip->locateName("ppt/slides/slide" . $slide_number . ".xml")) !== false) {
 
@@ -265,17 +323,49 @@ class TemplateController
             '${CIVILITECONTACT}',
             '${PRENOMCONTACT}',
             '${NOMCONTACT}',
-            '${MAILCONTACT}'
+            '${MAILCONTACT}',
+            '${DJOUR}',
+            '${NUMINTERVENANT}',
+            '${CIVILITEINTERVENANT}',
+            '${PRENOMINTERVENANT}',
+            '${NOMINTERVENANT}',
+            '${ADRESSEINTERVENANT}',
+            '${CPINTERVENANT}',
+            '${VILLEINTERVENANT}',
+            '${NOMUSER}',
+            '${PRENOMUSER}',
+            '${CIVILITEUSER}'
         );
     }
 
     /**
      * @param Study $study
+     * @param Member $connectedUser
+     * @param Member $consultant
      * @return array
+     * @throws \Exception
      */
-    private function getReplacementArray(Study $study): array
+    private function getReplacementArray(Study $study, Member $connectedUser, ?Member $consultant): array
     {
         $contact = $study->getContacts()[0];
+        $date = new DateTime();
+        /* $consultantsNum = '';
+         $consultantsFullAddress = '';
+         $consultantsFullName = '';
+         foreach ($study->getConsultantsArray() as $consultant) {
+             $consultantsNum .= $consultant->getId() . " ";
+             if ($consultant->getGender()->getLabel() == 'H')
+                 $consultantsFullName .= 'M. ';
+             elseif ($consultant->getGender()->getLabel() == 'F')
+                 $consultantsFullName .= 'Mme ';
+             else
+                 $consultantsFullName .= '';
+             $consultantsFullName .= $consultant->getFirstName() . " ";
+             $consultantsFullName .= $consultant->getLastName() . ", ";
+             $consultantsFullAddress .= $consultant->getAddress()->getLine1() . " " . $consultant->getAddress()->getLine2() . " ";
+             $consultantsFullAddress .= $consultant->getAddress()->getPostalCode() . " ";
+             $consultantsFullAddress .= $consultant->getAddress()->getCity() . ", ";
+         }*/
 
         return array(
             $study->getFirm()->getName(),
@@ -287,10 +377,21 @@ class TemplateController
             $study->getDescription(),
             $study->getSignDate()->format('d/m/Y'),
             $contact->getPosition(),
-            $contact->getGender()->getLabel(),
+            $contact->getGender()->getLabel() == 'H' ? "Monsieur" : ($contact->getGender()->getLabel() == 'F' ? "Madame" : ''),
             $contact->getFirstName(),
             $contact->getLastName(),
-            $contact->getEmail()
+            $contact->getEmail(),
+            $date->format('d/m/Y'),
+            ($consultant != null) ? $consultant->getId() : '',
+            ($consultant != null) ? ($consultant->getGender()->getLabel() == 'H' ? "Monsieur" : ($consultant->getGender()->getLabel() == 'F' ? "Madame" : '')) : '',
+            ($consultant != null) ? $consultant->getFirstName() : '',
+            ($consultant != null) ? $consultant->getLastName() : '',
+            ($consultant != null) ? $consultant->getAddress()->getLine1() . ' ' . $consultant->getAddress()->getLine2() : '',
+            ($consultant != null) ? $consultant->getAddress()->getPostalCode() : '',
+            ($consultant != null) ? $consultant->getAddress()->getCity() : '',
+            $connectedUser->getLastName(),
+            $connectedUser->getFirstName(),
+            $connectedUser->getGender()->getLabel() == 'H' ? "Monsieur" : ($connectedUser->getGender()->getLabel() == 'F' ? "Madame" : '')
         );
     }
 }
