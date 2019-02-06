@@ -48,6 +48,18 @@ class MemberDataService
         }
     }
 
+    public function getAll(): array
+    {
+        try {
+            $members = $this->repository->findAll();
+            return $members;
+        } catch (Exception $e) {
+            $msg = "Error finding page of member : " . $e->getMessage();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
+    }
+
     public function getOne(int $id): ?Member
     {
         try {

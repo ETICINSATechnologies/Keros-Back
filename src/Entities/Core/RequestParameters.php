@@ -45,13 +45,23 @@ class RequestParameters
      */
     public function __construct(array $params, array $searchFields)
     {
-        // Array of search valuee
-        if (isset($params['search']))
-            $this->search = explode(" ",$params['search']);
+        // Array of search values for member with the parameter search
+        if (isset($params['search'])) {
+            $this->search = explode(" ", $params['search']);
+        }
 
-        // Search fields
+        //Array of search values for member with the parameter position
+        if (isset($params['position'])) {
+            $this->search = explode(" ", $params['position']);
+        }
+
+        //Array of search values for member with the parameter year
+        if (isset($params['year'])) {
+            $this->search = explode(" ", $params['year']);
+        }
 
         $this->searchFields = $searchFields;
+
 
         // Page number
         $this->pageNumber = 0; // Default value

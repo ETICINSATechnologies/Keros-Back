@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Exception;
 use Keros\Entities\Core\MemberPosition;
+use Keros\Entities\Core\RequestParameters;
 use Keros\Error\KerosException;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
@@ -65,6 +66,19 @@ class MemberPositionDataService
             return $address;
         } catch (Exception $e) {
             $msg = "Error finding member position with ID $id : " . $e->getMessage();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
+    }
+
+    public function getPage(RequestParameters $requestParameters): array
+    {
+        try {
+            $criteria = $requestParameters->getCriteria();
+            $membersPosition = $this->repository->matching($criteria)->getValues();
+            return $membersPosition;
+        } catch (Exception $e) {
+            $msg = "Error finding page of members position : " . $e->getMessage();
             $this->logger->error($msg);
             throw new KerosException($msg, 500);
         }

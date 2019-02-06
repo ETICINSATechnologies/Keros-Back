@@ -7,8 +7,10 @@ use Keros\DataServices\Core\MemberPositionDataService;
 use Keros\Entities\Core\Member;
 use Keros\Entities\Core\MemberPosition;
 use Keros\DataServices\Core\MemberDataService;
+use Keros\Entities\Core\RequestParameters;
 use Keros\Error\KerosException;
 use Keros\Tools\Validator;
+use Doctrine\ORM\EntityRepository;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 
@@ -30,6 +32,7 @@ class MemberPositionService
      * @var Logger
      */
     private $logger;
+
 
     public function __construct(ContainerInterface $container)
     {
@@ -61,6 +64,11 @@ class MemberPositionService
         return $memberPosition;
     }
 
+    public function getAll(): array
+    {
+        return $this->memberPositionDataService->getAll();
+    }
+
     public function getLatestBoard(): array
     {
         $memberPositions = $this->memberPositionDataService->getAll();
@@ -79,6 +87,11 @@ class MemberPositionService
             }
         }
         return $boardMembers;
+    }
+
+    public function getPage(RequestParameters $requestParameters): array
+    {
+        return $this->memberPositionDataService->getPage($requestParameters);
     }
 
     public function getSome(array $ids): array
