@@ -107,6 +107,8 @@ CREATE TABLE `core_member` (
   `addressId`    int(11)      NOT NULL UNIQUE,
   `schoolYear`   int(11)     DEFAULT NULL,
   `departmentId` int(11)     DEFAULT NULL,
+  `company` varchar(255)     DEFAULT NULL,
+  `profilePicture` varchar(255)     DEFAULT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `core_user_userId_fk` FOREIGN KEY (`id`) REFERENCES `core_user` (`id`),
   CONSTRAINT `core_user_genderId_fk` FOREIGN KEY (`genderId`) REFERENCES `core_gender` (`id`),
@@ -118,11 +120,12 @@ CREATE TABLE `core_member` (
 
 DROP TABLE IF EXISTS core_member_position;
 CREATE TABLE `core_member_position` (
+  `id`         int(11) AUTO_INCREMENT,
   `memberId`   int(11) NOT NULL,
   `positionId` int(11) NOT NULL,
-  `year` int(4) NOT NULL,
-  `isBoard` tinyint(4) NOT NULL,
-  PRIMARY KEY (`memberId`, `positionId`),
+  `isBoard`    BOOLEAN NOT NULL DEFAULT FALSE,
+  `year`       int(11),
+  PRIMARY KEY (`id`),
   CONSTRAINT `core_member_position_memberId_fk` FOREIGN KEY (`memberId`) REFERENCES `core_member` (`id`),
   CONSTRAINT `core_position_position_positionId_fk` FOREIGN KEY (`positionId`) REFERENCES `core_position` (`id`)
 )

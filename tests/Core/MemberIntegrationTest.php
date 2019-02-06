@@ -43,10 +43,20 @@ class MemberIntegrationTest extends AppTestCase
             ],
             "schoolYear" => 1,
             "departmentId" => 1,
-            "positionIds" => [
-                1,
-                3
-            ]
+            "positions" => [
+                array(
+                    "id" => 3,
+                    "year" => 2018,
+                    "isBoard" => true
+                ),
+                array(
+                    "id" => 4,
+                    "year" => 2019,
+                    "isBoard" => false
+                )
+            ],
+            "company" => "Amazon",
+            "profilePicture" => "http://image.png"
         );
 
         $env = Environment::mock([
@@ -72,9 +82,11 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(1, $body->department->id);
         $this->assertSame(1, $body->schoolYear);
         $this->assertSame("0033675385495", $body->telephone);
+        $this->assertSame("Amazon", $body->company);
+        $this->assertSame("http://image.png", $body->profilePicture);
         $this->assertNotNull($body->address->id);
-        $this->assertSame(1, $body->positions[0]->id);
-        $this->assertSame(3, $body->positions[1]->id);
+        $this->assertSame(3, $body->positions[0]->id);
+        $this->assertSame(4, $body->positions[1]->id);
     }
 
     public function testDeleteMembersShouldReturn204()
@@ -187,10 +199,20 @@ class MemberIntegrationTest extends AppTestCase
                 "countryId" => 1
             ],
             "disabled" => null,
-            "positionIds" => [
-                1,
-                2
-            ]
+            "positions" => [
+                array(
+                    "id" => 3,
+                    "year" => 2018,
+                    "isBoard" => true
+                ),
+                array(
+                    "id" => 4,
+                    "year" => 2019,
+                    "isBoard" => false
+                )
+            ],
+            "company" => "Amazon",
+            "profilePicture" => "http://image.png"
         );
 
         $env = Environment::mock([
@@ -215,9 +237,10 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(1, $body->department->id);
         $this->assertSame(1, $body->schoolYear);
         $this->assertSame("0033675385495", $body->telephone);
-        $this->assertNotNull($body->address->id);
-        $this->assertSame(1, $body->positions[0]->id);
-        $this->assertSame(2, $body->positions[1]->id);
+        $this->assertSame("Amazon", $body->company);
+        $this->assertSame("http://image.png", $body->profilePicture);
+        $this->assertSame(3, $body->positions[0]->id);
+        $this->assertSame(4, $body->positions[1]->id);
     }
     public function testPutMemberShouldReturn200()
     {
@@ -239,10 +262,20 @@ class MemberIntegrationTest extends AppTestCase
             ],
             "schoolYear" => 1,
             "departmentId" => 1,
-            "positionIds" => [
-                1,
-                3
-            ]
+            "positions" => [
+                array(
+                    "id" => 3,
+                    "year" => 2018,
+                    "isBoard" => true
+                ),
+                array(
+                    "id" => 4,
+                    "year" => 2019,
+                    "isBoard" => false
+                )
+            ],
+            "company" => "Amazon",
+            "profilePicture" => "http://image.png"
         );
 
         $env = Environment::mock([
@@ -269,9 +302,11 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(1, $body->department->id);
         $this->assertSame(1, $body->schoolYear);
         $this->assertSame("0033675385495", $body->telephone);
+        $this->assertSame("Amazon", $body->company);
+        $this->assertSame("http://image.png", $body->profilePicture);
         $this->assertNotNull($body->address->id);
-        $this->assertSame(1, $body->positions[0]->id);
-        $this->assertSame(3, $body->positions[1]->id);
+        $this->assertSame(3, $body->positions[0]->id);
+        $this->assertSame(4, $body->positions[1]->id);
     }
 
     public function testPutMemberEmptyBodyShouldReturn400()

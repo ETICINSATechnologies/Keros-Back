@@ -120,4 +120,13 @@ class MemberController
 
         return $response->withStatus(204);
     }
+
+    public function getLatestBoard(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Getting latest board from " . $request->getServerParams()["REMOTE_ADDR"]);
+
+        $latestBoard = $this->memberService->getLatestBoard();
+
+        return $response->withJson($latestBoard, 200);
+    }
 }
