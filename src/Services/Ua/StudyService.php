@@ -129,7 +129,7 @@ class StudyService
         $confidential = Validator::optionalBool(isset($fields["confidential"]) ? $fields["confidential"] : null);
 
         $study = new Study($name, $description, $field, $status, $firm, $contacts, $leaders, $consultants, $qualityManagers, $confidential);
-      
+
         $study->setProvenance($provenance);
         $study->setSignDate($signDate);
         $study->setEndDate($endDate);

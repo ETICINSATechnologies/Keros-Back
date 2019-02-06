@@ -70,4 +70,5 @@ INSERT INTO `ua_study_contact` (`contactId`, `studyId`) VALUES
   (1, 2),
   (2, 2);
 
+
 COMMIT;

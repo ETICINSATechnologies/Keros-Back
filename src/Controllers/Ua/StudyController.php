@@ -84,7 +84,7 @@ class StudyController
 
     public function getPageStudy(Request $request, Response $response, array $args)
     {
-        $this->logger->debug("Get page studys from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->logger->debug("Get page studies from " . $request->getServerParams()["REMOTE_ADDR"]);
         $queryParams = $request->getQueryParams();
         $params = new RequestParameters($queryParams, Study::getSearchFields());
 
