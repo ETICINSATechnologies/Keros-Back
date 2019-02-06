@@ -124,7 +124,7 @@ class Study implements JsonSerializable
      * @param $confidential
      */
 
-    public function __construct($name, $description, $field, $status, $firm, $contacts, $leaders, $qualityManagers, $consultants)
+    public function __construct($name, $description, $field, $status, $firm, $contacts, $leaders, $qualityManagers, $consultants, $confidential)
     {
         $this->name = $name;
         $this->description = $description;
