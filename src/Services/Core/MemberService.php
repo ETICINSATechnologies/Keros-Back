@@ -128,6 +128,9 @@ class MemberService
         $allMembers = $this->memberDataService->getPage($requestParameters);
         $members = [];
 
+        if ($year == "latest")
+            $year = $this->memberPositionService->getLatestYear();
+
         // check if $positionId (resp. $year) is a parameter and if the position id (resp year) of
         // $memberPosition is identical to $positionId (resp. year)
         foreach ($allMembers as $member) {

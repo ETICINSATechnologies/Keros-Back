@@ -73,17 +73,23 @@ class MemberPositionService
         return $this->memberPositionDataService->getAll();
     }
 
+    public function getLatestYear(): int {
+        $memberPositions = $this->memberPositionDataService->getAll();
+        $year = 0;
+        foreach ($memberPositions as $membersPosition) {
+            if ($membersPosition->getYear() > $year) {
+                $year = $membersPosition->getYear();
+            }
+        }
+
+        return $year;
+    }
+
     public function getLatestBoard(): array
     {
         $memberPositions = $this->memberPositionDataService->getAll();
         $boardMembers = array();
-        $currentYear = 0;
-
-        foreach ($memberPositions as $membersPosition) {
-            if ($membersPosition->getYear() > $currentYear) {
-                $currentYear = $membersPosition->getYear();
-            }
-        }
+        $currentYear = $this->getLatestYear();
 
         foreach ($memberPositions as $membersPosition) {
             if ($membersPosition->getYear() == $currentYear and $membersPosition->getIsBoard() == true) {

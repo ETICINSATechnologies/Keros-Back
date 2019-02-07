@@ -8,7 +8,6 @@ use Slim\Http\Request;
 
 class MemberIntegrationTest extends AppTestCase
 {
-
     public function testSearchMemberShouldReturn200()
     {
         $env = Environment::mock([
@@ -29,6 +28,30 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(1, $body->content[0]->positions[0]->id);
         $this->assertSame(2, $body->content[0]->positions[1]->id);
         $this->assertSame(3, $body->content[0]->positions[2]->id);
+    }
+
+    public function testSearchLatestMemberShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/core/member?year=latest',
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(200, $response->getStatusCode());
+
+        $body = json_decode($response->getBody());
+        $this->assertNotNull($body->content);
+        $this->assertSame(2, sizeof($body->content));
+        $this->assertSame(1, $body->content[0]->id);
+        $this->assertSame(3, $body->content[0]->positions[0]->id);
+        $this->assertSame(3, $body->content[1]->id);
+        $this->assertSame(1, $body->content[1]->positions[0]->id);
+        $this->assertSame(2, $body->content[1]->positions[1]->id);
+        $this->assertSame(3, $body->content[1]->positions[2]->id);
     }
 
     public function testPutConnectedMemberEmptyBodyShouldReturn400()
