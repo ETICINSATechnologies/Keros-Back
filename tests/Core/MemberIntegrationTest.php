@@ -13,7 +13,7 @@ class MemberIntegrationTest extends AppTestCase
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/api/v1/core/member?search=Marah Teinturière',
+            'REQUEST_URI' => '/api/v1/core/member?search=Laurence&positionId=3&year=2018',
         ]);
 
         $req = Request::createFromEnvironment($env);
@@ -21,6 +21,14 @@ class MemberIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
 
         $this->assertSame(200, $response->getStatusCode());
+
+        $body = json_decode($response->getBody());
+        $this->assertNotNull($body->content);
+        $this->assertSame(1, sizeof($body->content));
+        $this->assertSame(3, $body->content[0]->id);
+        $this->assertSame(1, $body->content[0]->positions[0]->id);
+        $this->assertSame(2, $body->content[0]->positions[1]->id);
+        $this->assertSame(3, $body->content[0]->positions[2]->id);
     }
 
     public function testPutConnectedMemberEmptyBodyShouldReturn400()
@@ -152,7 +160,6 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertNotNull(strlen($body->content[0]->email));
         $this->assertNotNull(strlen($body->content[0]->birthday));
         $this->assertNotNull(strlen($body->content[0]->address->id));
-
     }
 
     public function testGetMemberShouldReturn200()

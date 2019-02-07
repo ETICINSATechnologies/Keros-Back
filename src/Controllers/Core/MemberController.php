@@ -87,9 +87,11 @@ class MemberController
 
         $params = new RequestParameters($queryParams, Member::getSearchFields());
 
-        // get the parameters positionId and year
-        $positionId = $queryParams['positionId'];
-        $year = $queryParams['year'];
+        // get the parameters positionId and year if they exist
+        $positionId = null;
+        $year = null;
+        if (isset($queryParams['positionId'])) $positionId = $queryParams['positionId'];
+        if (isset($queryParams['year'])) $year = $queryParams['year'];
 
         $members = $this->memberService->getPage($params, $positionId, $year);
         $totalCount = $this->memberService->getCount($params);

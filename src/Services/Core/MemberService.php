@@ -138,8 +138,10 @@ class MemberService
                     $matchingPosition = true;
                 if (!$year || $year == $memberPosition->getYear())
                     $matchingYear = true;
-                if ($matchingPosition && $matchingYear)
+                if ($matchingPosition && $matchingYear) {
                     $members[] = $member;
+                    break;
+                }
             }
         }
 
