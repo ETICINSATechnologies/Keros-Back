@@ -51,8 +51,8 @@ class RequestParameters
         }
 
         //Array of search values for member with the parameter position
-        if (isset($params['position'])) {
-            $this->search = explode(" ", $params['position']);
+        if (isset($params['positionId'])) {
+            $this->search = explode(" ", $params['positionId']);
         }
 
         //Array of search values for member with the parameter year

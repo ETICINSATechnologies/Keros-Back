@@ -86,23 +86,20 @@ class MemberController
         $queryParams = $request->getQueryParams();
 
         //Parameter search
-        if (isset($queryParams['search']))
-        {
-            $params = new RequestParameters($queryParams, Member::getSearchFields());
-            $members = $this->memberService->getPage($params);
-
-
-        }
+        $memberParams = $queryParams;
+        unset($memberParams['positionId']);
+        unset($memberParams['year']);
+        $memberParams = new RequestParameters($memberParams, Member::getSearchFields());
+        $members = $this->memberService->getPage($memberParams);
 
         //Parameter position
-        elseif (isset($queryParams['position']))
-        {
-            $params = new RequestParameters($queryParams, MemberPosition::getSearchFieldsPosition());
-            $membersPosition = $this->memberPositionService->getPage($params);
-            $membersAll = $this->memberService->getAll();
+        if (isset($queryParams['positionId'])) {
+            $membersPosition = $this->memberPositionService->getSome([$queryParams['positionId']]);
+            $membersAll = $members;
             $members = [];
             foreach ($membersPosition as $mP) {
-                foreach($membersAll as $mA) {
+                $this->logger->debug(json_encode($mP));
+                foreach ($membersAll as $mA) {
                     if ($mP->getMember() == $mA) {
                         $members = array_unique(array_merge($mA, $mP));
                     }
@@ -111,30 +108,23 @@ class MemberController
         }
 
         //Parameter year
-        elseif (isset($queryParams['year']))
-        {
+        if (isset($queryParams['year'])) {
             $params = new RequestParameters($queryParams, MemberPosition::getSearchFieldsYear());
             $membersPosition = $this->memberPositionService->getPage($params);
-            $membersAll = $this->memberService->getAll();
+            $membersAll = $members;
             $members = [];
             foreach ($membersPosition as $mP) {
-                foreach($membersAll as $mA) {
+                foreach ($membersAll as $mA) {
                     if ($mP->getMember() == $mA) {
-                        $members = array_unique(array_merge($mA, $mP));
+                        $members[] = $mA;
                     }
                 }
             }
         }
 
-        //No parameters : display all members
-        else
-        {
-            $params = new RequestParameters($queryParams, Member::getSearchFields());
-            $members = $this->memberService->getPage($params);
-        }
+        $totalCount = $this->memberService->getCount($memberParams);
+        $page = new Page($members, $memberParams, $totalCount);
 
-        $totalCount = $this->memberService->getCount($params);
-        $page = new Page($members, $params, $totalCount);
         return $response->withJson($page, 200);
     }
 

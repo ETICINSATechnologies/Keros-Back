@@ -89,6 +89,11 @@ class MemberPositionService
         return $boardMembers;
     }
 
+    /**
+     * @param RequestParameters $requestParameters
+     * @return MemberPosition[]
+     * @throws KerosException
+     */
     public function getPage(RequestParameters $requestParameters): array
     {
         return $this->memberPositionDataService->getPage($requestParameters);
@@ -98,6 +103,7 @@ class MemberPositionService
     {
         $memberPositions = [];
         foreach ($ids as $id) {
+            $this->logger->debug(is_int($id));
             $id = Validator::requiredId($id);
             $memberPosition = $this->memberPositionDataService->getOne($id);
             if (!$memberPosition) {
