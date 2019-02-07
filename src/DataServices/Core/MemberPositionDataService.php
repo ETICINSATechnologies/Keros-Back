@@ -47,6 +47,10 @@ class MemberPositionDataService
         }
     }
 
+    /**
+     * @return MemberPosition[]
+     * @throws KerosException
+     */
     public function getAll(): array
     {
         try {

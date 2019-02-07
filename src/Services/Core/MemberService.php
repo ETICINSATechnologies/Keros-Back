@@ -107,7 +107,7 @@ class MemberService
         return $member;
     }
 
-    public function getAll() : array
+    public function getAll(): array
     {
         return $this->memberDataService->getAll();
     }
@@ -123,9 +123,27 @@ class MemberService
         return $member;
     }
 
-    public function getPage(RequestParameters $requestParameters): array
+    public function getPage(RequestParameters $requestParameters, $positionId, $year): array
     {
-        return $this->memberDataService->getPage($requestParameters);
+        $allMembers = $this->memberDataService->getPage($requestParameters);
+        $members = [];
+
+        // check if $positionId (resp. $year) is a parameter and if the position id (resp year) of
+        // $memberPosition is identical to $positionId (resp. year)
+        foreach ($allMembers as $member) {
+            $matchingPosition = false;
+            $matchingYear = false;
+            foreach ($member->getMemberPositions() as $memberPosition) {
+                if (!$positionId || $positionId == $memberPosition->getPosition()->getId())
+                    $matchingPosition = true;
+                if (!$year || $year == $memberPosition->getYear())
+                    $matchingYear = true;
+                if ($matchingPosition && $matchingYear)
+                    $members[] = $member;
+            }
+        }
+
+        return $members;
     }
 
     public function getCount(RequestParameters $requestParameters): int
@@ -222,9 +240,9 @@ class MemberService
 
     }
 
-    public function getLatestBoard() : array
+    public function getLatestBoard(): array
     {
-        $boardMembersPositions =  $this->memberPositionService->getLatestBoard();
+        $boardMembersPositions = $this->memberPositionService->getLatestBoard();
         $boardMembers = array();
 
         foreach ($boardMembersPositions as $boardMemberPosition) {

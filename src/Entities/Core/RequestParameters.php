@@ -41,7 +41,7 @@ class RequestParameters
     /**
      * RequestParameters constructor.
      * @param array $params the parameters from the Request
-     * @param Searchable $class the class of the object searched
+     * @param array $searchFields
      */
     public function __construct(array $params, array $searchFields)
     {
@@ -50,18 +50,7 @@ class RequestParameters
             $this->search = explode(" ", $params['search']);
         }
 
-        //Array of search values for member with the parameter position
-        if (isset($params['positionId'])) {
-            $this->search = explode(" ", $params['positionId']);
-        }
-
-        //Array of search values for member with the parameter year
-        if (isset($params['year'])) {
-            $this->search = explode(" ", $params['year']);
-        }
-
         $this->searchFields = $searchFields;
-
 
         // Page number
         $this->pageNumber = 0; // Default value
@@ -129,6 +118,7 @@ class RequestParameters
                 }
             }
         }
+
         return $search;
     }
 }

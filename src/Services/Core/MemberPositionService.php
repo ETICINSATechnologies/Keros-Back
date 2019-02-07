@@ -64,6 +64,10 @@ class MemberPositionService
         return $memberPosition;
     }
 
+    /**
+     * @return MemberPosition[]
+     * @throws KerosException
+     */
     public function getAll(): array
     {
         return $this->memberPositionDataService->getAll();
@@ -103,7 +107,6 @@ class MemberPositionService
     {
         $memberPositions = [];
         foreach ($ids as $id) {
-            $this->logger->debug(is_int($id));
             $id = Validator::requiredId($id);
             $memberPosition = $this->memberPositionDataService->getOne($id);
             if (!$memberPosition) {

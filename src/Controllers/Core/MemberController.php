@@ -85,45 +85,16 @@ class MemberController
         $this->logger->debug("Get page members from " . $request->getServerParams()["REMOTE_ADDR"]);
         $queryParams = $request->getQueryParams();
 
-        //Parameter search
-        $memberParams = $queryParams;
-        unset($memberParams['positionId']);
-        unset($memberParams['year']);
-        $memberParams = new RequestParameters($memberParams, Member::getSearchFields());
-        $members = $this->memberService->getPage($memberParams);
+        $params = new RequestParameters($queryParams, Member::getSearchFields());
 
-        //Parameter position
-        if (isset($queryParams['positionId'])) {
-            $membersPosition = $this->memberPositionService->getSome([$queryParams['positionId']]);
-            $membersAll = $members;
-            $members = [];
-            foreach ($membersPosition as $mP) {
-                $this->logger->debug(json_encode($mP));
-                foreach ($membersAll as $mA) {
-                    if ($mP->getMember() == $mA) {
-                        $members = array_unique(array_merge($mA, $mP));
-                    }
-                }
-            }
-        }
+        // get the parameters positionId and year
+        $positionId = $queryParams['positionId'];
+        $year = $queryParams['year'];
 
-        //Parameter year
-        if (isset($queryParams['year'])) {
-            $params = new RequestParameters($queryParams, MemberPosition::getSearchFieldsYear());
-            $membersPosition = $this->memberPositionService->getPage($params);
-            $membersAll = $members;
-            $members = [];
-            foreach ($membersPosition as $mP) {
-                foreach ($membersAll as $mA) {
-                    if ($mP->getMember() == $mA) {
-                        $members[] = $mA;
-                    }
-                }
-            }
-        }
+        $members = $this->memberService->getPage($params, $positionId, $year);
+        $totalCount = $this->memberService->getCount($params);
 
-        $totalCount = $this->memberService->getCount($memberParams);
-        $page = new Page($members, $memberParams, $totalCount);
+        $page = new Page($members, $params, $totalCount);
 
         return $response->withJson($page, 200);
     }

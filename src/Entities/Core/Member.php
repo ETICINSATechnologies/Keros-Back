@@ -318,6 +318,9 @@ class Member implements JsonSerializable
         $this->department = $department;
     }
 
+    /**
+     * @return MemberPosition[]
+     */
     public function getMemberPositions()
     {
         return $this->memberPositions;

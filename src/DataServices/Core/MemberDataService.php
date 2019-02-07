@@ -72,10 +72,16 @@ class MemberDataService
         }
     }
 
+    /**
+     * @param RequestParameters $requestParameters
+     * @return Member[]
+     * @throws KerosException
+     */
     public function getPage(RequestParameters $requestParameters): array
     {
         try {
             $criteria = $requestParameters->getCriteria();
+            $this->logger->debug(json_encode($criteria));
             $members = $this->repository->matching($criteria)->getValues();
             return $members;
         } catch (Exception $e) {
