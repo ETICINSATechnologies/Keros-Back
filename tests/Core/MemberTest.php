@@ -15,7 +15,8 @@ class MemberTest extends TestCase
     public function testNewMemberShouldBeInstanceOfMember()
     {
         $this->assertInstanceOf(Member::class,
-            new Member("Basmah",
+            new Member(
+                "Basmah",
                 "Maiga",
                 new DateTime("11/26/1998"),
                 "0675385495",
@@ -23,7 +24,8 @@ class MemberTest extends TestCase
                 "2018",
                 new Gender("Femme"),
                 new Department(1, "IF", "Informatique"),
-                [new Position("Resp SI")]));
+                "Google",
+                "http://photoprofile.jpg"));
     }
 
     public function testMemberShouldCreateWithParams()
@@ -36,7 +38,8 @@ class MemberTest extends TestCase
             "2018",
             new Gender("Femme"),
             new Department(1, "IF", "Informatique"),
-            [new Position("Resp SI")]);
+            "Google",
+            "http://photoprofile.jpg");
 
 
         $this->assertInstanceOf(Member::class, $member);
@@ -46,5 +49,7 @@ class MemberTest extends TestCase
         $this->assertEquals("0675385495", $member->getTelephone());
         $this->assertEquals("basmah.maiga@gmail.com", $member->getEmail());
         $this->assertEquals("2018", $member->getSchoolYear());
+        $this->assertEquals("Google", $member->getCompany());
+        $this->assertEquals("http://photoprofile.jpg", $member->getProfilePicture());
     }
 }

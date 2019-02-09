@@ -3,6 +3,8 @@
 namespace Keros\Tools;
 
 use DateTime;
+use Keros\Entities\Ua\Contact;
+use Keros\Entities\Ua\Study;
 use Keros\Error\KerosException;
 
 class Validator
@@ -242,5 +244,23 @@ class Validator
             throw new KerosException("The provided array is not actually an array", 400);
         }
         return $array;
+    }
+
+    public static function requiredContact($contact) : Contact
+    {
+        if (!$contact) {
+            throw new KerosException("The contact could not be found", 400);
+        }
+
+        return $contact;
+    }
+
+    public static function requiredStudy($study) : Study
+    {
+        if (!$study) {
+            throw new KerosException("The study could not be found", 400);
+        }
+
+        return $study;
     }
 }

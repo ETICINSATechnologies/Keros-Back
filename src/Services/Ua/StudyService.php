@@ -84,7 +84,6 @@ class StudyService
      */
     public function create(array $fields): Study
     {
-        $projectNumber = Validator::requiredInt($fields["projectNumber"]);
         $name = Validator::requiredString($fields["name"]);
         $description = Validator::optionalString(isset($fields["description"]) ? $fields["description"] : null);
 
@@ -127,7 +126,10 @@ class StudyService
             $provenance = $this->provenanceService->getOne($provenanceId);
         }
 
-        $study = new Study($projectNumber, $name, $description, $field, $status, $firm, $contacts, $leaders, $consultants, $qualityManagers);
+        $confidential = Validator::optionalBool(isset($fields["confidential"]) ? $fields["confidential"] : null);
+
+        $study = new Study($name, $description, $field, $status, $firm, $contacts, $leaders, $consultants, $qualityManagers, $confidential);
+
         $study->setProvenance($provenance);
         $study->setSignDate($signDate);
         $study->setEndDate($endDate);
@@ -137,6 +139,7 @@ class StudyService
         $study->setEcoparticipationFee($ecoparticipationFee);
         $study->setOutsourcingFee($outsourcingFee);
         $study->setArchivedDate($archivedDate);
+        $study->setConfidential($confidential);
 
         $this->studyDataService->persist($study);
 
@@ -150,6 +153,18 @@ class StudyService
         $this->studyDataService->delete($study);
     }
 
+    public function deleteStudiesRelatedtoFirm (int $idFirm) : void
+    {
+        $firm = $this->firmService->getOne($idFirm);
+        $studies = $this->getAll();
+        foreach ($studies as $study) {
+            $study = Validator::requiredStudy($study);
+            if ($study->getFirm() == $firm){
+                $this->studyDataService->delete($study);
+            }
+        }
+    }
+
     public function getOne(int $id): Study
     {
         $id = Validator::requiredId($id);
@@ -159,6 +174,11 @@ class StudyService
             throw new KerosException("The study could not be found", 404);
         }
         return $study;
+    }
+
+    public function getAll(): array
+    {
+        return $this->studyDataService->getAll();
     }
 
     public function getPage(RequestParameters $requestParameters): array
@@ -176,7 +196,6 @@ class StudyService
         $id = Validator::requiredId($id);
         $study = $this->getOne($id);
 
-        $projectNumber = Validator::requiredInt($fields["projectNumber"]);
         $name = Validator::requiredString($fields["name"]);
         $description = Validator::optionalString(isset($fields["description"]) ? $fields["description"] : null);
 
@@ -219,7 +238,9 @@ class StudyService
             $provenance = $this->provenanceService->getOne($provenanceId);
         }
 
-        $study->setProjectNumber($projectNumber);
+
+        $confidential = Validator::optionalBool(isset($fields["confidential"]) ? $fields["confidential"] : null);
+
         $study->setName($name);
         $study->setDescription($description);
         $study->setField($field);
@@ -238,7 +259,7 @@ class StudyService
         $study->setEcoparticipationFee($ecoparticipationFee);
         $study->setOutsourcingFee($outsourcingFee);
         $study->setArchivedDate($archivedDate);
-
+        $study->setConfidential($confidential);
 
         $this->studyDataService->persist($study);
 

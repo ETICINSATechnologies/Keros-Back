@@ -4,10 +4,12 @@
 namespace Keros\DataServices;
 
 use Keros\DataServices\Core\AddressDataService;
+use Keros\DataServices\Core\TicketDataService;
 use Keros\DataServices\Core\CountryDataService;
 use Keros\DataServices\Core\DepartmentDataService;
 use Keros\DataServices\Core\GenderDataService;
 use Keros\DataServices\Core\MemberDataService;
+use Keros\DataServices\Core\MemberPositionDataService;
 use Keros\DataServices\Core\PoleDataService;
 use Keros\DataServices\Core\PositionDataService;
 use Keros\DataServices\Core\UserDataService;
@@ -27,6 +29,9 @@ class DataServiceRegistrar
         // Core
         $container[AddressDataService::class] = function ($container) {
             return new AddressDataService($container);
+        };
+        $container[TicketDataService::class] = function ($container) {
+            return new TicketDataService($container);
         };
         $container[CountryDataService::class] = function ($container) {
             return new CountryDataService($container);
@@ -48,6 +53,9 @@ class DataServiceRegistrar
         };
         $container[MemberDataService::class] = function ($container) {
             return new MemberDataService($container);
+        };
+        $container[MemberPositionDataService::class] = function ($container) {
+            return new MemberPositionDataService($container);
         };
 
         //UA

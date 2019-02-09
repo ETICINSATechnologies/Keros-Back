@@ -13,7 +13,7 @@ use Keros\Tools\Searchable;
 class RequestParameters
 {
     /**
-     * @var string - The string to search for in the entity - the searched fields depend on the entity.
+     * @var array - The array of strings to search for in the entity - the searched fields depend on the entity.
      * Default is empty
      */
     public $search;
@@ -45,11 +45,12 @@ class RequestParameters
      */
     public function __construct(array $params, array $searchFields)
     {
-        // Search value
+        // Array of search valuee
         if (isset($params['search']))
-            $this->search = $params['search'];
+            $this->search = explode(" ",$params['search']);
 
         // Search fields
+
         $this->searchFields = $searchFields;
 
         // Page number
@@ -87,9 +88,13 @@ class RequestParameters
     {
         $expr = Criteria::expr();
         $search = Criteria::create();
-        if (isset($this->search) && isset($this->searchFields)) {
-            foreach ($this->searchFields as $value) {
-                $search = $search->orWhere($expr->contains($value, $this->search));
+        if (!empty($this->search)) {
+            foreach ($this->search as $s) {
+                if (isset($s) && isset($this->searchFields)) {
+                    foreach ($this->searchFields as $value) {
+                        $search = $search->orWhere($expr->contains($value, $s));
+                    }
+                }
             }
         }
         if (isset($this->orderBy)) {
@@ -105,9 +110,13 @@ class RequestParameters
     {
         $expr = Criteria::expr();
         $search = Criteria::create();
-        if (isset($this->search) && isset($this->searchFields)) {
-            foreach ($this->searchFields as $value) {
-                $search = $search->orWhere($expr->contains($value, $this->search));
+        if (!empty($this->search)) {
+            foreach ($this->search as $s) {
+                if (isset($s) && isset($this->searchFields)) {
+                    foreach ($this->searchFields as $value) {
+                        $search = $search->orWhere($expr->contains($value, $s));
+                    }
+                }
             }
         }
         return $search;

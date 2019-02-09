@@ -4,12 +4,14 @@ namespace Keros\Controllers\Ua;
 
 use Doctrine\ORM\EntityManager;
 use Keros\Entities\Core\Page;
+use Keros\Services\Core\MemberService;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Ua\Study;
 use Keros\Services\Ua\FieldService;
 use Keros\Services\Ua\ProvenanceService;
 use Keros\Services\Ua\StatusService;
 use Keros\Services\Ua\StudyService;
+use Keros\Tools\Validator;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -46,6 +48,11 @@ class StudyController
      */
     private $statusService;
 
+    /**
+     * @var MemberService
+     */
+    private $memberService;
+
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get(Logger::class);
@@ -54,6 +61,7 @@ class StudyController
         $this->provenanceService = $container->get(ProvenanceService::class);
         $this->fieldService = $container->get(FieldService::class);
         $this->statusService = $container->get(StatusService::class);
+        $this->memberService = $container->get(MemberService::class);
     }
 
     public function getStudy(Request $request, Response $response, array $args)
@@ -65,9 +73,18 @@ class StudyController
         return $response->withJson($study, 200);
     }
 
+    public function getAllStudies(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Get studies " . $request->getServerParams()["REMOTE_ADDR"]);
+
+        $studies = $this->studyService->getAll();
+
+        return $response->withJson($studies, 200);
+    }
+
     public function getPageStudy(Request $request, Response $response, array $args)
     {
-        $this->logger->debug("Get page studys from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->logger->debug("Get page studies from " . $request->getServerParams()["REMOTE_ADDR"]);
         $queryParams = $request->getQueryParams();
         $params = new RequestParameters($queryParams, Study::getSearchFields());
 
@@ -75,7 +92,26 @@ class StudyController
         $totalCount = $this->studyService->getCount($params);
 
         $page = new Page($study, $params, $totalCount);
+
         return $response->withJson($page, 200);
+    }
+
+    public function getCurrentUserStudies(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Searching for studies related to current user from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $member = $this->memberService->getOne($request->getAttribute("userId"));
+        $studies = [];
+        if (!empty($member->getStudiesAsConsultant())){
+            $studies = array_unique(array_merge($studies, $member->getStudiesAsConsultant()), SORT_REGULAR);
+        }
+        if (!empty($member->getStudiesAsLeader())){
+            $studies =  array_unique(array_merge($studies, $member->getStudiesAsLeader()), SORT_REGULAR);
+        }
+        if (!empty($member->getStudiesAsQualityManager())){
+            $studies = array_unique(array_merge($studies, $member->getStudiesAsQualityManager()), SORT_REGULAR);
+        }
+
+        return $response->withJson($studies, 200);
     }
 
     public function createStudy(Request $request, Response $response, array $args)

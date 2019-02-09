@@ -6,12 +6,14 @@ namespace Keros\Services;
 use Keros\Services\Ua\ProvenanceService;
 use Keros\Services\Auth\LoginService;
 use Keros\Services\Core\AddressService;
+use Keros\Services\Core\TicketService;
 use Keros\Services\Core\CountryService;
 use Keros\Services\Core\DepartmentService;
 use Keros\Services\Core\GenderService;
 use Keros\Services\Core\PoleService;
 use Keros\Services\Core\PositionService;
 use Keros\Services\Core\MemberService;
+use Keros\Services\Core\MemberPositionService;
 use Keros\Services\Core\UserService;
 use Keros\Services\Ua\ContactService;
 use Keros\Services\Ua\FirmService;
@@ -37,6 +39,9 @@ class ServiceRegistrar
         $container[AddressService::class] = function ($container) {
             return new AddressService($container);
         };
+        $container[TicketService::class] = function ($container) {
+            return new TicketService($container);
+        };
         $container[DepartmentService::class] = function ($container) {
             return new DepartmentService($container);
         };
@@ -54,6 +59,9 @@ class ServiceRegistrar
         };
         $container[MemberService::class] = function ($container) {
             return new MemberService($container);
+        };
+        $container[MemberPositionService::class] = function ($container) {
+            return new MemberPositionService($container);
         };
 
         //UA

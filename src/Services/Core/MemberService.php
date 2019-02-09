@@ -4,6 +4,7 @@ namespace Keros\Services\Core;
 
 
 use Keros\DataServices\Core\MemberDataService;
+use Keros\DataServices\Core\TicketDataService;
 use Keros\Entities\Core\Member;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Error\KerosException;
@@ -34,9 +35,17 @@ class MemberService
      */
     private $positionService;
     /**
+     * @var TicketDataService
+     */
+    private $ticketDataService;
+    /**
      * @var MemberDataService
      */
     private $memberDataService;
+    /**
+     * @var MemberPositionService
+     */
+    private $memberPositionService;
     /**
      * @var Logger
      */
@@ -46,11 +55,12 @@ class MemberService
     {
         $this->logger = $container->get(Logger::class);
         $this->addressService = $container->get(AddressService::class);
+        $this->memberPositionService = $container->get(MemberPositionService::class);
         $this->genderService = $container->get(GenderService::class);
         $this->departmentService = $container->get(DepartmentService::class);
-        $this->positionService = $container->get(PositionService::class);
         $this->userService = $container->get(UserService::class);
         $this->memberDataService = $container->get(MemberDataService::class);
+        $this->ticketDataService = $container->get(TicketDataService::class);
     }
 
     /**
@@ -74,17 +84,25 @@ class MemberService
         if (isset($departmentId)) {
             $department = $this->departmentService->getOne($departmentId);
         }
-        $positionIds = $fields["positionIds"];
-        $positions = $this->positionService->getSome($positionIds);
 
-        $member = new Member($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $positions);
+        $company = Validator::optionalString($fields["company"]);
+        $profilePicture = Validator::optionalString($fields["profilePicture"]);
+
+        $member = new Member($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture);
 
         $user = $this->userService->create($fields);
-        $member->setUser($user);
-
         $address = $this->addressService->create($fields["address"]);
+
+        $member->setUser($user);
         $member->setAddress($address);
+
         $this->memberDataService->persist($member);
+
+        $memberPositions = [];
+        foreach ($fields["positions"] as $position) {
+            $memberPositions[] = $this->memberPositionService->create($member, $position);
+        }
+        $member->setMemberPositions($memberPositions);
 
         return $member;
     }
@@ -144,8 +162,19 @@ class MemberService
         if (isset($departmentId)) {
             $department = $this->departmentService->getOne($departmentId);
         }
-        $positionIds = $fields["positionIds"];
-        $positions = $this->positionService->getSome($positionIds);
+
+        $company = Validator::optionalString($fields["company"]);
+        $profilePicture = Validator::optionalString($fields["profilePicture"]);
+
+        $memberPositions = $member->getMemberPositions();
+        foreach ($memberPositions as $memberPosition)
+            $this->memberPositionService->delete($memberPosition);
+
+        $memberPositions = [];
+        foreach ($fields["positions"] as $position) {
+            $memberPositions[] = $this->memberPositionService->create($member, $position);
+        }
+        $member->setMemberPositions($memberPositions);
 
         $member->setFirstName($firstName);
         $member->setLastName($lastName);
@@ -155,11 +184,13 @@ class MemberService
         $member->setSchoolYear($schoolYear);
         $member->setGender($gender);
         $member->setDepartment($department);
-        $member->setPositions($positions);
+        $member->setCompany($company);
+        $member->setProfilePicture($profilePicture);
+        $member->setMemberPositions($memberPositions);
 
         $this->addressService->update($member->getAddress()->getId(), $fields["address"]);
-
         $this->userService->update($member->getId(), $fields);
+
         $this->memberDataService->persist($member);
 
         return $member;
@@ -170,16 +201,32 @@ class MemberService
         $id = Validator::requiredId($id);
         $member = $this->getOne($id);
         $address = $member->getAddress();
-
-        $member->setPositions([]);
+        $memberPositions = $member->getMemberPositions();
+        foreach ($memberPositions as $memberPosition)
+            $this->memberPositionService->delete($memberPosition);
         $member->setStudiesAsQualityManager([]);
         $member->setStudiesAsLeader([]);
         $member->setStudiesAsConsultant([]);
         $this->memberDataService->persist($member);
 
+        $this->ticketDataService->deleteTicketsRelatedToMember($id);
+
         $this->memberDataService->delete($member);
         $this->userService->delete($id);
         $this->addressService->delete($address->getId());
+
     }
 
+    public function getLatestBoard() : array
+    {
+        $boardMembersPositions =  $this->memberPositionService->getLatestBoard();
+        $boardMembers = array();
+
+        foreach ($boardMembersPositions as $boardMemberPosition) {
+            $memberId = $boardMemberPosition->getMember();
+            $boardMembers[] = $memberId;
+        }
+        return $boardMembers;
+
+    }
 }

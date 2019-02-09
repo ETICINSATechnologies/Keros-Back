@@ -54,13 +54,15 @@ class Member implements JsonSerializable
     protected $department;
 
     /**
-     * @ManyToMany(targetEntity="Position")
-     * @JoinTable(name="core_member_position",
-     *      joinColumns={@JoinColumn(name="memberId", referencedColumnName="id")},
-     *      inverseJoinColumns={@JoinColumn(name="positionId", referencedColumnName="id")}
-     *      )
+     * @OneToMany(targetEntity="MemberPosition", mappedBy="member")
      */
-    protected $positions;
+    protected $memberPositions;
+
+    /** @Column(type="string", length=20) */
+    protected $company;
+
+    /** @Column(type="string", length=200) */
+    protected $profilePicture;
 
     /**
      * @ManyToMany(targetEntity="Keros\Entities\Ua\Study", mappedBy="qualityManagers")
@@ -77,7 +79,7 @@ class Member implements JsonSerializable
      */
     protected $studiesAsLeader;
     
-    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $positions)
+    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -85,9 +87,10 @@ class Member implements JsonSerializable
         $this->telephone = $telephone;
         $this->email = $email;
         $this->schoolYear = $schoolYear;
-        $this->positions = $positions;
         $this->gender = $gender;
         $this->department = $department;
+        $this->company = $company;
+        $this->profilePicture = $profilePicture;
     }
 
     public function jsonSerialize()
@@ -104,12 +107,14 @@ class Member implements JsonSerializable
             'schoolYear' => $this->getSchoolYear(),
             'telephone' => $this->getTelephone(),
             'address' => $this->getAddress(),
-            'positions' => $this->getPositionsArray()
+            'positions' => $this->getPositionsArray(),
+            'company' => $this->getCompany(),
+            'profilePicture' => $this->getProfilePicture(),
         ];
     }
 
     public static function getSearchFields(): array {
-        return ['username', 'firstName', 'lastName', 'email'];
+        return ['firstName', 'lastName'];
     }
 
     // Getters and setters
@@ -252,6 +257,38 @@ class Member implements JsonSerializable
     /**
      * @return mixed
      */
+    public function getCompany()
+    {
+        return $this->company;
+    }
+
+    /**
+     * @param mixed $company
+     */
+    public function setCompany($company): void
+    {
+        $this->company = $company;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProfilePicture()
+    {
+        return $this->profilePicture;
+    }
+
+    /**
+     * @param mixed $profilePicture
+     */
+    public function setProfilePicture($profilePicture): void
+    {
+        $this->profilePicture = $profilePicture;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getSchoolYear()
     {
         return $this->schoolYear;
@@ -281,17 +318,17 @@ class Member implements JsonSerializable
         $this->department = $department;
     }
 
-    private function getPositions()
+    public function getMemberPositions()
     {
-        return $this->positions;
+        return $this->memberPositions;
     }
 
     /**
-     * @param mixed $positions
+     * @param mixed $memberPositions
      */
-    public function setPositions($positions): void
+    public function setMemberPositions($memberPositions): void
     {
-        $this->positions = $positions;
+        $this->memberPositions = $memberPositions;
     }
 
     /**
@@ -300,7 +337,7 @@ class Member implements JsonSerializable
     public function getPositionsArray()
     {
         $positions = [];
-        foreach ($this->getPositions() as $position)
+        foreach ($this->getMemberPositions() as $position)
         {
             $positions[] = $position;
         }

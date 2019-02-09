@@ -4,6 +4,7 @@ namespace Keros;
 
 use Keros\Controllers\Auth\LoginController;
 use Keros\Controllers\Core\AddressController;
+use Keros\Controllers\Core\TicketController;
 use Keros\Controllers\Core\CountryController;
 use Keros\Controllers\Core\DepartmentController;
 use Keros\Controllers\Core\GenderController;
@@ -85,6 +86,7 @@ class KerosApp
                     $this->get("/{id:[0-9]+}", FirmController::class . ':getFirm');
                     $this->post("", FirmController::class . ':createFirm');
                     $this->put("/{id:[0-9]+}", FirmController::class . ':updateFirm');
+                    $this->delete("/{id:[0-9]+}", FirmController::class . ':deleteFirm');
                 });
 
                 $this->group('/contact', function () {
@@ -98,9 +100,11 @@ class KerosApp
                 $this->group('/study', function () {
                     $this->get("", StudyController::class . ':getPageStudy');
                     $this->get("/{id:[0-9]+}", StudyController::class . ':getStudy');
+                    $this->get('/me', StudyController::class . ':getCurrentUserStudies');
                     $this->post("", StudyController::class . ':createStudy');
                     $this->put("/{id:[0-9]+}", StudyController::class . ':updateStudy');
                     $this->delete("/{id:[0-9]+}", StudyController::class . ':deleteStudy');
+
                 });
                 $this->group('/provenance', function () {
                     $this->get("", StudyController::class . ':getAllProvenances');
@@ -151,6 +155,14 @@ class KerosApp
                     $this->post("", MemberController::class . ':createMember');
                     $this->put("/{id:[0-9]+}", MemberController::class . ':updateMember');
                     $this->delete("/{id:[0-9]+}", MemberController::class . ':deleteMember');
+                    $this->get("/board/latest", MemberController::class . ':getLatestBoard');
+                });
+
+                $this->group('/ticket', function () {
+                    $this->get("", TicketController::class . ':getPageTickets');
+                    $this->get('/{id:[0-9]+}', TicketController::class . ':getTicket');
+                    $this->post("", TicketController::class . ':createTicket');
+                    $this->delete("/{id:[0-9]+}", TicketController::class . ':deleteTicket');
                 });
             })->add($this->getContainer()->get(AuthenticationMiddleware::class));
         });

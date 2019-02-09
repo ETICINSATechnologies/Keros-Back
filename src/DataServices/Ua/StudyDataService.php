@@ -51,8 +51,26 @@ class StudyDataService
     public function delete(Study $study) : void
     {
 
-        $this->entityManager->remove($study);
-        $this->entityManager->flush();
+        try {
+            $this->entityManager->remove($study);
+            $this->entityManager->flush();
+        } catch (Exception $e) {
+            $msg = "Failed to delete study : " . $e->getMessage();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
+    }
+
+    public function getAll(): array
+    {
+        try {
+            $studies = $this->repository->findAll();
+            return $studies;
+        } catch (Exception $e) {
+            $msg = "Error finding page of studies : " . $e->getMessage();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
     }
 
     public function getOne(int $id): ?Study
@@ -71,8 +89,8 @@ class StudyDataService
     {
         try {
             $criteria = $requestParameters->getCriteria();
-            $studys = $this->repository->matching($criteria)->getValues();
-            return $studys;
+            $studies = $this->repository->matching($criteria)->getValues();
+            return $studies;
         } catch (Exception $e) {
             $msg = "Error finding page of studys : " . $e->getMessage();
             $this->logger->error($msg);

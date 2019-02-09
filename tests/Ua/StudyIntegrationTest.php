@@ -2,12 +2,43 @@
 
 namespace KerosTest\Ua;
 
+use Keros\Tools\Validator;
 use KerosTest\AppTestCase;
 use Slim\Http\Environment;
 use Slim\Http\Request;
 
 class StudyIntegrationTest extends AppTestCase
 {
+    public function testGetCurrentUserStudiesShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/ua/study/me',
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(200, $response->getStatusCode());
+        $bodies = json_decode($response->getBody());
+
+        $bodies = Validator::requiredArray($bodies);
+        foreach ($bodies as $body) {
+            $this->assertEquals("2", $body->id);
+            $this->assertEquals("Tests d'acidité dans le Rhône", $body->name);
+            $this->assertEquals("Créateur de IDE", $body->description);
+            $this->assertEquals("1", $body->field->id);
+            $this->assertEquals("Web", $body->field->label);
+            $this->assertEquals("2", $body->status->id);
+            $this->assertEquals("En clôture", $body->status->label);
+            $this->assertEquals("1", $body->provenance->id);
+            $this->assertEquals("Site Web", $body->provenance->label);
+            $this->assertEquals("2018-11-10", $body->signDate);
+            $this->assertEquals("2", $body->firm->id);
+        }
+    }
+
     public function testDeleteStudyShouldReturn204 ()
     {
         $env = Environment::mock([
@@ -63,7 +94,6 @@ class StudyIntegrationTest extends AppTestCase
         $this->assertSame(200, $response->getStatusCode());
         $body = json_decode($response->getBody());
 
-        $this->assertEquals("12", $body->projectNumber);
         $this->assertEquals("Développement IDE", $body->name);
         $this->assertEquals("Développement d'un IDE pour utilisation interne", $body->description);
         $this->assertEquals("1", $body->field->id);
@@ -93,8 +123,7 @@ class StudyIntegrationTest extends AppTestCase
     {
 
         $post_body = array(
-            "id" =>2,
-            "projectNumber"=>13,
+            "id" =>3,
             "name"=>"Facebook",
             "description"=>"C est le feu",
             "fieldId"=>1,
@@ -105,7 +134,6 @@ class StudyIntegrationTest extends AppTestCase
             "leaderIds"=>array(),
             "consultantIds"=>array(),
             "qualityManagerIds"=>array(),
-
         );
         $env = Environment::mock([
             'REQUEST_METHOD' => 'POST',
@@ -117,7 +145,6 @@ class StudyIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
         $this->assertSame(201, $response->getStatusCode());
         $body = json_decode($response->getBody());
-
         $this->assertSame(3, $body->id);
         $this->assertSame("Facebook", $body->name);
     }
@@ -126,7 +153,6 @@ class StudyIntegrationTest extends AppTestCase
     {
 
         $post_body = array(
-            "projectNumber"=>13,
             "name"=>"Twitter",
             "description"=>"C est le feu",
             "fieldId"=>1,
@@ -137,6 +163,7 @@ class StudyIntegrationTest extends AppTestCase
             "leaderIds"=>array(),
             "consultantIds"=>array(),
             "qualityManagerIds"=>array(),
+            "confidential"=>true,
         );
         $env = Environment::mock([
             'REQUEST_METHOD' => 'PUT',
