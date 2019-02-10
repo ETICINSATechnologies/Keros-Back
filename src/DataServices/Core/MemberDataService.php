@@ -95,9 +95,9 @@ class MemberDataService
                         $whereStatement .= ' AND ';
 
                     if ($key == 'search') {
-                        $searchFields = explode(' ', $value);
+                        $searchValues = explode(' ', $value);
                         $searchStatement = '';
-                        foreach ($searchFields as $i => $field) {
+                        foreach ($searchValues as $i => $field) {
                             if (!empty($searchStatement))
                                 $searchStatement .= ' AND ';
 
