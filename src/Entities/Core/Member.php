@@ -145,7 +145,7 @@ class Member implements JsonSerializable
     /**
      * @return mixed
      */
-    public function getGender()
+    public function getGender() : Gender
     {
         return $this->gender;
     }
