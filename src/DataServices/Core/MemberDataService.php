@@ -6,9 +6,15 @@ namespace Keros\DataServices\Core;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Exception;
 use Keros\Entities\Core\Member;
+use Keros\Entities\Core\MemberPosition;
+use Keros\Entities\Core\Page;
+use Keros\Entities\Core\Position;
 use Keros\Entities\Core\RequestParameters;
+use Keros\Entities\Core\User;
 use Keros\Error\KerosException;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
@@ -27,17 +33,21 @@ class MemberDataService
      * @var EntityRepository
      */
     private $repository;
+    /**
+     * @var QueryBuilder
+     */
+    private $queryBuilder;
 
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get(Logger::class);
         $this->entityManager = $container->get(EntityManager::class);
         $this->repository = $this->entityManager->getRepository(Member::class);
+        $this->queryBuilder = $this->entityManager->createQueryBuilder();
     }
 
     public function persist(Member $member): void
     {
-
         try {
             $this->entityManager->persist($member);
             $this->entityManager->flush();
@@ -60,28 +70,76 @@ class MemberDataService
         }
     }
 
-    public function getPage(RequestParameters $requestParameters): array
+    /**
+     * @param RequestParameters $requestParameters
+     * @param $queryParams
+     * @return Page
+     * @throws KerosException
+     */
+    public function getPage(RequestParameters $requestParameters, array $queryParams)
     {
         try {
-            $criteria = $requestParameters->getCriteria();
-            $members = $this->repository->matching($criteria)->getValues();
-            return $members;
+            $this->queryBuilder
+                ->select('m')
+                ->from(Member::class, 'm')
+                ->innerJoin(User::class, 'u', 'WITH', 'm.user = u')
+                ->innerJoin(MemberPosition::class, 'mp', 'WITH', 'u.id = mp.member')
+                ->innerJoin(Position::class, 'p', 'WITH', 'mp.position = p');
+
+            $whereStatement = '';
+            $whereParameters = array();
+
+            foreach ($queryParams as $key => $value) {
+                if (in_array($key, ['positionId', 'year', 'firstName', 'lastName', 'company'])) {
+                    $this->logger->debug($value);
+                    if (!empty($whereStatement)) {
+                        $whereStatement .= ' AND ';
+                    }
+
+                    if ($key == 'positionId') {
+                        $whereStatement .= 'p.id = :positionId';
+                    } elseif ($key == 'year') {
+                        $whereStatement .= 'mp.year = :year';
+                    } elseif ($key == 'firstName' || $key == 'lastName' || $key == 'company') {
+                        // where with the form: 'm.key = :key'
+                        $whereStatement .= 'm.' . $key . ' = :' . $key;
+                    }
+
+                    $whereParameters[':' . $key] = $value;
+                }
+            }
+
+            $order = $requestParameters->getParameters()['order'];
+            $orderBy = $requestParameters->getParameters()['orderBy'];
+            $pageSize = $requestParameters->getParameters()['pageSize'];
+            $firstResult = $pageSize * $requestParameters->getParameters()['pageNumber'];
+
+            if (!empty($whereStatement)) {
+                $this->queryBuilder
+                    ->where($whereStatement)
+                    ->setParameters($whereParameters);
+            }
+
+            if (isset($orderBy)) {
+                $this->queryBuilder->orderBy($orderBy, $order);
+            }
+
+            $this->queryBuilder
+                ->setFirstResult($firstResult)
+                ->setMaxResults($pageSize);
+
+            $query = $this->queryBuilder->getQuery();
+
+            $this->logger->debug($query->getDQL());
+            $paginator = new Paginator($query, $fetchJoinCollection = true);
+
+            return new Page($query->execute(), $requestParameters, count($paginator));
+
         } catch (Exception $e) {
             $msg = "Error finding page of members : " . $e->getMessage();
             $this->logger->error($msg);
             throw new KerosException($msg, 500);
         }
-    }
-
-    public function getCount(?RequestParameters $requestParameters): int
-    {
-        if ($requestParameters != null) {
-            $countCriteria = $requestParameters->getCountCriteria();
-            $count = $this->repository->matching($countCriteria)->count();
-        } else {
-            $count = $this->repository->matching(Criteria::create())->count();
-        }
-        return $count;
     }
 
     public function delete(Member $member): void

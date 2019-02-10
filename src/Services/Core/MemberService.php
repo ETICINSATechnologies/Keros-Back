@@ -6,6 +6,7 @@ namespace Keros\Services\Core;
 use Keros\DataServices\Core\MemberDataService;
 use Keros\DataServices\Core\TicketDataService;
 use Keros\Entities\Core\Member;
+use Keros\Entities\Core\Page;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Error\KerosException;
 use Keros\Tools\Validator;
@@ -107,6 +108,11 @@ class MemberService
         return $member;
     }
 
+    public function getAll(): array
+    {
+        return $this->memberDataService->getAll();
+    }
+
     public function getOne(int $id): Member
     {
         $id = Validator::requiredId($id);
@@ -118,14 +124,13 @@ class MemberService
         return $member;
     }
 
-    public function getPage(RequestParameters $requestParameters): array
+    public function getPage(RequestParameters $requestParameters, array $queryParams): Page
     {
-        return $this->memberDataService->getPage($requestParameters);
-    }
+        if (isset($queryParams['year']) && $queryParams['year'] == 'latest') {
+            $queryParams['year'] = $this->memberPositionService->getLatestYear();
+        }
 
-    public function getCount(RequestParameters $requestParameters): int
-    {
-        return $this->memberDataService->getCount($requestParameters);
+        return $this->memberDataService->getPage($requestParameters, $queryParams);
     }
 
     public function getSome(array $ids): array
@@ -217,9 +222,9 @@ class MemberService
 
     }
 
-    public function getLatestBoard() : array
+    public function getLatestBoard(): array
     {
-        $boardMembersPositions =  $this->memberPositionService->getLatestBoard();
+        $boardMembersPositions = $this->memberPositionService->getLatestBoard();
         $boardMembers = array();
 
         foreach ($boardMembersPositions as $boardMemberPosition) {

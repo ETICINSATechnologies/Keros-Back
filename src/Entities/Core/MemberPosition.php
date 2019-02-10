@@ -58,10 +58,6 @@ class MemberPosition implements JsonSerializable
         ];
     }
 
-    public static function getSearchFields(): array {
-        return ['memberId', 'positionId', 'isBoard', 'year'];
-    }
-
     // Getters and setters
     /**
      * @return mixed

@@ -7,6 +7,7 @@ use Keros\Entities\Core\Page;
 use Keros\Services\Core\MemberService;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Ua\Study;
+use Keros\Services\Core\TemplateService;
 use Keros\Services\Ua\FieldService;
 use Keros\Services\Ua\ProvenanceService;
 use Keros\Services\Ua\StatusService;
@@ -53,6 +54,11 @@ class StudyController
      */
     private $memberService;
 
+    /**
+     * @var TemplateService
+     */
+    private $templateService;
+
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get(Logger::class);
@@ -62,6 +68,7 @@ class StudyController
         $this->fieldService = $container->get(FieldService::class);
         $this->statusService = $container->get(StatusService::class);
         $this->memberService = $container->get(MemberService::class);
+        $this->templateService = $container->get(TemplateService::class);
     }
 
     public function getStudy(Request $request, Response $response, array $args)
@@ -101,13 +108,13 @@ class StudyController
         $this->logger->debug("Searching for studies related to current user from " . $request->getServerParams()["REMOTE_ADDR"]);
         $member = $this->memberService->getOne($request->getAttribute("userId"));
         $studies = [];
-        if (!empty($member->getStudiesAsConsultant())){
+        if (!empty($member->getStudiesAsConsultant())) {
             $studies = array_unique(array_merge($studies, $member->getStudiesAsConsultant()), SORT_REGULAR);
         }
-        if (!empty($member->getStudiesAsLeader())){
-            $studies =  array_unique(array_merge($studies, $member->getStudiesAsLeader()), SORT_REGULAR);
+        if (!empty($member->getStudiesAsLeader())) {
+            $studies = array_unique(array_merge($studies, $member->getStudiesAsLeader()), SORT_REGULAR);
         }
-        if (!empty($member->getStudiesAsQualityManager())){
+        if (!empty($member->getStudiesAsQualityManager())) {
             $studies = array_unique(array_merge($studies, $member->getStudiesAsQualityManager()), SORT_REGULAR);
         }
 
@@ -200,5 +207,26 @@ class StudyController
         $status = $this->statusService->getAll();
 
         return $response->withJson($status, 200);
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return mixed
+     * @throws \Keros\Error\KerosException
+     */
+    public function getAllDocuments(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Get all templates from study " . $args["id"] . " " . $request->getServerParams()["REMOTE_ADDR"]);
+
+        $templates = array();
+        foreach ($this->templateService->getAll() as $template) {
+            $templates[] = array('id' => $template->getId(),
+                'name' => $template->getName(),
+                'generateLocation' => "http://localhost:8000" . "/api/v1/ua/study/" . $args["id"] . "/template/" . $template->getId());
+        }
+
+        return $response->withJson(array('documents' => $templates), 200);
     }
 }

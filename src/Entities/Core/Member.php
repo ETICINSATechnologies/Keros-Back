@@ -114,7 +114,7 @@ class Member implements JsonSerializable
     }
 
     public static function getSearchFields(): array {
-        return ['firstName', 'lastName'];
+        return ['firstName', 'lastName', 'company'];
     }
 
     // Getters and setters
@@ -145,7 +145,7 @@ class Member implements JsonSerializable
     /**
      * @return mixed
      */
-    public function getGender()
+    public function getGender() : Gender
     {
         return $this->gender;
     }
@@ -318,6 +318,9 @@ class Member implements JsonSerializable
         $this->department = $department;
     }
 
+    /**
+     * @return MemberPosition[]
+     */
     public function getMemberPositions()
     {
         return $this->memberPositions;

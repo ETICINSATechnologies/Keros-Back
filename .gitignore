@@ -8,3 +8,6 @@ vendor
 # Ignore logs but keep directory
 logs/*
 !logs/.gitkeep
+
+#macOS
+.DS_Store

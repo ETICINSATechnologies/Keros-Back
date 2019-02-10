@@ -4,9 +4,11 @@ namespace Keros\Controllers\Core;
 
 use Doctrine\ORM\EntityManager;
 use Keros\Entities\core\Member;
+use Keros\Entities\Core\MemberPosition;
 use Keros\Entities\Core\Page;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Services\Core\MemberService;
+use Keros\Services\Core\MemberPositionService;
 use Keros\Tools\Authorization\JwtCodec;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
@@ -33,12 +35,17 @@ class MemberController
      * @var JwtCodec
      */
     private $jwtCodec;
+    /**
+     * @var MemberPositionService
+     */
+    private $memberPositionService;
 
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get(Logger::class);
         $this->entityManager = $container->get(EntityManager::class);
         $this->memberService = $container->get(MemberService::class);
+        $this->memberPositionService = $container->get(MemberPositionService::class);
     }
 
     public function getMember(Request $request, Response $response, array $args)
@@ -77,12 +84,10 @@ class MemberController
     {
         $this->logger->debug("Get page members from " . $request->getServerParams()["REMOTE_ADDR"]);
         $queryParams = $request->getQueryParams();
-        $params = new RequestParameters($queryParams, Member::getSearchFields());
+        $requestParameters = new RequestParameters($queryParams, Member::getSearchFields());
 
-        $members = $this->memberService->getPage($params);
-        $totalCount = $this->memberService->getCount($params);
+        $page = $this->memberService->getPage($requestParameters, $queryParams);
 
-        $page = new Page($members, $params, $totalCount);
         return $response->withJson($page, 200);
     }
 
