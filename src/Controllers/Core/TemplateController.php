@@ -102,13 +102,14 @@ class TemplateController
         $this->logger->debug("Creating template from " . $request->getServerParams()["REMOTE_ADDR"]);
         $body = $request->getParsedBody();
 
+        //TODO utiliser le MODEL_DIRECTORY du settings.ini pour placer le modèle
+        // TODO valider la requete avant
         $uploadedFile = $request->getUploadedFiles()['file'];
         $body["extension"] = pathinfo($uploadedFile->getClientFileName(), PATHINFO_EXTENSION);
         $body["typeId"] = intval($body["typeId"]);//TODO a supp, juste pour postman
 
         $this->entityManager->beginTransaction();
         $template = $this->templateService->create($body);
-        mkdir(pathinfo($template->getLocation(), PATHINFO_DIRNAME), 0777, true);
         $uploadedFile->moveTo($template->getLocation());
         $this->entityManager->commit();
 
@@ -165,6 +166,7 @@ class TemplateController
         $study = $this->studyService->getOne($args["idStudy"]);
         $template = $this->templateService->getOne($args["idTemplate"]);
         $connectedUser = $this->memberService->getOne($request->getAttribute("userId"));
+        //TODO : add column in base in "core_template" to mark if it is for one consultant
         $templateWithOneConsultant = array('ARRM.docx', 'Avenant_Etudiant.docx', 'Demande_BV.docx', 'RM.docx');
         $doZip = count($study->getConsultantsArray()) > 1 && in_array($template->getName(), $templateWithOneConsultant);
 
@@ -181,7 +183,6 @@ class TemplateController
                 $this->logger->error($msg);
                 throw new KerosException($msg, 500);
             }
-            //mkdir($location, 0777, true);
             $files[] = array();
             foreach ($study->getConsultantsArray() as $consultant) {
                 $filename = $this->temporaryDirectory . pathinfo($template->getName(), PATHINFO_FILENAME) . '_' . $consultant->getId() . '.' . pathinfo($template->getLocation(), PATHINFO_EXTENSION);
@@ -210,10 +211,10 @@ class TemplateController
                 $location = $this->temporaryDirectory . md5($template->getName() . microtime()) . '.' . pathinfo($template->getLocation(), PATHINFO_EXTENSION);
             } while (file_exists($location));
 
-            mkdir(pathinfo($location, PATHINFO_DIRNAME), 0777, true);
             copy($template->getLocation(), $location);
 
             $return = false;
+            //TODO utiliser un switch
             if (pathinfo($template->getLocation(), PATHINFO_EXTENSION) == 'docx')
                 $return = $this->generateStudyDocx($location, $study, $connectedUser, null);
             elseif (pathinfo($template->getLocation(), PATHINFO_EXTENSION) == 'pptx')
@@ -227,8 +228,9 @@ class TemplateController
         }
 
         $kerosConfig = ConfigLoader::getConfig();
+        $filename = pathinfo($location, PATHINFO_BASENAME);
 
-        return $response->withJson(array('location' => 'http://'. $kerosConfig['DB_HOST'] . $kerosConfig[PORT] . $location), 200);
+        return $response->withJson(array('location' => $kerosConfig['BACKEND_URL'] . "/generated/" . $filename), 200);
     }
 
     /**

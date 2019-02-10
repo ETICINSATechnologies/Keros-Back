@@ -224,7 +224,7 @@ class StudyController
         foreach ($this->templateService->getAll() as $template) {
             $templates[] = array('id' => $template->getId(),
                 'name' => $template->getName(),
-                'generateLocation' => "http://keros-api-dev.etic-insa.com/api/v1/ua/study/" . $args["id"] . "/template/" . $template->getId());
+                'generateLocation' => "http://localhost:8000" . "/api/v1/ua/study/" . $args["id"] . "/template/" . $template->getId());
         }
 
         return $response->withJson(array('documents' => $templates), 200);
