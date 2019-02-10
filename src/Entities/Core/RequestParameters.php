@@ -65,7 +65,7 @@ class RequestParameters
         $this->pageSize = 25; // Default value
         if (isset($params['pageSize'])) {
             $pageSize = (int)$params['pageSize'];
-            if ($pageSize >= 1 && $pageSize <= 100) {
+            if ($pageSize >= 10 && $pageSize <= 100) {
                 $this->pageSize = $pageSize;
             }
         }

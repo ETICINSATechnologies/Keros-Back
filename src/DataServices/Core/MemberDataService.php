@@ -11,6 +11,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Exception;
 use Keros\Entities\Core\Member;
 use Keros\Entities\Core\MemberPosition;
+use Keros\Entities\Core\Page;
 use Keros\Entities\Core\Position;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Core\User;
@@ -57,18 +58,6 @@ class MemberDataService
         }
     }
 
-    public function getAll(): array
-    {
-        try {
-            $members = $this->repository->findAll();
-            return $members;
-        } catch (Exception $e) {
-            $msg = "Error finding page of member : " . $e->getMessage();
-            $this->logger->error($msg);
-            throw new KerosException($msg, 500);
-        }
-    }
-
     public function getOne(int $id): ?Member
     {
         try {
@@ -84,7 +73,7 @@ class MemberDataService
     /**
      * @param RequestParameters $requestParameters
      * @param $queryParams
-     * @return array|Paginator|Member[]
+     * @return Page
      * @throws KerosException
      */
     public function getPage(RequestParameters $requestParameters, array $queryParams)
@@ -101,26 +90,24 @@ class MemberDataService
             $whereParameters = array();
 
             foreach ($queryParams as $key => $value) {
-                if (!empty($whereStatement))
-                    $whereStatement .= ' AND ';
+                if (in_array($key, ['positionId', 'year', 'firstName', 'lastName', 'company'])) {
+                    $this->logger->debug($value);
+                    if (!empty($whereStatement)) {
+                        $whereStatement .= ' AND ';
+                    }
 
-                if ($key == 'positionId')
-                    $whereStatement .= 'p.id = :positionId';
+                    if ($key == 'positionId') {
+                        $whereStatement .= 'p.id = :positionId';
+                    } elseif ($key == 'year') {
+                        $whereStatement .= 'mp.year = :year';
+                    } elseif ($key == 'firstName' || $key == 'lastName' || $key == 'company') {
+                        // where with the form: 'm.key = :key'
+                        $whereStatement .= 'm.' . $key . ' = :' . $key;
+                    }
 
-                elseif ($key == 'year')
-                    $whereStatement .= 'mp.year = :year';
-
-                else
-                    // where with the form: 'm.key = :key'
-                    $whereStatement .= 'm.' . $key . ' = :' . $key;
-
-                $whereParameters[':' . $key] = $value;
+                    $whereParameters[':' . $key] = $value;
+                }
             }
-
-            $this->logger->debug($whereStatement);
-            $this->logger->debug(json_encode($whereParameters));
-
-            $this->logger->debug(json_encode($requestParameters));
 
             $order = $requestParameters->getParameters()['order'];
             $orderBy = $requestParameters->getParameters()['orderBy'];
@@ -133,8 +120,9 @@ class MemberDataService
                     ->setParameters($whereParameters);
             }
 
-            if (isset($orderBy))
+            if (isset($orderBy)) {
                 $this->queryBuilder->orderBy($orderBy, $order);
+            }
 
             $this->queryBuilder
                 ->setFirstResult($firstResult)
@@ -145,24 +133,13 @@ class MemberDataService
             $this->logger->debug($query->getDQL());
             $paginator = new Paginator($query, $fetchJoinCollection = true);
 
-            return $query->execute();
+            return new Page($query->execute(), $requestParameters, count($paginator));
 
         } catch (Exception $e) {
             $msg = "Error finding page of members : " . $e->getMessage();
             $this->logger->error($msg);
             throw new KerosException($msg, 500);
         }
-    }
-
-    public function getCount(?RequestParameters $requestParameters): int
-    {
-        if ($requestParameters != null) {
-            $countCriteria = $requestParameters->getCountCriteria();
-            $count = $this->repository->matching($countCriteria)->count();
-        } else {
-            $count = $this->repository->matching(Criteria::create())->count();
-        }
-        return $count;
     }
 
     public function delete(Member $member): void

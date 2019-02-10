@@ -85,12 +85,8 @@ class MemberController
         $this->logger->debug("Get page members from " . $request->getServerParams()["REMOTE_ADDR"]);
         $queryParams = $request->getQueryParams();
         $requestParameters = new RequestParameters($queryParams, Member::getSearchFields());
-        $searchParams = array_diff($queryParams, $requestParameters->getParameters());
 
-        $members = $this->memberService->getPage($requestParameters, $searchParams);
-        $totalCount = $this->memberService->getCount($requestParameters);
-
-        $page = new Page($members, $requestParameters, $totalCount);
+        $page = $this->memberService->getPage($requestParameters, $queryParams);
 
         return $response->withJson($page, 200);
     }
