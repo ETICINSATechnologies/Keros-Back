@@ -83,63 +83,67 @@ class MemberDataService
 
     /**
      * @param RequestParameters $requestParameters
-     * @param $positionId
-     * @param $year
+     * @param $queryParams
      * @return array|Paginator|Member[]
      * @throws KerosException
      */
-    public function getPage(RequestParameters $requestParameters, $positionId, $year)
+    public function getPage(RequestParameters $requestParameters, array $queryParams)
     {
         try {
-            $this->logger->debug(json_encode($requestParameters->getParameters()));
-
             $this->queryBuilder
                 ->select('m')
                 ->from(Member::class, 'm')
-                ->join(User::class, 'u')
-                ->join(MemberPosition::class, 'mp')
-                ->join(Position::class, 'p')
-                ->where('m.user = u')
-                ->andWhere('mp.position = p');
-//                ->andWhere('mp.member = m')
-//                ->andWhere('u.id = 3');
+                ->innerJoin(User::class, 'u', 'WITH', 'm.user = u')
+                ->innerJoin(MemberPosition::class, 'mp', 'WITH', 'u.id = mp.member')
+                ->innerJoin(Position::class, 'p', 'WITH', 'mp.position = p');
 
             $whereStatement = '';
             $whereParameters = array();
 
-            if ($positionId != null) {
-                $this->queryBuilder
-                    ->andWhere('p.id = :positionId')
-                    ->setParameters(array(':positionId' => $positionId));
-            }
-
-            if ($year != null) {
-                if (!empty($whereStatement)) {
+            foreach ($queryParams as $key => $value) {
+                if (!empty($whereStatement))
                     $whereStatement .= ' AND ';
-                }
-                $whereStatement .= 'mp.year = :year';
-                $whereParameters[':year'] = $year;
+
+                if ($key == 'positionId')
+                    $whereStatement .= 'p.id = :positionId';
+
+                elseif ($key == 'year')
+                    $whereStatement .= 'mp.year = :year';
+
+                else
+                    // where with the form: 'm.key = :key'
+                    $whereStatement .= 'm.' . $key . ' = :' . $key;
+
+                $whereParameters[':' . $key] = $value;
             }
 
             $this->logger->debug($whereStatement);
             $this->logger->debug(json_encode($whereParameters));
 
+            $this->logger->debug(json_encode($requestParameters));
+
+            $order = $requestParameters->getParameters()['order'];
+            $orderBy = $requestParameters->getParameters()['orderBy'];
             $pageSize = $requestParameters->getParameters()['pageSize'];
             $firstResult = $pageSize * $requestParameters->getParameters()['pageNumber'];
 
-            $query = $this->queryBuilder
+            if (!empty($whereStatement)) {
+                $this->queryBuilder
+                    ->where($whereStatement)
+                    ->setParameters($whereParameters);
+            }
+
+            if (isset($orderBy))
+                $this->queryBuilder->orderBy($orderBy, $order);
+
+            $this->queryBuilder
                 ->setFirstResult($firstResult)
-                ->setMaxResults($pageSize)
-                ->getQuery();
+                ->setMaxResults($pageSize);
+
+            $query = $this->queryBuilder->getQuery();
 
             $this->logger->debug($query->getDQL());
             $paginator = new Paginator($query, $fetchJoinCollection = true);
-
-            $members = [];
-            foreach ($paginator as $member) {
-                $members[] = $member;
-                $this->logger->debug(json_encode($member));
-            }
 
             return $query->execute();
 

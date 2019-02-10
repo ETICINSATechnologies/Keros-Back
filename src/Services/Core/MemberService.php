@@ -123,20 +123,9 @@ class MemberService
         return $member;
     }
 
-    public function getPage(RequestParameters $requestParameters, $positionId, $year): array
+    public function getPage(RequestParameters $requestParameters, array $queryParams): array
     {
-        $allMembers = $this->memberDataService->getPage($requestParameters, $positionId, $year);
-        $members = [];
-
-        if ($year == "latest") {
-            $year = $this->memberPositionService->getLatestYear();
-        }
-
-        foreach ($allMembers as $member) {
-            $members[] = $member;
-        }
-
-        return $members;
+        return $this->memberDataService->getPage($requestParameters, $queryParams);
     }
 
     public function getCount(RequestParameters $requestParameters): int
