@@ -108,11 +108,6 @@ class MemberService
         return $member;
     }
 
-    public function getAll(): array
-    {
-        return $this->memberDataService->getAll();
-    }
-
     public function getOne(int $id): Member
     {
         $id = Validator::requiredId($id);
