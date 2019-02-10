@@ -65,7 +65,7 @@ class RequestParameters
         $this->pageSize = 25; // Default value
         if (isset($params['pageSize'])) {
             $pageSize = (int)$params['pageSize'];
-            if ($pageSize >= 10 && $pageSize <= 100) {
+            if ($pageSize >= 1 && $pageSize <= 100) {
                 $this->pageSize = $pageSize;
             }
         }
@@ -81,6 +81,17 @@ class RequestParameters
         } else {
             $this->order = Criteria::ASC;
         }
+    }
+
+    public function getParameters()
+    {
+        return array(
+            'search' => $this->search,
+            'pageNumber' => $this->pageNumber,
+            'pageSize' => $this->pageSize,
+            'orderBy' => $this->orderBy,
+            'order' => $this->order
+        );
     }
 
     public function getCriteria(): Criteria

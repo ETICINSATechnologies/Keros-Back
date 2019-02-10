@@ -125,27 +125,15 @@ class MemberService
 
     public function getPage(RequestParameters $requestParameters, $positionId, $year): array
     {
-        $allMembers = $this->memberDataService->getPage($requestParameters);
+        $allMembers = $this->memberDataService->getPage($requestParameters, $positionId, $year);
         $members = [];
 
-        if ($year == "latest")
+        if ($year == "latest") {
             $year = $this->memberPositionService->getLatestYear();
+        }
 
-        // check if $positionId (resp. $year) is a parameter and if the position id (resp year) of
-        // $memberPosition is identical to $positionId (resp. year)
         foreach ($allMembers as $member) {
-            $matchingPosition = false;
-            $matchingYear = false;
-            foreach ($member->getMemberPositions() as $memberPosition) {
-                if (!$positionId || $positionId == $memberPosition->getPosition()->getId())
-                    $matchingPosition = true;
-                if (!$year || $year == $memberPosition->getYear())
-                    $matchingYear = true;
-                if ($matchingPosition && $matchingYear) {
-                    $members[] = $member;
-                    break;
-                }
-            }
+            $members[] = $member;
         }
 
         return $members;

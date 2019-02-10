@@ -50,7 +50,6 @@ class StudyDataService
 
     public function delete(Study $study) : void
     {
-
         try {
             $this->entityManager->remove($study);
             $this->entityManager->flush();
