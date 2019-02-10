@@ -41,15 +41,14 @@ class RequestParameters
     /**
      * RequestParameters constructor.
      * @param array $params the parameters from the Request
-     * @param Searchable $class the class of the object searched
+     * @param array $searchFields
      */
     public function __construct(array $params, array $searchFields)
     {
-        // Array of search valuee
-        if (isset($params['search']))
-            $this->search = explode(" ",$params['search']);
-
-        // Search fields
+        // Array of search values for member with the parameter search
+        if (isset($params['search'])) {
+            $this->search = explode(" ", $params['search']);
+        }
 
         $this->searchFields = $searchFields;
 
@@ -82,6 +81,17 @@ class RequestParameters
         } else {
             $this->order = Criteria::ASC;
         }
+    }
+
+    public function getParameters()
+    {
+        return array(
+            'search' => $this->search,
+            'pageNumber' => $this->pageNumber,
+            'pageSize' => $this->pageSize,
+            'orderBy' => $this->orderBy,
+            'order' => $this->order
+        );
     }
 
     public function getCriteria(): Criteria
@@ -119,6 +129,7 @@ class RequestParameters
                 }
             }
         }
+
         return $search;
     }
 }

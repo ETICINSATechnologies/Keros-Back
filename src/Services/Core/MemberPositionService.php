@@ -7,8 +7,10 @@ use Keros\DataServices\Core\MemberPositionDataService;
 use Keros\Entities\Core\Member;
 use Keros\Entities\Core\MemberPosition;
 use Keros\DataServices\Core\MemberDataService;
+use Keros\Entities\Core\RequestParameters;
 use Keros\Error\KerosException;
 use Keros\Tools\Validator;
+use Doctrine\ORM\EntityRepository;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 
@@ -30,6 +32,7 @@ class MemberPositionService
      * @var Logger
      */
     private $logger;
+
 
     public function __construct(ContainerInterface $container)
     {
@@ -61,17 +64,32 @@ class MemberPositionService
         return $memberPosition;
     }
 
+    /**
+     * @return MemberPosition[]
+     * @throws KerosException
+     */
+    public function getAll(): array
+    {
+        return $this->memberPositionDataService->getAll();
+    }
+
+    public function getLatestYear(): int {
+        $memberPositions = $this->memberPositionDataService->getAll();
+        $year = 0;
+        foreach ($memberPositions as $membersPosition) {
+            if ($membersPosition->getYear() > $year) {
+                $year = $membersPosition->getYear();
+            }
+        }
+
+        return $year;
+    }
+
     public function getLatestBoard(): array
     {
         $memberPositions = $this->memberPositionDataService->getAll();
         $boardMembers = array();
-        $currentYear = 0;
-
-        foreach ($memberPositions as $membersPosition) {
-            if ($membersPosition->getYear() > $currentYear) {
-                $currentYear = $membersPosition->getYear();
-            }
-        }
+        $currentYear = $this->getLatestYear();
 
         foreach ($memberPositions as $membersPosition) {
             if ($membersPosition->getYear() == $currentYear and $membersPosition->getIsBoard() == true) {
@@ -79,6 +97,16 @@ class MemberPositionService
             }
         }
         return $boardMembers;
+    }
+
+    /**
+     * @param RequestParameters $requestParameters
+     * @return MemberPosition[]
+     * @throws KerosException
+     */
+    public function getPage(RequestParameters $requestParameters): array
+    {
+        return $this->memberPositionDataService->getPage($requestParameters);
     }
 
     public function getSome(array $ids): array

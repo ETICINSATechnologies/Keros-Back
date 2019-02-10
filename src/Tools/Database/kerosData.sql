@@ -30,7 +30,7 @@ INSERT INTO core_member (id, genderId, firstName, lastName, birthday, telephone,
 TRUNCATE TABLE core_member_position;
 INSERT INTO core_member_position (id, memberId, positionId, isBoard, year) VALUES
   (1, 1, 3, TRUE, 2018),
-  (2, 2, 3, FALSE, 2018),
+  (2, 2, 3, FALSE, 2017),
   (3, 3, 1, TRUE, 2018),
   (4, 3, 2, TRUE, 1990),
   (5, 3, 3, FALSE, 2015);
