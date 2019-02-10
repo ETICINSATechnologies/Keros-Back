@@ -90,22 +90,37 @@ class MemberDataService
             $whereParameters = array();
 
             foreach ($queryParams as $key => $value) {
-                if (in_array($key, ['positionId', 'year', 'firstName', 'lastName', 'company'])) {
-                    $this->logger->debug($value);
-                    if (!empty($whereStatement)) {
+                if (in_array($key, ['search', 'positionId', 'year', 'firstName', 'lastName', 'company'])) {
+                    if (!empty($whereStatement))
                         $whereStatement .= ' AND ';
+
+                    if ($key == 'search') {
+                        $searchValues = explode(' ', $value);
+                        $searchStatement = '';
+                        foreach ($searchValues as $i => $field) {
+                            if (!empty($searchStatement))
+                                $searchStatement .= ' AND ';
+
+                            $searchStatement .=
+                                '(m.firstName = :search' . $i
+                                . ' OR m.lastName = :search' . $i
+                                . ' OR m.company = :search' . $i . ')';
+                            $whereParameters[':search' . $i] = $field;
+                        }
+
+                        $whereStatement .= $searchStatement;
+                    } else {
+                        if ($key == 'positionId') {
+                            $whereStatement .= 'p.id = :positionId';
+                        } elseif ($key == 'year') {
+                            $whereStatement .= 'mp.year = :year';
+                        } elseif ($key == 'firstName' || $key == 'lastName' || $key == 'company') {
+                            // where with the form: 'm.key = :key'
+                            $whereStatement .= 'm.' . $key . ' = :' . $key;
+                        }
+                        $whereParameters[':' . $key] = $value;
                     }
 
-                    if ($key == 'positionId') {
-                        $whereStatement .= 'p.id = :positionId';
-                    } elseif ($key == 'year') {
-                        $whereStatement .= 'mp.year = :year';
-                    } elseif ($key == 'firstName' || $key == 'lastName' || $key == 'company') {
-                        // where with the form: 'm.key = :key'
-                        $whereStatement .= 'm.' . $key . ' = :' . $key;
-                    }
-
-                    $whereParameters[':' . $key] = $value;
                 }
             }
 
@@ -129,8 +144,6 @@ class MemberDataService
                 ->setMaxResults($pageSize);
 
             $query = $this->queryBuilder->getQuery();
-
-            $this->logger->debug($query->getDQL());
             $paginator = new Paginator($query, $fetchJoinCollection = true);
 
             return new Page($query->execute(), $requestParameters, count($paginator));
