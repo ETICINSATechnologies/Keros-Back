@@ -78,8 +78,9 @@ INSERT INTO `core_template_type` (`id`, `label`) VALUES
   (2, 'Membre');
 
 TRUNCATE TABLE core_template;
-INSERT INTO `core_template` (`id`, `name`, `location`, `typeId`) VALUES
-  (1, 'testGet', 'null part', 1),
-  (2, 'test', 'qlq part', 1);
+INSERT INTO `core_template` (`id`, `name`, `location`, `typeId`, `oneConsultant`) VALUES
+  (1, 'testGet', 'null part', 1, 0),
+  (2, 'test', 'qlq part', 1, 0),
+  (3, 'one consutant template', 'pas ici', 1, 1);
 
 COMMIT;

@@ -63,14 +63,15 @@ class TemplateService
     public function create(array $fields): Template
     {
         $name = Validator::requiredString($fields["name"]);
-        $typeId = Validator::requiredId($fields["typeId"]); //TODO
+        $typeId = Validator::requiredId($fields["typeId"]);
+        $oneConsultant = Validator::requiredBool($fields["oneConsultant"]);
         $extension = Validator::requiredString($fields["extension"]);
 
         $date = new DateTime();
         $location = $this->templateDirectory . $date->format('d-m-Y_H:i:s:u') . '.' . $extension;
 
-        $templateType = $this->templateTypeService->getOne($typeId); //TODO $typeId
-        $template = new Template($name, $location, $templateType);
+        $templateType = $this->templateTypeService->getOne($typeId);
+        $template = new Template($name, $location, $templateType, $oneConsultant);
 
         $this->templateDataService->persist($template);
 

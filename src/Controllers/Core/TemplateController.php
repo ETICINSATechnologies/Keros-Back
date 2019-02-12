@@ -117,10 +117,9 @@ class TemplateController
         $body = $request->getParsedBody();
 
         //TODO utiliser le MODEL_DIRECTORY du settings.ini pour placer le modèle
-        // TODO valider la requete avant
+        //TODO valider la requete avant
         $uploadedFile = $request->getUploadedFiles()['file'];
         $body["extension"] = pathinfo($uploadedFile->getClientFileName(), PATHINFO_EXTENSION);
-        //$body["typeId"] = intval($body["typeId"]);//TODO a supp, juste pour postman
 
         $this->entityManager->beginTransaction();
         $template = $this->templateService->create($body);
@@ -180,11 +179,10 @@ class TemplateController
         $study = $this->studyService->getOne($args["idStudy"]);
         $template = $this->templateService->getOne($args["idTemplate"]);
         $connectedUser = $this->memberService->getOne($request->getAttribute("userId"));
-        $templateWithOneConsultant = array('ARRM.docx', 'Avenant_Etudiant.docx', 'Demande_BV.docx', 'RM.docx');
-        //TODO : add column in base in "core_template" to mark if it is for one consultant
+        //$templateWithOneConsultant = array('ARRM.docx', 'Avenant_Etudiant.docx', 'Demande_BV.docx', 'RM.docx');
 
         //Zip are done if one document per consultant is needed
-        $doZip = count($study->getConsultantsArray()) > 1 && in_array($template->getName(), $templateWithOneConsultant);
+        $doZip = $template->getOneConsultant() == 1;
 
         if ($doZip) {
             //generate file name until it doesn't not actually exist
@@ -207,10 +205,15 @@ class TemplateController
 
                 $return = false;
                 //open document and replace pattern
-                if (pathinfo($template->getLocation(), PATHINFO_EXTENSION) == 'docx')
-                    $return = $this->generateStudyDocx($filename, $study, $connectedUser, array($consultant));
-                elseif (pathinfo($template->getLocation(), PATHINFO_EXTENSION) == 'pptx')
-                    $return = $this->generateStudyPptx($filename, $study, $connectedUser, array($consultant));
+                switch (pathinfo($template->getLocation(), PATHINFO_EXTENSION)) {
+                    case 'docx':
+                        $return = $this->generateStudyDocx($filename, $study, $connectedUser, array($consultant));
+                        break;
+                    case 'pptx':
+                        $return = $this->generateStudyPptx($filename, $study, $connectedUser, array($consultant));
+                        break;
+                }
+
                 if (!$return) {
                     $msg = "Error generating document with template " . $template->getId() . " and study " . $study->getId();
                     $this->logger->error($msg);
@@ -233,11 +236,14 @@ class TemplateController
             copy($template->getLocation(), $location);
 
             $return = false;
-            //TODO utiliser un switch
-            if (pathinfo($template->getLocation(), PATHINFO_EXTENSION) == 'docx')
-                $return = $this->generateStudyDocx($location, $study, $connectedUser, null);
-            elseif (pathinfo($template->getLocation(), PATHINFO_EXTENSION) == 'pptx')
-                $return = $this->generateStudyPptx($location, $study, $connectedUser, null);
+            switch (pathinfo($template->getLocation(), PATHINFO_EXTENSION)) {
+                case 'docx':
+                    $return = $this->generateStudyDocx($filename, $study, $connectedUser, array($consultant));
+                    break;
+                case 'pptx':
+                    $return = $this->generateStudyPptx($filename, $study, $connectedUser, array($consultant));
+                    break;
+            }
 
             if (!$return) {
                 $msg = "Error generating document with template " . $template->getId() . " and study " . $study->getId();
