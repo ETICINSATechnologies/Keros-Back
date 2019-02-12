@@ -227,7 +227,8 @@ class StudyController
     {
         $this->logger->debug("Get all templates from study " . $args["id"] . " " . $request->getServerParams()["REMOTE_ADDR"]);
 
-        $this->studyService->consultantAreValid($args["id"]);
+        if (!$this->studyService->consultantAreValid($args["id"]))
+            return $response->withStatus(400, "Invalid consultant in study " . $args["id"]);
 
         $templates = array();
         foreach ($this->templateService->getAll() as $template) {

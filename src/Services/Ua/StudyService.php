@@ -276,13 +276,15 @@ class StudyService
 
     /**
      * @param int $id
+     * @return bool
      * @throws KerosException
      */
-    public function consultantAreValid(int $id)
+    public function consultantAreValid(int $id): bool
     {
+        $id = Validator::requiredId($id);
         $study = $this->getOne($id);
         if (empty($study->getConsultantsArray())) {
-            throw new KerosException("No consultant in study " . $id, 500);
+            return false;
         }
         foreach ($study->getConsultantsArray() as $consultant) {
             $isConsultant = false;
@@ -290,7 +292,8 @@ class StudyService
                 if ($position->getPosition()->getLabel() == 'Consultant')
                     $isConsultant = true;
             if (!$isConsultant)
-                throw new KerosException("Consultant " . $consultant->getId() . " is not really a consultant in study " . $id, 500);
+                return false;
         }
+        return true;
     }
 }

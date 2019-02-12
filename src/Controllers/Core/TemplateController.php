@@ -5,15 +5,14 @@ namespace Keros\Controllers\Core;
 
 use Doctrine\ORM\EntityManager;
 use Keros\DataServices\Core\TemplateDataService;
-use Keros\Entities\Core\Gender;
 use Keros\Entities\Core\Member;
-use Keros\Entities\Ua\Contact;
 use Keros\Entities\Ua\Study;
 use Keros\Error\KerosException;
 use Keros\Services\Core\MemberService;
 use Keros\Services\Core\TemplateService;
 use Keros\Services\Ua\StudyService;
 use Keros\Tools\ConfigLoader;
+use Keros\Tools\GenderBuilder;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Slim\Http\Request;
@@ -69,6 +68,11 @@ class TemplateController
     private $backUrl;
 
     /**
+     * @var GenderBuilder
+     */
+    private $genderBuilder;
+
+    /**
      * TemplateController constructor.
      * @param ContainerInterface $container
      */
@@ -84,6 +88,7 @@ class TemplateController
         $this->temporaryDirectory = $this->kerosConfig['TEMPORARY_DIRECTORY'];
         $this->backUrl = $this->kerosConfig['BACK_URL'];
         $this->logger->info($this->kerosConfig['TEMPLATE_DIRECTORY']);
+        $this->genderBuilder = $container->get(GenderBuilder::class);
     }
 
     /**
@@ -116,7 +121,6 @@ class TemplateController
         $this->logger->debug("Creating template from " . $request->getServerParams()["REMOTE_ADDR"]);
         $body = $request->getParsedBody();
 
-        //TODO utiliser le MODEL_DIRECTORY du settings.ini pour placer le modèle
         //TODO valider la requete avant
         $uploadedFile = $request->getUploadedFiles()['file'];
         $body["extension"] = pathinfo($uploadedFile->getClientFileName(), PATHINFO_EXTENSION);
@@ -179,7 +183,12 @@ class TemplateController
         $study = $this->studyService->getOne($args["idStudy"]);
         $template = $this->templateService->getOne($args["idTemplate"]);
         $connectedUser = $this->memberService->getOne($request->getAttribute("userId"));
-        //$templateWithOneConsultant = array('ARRM.docx', 'Avenant_Etudiant.docx', 'Demande_BV.docx', 'RM.docx');
+
+        if($study->getContacts() == null || empty($study->getContacts()))
+            return $response->withStatus(400, "No contact in study " . $study->getId());
+
+        if(!$this->studyService->consultantAreValid($study->getId()))
+            return $response->withStatus(400, "Invalid consultant in study " . $study->getId());
 
         //Zip are done if one document per consultant is needed
         $doZip = $template->getOneConsultant() == 1;
@@ -203,7 +212,6 @@ class TemplateController
                 //copy template
                 copy($template->getLocation(), $filename);
 
-                $return = false;
                 //open document and replace pattern
                 switch (pathinfo($template->getLocation(), PATHINFO_EXTENSION)) {
                     case 'docx':
@@ -212,6 +220,8 @@ class TemplateController
                     case 'pptx':
                         $return = $this->generateStudyPptx($filename, $study, $connectedUser, array($consultant));
                         break;
+                    default :
+                        $return = false;
                 }
 
                 if (!$return) {
@@ -235,7 +245,6 @@ class TemplateController
 
             copy($template->getLocation(), $location);
 
-            $return = false;
             switch (pathinfo($template->getLocation(), PATHINFO_EXTENSION)) {
                 case 'docx':
                     $return = $this->generateStudyDocx($filename, $study, $connectedUser, array($consultant));
@@ -243,6 +252,8 @@ class TemplateController
                 case 'pptx':
                     $return = $this->generateStudyPptx($filename, $study, $connectedUser, array($consultant));
                     break;
+                default :
+                    $return = false;
             }
 
             if (!$return) {
@@ -379,6 +390,7 @@ class TemplateController
         //loop to have multiple consultant identity correctly
         foreach ($study->getConsultantsArray() as $consultant) {
             $consultantsIdentity .= $this->getStringGender($consultant->getGender()) . ' ' . $consultant->getLastName() . ' ' . $consultant->getFirstName();
+            //If we are not one the last consultant in the array
             if (++$nbConsultant !== count($study->getConsultantsArray()))
                 $consultantsIdentity .= ', ';
         }
@@ -413,18 +425,5 @@ class TemplateController
             $this->getStringGender($connectedUser->getGender()) . ' ' . $connectedUser->getLastName() . ' ' . $connectedUser->getFirstName(),
             $study->getArchivedDate()->format('d/m/Y')
         );
-    }
-
-    /**
-     * @param Gender $gender
-     * @return string
-     */
-    private function getStringGender(Gender $gender): string
-    {
-        if ($gender->getLabel() == 'H')
-            return 'Monsieur';
-        elseif ($gender->getLabel() == 'F')
-            return 'Madame';
-        return '';
     }
 }
