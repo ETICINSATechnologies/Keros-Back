@@ -277,31 +277,21 @@ CREATE TABLE ua_study_qualityManager (
 
 DROP TABLE IF EXISTS core_template_type;
 CREATE TABLE core_template_type (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `label` varchar(64) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-ALTER TABLE `core_template_type`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=3;
 
 DROP TABLE IF EXISTS core_template;
 CREATE TABLE `core_template` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `location` varchar(255) NOT NULL,
-  `typeId` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-ALTER TABLE `core_template`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_template_template_type` (`typeId`);
-
-ALTER TABLE `core_template`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
-
-ALTER TABLE `core_template`
-  ADD CONSTRAINT `fk_template_template_type` FOREIGN KEY (`typeId`) REFERENCES `core_template_type` (`id`);
+  `typeId` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_template_template_type` (`typeId`),
+  CONSTRAINT `fk_template_template_type` FOREIGN KEY (`typeId`) REFERENCES `core_template_type` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=13;
 
 SET AUTOCOMMIT = 1;
 SET FOREIGN_KEY_CHECKS = 1;
