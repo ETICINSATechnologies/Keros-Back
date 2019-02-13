@@ -184,10 +184,6 @@ class KerosApp
             })->add($this->getContainer()->get(AuthenticationMiddleware::class));
         });
 
-        $app->getContainer()['documentDirectory'] = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'documents' . DIRECTORY_SEPARATOR;
-        $app->getContainer()['templateDirectory'] = $app->getContainer()['documentDirectory'] . 'templates' . DIRECTORY_SEPARATOR;
-        $app->getContainer()['temporaryDirectory'] = $app->getContainer()['documentDirectory'] . 'tmp' . DIRECTORY_SEPARATOR;
-
         $this->app = $app;
     }
 

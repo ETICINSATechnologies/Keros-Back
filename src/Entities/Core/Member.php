@@ -335,7 +335,7 @@ class Member implements JsonSerializable
     }
 
     /**
-     * @return array
+     * @return MemberPosition[]
      */
     public function getPositionsArray()
     {

@@ -33,7 +33,9 @@ INSERT INTO core_member_position (id, memberId, positionId, isBoard, year) VALUE
   (2, 2, 3, FALSE, 2017),
   (3, 3, 1, TRUE, 2018),
   (4, 3, 2, TRUE, 1990),
-  (5, 3, 3, FALSE, 2015);
+  (5, 3, 3, FALSE, 2015),
+  (6, 1, 6, FALSE, 2016),
+  (7, 2, 6, FALSE, 2002);
 
 TRUNCATE TABLE ua_firm;
 INSERT INTO ua_firm (id, siret, name, addressId, typeId) VALUES
@@ -48,9 +50,9 @@ INSERT INTO `ua_contact` (`id`, `firstName`, `lastName`, `genderId`, `firmId`, `
   (4, 'Marah', 'Galy Adam', 1, 1, 'marah.galy@etic-insa.com', '0033646786532', NULL, NULL, NULL, 0);
 
 TRUNCATE TABLE ua_study;
-INSERT INTO `ua_study` (`id`, `name`, `description`, `fieldId`, `provenanceId`, `statusId`, `signDate`, `endDate`, `managementFee`, `realizationFee`, `rebilledFee`, `ecoparticipationFee`, `outsourcingFee`, `archivedDate`, `firmId`, `confidential`) VALUES
-  (1, 'Développement IDE', 'Développement d\'un IDE pour utilisation interne', 1, 1, 2, '2018-11-10', '2018-11-10', 12000000, 123, 12345, 12, 12324454, '2018-11-10', 1, true),
-  (2, 'Tests d\'acidité dans le Rhône', 'Créateur de IDE', 1, 1, 2, '2018-11-10', '2018-11-10', 12000000, 123, 12345, 12, 12324454, '2018-11-10', 2, false);
+INSERT INTO `ua_study` (`id`, `name`, `description`, `fieldId`, `provenanceId`, `statusId`, `signDate`, `endDate`, `managementFee`, `realizationFee`, `rebilledFee`, `ecoparticipationFee`, `outsourcingFee`, `archivedDate`, `firmId`) VALUES
+  (1, 'Développement IDE', 'Développement d''un IDE pour utilisation interne', 1, 1, 2, '2018-11-10', '2018-11-10', 12000000, 123, 12345, 12, 12324454, '2018-11-10', 1),
+  (2, 'Tests d''acidité dans le Rhône', 'Créateur de IDE', 1, 1, 2, '2018-11-10', '2018-11-10', 12000000, 123, 12345, 12, 12324454, '2018-11-10', 2);
 
 TRUNCATE TABLE ua_study_consultant;
 INSERT INTO `ua_study_consultant` (`memberId`, `studyId`) VALUES
@@ -76,8 +78,9 @@ INSERT INTO `core_template_type` (`id`, `label`) VALUES
   (2, 'Membre');
 
 TRUNCATE TABLE core_template;
-INSERT INTO `core_template` (`id`, `name`, `location`, `typeId`) VALUES
-  (1, 'testGet', 'null part', 1),
-  (2, 'test', 'qlq part', 1);
+INSERT INTO `core_template` (`id`, `name`, `location`, `typeId`, `oneConsultant`) VALUES
+  (1, 'testGet', 'null part', 1, 0),
+  (2, 'test', 'qlq part', 1, 0),
+  (3, 'one consutant template', 'pas ici', 1, 1);
 
 COMMIT;

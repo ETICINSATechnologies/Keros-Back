@@ -3,6 +3,9 @@
 
 namespace Keros\Services;
 
+use Keros\Services\Core\TemplateService;
+use Keros\Services\Core\TemplateTypeService;
+use Keros\Services\Ua\ProvenanceService;
 use Keros\Services\Auth\LoginService;
 use Keros\Services\Core\AddressService;
 use Keros\Services\Core\CountryService;
@@ -12,15 +15,12 @@ use Keros\Services\Core\MemberPositionService;
 use Keros\Services\Core\MemberService;
 use Keros\Services\Core\PoleService;
 use Keros\Services\Core\PositionService;
-use Keros\Services\Core\TemplateService;
-use Keros\Services\Core\TemplateTypeService;
 use Keros\Services\Core\TicketService;
 use Keros\Services\Core\UserService;
 use Keros\Services\Ua\ContactService;
 use Keros\Services\Ua\FieldService;
 use Keros\Services\Ua\FirmService;
 use Keros\Services\Ua\FirmTypeService;
-use Keros\Services\Ua\ProvenanceService;
 use Keros\Services\Ua\StatusService;
 use Keros\Services\Ua\StudyService;
 use Psr\Container\ContainerInterface;

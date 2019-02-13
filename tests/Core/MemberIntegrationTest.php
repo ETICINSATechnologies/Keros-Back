@@ -34,7 +34,7 @@ class MemberIntegrationTest extends AppTestCase
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/api/v1/core/member?year=2018',
+            'REQUEST_URI' => '/api/v1/core/member?year=latest',
         ]);
 
         $req = Request::createFromEnvironment($env);

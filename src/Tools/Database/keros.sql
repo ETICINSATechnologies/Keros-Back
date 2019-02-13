@@ -275,30 +275,66 @@ CREATE TABLE ua_study_qualityManager (
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
+DROP TABLE IF EXISTS core_template_type;
+CREATE TABLE core_template_type (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `label` varchar(64) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=3;
+
+DROP TABLE IF EXISTS core_template;
+CREATE TABLE `core_template` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `location` varchar(255) NOT NULL,
+  `typeId` int(11) NOT NULL,
+  `oneConsultant` boolean NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  KEY `fk_template_template_type` (`typeId`),
+  CONSTRAINT `fk_template_template_type` FOREIGN KEY (`typeId`) REFERENCES `core_template_type` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=13;
+
 SET AUTOCOMMIT = 1;
 SET FOREIGN_KEY_CHECKS = 1;
 SET UNIQUE_CHECKS = 1;
 
-# Permanent Data
 INSERT INTO `core_pole` (id, label, name) VALUES
   (1, 'Com', 'Communication'),
   (2, 'Cons', 'Consultant'),
-  (3, 'DSI', 'Direction des Systèmes d\'Information,'),
-  (4, 'GRC', 'Gestion des Relations Clients'),
-  (5, 'Pres', 'Présidence'),
-  (6, 'Qua', 'Qualité'),
-  (7, 'RH', 'Ressources Humaines'),
-  (8, 'SG', 'Secretariat'),
-  (9, 'Treso', 'Trésorerie'),
-  (10, 'UA', 'Unité d\'affaires');
+  (3, 'DevCo', 'Developpement Commercial'),
+  (4, 'Perf', 'Performance'),
+  (5, 'Prez', 'Présidence'),
+  (6, 'RH', 'Ressources Humaines'),
+  (7, 'SI', 'Systèmes d\'Information,'),
+  (8, 'Treso', 'Trésorerie'),
+  (9, 'UA', 'Unité d\'affaires');
 
 INSERT INTO `core_position` (id, label, poleId) VALUES
-  (1, 'Ancien membre', null), (2, 'Auditeur CNJE', null), (3, 'Chargé d''affaires', 10), (4, 'Client', null),
-  (5, 'Comptable', 9), (6, 'Consultant', null), (7, 'Junior Com', 1), (8, 'Junior DSI', 3), (9, 'Junior GRC', 4),
-  (10, 'Junior Qualité', 6), (11, 'Membre CNJE', null), (12, 'Président', 5), (13, 'Responsable BU', 10),
-  (14, 'Responsable Com', 1), (15, 'Responsable DSI', 3), (16, 'Responsable GRC', 4), (17, 'Responsable Qualité', 6),
-  (18, 'Responsable UA', 10), (19, 'Secrétaire Général', 8), (20, 'Trésorier', 9), (21, 'Vice-Président', 5),
-  (22, 'Vice-Trésorier', 9);
+  (1, 'Auditeur orga', null),
+  (2, 'Auditeur treso', null),
+  (3, 'Chargé d''affaires', 3),
+  (4, 'Chef de projets', 9),
+  (5, 'Comptable', 8),
+  (6, 'Consultant', 2),
+  (7, 'Junior com', 1),
+  (8, 'Junior devCo', 3),
+  (9, 'Junior qualité', 4),
+  (10, 'Junior SI', 7),
+  (11, 'Junior UA', 9),
+  (12, 'Membre CNJE', null),
+  (13, 'Membre d''Honneur', null),
+  (14, 'Président', 5),
+  (15, 'Responsable BU', 9),
+  (16, 'Responsable com', 1),
+  (17, 'Responsable devCo', 3),
+  (18, 'Responsable qualité', 4),
+  (19, 'Responsable RH', 6),
+  (20, 'Responsable SI', 7),
+  (21, 'Responsable d''UA', 9),
+  (22, 'Secrétaire général', 6),
+  (23, 'Trésorier', 8),
+  (24, 'Vice-Président', 5),
+  (25, 'Vice-Trésorier', 8);
 
 INSERT INTO core_department (id, label, name) VALUES
   (1, 'BB', 'Biochimie et Biotechnologies'),
@@ -394,35 +430,5 @@ INSERT INTO `ua_field` (`id`, `label`) VALUES
   (11, 'Benchmark'),
   (12, 'Productique'),
   (13, 'Traduction');
-
-
-CREATE TABLE `core_template_type` (
-  `id` int(11) NOT NULL,
-  `label` varchar(64) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-ALTER TABLE `core_template_type`
-  ADD PRIMARY KEY (`id`);
-
-ALTER TABLE `core_template_type`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
-
-CREATE TABLE `core_template` (
-  `id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `location` varchar(255) NOT NULL,
-  `typeId` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-ALTER TABLE `core_template`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_template_template_type` (`typeId`);
-
-ALTER TABLE `core_template`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
-
-ALTER TABLE `core_template`
-  ADD CONSTRAINT `fk_template_template_type` FOREIGN KEY (`typeId`) REFERENCES `core_template_type` (`id`);
 
 COMMIT;

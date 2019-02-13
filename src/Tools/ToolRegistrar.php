@@ -33,5 +33,8 @@ class ToolRegistrar
         $container[AuthenticationMiddleware::class] = function ($container) {
             return new AuthenticationMiddleware($container);
         };
+        $container[GenderBuilder::class] = function (){
+            return new GenderBuilder();
+        };
     }
 }

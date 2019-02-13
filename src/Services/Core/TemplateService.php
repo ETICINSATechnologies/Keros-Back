@@ -12,6 +12,7 @@ namespace Keros\Services\Core;
 use Keros\DataServices\Core\TemplateDataService;
 use Keros\Entities\Core\Template;
 use Keros\Error\KerosException;
+use Keros\Tools\ConfigLoader;
 use Keros\Tools\Validator;
 use Psr\Container\ContainerInterface;
 use DateTime;
@@ -35,6 +36,11 @@ class TemplateService
     private $templateDirectory;
 
     /**
+     * @var
+     */
+    private $kerosConfig;
+
+    /**
      * TemplateService constructor.
      * @param ContainerInterface $container
      */
@@ -42,7 +48,8 @@ class TemplateService
     {
         $this->templateDataService = $container->get(TemplateDataService::class);
         $this->templateTypeService = $container->get(TemplateTypeService::class);
-        $this->templateDirectory = $container->get("templateDirectory");
+        $this->kerosConfig = ConfigLoader::getConfig();
+        $this->templateDirectory = $this->kerosConfig['TEMPLATE_DIRECTORY'];
     }
 
     /**
@@ -56,14 +63,15 @@ class TemplateService
     public function create(array $fields): Template
     {
         $name = Validator::requiredString($fields["name"]);
-        //$typeId = Validator::requiredId($fields["typeId"]); //TODO
+        $typeId = Validator::requiredId($fields["typeId"]);
+        $oneConsultant = Validator::requiredBool($fields["oneConsultant"]);
         $extension = Validator::requiredString($fields["extension"]);
 
         $date = new DateTime();
         $location = $this->templateDirectory . $date->format('d-m-Y_H:i:s:u') . '.' . $extension;
 
-        $templateType = $this->templateTypeService->getOne(1); //TODO $typeId
-        $template = new Template($name, $location, $templateType);
+        $templateType = $this->templateTypeService->getOne($typeId);
+        $template = new Template($name, $location, $templateType, $oneConsultant);
 
         $this->templateDataService->persist($template);
 
@@ -100,7 +108,7 @@ class TemplateService
     }
 
     /**
-     * @return array
+     * @return Template[]
      * @throws KerosException
      */
     public function getAll(): array
