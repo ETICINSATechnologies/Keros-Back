@@ -288,6 +288,7 @@ CREATE TABLE `core_template` (
   `name` varchar(255) NOT NULL,
   `location` varchar(255) NOT NULL,
   `typeId` int(11) NOT NULL,
+  `oneConsultant` boolean NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `fk_template_template_type` (`typeId`),
   CONSTRAINT `fk_template_template_type` FOREIGN KEY (`typeId`) REFERENCES `core_template_type` (`id`)

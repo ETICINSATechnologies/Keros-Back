@@ -13,6 +13,7 @@ use Keros\Services\Core\MemberService;
 use Keros\Services\Core\PositionService;
 use Keros\Services\Core\UserService;
 use Keros\Tools\Validator;
+use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 
 class StudyService
@@ -62,8 +63,14 @@ class StudyService
      */
     private $studyDataService;
 
+    /**
+     * @var Logger
+     */
+    private $logger;
+
     public function __construct(ContainerInterface $container)
     {
+        $this->logger = $container->get(Logger::class);
         $this->addressService = $container->get(AddressService::class);
         $this->genderService = $container->get(GenderService::class);
         $this->firmService = $container->get(FirmService::class);
@@ -153,13 +160,13 @@ class StudyService
         $this->studyDataService->delete($study);
     }
 
-    public function deleteStudiesRelatedtoFirm (int $idFirm) : void
+    public function deleteStudiesRelatedtoFirm(int $idFirm): void
     {
         $firm = $this->firmService->getOne($idFirm);
         $studies = $this->getAll();
         foreach ($studies as $study) {
             $study = Validator::requiredStudy($study);
-            if ($study->getFirm() == $firm){
+            if ($study->getFirm() == $firm) {
                 $this->studyDataService->delete($study);
             }
         }
@@ -266,4 +273,27 @@ class StudyService
         return $study;
     }
 
+
+    /**
+     * @param int $id
+     * @return bool
+     * @throws KerosException
+     */
+    public function consultantAreValid(int $id): bool
+    {
+        $id = Validator::requiredId($id);
+        $study = $this->getOne($id);
+        if (empty($study->getConsultantsArray())) {
+            return false;
+        }
+        foreach ($study->getConsultantsArray() as $consultant) {
+            $isConsultant = false;
+            foreach ($consultant->getPositionsArray() as $position)
+                if ($position->getPosition()->getLabel() == 'Consultant')
+                    $isConsultant = true;
+            if (!$isConsultant)
+                return false;
+        }
+        return true;
+    }
 }

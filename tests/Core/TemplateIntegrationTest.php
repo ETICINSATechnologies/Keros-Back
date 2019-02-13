@@ -22,6 +22,7 @@ class TemplateIntegrationTest extends AppTestCase
         $body = json_decode($response->getBody());
         $this->assertSame("testGet", $body->name);
         $this->assertSame(1, $body->id);
+        $this->assertSame(false, $body->oneConsultant);
     }
 
     public function testGetTemplateShouldReturn404()
@@ -71,6 +72,6 @@ class TemplateIntegrationTest extends AppTestCase
 
         $this->assertSame(200, $response->getStatusCode());
         $body = json_decode($response->getBody());
-        $this->assertEquals(2, count($body));
+        $this->assertEquals(3, count($body));
     }
 }

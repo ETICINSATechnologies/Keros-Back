@@ -12,6 +12,7 @@ use Keros\Services\Ua\FieldService;
 use Keros\Services\Ua\ProvenanceService;
 use Keros\Services\Ua\StatusService;
 use Keros\Services\Ua\StudyService;
+use Keros\Tools\ConfigLoader;
 use Keros\Tools\Validator;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
@@ -59,6 +60,11 @@ class StudyController
      */
     private $templateService;
 
+    /**
+     * @var
+     */
+    private $kerosConfig;
+
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get(Logger::class);
@@ -69,6 +75,7 @@ class StudyController
         $this->statusService = $container->get(StatusService::class);
         $this->memberService = $container->get(MemberService::class);
         $this->templateService = $container->get(TemplateService::class);
+        $this->kerosConfig = ConfigLoader::getConfig();
     }
 
     public function getStudy(Request $request, Response $response, array $args)
@@ -220,13 +227,17 @@ class StudyController
     {
         $this->logger->debug("Get all templates from study " . $args["id"] . " " . $request->getServerParams()["REMOTE_ADDR"]);
 
+        if (!$this->studyService->consultantAreValid($args["id"]))
+            return $response->withStatus(400, "Invalid consultant in study " . $args["id"]);
+
         $templates = array();
         foreach ($this->templateService->getAll() as $template) {
             $templates[] = array('id' => $template->getId(),
                 'name' => $template->getName(),
-                'generateLocation' => "http://localhost:8000" . "/api/v1/ua/study/" . $args["id"] . "/template/" . $template->getId());
+                'generateLocation' => $this->kerosConfig["BACK_URL"] . "/api/v1/ua/study/" . $args["id"] . "/template/" . $template->getId());
         }
 
         return $response->withJson(array('documents' => $templates), 200);
     }
+
 }

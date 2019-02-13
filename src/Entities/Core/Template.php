@@ -30,6 +30,8 @@ class Template implements JsonSerializable
     /** @Column(type="string", length=255) */
     protected $location;
 
+    /** @Column(type="boolean") */
+    protected $oneConsultant;
     /**
      * @ManyToOne(targetEntity="TemplateType")
      * @JoinColumn(name="typeId", referencedColumnName="id")
@@ -41,12 +43,14 @@ class Template implements JsonSerializable
      * @param $name
      * @param $location
      * @param $typeId
+     * @param $oneConsultant
      */
-    public function __construct($name, $location, $typeId)
+    public function __construct($name, $location, $typeId, $oneConsultant)
     {
         $this->name = $name;
         $this->location = $location;
         $this->typeId = $typeId;
+        $this->oneConsultant = $oneConsultant;
     }
 
     public function jsonSerialize()
@@ -56,6 +60,7 @@ class Template implements JsonSerializable
             'name' => $this->getName(),
             'location' => $this->getLocation(),
             'typeId' => $this->getTypeId(),
+            'oneConsultant' => $this->getOneConsultant(),
         ];
     }
 
@@ -123,6 +128,21 @@ class Template implements JsonSerializable
         $this->typeId = $typeId;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getOneConsultant()
+    {
+        return $this->oneConsultant;
+    }
+
+    /**
+     * @param mixed $oneConsultant
+     */
+    public function setOneConsultant($oneConsultant): void
+    {
+        $this->oneConsultant = $oneConsultant;
+    }
 
 
 }
