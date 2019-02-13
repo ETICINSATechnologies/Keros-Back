@@ -51,8 +51,8 @@ class MemberPositionService
     public function create(Member $member, array $fields): MemberPosition
     {
         $positionId = Validator::requiredId($fields["id"]);
-        $isBoard = Validator::requiredBool($fields["isBoard"]);
-        $year = Validator::requiredInt($fields["year"]);
+        $isBoard = Validator::optionalBool($fields["isBoard"]);
+        $year = Validator::optionalInt($fields["year"]);
 
         $position = $this->positionService->getOne($positionId);
 

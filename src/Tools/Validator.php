@@ -37,6 +37,20 @@ class Validator
         return $id;
     }
 
+    public static function optionalInt($int): ?int
+    {
+        if ($int == null) {
+            return null;
+        }
+        if (!is_int($int)) {
+            throw new KerosException("The provided id is not an integer", 400);
+        }
+        if ($int < 0) {
+            throw new KerosException("The ID cannot be a negative number", 400);
+        }
+        return $int;
+    }
+
     public static function requiredEmail($email): string
     {
         if ($email == null) {
@@ -195,15 +209,15 @@ class Validator
         if (strlen($telephone) == 0) {
             return null;
         }
-        if (!preg_match("/00\d{11}/", $telephone))
+        elseif (strlen($telephone) < 8 || strlen($telephone) > 16){
             throw new KerosException("The provided phone number is invalid", 400);
-
+        }
         return $telephone;
     }
 
     public static function requiredPhone($telephone): ?string
     {
-        if (!preg_match("/00\d{11}/", $telephone))
+        if (strlen($telephone) < 8 || strlen($telephone) > 16)
             throw new KerosException("The provided phone number is invalid", 400);
 
         return $telephone;
