@@ -111,7 +111,7 @@ class MemberController
         $this->entityManager->beginTransaction();
         $member = $this->memberService->update($args['id'], $body);
         $this->entityManager->commit();
-
+        
         return $response->withJson($member, 200);
     }
 

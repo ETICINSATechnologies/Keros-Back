@@ -280,7 +280,7 @@ CREATE TABLE core_template_type (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `label` varchar(64) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS core_template;
 CREATE TABLE `core_template` (
@@ -292,7 +292,7 @@ CREATE TABLE `core_template` (
   PRIMARY KEY (`id`),
   KEY `fk_template_template_type` (`typeId`),
   CONSTRAINT `fk_template_template_type` FOREIGN KEY (`typeId`) REFERENCES `core_template_type` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=13;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 SET AUTOCOMMIT = 1;
 SET FOREIGN_KEY_CHECKS = 1;

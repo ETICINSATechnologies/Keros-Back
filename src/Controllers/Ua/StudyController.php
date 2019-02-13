@@ -4,6 +4,7 @@ namespace Keros\Controllers\Ua;
 
 use Doctrine\ORM\EntityManager;
 use Keros\Entities\Core\Page;
+use Keros\Error\KerosException;
 use Keros\Services\Core\MemberService;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Ua\Study;
@@ -225,10 +226,10 @@ class StudyController
      */
     public function getAllDocuments(Request $request, Response $response, array $args)
     {
-        $this->logger->debug("Get all templates from study " . $args["id"] . " " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->logger->debug("Get all documents for study " . $args["id"] . " " . $request->getServerParams()["REMOTE_ADDR"]);
 
         if (!$this->studyService->consultantAreValid($args["id"]))
-            return $response->withStatus(400, "Invalid consultant in study " . $args["id"]);
+            throw new KerosException("Invalid consultant in study", 400);
 
         $templates = array();
         foreach ($this->templateService->getAll() as $template) {
