@@ -8,6 +8,7 @@ use Keros\Entities\Core\Address;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Error\KerosException;
 use Keros\Tools\Validator;
+use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 
 class AddressService
@@ -20,11 +21,16 @@ class AddressService
      * @var CountryService
      */
     private $countryService;
+    /**
+     * @var Logger
+     */
+    private $logger;
 
     public function __construct(ContainerInterface $container)
     {
         $this->addressDataService = $container->get(AddressDataService::class);
         $this->countryService = $container->get(CountryService::class);
+        $this->logger = $container->get(Logger::class);
     }
 
     public function create(array $fields): Address
