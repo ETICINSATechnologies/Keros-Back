@@ -3,6 +3,7 @@
 
 namespace Keros\Services\Ua;
 
+use Keros\Entities\Core\Page;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Ua\Contact;
 use Keros\Error\KerosException;
@@ -128,9 +129,9 @@ class ContactService
         return $contact;
     }
 
-    public function getPage(RequestParameters $requestParameters): array
+    public function getPage(RequestParameters $requestParameters, array $queryParams): Page
     {
-        return $this->contactDataService->getPage($requestParameters);
+        return $this->contactDataService->getPage($requestParameters, $queryParams);
     }
 
     public function getCount(RequestParameters $requestParameters): int
