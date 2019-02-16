@@ -6,9 +6,13 @@ namespace Keros\DataServices\Ua;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Exception;
+use Keros\Entities\Core\Page;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Ua\Contact;
+use Keros\Entities\Ua\Firm;
 use Keros\Error\KerosException;
 use Keros\Tools\Validator;
 use Monolog\Logger;
@@ -28,12 +32,17 @@ class ContactDataService
      * @var EntityRepository
      */
     private $repository;
+    /**
+     * @var QueryBuilder
+     */
+    private $queryBuilder;
 
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get(Logger::class);
         $this->entityManager = $container->get(EntityManager::class);
         $this->repository = $this->entityManager->getRepository(Contact::class);
+        $this->queryBuilder = $this->entityManager->createQueryBuilder();
     }
 
     public function delete(Contact $contact) : void
@@ -84,12 +93,70 @@ class ContactDataService
         }
     }
 
-    public function getPage(RequestParameters $requestParameters): array
+    public function getPage(RequestParameters $requestParameters, array $queryParams): Page
     {
         try {
-            $criteria = $requestParameters->getCriteria();
-            $members = $this->repository->matching($criteria)->getValues();
-            return $members;
+            $this->queryBuilder
+                ->select('c')
+                ->from(Contact::class, 'c')
+                ->leftJoin(Firm::class, 'f', 'WITH', 'c.firm = f');
+
+            $whereStatement = '';
+            $whereParameters = array();
+
+            foreach ($queryParams as $key => $value) {
+                if (in_array($key, ['search', 'firmId'])) {
+                    if (!empty($whereStatement))
+                        $whereStatement .= ' AND ';
+
+                    if ($key == 'search') {
+                        $searchValues = explode(' ', $value);
+                        $searchStatement = '';
+                        foreach ($searchValues as $i => $field) {
+                            if (!empty($searchStatement))
+                                $searchStatement .= ' AND ';
+
+                            $searchStatement .=
+                                '(c.firstName = :search' . $i
+                                . ' OR c.lastName = :search' . $i . ')';
+                            $whereParameters[':search' . $i] = $field;
+                        }
+
+                        $whereStatement .= $searchStatement;
+                    } else {
+                        if ($key == 'firmId') {
+                            $whereStatement .= 'f.id = :firmId';
+                        }
+                        $whereParameters[':' . $key] = $value;
+                    }
+
+                }
+            }
+
+            $order = $requestParameters->getParameters()['order'];
+            $orderBy = $requestParameters->getParameters()['orderBy'];
+            $pageSize = $requestParameters->getParameters()['pageSize'];
+            $firstResult = $pageSize * $requestParameters->getParameters()['pageNumber'];
+
+            if (!empty($whereStatement)) {
+                $this->queryBuilder
+                    ->where($whereStatement)
+                    ->setParameters($whereParameters);
+            }
+
+            if (isset($orderBy)) {
+                $this->queryBuilder->orderBy($orderBy, $order);
+            }
+
+            $this->queryBuilder
+                ->setFirstResult($firstResult)
+                ->setMaxResults($pageSize);
+
+            $query = $this->queryBuilder->getQuery();
+            $paginator = new Paginator($query, $fetchJoinCollection = true);
+
+            return new Page($query->execute(), $requestParameters, count($paginator));
+
         } catch (Exception $e) {
             $msg = "Error finding page of contacts : " . $e->getMessage();
             $this->logger->error($msg);

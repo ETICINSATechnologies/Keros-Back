@@ -121,7 +121,6 @@ class TemplateController
         $this->logger->debug("Creating template from " . $request->getServerParams()["REMOTE_ADDR"]);
         $body = $request->getParsedBody();
 
-        //TODO valider la requete avant
         $uploadedFile = $request->getUploadedFiles()['file'];
         $body["extension"] = pathinfo($uploadedFile->getClientFileName(), PATHINFO_EXTENSION);
 
@@ -184,11 +183,17 @@ class TemplateController
         $template = $this->templateService->getOne($args["idTemplate"]);
         $connectedUser = $this->memberService->getOne($request->getAttribute("userId"));
 
-        if($study->getContacts() == null || empty($study->getContacts()))
-            return $response->withStatus(400, "No contact in study " . $study->getId());
+        if ($study->getContacts() == null || empty($study->getContacts())) {
+            $msg = "No contact in study " . $study->getId();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 400);
+        }
 
-        if(!$this->studyService->consultantAreValid($study->getId()))
-            return $response->withStatus(400, "Invalid consultant in study " . $study->getId());
+        if (!$this->studyService->consultantAreValid($study->getId())) {
+            $msg = "Invalid consultant in study " . $study->getId();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 400);
+        }
 
         //Zip are done if one document per consultant is needed
         $doZip = $template->getOneConsultant() == 1;
@@ -247,10 +252,10 @@ class TemplateController
 
             switch (pathinfo($template->getLocation(), PATHINFO_EXTENSION)) {
                 case 'docx':
-                    $return = $this->generateStudyDocx($filename, $study, $connectedUser, array($consultant));
+                    $return = $this->generateStudyDocx($location, $study, $connectedUser, $study->getConsultantsArray());
                     break;
                 case 'pptx':
-                    $return = $this->generateStudyPptx($filename, $study, $connectedUser, array($consultant));
+                    $return = $this->generateStudyPptx($location, $study, $connectedUser, $study->getConsultantsArray());
                     break;
                 default :
                     $return = false;
@@ -389,7 +394,7 @@ class TemplateController
         $nbConsultant = 0;
         //loop to have multiple consultant identity correctly
         foreach ($study->getConsultantsArray() as $consultant) {
-            $consultantsIdentity .= $this->getStringGender($consultant->getGender()) . ' ' . $consultant->getLastName() . ' ' . $consultant->getFirstName();
+            $consultantsIdentity .= $this->genderBuilder->getStringGender($consultant->getGender()) . ' ' . $consultant->getLastName() . ' ' . $consultant->getFirstName();
             //If we are not one the last consultant in the array
             if (++$nbConsultant !== count($study->getConsultantsArray()))
                 $consultantsIdentity .= ', ';
@@ -404,13 +409,13 @@ class TemplateController
             $study->getDescription(),
             $study->getSignDate()->format('d/m/Y'),
             $contact->getPosition(),
-            $this->getStringGender($contact->getGender()),
+            $this->genderBuilder->getStringGender($contact->getGender()),
             $contact->getFirstName(),
             $contact->getLastName(),
             $contact->getEmail(),
             $date->format('d/m/Y'),
             $consultants[0]->getId(),
-            $this->getStringGender($consultants[0]->getGender()),
+            $this->genderBuilder->getStringGender($consultants[0]->getGender()),
             $consultants[0]->getFirstName(),
             $consultants[0]->getLastName(),
             $consultants[0]->getEmail(),
@@ -419,10 +424,10 @@ class TemplateController
             $consultants[0]->getAddress()->getCity(),
             $connectedUser->getLastName(),
             $connectedUser->getFirstName(),
-            $this->getStringGender($connectedUser->getGender()),
-            $this->getStringGender($contact->getGender()) . ' ' . $contact->getLastName() . ' ' . $contact->getFirstName(),
+            $this->genderBuilder->getStringGender($connectedUser->getGender()),
+            $this->genderBuilder->getStringGender($contact->getGender()) . ' ' . $contact->getLastName() . ' ' . $contact->getFirstName(),
             $consultantsIdentity,
-            $this->getStringGender($connectedUser->getGender()) . ' ' . $connectedUser->getLastName() . ' ' . $connectedUser->getFirstName(),
+            $this->genderBuilder->getStringGender($connectedUser->getGender()) . ' ' . $connectedUser->getLastName() . ' ' . $connectedUser->getFirstName(),
             $study->getArchivedDate()->format('d/m/Y')
         );
     }
