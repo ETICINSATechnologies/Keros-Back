@@ -53,12 +53,12 @@ class TemplateController
     private $temporaryDirectory;
 
     /**
-     * @var
+     * @var MemberService
      */
     private $memberService;
 
     /**
-     * @var
+     * @var ConfigLoader
      */
     private $kerosConfig;
 
@@ -373,7 +373,16 @@ class TemplateController
             '${IDENTITECONTACT}',
             '${IDENTITEINTERVENANT}',
             '${INDENTITEUSER}',
-            '${DATEFIN}'
+            '${DATEFIN}',
+            //TODO fichier : accord confidentialité, pret licence
+            '${NOMPRESIDENT}',
+            '${CIVPRESIDENT}',
+            '$‘PRENOMPRESIDENT}',
+            '${NOMTRESORIER}',
+            '${CIVTRESORIER}',
+            '${PRENOMTRESORIER}',
+            '${IDENTITETRESORIER',
+            '${IDENTITEPRESIDENT}'
         );
     }
 
@@ -396,9 +405,24 @@ class TemplateController
         foreach ($study->getConsultantsArray() as $consultant) {
             $consultantsIdentity .= $this->genderBuilder->getStringGender($consultant->getGender()) . ' ' . $consultant->getLastName() . ' ' . $consultant->getFirstName();
             //If we are not one the last consultant in the array
+
             if (++$nbConsultant !== count($study->getConsultantsArray()))
                 $consultantsIdentity .= ', ';
         }
+        //$tresorier = null;
+        //$president = null;
+        $board = $this->memberService->getLatestBoard();
+        foreach ($board as $member) {
+            foreach ($member->getPositionsArray() as $position) {
+                if ($position->getIsBoard()) {
+                    if ($position->getPosition()->getLabel() == "Trésorier")
+                        $tresorier = $position->getMember();
+                    else if ($position->getPosition()->getLabel() == "Président")
+                        $president = $position->getMember();
+                }
+            }
+        }
+
         return array(
             $study->getFirm()->getName(),
             $study->getName(),
@@ -428,7 +452,9 @@ class TemplateController
             $this->genderBuilder->getStringGender($contact->getGender()) . ' ' . $contact->getLastName() . ' ' . $contact->getFirstName(),
             $consultantsIdentity,
             $this->genderBuilder->getStringGender($connectedUser->getGender()) . ' ' . $connectedUser->getLastName() . ' ' . $connectedUser->getFirstName(),
-            $study->getArchivedDate()->format('d/m/Y')
+            $study->getArchivedDate()->format('d/m/Y'),
+            $president->getLastName(),
+            //$this->getS
         );
     }
 }

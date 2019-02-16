@@ -217,6 +217,9 @@ class MemberService
 
     }
 
+    /**
+     * @return Member[]
+     */
     public function getLatestBoard(): array
     {
         $boardMembersPositions = $this->memberPositionService->getLatestBoard();

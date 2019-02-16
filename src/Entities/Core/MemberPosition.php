@@ -60,7 +60,7 @@ class MemberPosition implements JsonSerializable
 
     // Getters and setters
     /**
-     * @return mixed
+     * @return Member
      */
     public function getMember()
     {
