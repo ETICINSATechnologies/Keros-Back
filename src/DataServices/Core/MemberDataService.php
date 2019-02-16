@@ -12,6 +12,7 @@ use Exception;
 use Keros\Entities\Core\Member;
 use Keros\Entities\Core\MemberPosition;
 use Keros\Entities\Core\Page;
+use Keros\Entities\Core\Pole;
 use Keros\Entities\Core\Position;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Core\User;
@@ -84,13 +85,14 @@ class MemberDataService
                 ->from(Member::class, 'm')
                 ->innerJoin(User::class, 'u', 'WITH', 'm.user = u')
                 ->leftJoin(MemberPosition::class, 'mp', 'WITH', 'u.id = mp.member')
-                ->leftJoin(Position::class, 'p', 'WITH', 'mp.position = p');
+                ->leftJoin(Position::class, 'p', 'WITH', 'mp.position = p')
+                ->leftJoin(Pole::class, 'pole', 'WITH', 'p.pole = pole.id');
 
             $whereStatement = '';
             $whereParameters = array();
 
             foreach ($queryParams as $key => $value) {
-                if (in_array($key, ['search', 'positionId', 'year', 'firstName', 'lastName', 'company'])) {
+                if (in_array($key, ['search', 'poleId', 'positionId', 'year', 'firstName', 'lastName', 'company'])) {
                     if (!empty($whereStatement))
                         $whereStatement .= ' AND ';
 
@@ -112,6 +114,8 @@ class MemberDataService
                     } else {
                         if ($key == 'positionId') {
                             $whereStatement .= 'p.id = :positionId';
+                        } elseif ($key == 'poleId') {
+                            $whereStatement .= 'pole.id = :poleId';
                         } elseif ($key == 'year') {
                             $whereStatement .= 'mp.year = :year';
                         } elseif ($key == 'firstName' || $key == 'lastName' || $key == 'company') {
