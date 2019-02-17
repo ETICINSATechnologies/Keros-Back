@@ -174,7 +174,7 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(200, $response->getStatusCode());
 
         $body = json_decode($response->getBody());
-        $this->assertEquals(3, count($body->content));
+        $this->assertEquals(4, count($body->content));
         $this->assertNotNull(strlen($body->content[0]->id));
         $this->assertNotNull(strlen($body->content[0]->username));
         $this->assertNotNull(strlen($body->content[0]->firstName));

@@ -50,12 +50,10 @@ class ContactController
     {
         $this->logger->debug("Get page contacts from " . $request->getServerParams()["REMOTE_ADDR"]);
         $queryParams = $request->getQueryParams();
-        $params = new RequestParameters($queryParams, Contact::getSearchFields());
+        $requestParameters = new RequestParameters($queryParams, Contact::getSearchFields());
 
-        $contact = $this->contactService->getPage($params);
-        $totalCount = $this->contactService->getCount($params);
+        $page = $this->contactService->getPage($requestParameters, $queryParams);
 
-        $page = new Page($contact, $params, $totalCount);
         return $response->withJson($page, 200);
     }
 
