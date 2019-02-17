@@ -372,7 +372,6 @@ class TemplateController
             '${IDENTITEINTERVENANT}',
             '${INDENTITEUSER}',
             '${DATEFIN}',
-            //TODO fichier : accord confidentialité, pret licence
             '${NOMPRESIDENT}',
             '${CIVPRESIDENT}',
             '${PRENOMPRESIDENT}',
@@ -403,10 +402,11 @@ class TemplateController
         foreach ($study->getConsultantsArray() as $consultant) {
             $consultantsIdentity .= $this->genderBuilder->getStringGender($consultant->getGender()) . ' ' . $consultant->getLastName() . ' ' . $consultant->getFirstName();
             //If we are not one the last consultant in the array
-
             if (++$nbConsultant !== count($study->getConsultantsArray()))
                 $consultantsIdentity .= ', ';
         }
+
+        //Information about actual board
         $tresorier = null;
         $president = null;
         $board = $this->memberService->getLatestBoard();
@@ -421,55 +421,44 @@ class TemplateController
             }
         }
 
-        if($tresorier == null){
-            $msg = "Tresorier needed in actual board";
-            $this->logger->error($msg);
-            throw new KerosException($msg, 400);
-        }
-        if($president == null){
-            $msg = "President needed in actual board";
-            $this->logger->error($msg);
-            throw new KerosException($msg, 400);
-        }
-
         return array(
             $study->getFirm()->getName(),
             $study->getName(),
             $study->getFirm()->getAddress()->getLine1() . ", " . $study->getFirm()->getAddress()->getLine2(),
             $study->getFirm()->getAddress()->getPostalCode(),
             $study->getFirm()->getAddress()->getCity(),
-            $study->getFirm()->getSiret(),
-            $study->getDescription(),
-            $study->getSignDate()->format('d/m/Y'),
-            $contact->getPosition(),
+            ($study->getFirm()->getSiret() != null) ? $study->getFirm()->getSiret() : '${SIRETENTREPRISE}',
+            ($study->getDescription() != null) ? $study->getDescription() : '${DESCRIPTIONETUDE}',
+            ($study->getSignDate() != null) ? $study->getSignDate()->format('d/m/Y') : '${DATESIGCV}',
+            ($contact->getPosition() != null) ? $contact->getPosition() != null : '${FCTCONTACT}',
             $this->genderBuilder->getStringGender($contact->getGender()),
             $contact->getFirstName(),
             $contact->getLastName(),
             $contact->getEmail(),
             $date->format('d/m/Y'),
-            $consultants[0]->getId(),
-            $this->genderBuilder->getStringGender($consultants[0]->getGender()),
-            $consultants[0]->getFirstName(),
-            $consultants[0]->getLastName(),
-            $consultants[0]->getEmail(),
-            $consultants[0]->getAddress()->getLine1() . ' ' . $consultants[0]->getAddress()->getLine2(),
-            $consultants[0]->getAddress()->getPostalCode(),
-            $consultants[0]->getAddress()->getCity(),
+            ($consultants[0] != null) ? $consultants[0]->getId() : '${NUMINTERVENANT}',
+            ($consultants[0] != null) ? $this->genderBuilder->getStringGender($consultants[0]->getGender()) : '${CIVILITEINTERVENANT}',
+            ($consultants[0] != null) ? $consultants[0]->getFirstName() : '${PRENOMINTERVENANT}',
+            ($consultants[0] != null) ? $consultants[0]->getLastName() : '${NOMINTERVENANT}',
+            ($consultants[0] != null) ? $consultants[0]->getEmail() : '${MAILINTERVENANT}',
+            ($consultants[0] != null) ? $consultants[0]->getAddress()->getLine1() . (($consultants[0]->getAddress()->getLine2() != null) ? ' ' . $consultants[0]->getAddress()->getLine2() : '') : '${ADRESSEINTERVENANT}',
+            ($consultants[0] != null) ? $consultants[0]->getAddress()->getPostalCode() : '${CPINTERVENANT}',
+            ($consultants[0] != null) ? $consultants[0]->getAddress()->getCity() : '${VILLEINTERVENANT}',
             $connectedUser->getLastName(),
             $connectedUser->getFirstName(),
             $this->genderBuilder->getStringGender($connectedUser->getGender()),
             $this->genderBuilder->getStringGender($contact->getGender()) . ' ' . $contact->getLastName() . ' ' . $contact->getFirstName(),
             $consultantsIdentity,
             $this->genderBuilder->getStringGender($connectedUser->getGender()) . ' ' . $connectedUser->getLastName() . ' ' . $connectedUser->getFirstName(),
-            $study->getArchivedDate()->format('d/m/Y'),
-            $president->getLastName(),
-            $this->genderBuilder->getStringGender($president->getGender()),
-            $president->getFirstName(),
-            $tresorier->getLastName(),
-            $this->genderBuilder->getStringGender($tresorier->getGender()),
-            $tresorier->getFirstName(),
-            $this->genderBuilder->getStringGender($tresorier->getGender()) . ' ' . $tresorier->getLastName() . ' ' . $tresorier->getFirstName(),
-            $this->genderBuilder->getStringGender($president->getGender()) . ' ' . $president->getLastName() . ' ' . $president->getFirstName(),
+            ($study->getArchivedDate() != null) ? $study->getArchivedDate()->format('d/m/Y') : '${DATEFIN}',
+            ($president != null) ? $president->getLastName() : '${NOMPRESIDENT}',
+            ($president != null) ? $this->genderBuilder->getStringGender($president->getGender()) : '${CIVPRESIDENT}',
+            ($president != null) ? $president->getFirstName() : '${PRENOMPRESIDENT',
+            ($tresorier != null) ? $tresorier->getLastName() : '${NOMTRESORIER}',
+            ($tresorier != null) ? $this->genderBuilder->getStringGender($tresorier->getGender()) : '${CIVTRESORIER}',
+            ($tresorier != null) ? $tresorier->getFirstName() : '${PRENOMTRESORIER}',
+            ($tresorier != null) ? $this->genderBuilder->getStringGender($tresorier->getGender()) . ' ' . $tresorier->getLastName() . ' ' . $tresorier->getFirstName() : '${IDENTITETRESORIER}',
+            ($president != null) ? $this->genderBuilder->getStringGender($president->getGender()) . ' ' . $president->getLastName() . ' ' . $president->getFirstName() : '${IDENTITEPRESIDENT}',
         );
     }
 }
