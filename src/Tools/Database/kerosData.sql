@@ -40,7 +40,7 @@ INSERT INTO core_member_position (id, memberId, positionId, isBoard, year) VALUE
   (6, 1, 6, FALSE, 2016),
   (7, 2, 6, FALSE, 2002),
   (8, 3, 14, TRUE, 2018),
-  (9, 2, 23, TRUE, 2018);
+  (9, 2, 23, TRUE, 2018),
   (10, 4, 9, FALSE, 2015);
 
 TRUNCATE TABLE ua_firm;
