@@ -45,7 +45,7 @@ class MemberIntegrationTest extends AppTestCase
 
         $body = json_decode($response->getBody());
         $this->assertNotNull($body->content);
-        $this->assertSame(2, sizeof($body->content));
+        $this->assertSame(3, sizeof($body->content));
         $this->assertSame(1, $body->content[0]->id);
         $this->assertSame(3, $body->content[0]->positions[0]->id);
         $this->assertSame(3, $body->content[1]->id);

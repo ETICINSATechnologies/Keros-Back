@@ -2,7 +2,6 @@
 
 namespace Keros\Controllers\Core;
 
-
 use Doctrine\ORM\EntityManager;
 use Keros\DataServices\Core\TemplateDataService;
 use Keros\Entities\Core\Member;
@@ -87,7 +86,6 @@ class TemplateController
         $this->kerosConfig = ConfigLoader::getConfig();
         $this->temporaryDirectory = $this->kerosConfig['TEMPORARY_DIRECTORY'];
         $this->backUrl = $this->kerosConfig['BACK_URL'];
-        $this->logger->info($this->kerosConfig['TEMPLATE_DIRECTORY']);
         $this->genderBuilder = $container->get(GenderBuilder::class);
     }
 
@@ -377,11 +375,11 @@ class TemplateController
             //TODO fichier : accord confidentialité, pret licence
             '${NOMPRESIDENT}',
             '${CIVPRESIDENT}',
-            '$‘PRENOMPRESIDENT}',
+            '${PRENOMPRESIDENT}',
             '${NOMTRESORIER}',
             '${CIVTRESORIER}',
             '${PRENOMTRESORIER}',
-            '${IDENTITETRESORIER',
+            '${IDENTITETRESORIER}',
             '${IDENTITEPRESIDENT}'
         );
     }
@@ -409,8 +407,8 @@ class TemplateController
             if (++$nbConsultant !== count($study->getConsultantsArray()))
                 $consultantsIdentity .= ', ';
         }
-        //$tresorier = null;
-        //$president = null;
+        $tresorier = null;
+        $president = null;
         $board = $this->memberService->getLatestBoard();
         foreach ($board as $member) {
             foreach ($member->getPositionsArray() as $position) {
@@ -421,6 +419,17 @@ class TemplateController
                         $president = $position->getMember();
                 }
             }
+        }
+
+        if($tresorier == null){
+            $msg = "Tresorier needed in actual board";
+            $this->logger->error($msg);
+            throw new KerosException($msg, 400);
+        }
+        if($president == null){
+            $msg = "President needed in actual board";
+            $this->logger->error($msg);
+            throw new KerosException($msg, 400);
         }
 
         return array(
@@ -454,7 +463,13 @@ class TemplateController
             $this->genderBuilder->getStringGender($connectedUser->getGender()) . ' ' . $connectedUser->getLastName() . ' ' . $connectedUser->getFirstName(),
             $study->getArchivedDate()->format('d/m/Y'),
             $president->getLastName(),
-            //$this->getS
+            $this->genderBuilder->getStringGender($president->getGender()),
+            $president->getFirstName(),
+            $tresorier->getLastName(),
+            $this->genderBuilder->getStringGender($tresorier->getGender()),
+            $tresorier->getFirstName(),
+            $this->genderBuilder->getStringGender($tresorier->getGender()) . ' ' . $tresorier->getLastName() . ' ' . $tresorier->getFirstName(),
+            $this->genderBuilder->getStringGender($president->getGender()) . ' ' . $president->getLastName() . ' ' . $president->getFirstName(),
         );
     }
 }

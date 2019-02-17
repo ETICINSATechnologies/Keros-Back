@@ -305,9 +305,9 @@ INSERT INTO `core_pole` (id, label, name) VALUES
   (4, 'Perf', 'Performance'),
   (5, 'Prez', 'Présidence'),
   (6, 'RH', 'Ressources Humaines'),
-  (7, 'SI', 'Systèmes d\'Information,'),
+  (7, 'SI', 'Systèmes d''Information,'),
   (8, 'Treso', 'Trésorerie'),
-  (9, 'UA', 'Unité d\'affaires');
+  (9, 'UA', 'Unité d''affaires');
 
 INSERT INTO `core_position` (id, label, poleId) VALUES
   (1, 'Auditeur orga', null),
