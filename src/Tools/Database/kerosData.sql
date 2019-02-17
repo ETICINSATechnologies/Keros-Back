@@ -74,11 +74,6 @@ INSERT INTO `ua_study_contact` (`contactId`, `studyId`) VALUES
   (1, 2),
   (2, 2);
 
-TRUNCATE TABLE core_template_type;
-INSERT INTO `core_template_type` (`id`, `label`) VALUES
-  (1, 'Study'),
-  (2, 'Membre');
-
 TRUNCATE TABLE core_template;
 INSERT INTO `core_template` (`id`, `name`, `location`, `typeId`, `oneConsultant`) VALUES
   (1, 'testGet', 'null part', 1, 0),
