@@ -2,6 +2,7 @@
 
 namespace KerosTest\Ua;
 
+use Keros\Tools\ConfigLoader;
 use Keros\Tools\Validator;
 use KerosTest\AppTestCase;
 use Slim\Http\Environment;
@@ -47,13 +48,14 @@ class StudyIntegrationTest extends AppTestCase
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
+        $kerosConfig = ConfigLoader::getConfig();
 
         $this->assertSame(200, $response->getStatusCode());
         $body = json_decode($response->getBody());
         $this->assertEquals(3, count($body->documents));
         $this->assertSame(1, $body->documents[0]->id);
         $this->assertSame('testGet', $body->documents[0]->name);
-        $this->assertSame('http://keros-api-dev.etic-insa.com/api/v1/ua/study/2/template/1', $body->documents[0]->generateLocation);
+        $this->assertSame($kerosConfig['BACK_URL'] . '/api/v1/ua/study/2/template/1', $body->documents[0]->generateLocation);
     }
 
     public function testGetAllDocumentsShouldReturn400(){

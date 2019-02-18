@@ -94,7 +94,7 @@ CREATE TABLE `core_ticket` (
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
-# L'ID de core_member est le même que celui de core_user qui lui est attaché
+-- L'ID de core_member est le même que celui de core_user qui lui est attaché
 DROP TABLE IF EXISTS core_member;
 CREATE TABLE `core_member` (
   `id`           int(11)      NOT NULL,
@@ -155,7 +155,7 @@ CREATE TABLE `ua_firm` (
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
-# L'ID de ua_contact est le même que celui de core_user qui lui est attaché
+-- L'ID de ua_contact est le même que celui de core_user qui lui est attaché
 DROP TABLE IF EXISTS ua_contact;
 CREATE TABLE `ua_contact` (
   `id`           int(11) AUTO_INCREMENT,
@@ -285,8 +285,8 @@ CREATE TABLE core_template_type (
 DROP TABLE IF EXISTS core_template;
 CREATE TABLE `core_template` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `location` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL UNIQUE,
+  `location` varchar(255) NOT NULL UNIQUE,
   `typeId` int(11) NOT NULL,
   `oneConsultant` boolean NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
@@ -305,9 +305,9 @@ INSERT INTO `core_pole` (id, label, name) VALUES
   (4, 'Perf', 'Performance'),
   (5, 'Prez', 'Présidence'),
   (6, 'RH', 'Ressources Humaines'),
-  (7, 'SI', 'Systèmes d\'Information,'),
+  (7, 'SI', 'Systèmes d''Information,'),
   (8, 'Treso', 'Trésorerie'),
-  (9, 'UA', 'Unité d\'affaires');
+  (9, 'UA', 'Unité d''affaires');
 
 INSERT INTO `core_position` (id, label, poleId) VALUES
   (1, 'Auditeur orga', null),
@@ -430,5 +430,9 @@ INSERT INTO `ua_field` (`id`, `label`) VALUES
   (11, 'Benchmark'),
   (12, 'Productique'),
   (13, 'Traduction');
+
+INSERT INTO `core_template_type` (`id`, `label`) VALUES
+  (1, 'Study'),
+  (2, 'Membre');
 
 COMMIT;
