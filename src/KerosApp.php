@@ -32,6 +32,7 @@ use Keros\Tools\ToolRegistrar;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Keros\Services\Core\MemberService;
 
 
 /**
@@ -41,6 +42,12 @@ use Psr\Http\Message\ServerRequestInterface as Request;
  */
 class KerosApp
 {
+
+    /**
+     * @var MemberService
+     */
+    private $memberService;
+
     /**
      * Stores an instance of the Slim application.
      * @var \Slim\App
@@ -56,6 +63,20 @@ class KerosApp
         ToolRegistrar::register($container);
         DataServiceRegistrar::register($container);
         ServiceRegistrar::register($container);
+    }
+
+    public function accessRightsCreateMember()
+    {
+        /*$request = "http://localhost:8000/api/v1/core/member/me";
+        $member = $this->memberService->getOne($request->getAttribute("userId"));
+
+        foreach ($member->getPositionsArray() as $position)
+        {
+            if ($position->getPosition() == "19")
+            {
+                $this->post("", MemberController::class . ':createMember');
+            }
+        }*/
     }
 
     /**
@@ -156,7 +177,8 @@ class KerosApp
                     $this->get("/me", MemberController::class . ':getConnectedUser');
                     $this->put("/me", MemberController::class . ':updateConnectedUser');
                     $this->get('/{id:[0-9]+}', MemberController::class . ':getMember');
-                    $this->post("", MemberController::class . ':createMember');
+                    //$this->post("", MemberController::class . ':createMember');
+                    $this->accessRightsCreateMember();
                     $this->put("/{id:[0-9]+}", MemberController::class . ':updateMember');
                     $this->delete("/{id:[0-9]+}", MemberController::class . ':deleteMember');
                     $this->get("/board/latest", MemberController::class . ':getLatestBoard');
@@ -195,4 +217,7 @@ class KerosApp
     {
         return $this->app;
     }
+
+
+
 }
