@@ -107,7 +107,7 @@ class MemberController
     {
         //check access rights
         $this->accessRightsService = new AccessRightsService($this->memberService->getOne($request->getAttribute("userId")));
-        $this->accessRightsService->checkPostMember();
+        $this->accessRightsService->checkRightsPostMember();
 
         $this->logger->debug("Creating member from " . $request->getServerParams()["REMOTE_ADDR"]);
         $body = $request->getParsedBody();
