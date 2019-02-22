@@ -26,6 +26,7 @@ use Keros\Tools\Authorization\AuthenticationMiddleware;
 use Keros\Tools\ConfigLoader;
 use Keros\Tools\JwtCodec;
 use Keros\Tools\KerosEntityManager;
+use Keros\Error\KerosException;
 use Keros\Tools\LoggerBuilder;
 use Keros\Tools\PasswordEncryption;
 use Keros\Tools\ToolRegistrar;
@@ -65,18 +66,29 @@ class KerosApp
         ServiceRegistrar::register($container);
     }
 
-    public function accessRightsCreateMember()
+    public function accessRightsCreateMember(Request $request)
     {
-        /*$request = "http://localhost:8000/api/v1/core/member/me";
         $member = $this->memberService->getOne($request->getAttribute("userId"));
 
         foreach ($member->getPositionsArray() as $position)
         {
-            if ($position->getPosition() == "19")
+            if ($position->getPosition()->getId() == "19")
             {
-                $this->post("", MemberController::class . ':createMember');
+                //Aucune idée de comment apeller $app dans la méthode, big up à toi si tu trouve mdr
+                //Normalement, une fois que c'est bon ça devrait marcher : le SG a pour Position Id 19, mais tu
+                //peux tester avec le current /me qui a une position Id de 3 pour faire marcher le truc
+                $app->group("/api/v1", function () {
+                    $this->group('/core', function () {
+                        $this->post("", MemberController::class . ':createMember');
+                    });
+                });
+
             }
-        }*/
+            else
+            {
+                throw new KerosException("Vous n'avez pas les droits nécessaires pour réaliser cette action", 404);
+            }
+        }
     }
 
     /**
@@ -87,6 +99,8 @@ class KerosApp
         $app = new \Slim\App(['settings' => ConfigLoader::getConfig()]);
 
         $this->prepareContainer($app->getContainer());
+
+        $this->memberService=($app->getContainer())->get(MemberService::class);
 
         $app->group("/api/v1", function () {
             $this->get("/health", function (Request $request, Response $response, array $args) {
@@ -178,7 +192,7 @@ class KerosApp
                     $this->put("/me", MemberController::class . ':updateConnectedUser');
                     $this->get('/{id:[0-9]+}', MemberController::class . ':getMember');
                     //$this->post("", MemberController::class . ':createMember');
-                    $this->accessRightsCreateMember();
+                    $this->post("",KerosApp::class . ':accessRightsCreateMember');
                     $this->put("/{id:[0-9]+}", MemberController::class . ':updateMember');
                     $this->delete("/{id:[0-9]+}", MemberController::class . ':deleteMember');
                     $this->get("/board/latest", MemberController::class . ':getLatestBoard');
