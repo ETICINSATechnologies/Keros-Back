@@ -9,6 +9,7 @@ use Keros\Entities\Core\Page;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Services\Core\MemberService;
 use Keros\Services\Core\MemberPositionService;
+use Keros\Services\Auth\AccessRightsService;
 use Keros\Tools\Authorization\JwtCodec;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
@@ -39,6 +40,15 @@ class MemberController
      * @var MemberPositionService
      */
     private $memberPositionService;
+    /**
+     * @var AccessRightsService
+     */
+    private $accessRightsService;
+
+    /**
+     * MemberController constructor.
+     * @param ContainerInterface $container
+     */
 
     public function __construct(ContainerInterface $container)
     {
@@ -46,6 +56,7 @@ class MemberController
         $this->entityManager = $container->get(EntityManager::class);
         $this->memberService = $container->get(MemberService::class);
         $this->memberPositionService = $container->get(MemberPositionService::class);
+
     }
 
     public function getMember(Request $request, Response $response, array $args)
@@ -93,6 +104,10 @@ class MemberController
 
     public function createMember(Request $request, Response $response, array $args)
     {
+        //check access rights
+        $this->accessRightsService = new AccessRightsService($this->memberService->getOne($request->getAttribute("userId")));
+        $this->accessRightsService->checkPostMember();
+
         $this->logger->debug("Creating member from " . $request->getServerParams()["REMOTE_ADDR"]);
         $body = $request->getParsedBody();
 
