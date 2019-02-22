@@ -36,5 +36,8 @@ class ToolRegistrar
         $container[GenderBuilder::class] = function (){
             return new GenderBuilder();
         };
+        $container[DirectoryManager::class] = function (){
+            return new DirectoryManager();
+        };
     }
 }

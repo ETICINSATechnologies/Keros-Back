@@ -235,7 +235,9 @@ class StudyController
         foreach ($this->templateService->getAll() as $template) {
             $templates[] = array('id' => $template->getId(),
                 'name' => $template->getName(),
-                'generateLocation' => $this->kerosConfig["BACK_URL"] . "/api/v1/ua/study/" . $args["id"] . "/template/" . $template->getId());
+                'generateLocation' => $this->kerosConfig["BACK_URL"] . "/api/v1/ua/study/" . $args["id"] . "/template/" . $template->getId(),
+                'uploadLocation' => $this->kerosConfig["BACK_URL"] . "/api/v1/ua/study/" . $args["id"] . "/document/" . $template->getId(),
+                'downloadLocation' => $this->kerosConfig["BACK_URL"] . "/api/v1/ua/study/" . $args["id"] . "/document/" . $template->getId());
         }
 
         return $response->withJson(array('documents' => $templates), 200);
