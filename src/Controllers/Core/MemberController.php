@@ -11,6 +11,7 @@ use Keros\Services\Core\MemberService;
 use Keros\Services\Core\MemberPositionService;
 use Keros\Services\Auth\AccessRightsService;
 use Keros\Tools\Authorization\JwtCodec;
+use Keros\Tools\Validator;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -110,6 +111,7 @@ class MemberController
 
         $this->logger->debug("Creating member from " . $request->getServerParams()["REMOTE_ADDR"]);
         $body = $request->getParsedBody();
+        $body = Validator::requiredArray($body);
 
         $this->entityManager->beginTransaction();
         $member = $this->memberService->create($body);

@@ -33,8 +33,9 @@ class AccessRightsService
     }
 
     public function checkPostMember() {
+        $accessForbidden = array(19);
         foreach($this->memberPositions as $memberPosition){
-            if ($memberPosition->getPosition()->getId() != 19){
+            if (in_array($memberPosition->getPosition()->getId(),$accessForbidden)){
                 throw new KerosException("You do not have the rights for creating a member", 404);
             }
         }
