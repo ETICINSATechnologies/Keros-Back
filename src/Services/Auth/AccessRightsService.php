@@ -32,11 +32,20 @@ class AccessRightsService
         $this->memberPositions = $this->currentMember->getMemberPositions();
     }
 
-    public function checkPostMember() {
-        $accessForbidden = array(19);
+    public function checkRightsPostMember() {
+        $accessAllowed = array(19); //secrétaire général
         foreach($this->memberPositions as $memberPosition){
-            if (in_array($memberPosition->getPosition()->getId(),$accessForbidden)){
+            if (!in_array($memberPosition->getPosition()->getId(),$accessAllowed)){
                 throw new KerosException("You do not have the rights for creating a member", 404);
+            }
+        }
+    }
+
+    public function checkRightsConfidentialStudies() {
+        $accessAllowed = array(18, 17); //resp UA
+        foreach($this->memberPositions as $memberPosition){
+            if (!in_array($memberPosition->getPosition()->getId(),$accessAllowed)){
+                throw new KerosException("You do not have the rights for accessing a confidential study", 404);
             }
         }
     }

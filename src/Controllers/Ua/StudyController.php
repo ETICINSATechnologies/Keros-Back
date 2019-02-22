@@ -13,6 +13,7 @@ use Keros\Services\Ua\FieldService;
 use Keros\Services\Ua\ProvenanceService;
 use Keros\Services\Ua\StatusService;
 use Keros\Services\Ua\StudyService;
+use Keros\Services\Auth\AccessRightsService;
 use Keros\Tools\ConfigLoader;
 use Keros\Tools\Validator;
 use Monolog\Logger;
@@ -65,6 +66,10 @@ class StudyController
      * @var
      */
     private $kerosConfig;
+    /**
+     * @var AccessRightsService
+     */
+    private $accessRightsService;
 
     public function __construct(ContainerInterface $container)
     {
@@ -81,9 +86,15 @@ class StudyController
 
     public function getStudy(Request $request, Response $response, array $args)
     {
+        $this->accessRightsService = new AccessRightsService($this->memberService->getOne($request->getAttribute("userId")));
+
         $this->logger->debug("Getting study by ID from " . $request->getServerParams()["REMOTE_ADDR"]);
 
         $study = $this->studyService->getOne($args["id"]);
+
+        if ($study->getConfidential()==true){
+            $this->accessRightsService->checkRightsConfidentialStudies();
+        }
 
         return $response->withJson($study, 200);
     }
@@ -93,6 +104,8 @@ class StudyController
         $this->logger->debug("Get studies " . $request->getServerParams()["REMOTE_ADDR"]);
 
         $studies = $this->studyService->getAll();
+
+        //faut-il enlever les études confidentielles si l'utilisateur n'a pas les droits ?
 
         return $response->withJson($studies, 200);
     }
