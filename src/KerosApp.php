@@ -26,6 +26,8 @@ use Keros\Tools\Authorization\AuthenticationMiddleware;
 use Keros\Tools\ConfigLoader;
 use Keros\Tools\JwtCodec;
 use Keros\Tools\KerosEntityManager;
+use Keros\Error\KerosException;
+use Keros\Tools\LoggerBuilder;
 use Keros\Tools\PasswordEncryption;
 use Keros\Tools\ToolRegistrar;
 use Psr\Container\ContainerInterface;
@@ -64,20 +66,6 @@ class KerosApp
         ServiceRegistrar::register($container);
     }
 
-    public function accessRightsCreateMember()
-    {
-        /*$request = "http://localhost:8000/api/v1/core/member/me";
-        $member = $this->memberService->getOne($request->getAttribute("userId"));
-
-        foreach ($member->getPositionsArray() as $position)
-        {
-            if ($position->getPosition() == "19")
-            {
-                $this->post("", MemberController::class . ':createMember');
-            }
-        }*/
-    }
-
     /**
      * KerosApp constructor. Configures the Slim App
      */
@@ -86,6 +74,8 @@ class KerosApp
         $app = new \Slim\App(['settings' => ConfigLoader::getConfig()]);
 
         $this->prepareContainer($app->getContainer());
+
+        $this->memberService=($app->getContainer())->get(MemberService::class);
 
         $app->group("/api/v1", function () {
             $this->get("/health", function (Request $request, Response $response, array $args) {
@@ -179,7 +169,7 @@ class KerosApp
                     $this->put("/me", MemberController::class . ':updateConnectedUser');
                     $this->get('/{id:[0-9]+}', MemberController::class . ':getMember');
                     //$this->post("", MemberController::class . ':createMember');
-                    $this->accessRightsCreateMember();
+                    $this->post("",KerosApp::class . ':accessRightsCreateMember');
                     $this->put("/{id:[0-9]+}", MemberController::class . ':updateMember');
                     $this->delete("/{id:[0-9]+}", MemberController::class . ':deleteMember');
                     $this->get("/board/latest", MemberController::class . ':getLatestBoard');
