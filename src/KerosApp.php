@@ -168,8 +168,8 @@ class KerosApp
                     $this->get("/me", MemberController::class . ':getConnectedUser');
                     $this->put("/me", MemberController::class . ':updateConnectedUser');
                     $this->get('/{id:[0-9]+}', MemberController::class . ':getMember');
-                    //$this->post("", MemberController::class . ':createMember');
-                    $this->post("",KerosApp::class . ':accessRightsCreateMember');
+                    $this->post("", MemberController::class . ':createMember');
+                    //$this->post("",KerosApp::class . ':accessRightsCreateMember');
                     $this->put("/{id:[0-9]+}", MemberController::class . ':updateMember');
                     $this->delete("/{id:[0-9]+}", MemberController::class . ':deleteMember');
                     $this->get("/board/latest", MemberController::class . ':getLatestBoard');
