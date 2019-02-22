@@ -295,8 +295,8 @@ CREATE TABLE `core_template` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS core_document;
-CREATE TABLE `core_document`(
-  `id` int(11) UNIQUE NOT NULL AUTO_INCREMENT,
+CREATE TABLE `core_document` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `studyId` int(11) NOT NULL,
   `templateId` int(11) NOT NULL,
   `date` datetime NOT NULL,
