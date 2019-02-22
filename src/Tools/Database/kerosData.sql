@@ -83,7 +83,7 @@ INSERT INTO `core_template` (`id`, `name`, `location`, `typeId`, `oneConsultant`
   (3, 'one consutant template', 'pas ici', 1, 1);
 
 TRUNCATE TABLE core_document;
-INSERT INTO core_document(id, studyId, templateId, date, name, location) VALUES
+INSERT INTO `core_document`(`id`, `studyId`, `templateId`, `date`, `name`, `location`) VALUES
   (1, 2, 2, STR_TO_DATE('2019/2/14 10:40:10', '%Y/%m/%d %h:%i:%s'), 'test.php', 'study_2/template_2/test.php'),
   (2, 2, 2, STR_TO_DATE('2018/2/14 10:40:10', '%Y/%m/%d %h:%i:%s'), 'vieuxtest.php', 'study_2/template_2/location_ici.php');
 

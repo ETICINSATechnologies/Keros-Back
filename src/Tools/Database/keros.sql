@@ -295,16 +295,16 @@ CREATE TABLE `core_template` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS core_document;
-CREATE TABLE core_document(
-  id int(11) UNIQUE NOT NULL AUTO_INCREMENT,
-  studyId int(11) NOT NULL,
-  templateId int(11) NOT NULL,
-  date datetime NOT NULL,
-  location varchar(256) NOT NULL UNIQUE,
-  name varchar(256) NOT NULL,
+CREATE TABLE `core_document`(
+  `id` int(11) UNIQUE NOT NULL AUTO_INCREMENT,
+  `studyId` int(11) NOT NULL,
+  `templateId` int(11) NOT NULL,
+  `date` datetime NOT NULL,
+  `location` varchar(256) NOT NULL UNIQUE,
+  `name` varchar(256) NOT NULL,
   PRIMARY KEY (id),
-  CONSTRAINT fk_core_document_ua_study FOREIGN KEY (studyId) REFERENCES ua_status (id),
-  CONSTRAINT fk_core_document_core_template FOREIGN KEY (templateId) REFERENCES core_template(id)
+  CONSTRAINT `fk_core_document_ua_study` FOREIGN KEY (`studyId`) REFERENCES ua_status (`id`),
+  CONSTRAINT `fk_core_document_core_template` FOREIGN KEY (`templateId`) REFERENCES core_template(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 SET AUTOCOMMIT = 1;
