@@ -4,7 +4,7 @@ namespace Keros\DataServices\Core;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use Keros\Entities\Document;
+use Keros\Entities\Core\Document;
 use Keros\Error\KerosException;
 use Monolog\Logger;
 use Exception;

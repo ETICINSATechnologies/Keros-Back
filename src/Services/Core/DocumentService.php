@@ -3,7 +3,8 @@
 namespace Keros\Services\Core;
 
 use Keros\DataServices\Core\DocumentDataService;
-use Keros\Entities\Document;
+
+use Keros\Entities\Core\Document;
 use Keros\Error\KerosException;
 use Keros\Services\Ua\StudyService;
 use Keros\Tools\ConfigLoader;

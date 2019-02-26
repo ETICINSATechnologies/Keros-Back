@@ -1,6 +1,6 @@
 <?php
 
-namespace Keros\Entities;
+namespace Keros\Entities\Core;
 
 use JsonSerializable;
 use Keros\Entities\Core\Template;
