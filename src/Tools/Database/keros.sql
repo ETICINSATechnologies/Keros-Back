@@ -293,7 +293,7 @@ CREATE TABLE `core_template` (
   KEY `fk_template_template_type` (`typeId`),
   CONSTRAINT `fk_template_template_type` FOREIGN KEY (`typeId`) REFERENCES `core_template_type` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*
+
 DROP TABLE IF EXISTS core_document;
 CREATE TABLE `core_document` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -303,10 +303,10 @@ CREATE TABLE `core_document` (
   `location` varchar(256) NOT NULL UNIQUE,
   `name` varchar(256) NOT NULL,
   PRIMARY KEY (id),
-  CONSTRAINT `fk_core_document_ua_study` FOREIGN KEY (`studyId`) REFERENCES ua_status (`id`),
+  CONSTRAINT `fk_core_document_ua_study` FOREIGN KEY (`studyId`) REFERENCES ua_study(`id`),
   CONSTRAINT `fk_core_document_core_template` FOREIGN KEY (`templateId`) REFERENCES core_template(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-*/
+
 SET AUTOCOMMIT = 1;
 SET FOREIGN_KEY_CHECKS = 1;
 SET UNIQUE_CHECKS = 1;

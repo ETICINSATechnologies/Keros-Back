@@ -81,7 +81,6 @@ class DocumentController
         $document = $this->documentService->create($body);
         $this->logger->info($this->kerosConfig['STUDY_DOCUMENT_DIRECTORY'] . $document->getLocation());
         $uploadedFile->moveTo($this->kerosConfig['STUDY_DOCUMENT_DIRECTORY'] . $document->getLocation());
-        $this->logger->info("bonjour");
         $this->entityManager->commit();
 
         return $response->withStatus(200);
@@ -96,7 +95,7 @@ class DocumentController
      */
     public function getDocument(Request $request, Response $response, array $args)
     {
-        $this->logger->debug("Getting document path by ID from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->logger->debug("Getting document path for study " . $args["studyId"] . " and template " . $args['documentId'] . " from " . $request->getServerParams()["REMOTE_ADDR"]);
 
         $document = $this->documentService->getLatestDocumentFromStudyTemplate($args["studyId"], $args['documentId']);
 

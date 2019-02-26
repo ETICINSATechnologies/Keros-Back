@@ -15,7 +15,7 @@ class DocumentIntegrationTest extends AppTestCase
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/api/v1/ua/study/2/document/2',
+            'REQUEST_URI' => '/api/v1/ua/study/1/document/2',
         ]);
 
         $req = Request::createFromEnvironment($env);
@@ -25,7 +25,7 @@ class DocumentIntegrationTest extends AppTestCase
         $body = json_decode($response->getBody());
 
         $kerosConfig = ConfigLoader::getConfig();
-        $this->assertSame($kerosConfig['STUDY_DOCUMENT_DIRECTORY'] . 'study_2/template_2/test.php', $body->location);
+        $this->assertSame($kerosConfig['STUDY_DOCUMENT_DIRECTORY'] . 'study_1/template_2/test.php', $body->location);
     }
 
     public function testPostDocumentShouldReturn200()
@@ -69,7 +69,7 @@ class DocumentIntegrationTest extends AppTestCase
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/api/v1/ua/study/1/document/2',
+            'REQUEST_URI' => '/api/v1/ua/study/2/document/2',
         ]);
 
         $req = Request::createFromEnvironment($env);
