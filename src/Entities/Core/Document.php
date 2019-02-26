@@ -42,7 +42,7 @@ class Document implements JsonSerializable
     /** @Column(type="string", length=255) */
     protected $name;
 
-    /** @Column(type="string", length=256) */
+    /** @Column(type="string", length=255) */
     protected $location;
 
     /**
