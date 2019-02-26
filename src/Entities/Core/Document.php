@@ -39,7 +39,7 @@ class Document implements JsonSerializable
      */
     protected $date;
 
-    /** @Column(type="string", length=256) */
+    /** @Column(type="string", length=255) */
     protected $name;
 
     /** @Column(type="string", length=256) */
