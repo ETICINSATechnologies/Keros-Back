@@ -300,8 +300,8 @@ CREATE TABLE `core_document` (
   `studyId` int(11) NOT NULL,
   `templateId` int(11) NOT NULL,
   `date` datetime NOT NULL,
-  `location` varchar(256) NOT NULL UNIQUE,
-  `name` varchar(256) NOT NULL,
+  `location` varchar(255) NOT NULL UNIQUE,
+  `name` varchar(255) NOT NULL,
   PRIMARY KEY (id),
   CONSTRAINT `fk_core_document_ua_study` FOREIGN KEY (`studyId`) REFERENCES ua_study(`id`),
   CONSTRAINT `fk_core_document_core_template` FOREIGN KEY (`templateId`) REFERENCES core_template(`id`)
