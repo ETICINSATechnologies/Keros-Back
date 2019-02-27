@@ -114,17 +114,22 @@ class MemberDataService
                     } else {
                         if ($key == 'positionId') {
                             $whereStatement .= 'p.id = :positionId';
+                            $whereParameters[':' . $key] = $value;
                         } elseif ($key == 'poleId') {
                             $whereStatement .= 'pole.id = :poleId';
+                            $whereParameters[':' . $key] = $value;
                         } elseif ($key == 'year') {
                             $whereStatement .= 'mp.year = :year';
-                        } elseif ($key == 'firstName' || $key == 'lastName' || $key == 'company') {
-                            // where with the form: 'm.key = :key'
+                            $whereParameters[':' . $key] = $value;
+                        } elseif ($key == 'company') {
                             $whereStatement .= 'm.' . $key . ' = :' . $key;
+                            $whereParameters[':' . $key] = $value;
+                        } elseif ($key == 'firstName' || $key == 'lastName') {
+                            // where with the form: 'm.key = :key'
+                            $whereStatement .= 'm.' . $key . ' LIKE :' . $key;
+                            $whereParameters[':' . $key] = '%' . $value . '%';
                         }
-                        $whereParameters[':' . $key] = $value;
                     }
-
                 }
             }
 

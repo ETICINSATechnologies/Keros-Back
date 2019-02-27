@@ -105,7 +105,7 @@ class ContactDataService
             $whereParameters = array();
 
             foreach ($queryParams as $key => $value) {
-                if (in_array($key, ['search', 'firmId'])) {
+                if (in_array($key, ['search', 'firmId', 'firstName', 'lastName'])) {
                     if (!empty($whereStatement))
                         $whereStatement .= ' AND ';
 
@@ -126,8 +126,12 @@ class ContactDataService
                     } else {
                         if ($key == 'firmId') {
                             $whereStatement .= 'f.id = :firmId';
+                            $whereParameters[':' . $key] = $value;
+                        }elseif ($key == 'firstName' || $key == 'lastName') {
+                            $whereStatement .= 'c.' . $key . ' LIKE :' . $key;
+                            $whereParameters[':' . $key] = '%' . $value . '%';
                         }
-                        $whereParameters[':' . $key] = $value;
+
                     }
 
                 }
