@@ -66,32 +66,6 @@ class KerosApp
         ServiceRegistrar::register($container);
     }
 
-    /*
-    public function accessRightsCreateMember(Request $request)
-    {
-        $member = $this->memberService->getOne($request->getAttribute("userId"));
-
-        foreach ($member->getPositionsArray() as $position)
-        {
-            if ($position->getPosition()->getId() == "19")
-            {
-                //Aucune idée de comment apeller $app dans la méthode, big up à toi si tu trouve mdr
-                //Normalement, une fois que c'est bon ça devrait marcher : le SG a pour Position Id 19, mais tu
-                //peux tester avec le current /me qui a une position Id de 3 pour faire marcher le truc
-                $app->group("/api/v1", function () {
-                    $this->group('/core', function () {
-                        $this->post("", MemberController::class . ':createMember');
-                    });
-                });
-
-            }
-            else
-            {
-                throw new KerosException("Vous n'avez pas les droits nécessaires pour réaliser cette action", 404);
-            }
-        }
-    }*/
-
     /**
      * KerosApp constructor. Configures the Slim App
      */

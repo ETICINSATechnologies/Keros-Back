@@ -200,6 +200,7 @@ class StudyService
 
     public function update(int $id, ?array $fields): Study
     {
+
         $id = Validator::requiredId($id);
         $study = $this->getOne($id);
 

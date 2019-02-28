@@ -5,6 +5,7 @@ namespace Keros\Tools;
 use DateTime;
 use Keros\Entities\Ua\Contact;
 use Keros\Entities\Ua\Study;
+use Keros\Entities\Core\Member;
 use Keros\Error\KerosException;
 
 class Validator
@@ -276,5 +277,14 @@ class Validator
         }
 
         return $study;
+    }
+
+    public static function requiredMember($member) : Member
+    {
+        if (!$member) {
+            throw new KerosException("The member could not be found", 400);
+        }
+
+        return $member;
     }
 }

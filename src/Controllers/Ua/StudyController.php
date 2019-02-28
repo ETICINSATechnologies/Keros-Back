@@ -93,7 +93,7 @@ class StudyController
         $study = $this->studyService->getOne($args["id"]);
 
         if ($study->getConfidential()==true){
-            $this->accessRightsService->checkRightsConfidentialStudies();
+            $this->accessRightsService->checkRightsConfidentialStudies($study);
         }
 
         return $response->withJson($study, 200);
@@ -105,21 +105,23 @@ class StudyController
 
         $studies = $this->studyService->getAll();
 
-        //faut-il enlever les études confidentielles si l'utilisateur n'a pas les droits ?
-
         return $response->withJson($studies, 200);
     }
 
     public function getPageStudy(Request $request, Response $response, array $args)
     {
+        $this->accessRightsService = new AccessRightsService($this->memberService->getOne($request->getAttribute("userId")));
+
         $this->logger->debug("Get page studies from " . $request->getServerParams()["REMOTE_ADDR"]);
         $queryParams = $request->getQueryParams();
         $params = new RequestParameters($queryParams, Study::getSearchFields());
 
-        $study = $this->studyService->getPage($params);
+        $studies = $this->studyService->getPage($params);
+        $studies = $this->accessRightsService->filterGetAllStudies($studies);
+
         $totalCount = $this->studyService->getCount($params);
 
-        $page = new Page($study, $params, $totalCount);
+        $page = new Page($studies, $params, $totalCount);
 
         return $response->withJson($page, 200);
     }
@@ -174,6 +176,10 @@ class StudyController
         $body = $request->getParsedBody();
 
         $this->entityManager->beginTransaction();
+        //throw new KerosException("hi".json_encode($body['qualityManagerIds']), 404);
+        if (isset($body['qualityManagerIds'])){
+            $this->accessRightsService->checkRightsAttributeQualityManager();
+        }
         $study = $this->studyService->update($args['id'], $body);
         $this->entityManager->commit();
 
