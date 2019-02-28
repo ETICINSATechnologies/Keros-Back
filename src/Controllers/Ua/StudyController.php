@@ -166,6 +166,10 @@ class StudyController
 
     public function updateStudy(Request $request, Response $response, array $args)
     {
+        $this->accessRightsService = new AccessRightsService($this->memberService->getOne($request->getAttribute("userId")));
+        $study = $this->studyService->getOne($args['id']);
+        $this->accessRightsService->checkRightsUpdateStudy($study);
+
         $this->logger->debug("Updating study from " . $request->getServerParams()["REMOTE_ADDR"]);
         $body = $request->getParsedBody();
 
