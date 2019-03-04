@@ -43,10 +43,10 @@ class Validator
             return null;
         }
         if (!is_int($int)) {
-            throw new KerosException("The provided id is not an integer", 400);
+            throw new KerosException("The provided value is not an integer", 400);
         }
         if ($int < 0) {
-            throw new KerosException("The ID cannot be a negative number", 400);
+            throw new KerosException("The value cannot be a negative number", 400);
         }
         return $int;
     }
@@ -130,7 +130,7 @@ class Validator
             throw new KerosException("The provided int cannot be null", 400);
         }
         if (!is_int($int)) {
-            throw new KerosException("The int provided is not actually a int", 400);
+            throw new KerosException("The value provided is not actually a int", 400);
         }
         return $int;
     }
