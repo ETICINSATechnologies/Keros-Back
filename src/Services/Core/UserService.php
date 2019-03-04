@@ -69,7 +69,7 @@ class UserService
         $user->setUsername($username);
 
         if (isset($fields["password"])) {
-            $password = Validator::requiredString($fields["password"]);
+            $password = Validator::requiredPassword($fields["password"]);
             $encryptedPassword = PasswordEncryption::encrypt($password);
             $user->setPassword($encryptedPassword);
         }
