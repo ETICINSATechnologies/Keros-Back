@@ -18,6 +18,7 @@ use Keros\DataServices\Core\UserDataService;
 use Keros\DataServices\Ua\ContactDataService;
 use Keros\DataServices\Ua\FirmTypeDataService;
 use Keros\DataServices\Ua\FirmDataService;
+use Keros\DataServices\Ua\PaymentSlipDataService;
 use Keros\DataServices\Ua\ProvenanceDataService;
 use Keros\DataServices\Ua\FieldDataService;
 use Keros\DataServices\Ua\StatusDataService;
@@ -79,8 +80,7 @@ class DataServiceRegistrar
         $container[ProvenanceDataService::class] = function ($container) {
             return new ProvenanceDataService($container);
         };
-        $container[FieldDataService::class] = function ($container)
-        {
+        $container[FieldDataService::class] = function ($container) {
             return new FieldDataService($container);
         };
         $container[StatusDataService::class] = function ($container) {
@@ -88,6 +88,11 @@ class DataServiceRegistrar
         };
         $container[StudyDataService::class] = function ($container) {
             return new StudyDataService($container);
+        };
+
+        //Treso
+        $container[PaymentSlipDataService::class] = function ($container) {
+            return new PaymentSlipDataService($container);
         };
     }
 }

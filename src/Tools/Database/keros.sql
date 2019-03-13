@@ -294,6 +294,39 @@ CREATE TABLE `core_template` (
   CONSTRAINT `fk_template_template_type` FOREIGN KEY (`typeId`) REFERENCES `core_template_type` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS treso_payment_slip;
+CREATE TABLE treso_payment_slip (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  missionRecapNumber varchar(32) NOT NULL,
+  consultantName varchar(255) NOT NULL,
+  consultantSocialSecurityNumber varchar(255) NOT NULL,
+  addressId int(11),
+  email varchar(255) NOT NULL,
+  studyId int(11),
+  clientName varchar(255) NOT NULL,
+  projectLead varchar(255) NOT NULL,
+  consultantId int(11),
+  isTotalJeh boolean,
+  isStudyPaid boolean,
+  amountDescription varchar(2048) NOT NULL,
+  createdDate date,
+  creatorId int(11),
+  validatedByUa boolean,
+  validatedByUaDate date,
+  uaValidatorId int(11),
+  validatedByPerf boolean,
+  validatedByPerfDate date,
+  perfValidatorId int(11),
+  PRIMARY KEY (id),
+  CONSTRAINT fk_payment_slip_address FOREIGN KEY (addressId) REFERENCES  core_address(id),
+  CONSTRAINT fk_payment_slip_study FOREIGN KEY (studyId) REFERENCES  ua_study(id),
+  CONSTRAINT fk_payment_slip_consultant FOREIGN KEY (consultantId) REFERENCES  core_member(id),
+  CONSTRAINT fk_payment_slip_creator FOREIGN KEY (creatorId) REFERENCES  core_member(id),
+  CONSTRAINT fk_payment_slip_ua_validator FOREIGN KEY (uaValidatorId) REFERENCES  core_member(id),
+  CONSTRAINT fk_payment_slip_perf_validator FOREIGN KEY (perfValidatorId) REFERENCES  core_member(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 SET AUTOCOMMIT = 1;
 SET FOREIGN_KEY_CHECKS = 1;
 SET UNIQUE_CHECKS = 1;

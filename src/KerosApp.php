@@ -13,6 +13,7 @@ use Keros\Controllers\Core\PoleController;
 use Keros\Controllers\Core\PositionController;
 use Keros\Controllers\Core\TemplateController;
 use Keros\Controllers\Core\TemplateTypeController;
+use Keros\Controllers\Treso\PaymentSlipController;
 use Keros\Controllers\Ua\ContactController;
 use Keros\Controllers\Ua\FirmController;
 use Keros\Controllers\Ua\FirmTypeController;
@@ -181,6 +182,13 @@ class KerosApp
                     $this->delete("/{id:[0-9]+}", TemplateController::class . ':deleteTemplate');
                 });
 
+            })->add($this->getContainer()->get(AuthenticationMiddleware::class));
+
+            $this->group('/treso', function () {
+                $this->group('/payment-slip', function () {
+                    $this->post("", PaymentSlipController::class . ':createPaymentSlip');
+                    $this->get("", PaymentSlipController::class . ':getPagePaymentSlip');
+                    });
             })->add($this->getContainer()->get(AuthenticationMiddleware::class));
         });
 

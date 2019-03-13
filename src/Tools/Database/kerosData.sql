@@ -82,4 +82,9 @@ INSERT INTO `core_template` (`id`, `name`, `location`, `typeId`, `oneConsultant`
   (2, 'test', 'qlq part', 1, 0),
   (3, 'one consutant template', 'pas ici', 1, 1);
 
+TRUNCATE TABLE treso_payment_slip;
+INSERT INTO treso_payment_slip (id, missionRecapNumber, consultantName, consultantSocialSecurityNumber, addressId, email, studyId, clientName, projectLead, consultantId, isTotalJeh, isStudyPaid, amountDescription, createdDate, creatorId, validatedByUa, validatedByUaDate, uaValidatorId, validatedByPerf, validatedByPerfDate, perfValidatorId) VALUES
+  (1, '102383203', 'Shrek', '12320183', 1, 'shrek@fortfortlointain.fr', 1, 'L''âne', 'Le chat Potté', 1, false, false, 'Facture payée', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), 1, false, STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), 2, false, STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), 3)
+  ;
+
 COMMIT;

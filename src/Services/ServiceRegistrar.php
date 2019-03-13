@@ -1,10 +1,10 @@
 <?php
 
-
 namespace Keros\Services;
 
 use Keros\Services\Core\TemplateService;
 use Keros\Services\Core\TemplateTypeService;
+use Keros\Services\Treso\PaymentSlipService;
 use Keros\Services\Ua\ProvenanceService;
 use Keros\Services\Auth\LoginService;
 use Keros\Services\Core\AddressService;
@@ -94,5 +94,11 @@ class ServiceRegistrar
         $container[StudyService::class] = function ($container) {
             return new StudyService($container);
         };
+
+        //Treso
+        $container[PaymentSlipService::class] = function ($container) {
+            return new PaymentSlipService($container);
+        };
+
     }
 }
