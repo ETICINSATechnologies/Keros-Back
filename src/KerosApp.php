@@ -3,7 +3,6 @@
 namespace Keros;
 
 use Keros\Controllers\Auth\LoginController;
-use Keros\Controllers\Core\AddressController;
 use Keros\Controllers\Ua\StudyDocumentController;
 use Keros\Controllers\Core\TicketController;
 use Keros\Controllers\Core\CountryController;
@@ -13,20 +12,18 @@ use Keros\Controllers\Core\MemberController;
 use Keros\Controllers\Core\PoleController;
 use Keros\Controllers\Core\PositionController;
 use Keros\Controllers\Core\DocumentTypeController;
+use Keros\Controllers\Treso\FactureController;
+use Keros\Controllers\Treso\FactureTypeController;
 use Keros\Controllers\Ua\ContactController;
 use Keros\Controllers\Ua\FirmController;
 use Keros\Controllers\Ua\FirmTypeController;
 use Keros\Controllers\Ua\StudyController;
 use Keros\DataServices\DataServiceRegistrar;
-use Keros\Entities\Ua\Study;
-use Keros\Error\ErrorHandler;
-use Keros\Error\PhpErrorHandler;
 use Keros\Services\ServiceRegistrar;
 use Keros\Tools\Authorization\AuthenticationMiddleware;
 use Keros\Tools\ConfigLoader;
 use Keros\Tools\JwtCodec;
 use Keros\Tools\KerosEntityManager;
-use Keros\Tools\LoggerBuilder;
 use Keros\Tools\PasswordEncryption;
 use Keros\Tools\ToolRegistrar;
 use Psr\Container\ContainerInterface;
@@ -178,6 +175,22 @@ class KerosApp
                     $this->delete("/{id:[0-9]+}", DocumentTypeController::class . ':deleteDocumentType');
                 });
 
+            })->add($this->getContainer()->get(AuthenticationMiddleware::class));
+
+            $this->group('/treso', function () {
+
+                $this->group('/facture-types', function () {
+                    $this->get("", FactureTypeController::class . ':getAllFactureTypes');
+                });
+                $this->group('/facture', function () {
+                    $this->get("", FactureController::class . ':getPageFacture');
+                    $this->post("", FactureController::class . ':createFacture');
+                    $this->get('/{id:[0-9]+}', FactureController::class . ':getFacture');
+                    $this->delete("/{id:[0-9]+}", FactureController::class . ':deleteFacture');
+                    $this->put("/{id:[0-9]+}", FactureController::class . ':updateFacture');
+                    $this->post("/{id:[0-9]+}/validate-ua", FactureController::class . ':validateFactureByUa');
+                    $this->post("/{id:[0-9]+}/validate-perf", FactureController::class . ':validateFactureByPerf');
+                });
             })->add($this->getContainer()->get(AuthenticationMiddleware::class));
         });
 

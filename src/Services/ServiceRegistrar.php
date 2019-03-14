@@ -4,6 +4,8 @@
 namespace Keros\Services;
 
 use Keros\Services\Ua\StudyDocumentService;
+use Keros\Services\Treso\FactureService;
+use Keros\Services\Treso\FactureTypeService;
 use Keros\Services\Ua\ProvenanceService;
 use Keros\Services\Auth\LoginService;
 use Keros\Services\Core\AddressService;
@@ -93,6 +95,14 @@ class ServiceRegistrar
         };
         $container[StudyDocumentService::class] = function ($container) {
             return new StudyDocumentService($container);
+        };
+
+        //Treso
+        $container[FactureTypeService::class] = function ($container) {
+            return new FactureTypeService($container);
+        };
+        $container[FactureService::class] = function ($container) {
+            return new FactureService($container);
         };
     }
 }

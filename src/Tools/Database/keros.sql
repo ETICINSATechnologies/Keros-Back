@@ -304,6 +304,47 @@ CREATE TABLE `ua_study_document` (
   CONSTRAINT fk_study_document_study_document_type FOREIGN KEY (studyDocumentTypeId) REFERENCES ua_study_document_type(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS treso_facture_type;
+CREATE TABLE `treso_facture_type` (
+  `id`    int(1) AUTO_INCREMENT,
+  `label` VARCHAR(255) NOT NULL UNIQUE,
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+
+DROP TABLE IF EXISTS treso_facture;
+CREATE TABLE treso_facture (
+  id int(1) AUTO_INCREMENT,
+  numero varchar(32),
+  addressId int(11),
+  clientName varchar(255),
+  contactName varchar(255),
+  contactEmail varchar(255),
+  studyId int(11) NOT NULL,
+  typeId int(11) NOT NULL,
+  amountDescription varchar(2048),
+  subject varchar(255),
+  agreementSignDate date,
+  amountHT float,
+  taxPercentage float,
+  dueDate date,
+  additionalInformation varchar(2048),
+  createdDate date,
+  createdById int(11),
+  validatedByUa boolean,
+  validatedByUaDate date,
+  validatedByUaMemberId int(11),
+  validatedByPerf boolean,
+  validatedByPerfDate date,
+  validatedByPerfMemberId int(11),
+  PRIMARY KEY (id),
+  CONSTRAINT fk_facture_address FOREIGN KEY (addressId) REFERENCES core_address(id),
+  CONSTRAINT fk_facture_study FOREIGN KEY (studyId) REFERENCES ua_study(id),
+  CONSTRAINT fk_facture_facture_type FOREIGN KEY (typeId) REFERENCES treso_facture_type(id),
+  CONSTRAINT fk_facture_createdBy_member FOREIGN KEY (createdById) REFERENCES core_member(id),
+  CONSTRAINT fk_facture_validatedByUa_member FOREIGN KEY (validatedByUaMemberId) REFERENCES core_member(id),
+  CONSTRAINT fk_facture_validatedByPerf_member FOREIGN KEY (validatedByPerfMemberId) REFERENCES core_member(id)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+
 SET AUTOCOMMIT = 1;
 SET FOREIGN_KEY_CHECKS = 1;
 SET UNIQUE_CHECKS = 1;
@@ -440,5 +481,11 @@ INSERT INTO `ua_field` (`id`, `label`) VALUES
   (11, 'Benchmark'),
   (12, 'Productique'),
   (13, 'Traduction');
+
+INSERT INTO treso_facture_type (id, label) VALUES
+  (1, 'Pro-forma'),
+  (2, 'Acompte'),
+  (3, 'Intermédiaire'),
+  (4, 'Solde');
 
 COMMIT;
