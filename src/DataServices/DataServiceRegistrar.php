@@ -4,6 +4,7 @@
 namespace Keros\DataServices;
 
 use Keros\DataServices\Core\AddressDataService;
+use Keros\DataServices\Ua\StudyDocumentDataService;
 use Keros\DataServices\Core\TicketDataService;
 use Keros\DataServices\Core\CountryDataService;
 use Keros\DataServices\Core\DepartmentDataService;
@@ -65,6 +66,9 @@ class DataServiceRegistrar
         $container[TemplateTypeDataService::class] = function ($container) {
             return new TemplateTypeDataService($container);
         };
+        $container[StudyDocumentDataService::class] = function ($container) {
+            return new StudyDocumentDataService($container);
+        };
 
         //UA
         $container[FirmTypeDataService::class] = function ($container) {
@@ -79,8 +83,7 @@ class DataServiceRegistrar
         $container[ProvenanceDataService::class] = function ($container) {
             return new ProvenanceDataService($container);
         };
-        $container[FieldDataService::class] = function ($container)
-        {
+        $container[FieldDataService::class] = function ($container) {
             return new FieldDataService($container);
         };
         $container[StatusDataService::class] = function ($container) {

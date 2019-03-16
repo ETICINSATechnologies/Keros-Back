@@ -56,6 +56,8 @@ class StudyIntegrationTest extends AppTestCase
         $this->assertSame(1, $body->documents[0]->id);
         $this->assertSame('testGet', $body->documents[0]->name);
         $this->assertSame($kerosConfig['BACK_URL'] . '/api/v1/ua/study/2/template/1', $body->documents[0]->generateLocation);
+        $this->assertSame($kerosConfig['BACK_URL'] . '/api/v1/ua/study/2/document/1', $body->documents[0]->uploadLocation);
+        $this->assertSame($kerosConfig['BACK_URL'] . '/api/v1/ua/study/2/document/1', $body->documents[0]->downloadLocation);
     }
 
     public function testGetAllDocumentsShouldReturn400(){

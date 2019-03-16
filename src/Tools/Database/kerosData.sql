@@ -82,4 +82,9 @@ INSERT INTO `core_template` (`id`, `name`, `location`, `typeId`, `oneConsultant`
   (2, 'test', 'qlq part', 1, 0),
   (3, 'one consutant template', 'pas ici', 1, 1);
 
+TRUNCATE TABLE ua_study_document;
+INSERT INTO `ua_study_document`(`id`, `studyId`, `templateId`, `date`, `name`, `location`) VALUES
+  (1, 1, 2, STR_TO_DATE('2019/2/14 10:40:10', '%Y/%m/%d %h:%i:%s'), 'test.php', 'study_1/template_2/test.php'),
+  (2, 1, 2, STR_TO_DATE('2018/2/14 10:40:10', '%Y/%m/%d %h:%i:%s'), 'vieuxtest.php', 'study_1/template_2/location_ici.php');
+
 COMMIT;

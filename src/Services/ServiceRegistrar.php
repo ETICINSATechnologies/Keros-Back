@@ -3,6 +3,7 @@
 
 namespace Keros\Services;
 
+use Keros\Services\Ua\StudyDocumentService;
 use Keros\Services\Core\TemplateService;
 use Keros\Services\Core\TemplateTypeService;
 use Keros\Services\Ua\ProvenanceService;
@@ -70,6 +71,9 @@ class ServiceRegistrar
         };
         $container[TemplateTypeService::class] = function ($container) {
             return new TemplateTypeService($container);
+        };
+        $container[StudyDocumentService::class] = function ($container) {
+            return new StudyDocumentService($container);
         };
 
         //UA
