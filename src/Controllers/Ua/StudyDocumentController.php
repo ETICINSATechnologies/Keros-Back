@@ -58,7 +58,7 @@ class DocumentController
         $this->logger->debug("Uploading document " . $args['documentId'] . " for study " . $args['studyId'] . " from " . $request->getServerParams()["REMOTE_ADDR"]);
 
         if ($request->getUploadedFiles() == null) {
-            $msg = 'No file given ' . json_encode($request->getUploadedFiles());
+            $msg = 'No file given';
             $this->logger->error($msg);
             throw new KerosException($msg, 400);
         }
@@ -79,7 +79,6 @@ class DocumentController
 
         $this->entityManager->beginTransaction();
         $document = $this->documentService->create($body);
-        $this->logger->info($this->kerosConfig['STUDY_DOCUMENT_DIRECTORY'] . $document->getLocation());
         $uploadedFile->moveTo($this->kerosConfig['STUDY_DOCUMENT_DIRECTORY'] . $document->getLocation());
         $this->entityManager->commit();
 

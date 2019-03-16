@@ -1,19 +1,19 @@
 <?php
 
-namespace Keros\Services\Core;
+namespace Keros\Services\Ua;
 
-use Keros\DataServices\Core\DocumentDataService;
+use Keros\DataServices\Ua\StudyDocumentDataService;
 
-use Keros\Entities\Core\Document;
+use Keros\Entities\Ua\StudyDocument;
 use Keros\Error\KerosException;
-use Keros\Services\Ua\StudyService;
+use Keros\Services\Core\TemplateService;
 use Keros\Tools\ConfigLoader;
 use Keros\Tools\DirectoryManager;
 use Keros\Tools\Validator;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 
-class DocumentService
+class StudyDocumentService
 {
 
     /**
@@ -22,7 +22,7 @@ class DocumentService
     private $logger;
 
     /**
-     * @var DocumentDataService
+     * @var StudyDocumentDataService
      */
     private $documentDataService;
 
@@ -47,13 +47,13 @@ class DocumentService
     private $directoryManager;
 
     /**
-     * DocumentService constructor.
+     * StudyDocumentService constructor.
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get(Logger::class);
-        $this->documentDataService = $container->get(DocumentDataService::class);
+        $this->documentDataService = $container->get(StudyDocumentDataService::class);
         $this->templateService = $container->get(TemplateService::class);
         $this->studyService = $container->get(StudyService::class);
         $this->kerosConfig = ConfigLoader::getConfig();
@@ -62,10 +62,10 @@ class DocumentService
 
     /**
      * @param array $fields
-     * @return Document
+     * @return StudyDocument
      * @throws \Exception
      */
-    public function create(array $fields): Document
+    public function create(array $fields): StudyDocument
     {
         $studyId = Validator::requiredInt(intval($fields['studyId']));
         $templateId = Validator::requiredInt(intval($fields['documentId']));
@@ -84,7 +84,7 @@ class DocumentService
         $location = $this->directoryManager->uniqueFilename($file, false, $location);
 
         $this->directoryManager->mkdir($this->kerosConfig['STUDY_DOCUMENT_DIRECTORY'] . pathinfo($location, PATHINFO_DIRNAME));
-        $document = new Document($study, $template, $date, $name, $location);
+        $document = new StudyDocument($study, $template, $date, $name, $location);
 
         $this->documentDataService->persist($document);
 
@@ -93,10 +93,10 @@ class DocumentService
 
     /**
      * @param int $id
-     * @return Document
+     * @return StudyDocument
      * @throws \Keros\Error\KerosException
      */
-    public function getOne(int $id): Document
+    public function getOne(int $id): StudyDocument
     {
         $id = Validator::requiredId($id);
 
@@ -121,10 +121,10 @@ class DocumentService
     /**
      * @param int $studyId
      * @param int $templateId
-     * @return Document
+     * @return StudyDocument
      * @throws KerosException
      */
-    public function getLatestDocumentFromStudyTemplate(int $studyId, int $templateId): Document
+    public function getLatestDocumentFromStudyTemplate(int $studyId, int $templateId): StudyDocument
     {
         $documents = $this->documentDataService->getAll();
 

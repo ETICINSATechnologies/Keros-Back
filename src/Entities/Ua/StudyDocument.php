@@ -1,10 +1,9 @@
 <?php
 
-namespace Keros\Entities\Core;
+namespace Keros\Entities\Ua;
 
 use JsonSerializable;
 use Keros\Entities\Core\Template;
-use Keros\Entities\Ua\Study;
 
 /**
  * Class Document
