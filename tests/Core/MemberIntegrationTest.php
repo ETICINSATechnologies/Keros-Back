@@ -8,6 +8,28 @@ use Slim\Http\Request;
 
 class MemberIntegrationTest extends AppTestCase
 {
+    public function testLikeSearchMemberShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/core/member?firstName=Lauren&positionId=1&year=2018',
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(200, $response->getStatusCode());
+
+        $body = json_decode($response->getBody());
+        $this->assertNotNull($body->content);
+        $this->assertSame(1, sizeof($body->content));
+        $this->assertSame(3, $body->content[0]->id);
+        $this->assertSame(1, $body->content[0]->positions[0]->id);
+        $this->assertSame(2, $body->content[0]->positions[1]->id);
+        $this->assertSame(3, $body->content[0]->positions[2]->id);
+    }
+
     public function testSearchMemberShouldReturn200()
     {
         $env = Environment::mock([

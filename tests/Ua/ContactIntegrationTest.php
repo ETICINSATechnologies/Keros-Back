@@ -8,6 +8,45 @@ use Slim\Http\Request;
 
 class ContactIntegrationTest extends AppTestCase
 {
+
+    public function testSearchLikeContactShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/ua/contact?lastName=Lan',
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(200, $response->getStatusCode());
+
+        $body = json_decode($response->getBody());
+        $this->assertNotNull($body->content);
+        $this->assertSame(1, sizeof($body->content));
+        $this->assertSame(1, $body->content[0]->id);
+    }
+
+    public function testSearchContactShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/ua/contact?lastName=Lang',
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(200, $response->getStatusCode());
+
+        $body = json_decode($response->getBody());
+        $this->assertNotNull($body->content);
+        $this->assertSame(1, sizeof($body->content));
+        $this->assertSame(1, $body->content[0]->id);
+    }
+
     public function testGetAllContactShouldReturn200()
     {
         $env = Environment::mock([
