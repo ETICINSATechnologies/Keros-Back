@@ -1,16 +1,16 @@
 <?php
 
-namespace Keros\DataServices\Core;
+namespace Keros\DataServices\Ua;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use Keros\Entities\Core\Document;
+use Keros\Entities\Ua\StudyDocument;
 use Keros\Error\KerosException;
 use Monolog\Logger;
 use Exception;
 use Psr\Container\ContainerInterface;
 
-class DocumentDataService
+class StudyDocumentDataService
 {
     /**
      * @var EntityManager
@@ -28,21 +28,21 @@ class DocumentDataService
     private $repository;
 
     /**
-     * DocumentDataService constructor.
+     * StudyDocumentDataService constructor.
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get(Logger::class);
         $this->entityManager = $container->get(EntityManager::class);
-        $this->repository = $this->entityManager->getRepository(Document::class);
+        $this->repository = $this->entityManager->getRepository(StudyDocument::class);
     }
 
     /**
-     * @param Document $document
+     * @param StudyDocument $document
      * @throws KerosException
      */
-    public function persist(Document $document): void
+    public function persist(StudyDocument $document): void
     {
         try {
             $this->entityManager->persist($document);
@@ -56,10 +56,10 @@ class DocumentDataService
 
     /**
      * @param int $id
-     * @return Document|null
+     * @return StudyDocument|null
      * @throws KerosException
      */
-    public function getOne(int $id): ?Document
+    public function getOne(int $id): ?StudyDocument
     {
         try {
             $document = $this->repository->find($id);
@@ -72,7 +72,7 @@ class DocumentDataService
     }
 
     /**
-     * @return Document[]
+     * @return StudyDocument[]
      * @throws KerosException
      */
     public function getAll(): array
@@ -88,10 +88,10 @@ class DocumentDataService
     }
 
     /**
-     * @param Document $document
+     * @param StudyDocument $document
      * @throws KerosException
      */
-    public function delete(Document $document): void
+    public function delete(StudyDocument $document): void
     {
         try {
             $this->entityManager->remove($document);

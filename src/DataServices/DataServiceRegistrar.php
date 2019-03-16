@@ -4,7 +4,7 @@
 namespace Keros\DataServices;
 
 use Keros\DataServices\Core\AddressDataService;
-use Keros\DataServices\Core\DocumentDataService;
+use Keros\DataServices\Ua\StudyDocumentDataService;
 use Keros\DataServices\Core\TicketDataService;
 use Keros\DataServices\Core\CountryDataService;
 use Keros\DataServices\Core\DepartmentDataService;
@@ -66,8 +66,8 @@ class DataServiceRegistrar
         $container[TemplateTypeDataService::class] = function ($container) {
             return new TemplateTypeDataService($container);
         };
-        $container[DocumentDataService::class] = function ($container) {
-            return new DocumentDataService($container);
+        $container[StudyDocumentDataService::class] = function ($container) {
+            return new StudyDocumentDataService($container);
         };
 
         //UA

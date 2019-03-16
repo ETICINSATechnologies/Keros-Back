@@ -4,7 +4,7 @@ namespace Keros;
 
 use Keros\Controllers\Auth\LoginController;
 use Keros\Controllers\Core\AddressController;
-use Keros\Controllers\Core\DocumentController;
+use Keros\Controllers\Ua\StudyDocumentController;
 use Keros\Controllers\Core\TicketController;
 use Keros\Controllers\Core\CountryController;
 use Keros\Controllers\Core\DepartmentController;
@@ -109,8 +109,8 @@ class KerosApp
                     $this->delete("/{id:[0-9]+}", StudyController::class . ':deleteStudy');
                     $this->get("/{idStudy:[0-9]+}/template/{idTemplate:[0-9]+}", TemplateController::class . ':generateDocument');
                     $this->get("/{id:[0-9]+}/documents", StudyController::class . ':getAllDocuments');
-                    $this->post("/{studyId:[0-9]+}/document/{documentId:[0-9]+}", DocumentController::class . ':createDocument');
-                    $this->get("/{studyId:[0-9]+}/document/{documentId:[0-9]+}", DocumentController::class . ':getDocument');
+                    $this->post("/{studyId:[0-9]+}/document/{documentId:[0-9]+}", StudyDocumentController::class . ':createDocument');
+                    $this->get("/{studyId:[0-9]+}/document/{documentId:[0-9]+}", StudyDocumentController::class . ':getDocument');
                 });
                 $this->group('/provenance', function () {
                     $this->get("", StudyController::class . ':getAllProvenances');

@@ -6,12 +6,12 @@ use JsonSerializable;
 use Keros\Entities\Core\Template;
 
 /**
- * Class Document
+ * Class StudyDocument
  * @package Keros\Entities
  * @Entity
- * @Table(name="core_document")
+ * @Table(name="ua_study_document")
  */
-class Document implements JsonSerializable
+class StudyDocument implements JsonSerializable
 {
 
     /**
@@ -45,7 +45,7 @@ class Document implements JsonSerializable
     protected $location;
 
     /**
-     * Document constructor.
+     * StudyDocument constructor.
      * @param $study
      * @param $template
      * @param $date

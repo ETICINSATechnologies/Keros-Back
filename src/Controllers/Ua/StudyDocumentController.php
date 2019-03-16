@@ -1,21 +1,21 @@
 <?php
 
-namespace Keros\Controllers\Core;
+namespace Keros\Controllers\Ua;
 
 
 use Doctrine\ORM\EntityManager;
 use Keros\Error\KerosException;
-use Keros\Services\Core\DocumentService;
+use Keros\Services\Ua\StudyDocumentService;
 use Keros\Tools\ConfigLoader;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class DocumentController
+class StudyDocumentController
 {
     /**
-     * @var DocumentService
+     * @var StudyDocumentService
      */
     private $documentService;
 
@@ -35,14 +35,14 @@ class DocumentController
     private $kerosConfig;
 
     /**
-     * DocumentController constructor.
+     * StudyDocumentController constructor.
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get(Logger::class);
         $this->entityManager = $container->get(EntityManager::class);
-        $this->documentService = $container->get(DocumentService::class);
+        $this->documentService = $container->get(StudyDocumentService::class);
         $this->kerosConfig = ConfigLoader::getConfig();
     }
 
