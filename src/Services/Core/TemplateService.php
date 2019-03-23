@@ -3,7 +3,6 @@
 
 namespace Keros\Services\Core;
 
-
 use Keros\DataServices\Core\TemplateDataService;
 use Keros\Entities\Core\Member;
 use Keros\Entities\Core\Template;
@@ -18,6 +17,11 @@ use Psr\Container\ContainerInterface;
 use DateTime;
 use Exception;
 
+/**
+ * Lien pour le publipostage https://stackoverflow.com/questions/19503653/how-to-extract-text-from-word-file-doc-docx-xlsx-pptx-php/19503654#19503654
+ * Class TemplateService
+ * @package Keros\Services\Core
+ */
 class TemplateService
 {
     /**
@@ -93,8 +97,8 @@ class TemplateService
     public function create(array $fields): Template
     {
         $name = Validator::requiredString($fields["name"]);
-        $typeId = Validator::requiredId($fields["typeId"]);
-        $oneConsultant = Validator::requiredBool($fields["oneConsultant"]);
+        $typeId = Validator::requiredId(intval($fields["typeId"]));
+        $oneConsultant = Validator::requiredBool(boolval($fields["oneConsultant"]));
         $extension = Validator::requiredString($fields["extension"]);
 
         $date = new DateTime();
@@ -147,14 +151,108 @@ class TemplateService
     }
 
     /**
-     * https://stackoverflow.com/questions/19503653/how-to-extract-text-from-word-file-doc-docx-xlsx-pptx-php/19503654#19503654
-     * @param int $studyId
+     * @param Template $template
+     * @param array $searchArray
+     * @param array[] $replacementArrays Array of all replacement array
+     * @return string
+     * @throws KerosException
+     */
+    private function generateMultipleDocument(Template $template, array $searchArray, array $replacementArrays)
+    {
+        //generate file name until it doesn't not actually exist
+        do {
+            $zipLocation = $this->temporaryDirectory . md5($template->getName() . microtime()) . '.zip';
+        } while (file_exists($zipLocation));
+        $zip = new \ZipArchive();
+        if ($zip->open($zipLocation, \ZipArchive::CREATE) !== TRUE) {
+            $msg = "Error creating zip with template " . $template->getId();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
+        $files[] = array();
+        //create document for each consultant
+        $cpt = -1;
+        foreach ($replacementArrays as $replacementArray) {
+            $cpt++;
+            //TODO use identifiant
+            //$filename = $this->temporaryDirectory . pathinfo($template->getName(), PATHINFO_FILENAME) . '_' . $consultant->getId() . '.' . pathinfo($template->getLocation(), PATHINFO_EXTENSION);
+            $filename = $this->temporaryDirectory . pathinfo($template->getName(), PATHINFO_FILENAME) . '_' . $cpt . '.' . pathinfo($template->getLocation(), PATHINFO_EXTENSION);
+            $files[] = $filename;
+            //copy template
+            copy($template->getLocation(), $filename);
+
+            //open document and replace pattern
+            switch (pathinfo($template->getLocation(), PATHINFO_EXTENSION)) {
+                case 'docx':
+                    $return = $this->generateDocx($filename, $searchArray, $replacementArray);
+                    break;
+                case 'pptx':
+                    $return = $this->generatePptx($filename, $searchArray, $replacementArray);
+                    break;
+                default :
+                    $return = false;
+            }
+
+            if (!$return) {
+                $msg = "Error generating document with template " . $template->getId();
+                $this->logger->error($msg);
+                throw new KerosException($msg, 500);
+            }
+            //move file with replaced pattern in zip archive
+            $zip->addFile($filename, pathinfo($template->getName(), PATHINFO_FILENAME) . DIRECTORY_SEPARATOR . pathinfo($filename, PATHINFO_BASENAME));
+        }
+        $zip->close();
+        //delete every temporary file
+        foreach ($files as $filename)
+            unlink($filename);
+        $location = $zipLocation;
+
+        return $location;
+    }
+
+    /**
+     * @param Template $template
+     * @param array $searchArray
+     * @param array $replacementArray
+     * @return string
+     * @throws KerosException
+     */
+    private function generateSimpleDocument(Template $template, array $searchArray, array $replacementArray)
+    {
+        do {
+            $location = $this->temporaryDirectory . md5($template->getName() . microtime()) . '.' . pathinfo($template->getLocation(), PATHINFO_EXTENSION);
+        } while (file_exists($location));
+
+        copy($template->getLocation(), $location);
+
+        switch (pathinfo($template->getLocation(), PATHINFO_EXTENSION)) {
+            case 'docx':
+                $return = $this->generateDocx($location, $searchArray, $replacementArray);
+                break;
+            case 'pptx':
+                $return = $this->generatePptx($location, $searchArray, $replacementArray);
+                break;
+            default :
+                $return = false;
+        }
+
+        if (!$return) {
+            $msg = "Error generating document with template " . $template->getId();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
+        return $location;
+    }
+
+    /**
      * @param int $templateId
+     * @param int $studyId
      * @param int $connectedUserId
      * @return string
      * @throws \Exception
      */
-    public function generateDocument(int $studyId, int $templateId, int $connectedUserId) : string {
+    public function generateStudyDocument(int $templateId, int $studyId, int $connectedUserId): string
+    {
         $study = $this->studyService->getOne($studyId);
         $template = $this->getOne($templateId);
         $connectedUser = $this->memberService->getOne($connectedUserId);
@@ -173,97 +271,32 @@ class TemplateService
 
         //Zip are done if one document per consultant is needed
         $doZip = $template->getOneConsultant() == 1;
+        $searchArray = $this->getStudySearchArray();
 
         if ($doZip) {
-            //generate file name until it doesn't not actually exist
-            do {
-                $ziplocation = $this->temporaryDirectory . md5($template->getName() . microtime()) . '.zip';
-            } while (file_exists($ziplocation));
-            $zip = new \ZipArchive();
-            if ($zip->open($ziplocation, \ZipArchive::CREATE) !== TRUE) {
-                $msg = "Error creating zip with template " . $template->getId() . " and study " . $study->getId();
-                $this->logger->error($msg);
-                throw new KerosException($msg, 500);
-            }
-            $files[] = array();
-            //create document for each consultant
-            foreach ($study->getConsultantsArray() as $consultant) {
-                $filename = $this->temporaryDirectory . pathinfo($template->getName(), PATHINFO_FILENAME) . '_' . $consultant->getId() . '.' . pathinfo($template->getLocation(), PATHINFO_EXTENSION);
-                $files[] = $filename;
-                //copy template
-                copy($template->getLocation(), $filename);
-
-                //open document and replace pattern
-                switch (pathinfo($template->getLocation(), PATHINFO_EXTENSION)) {
-                    case 'docx':
-                        $return = $this->generateStudyDocx($filename, $study, $connectedUser, array($consultant));
-                        break;
-                    case 'pptx':
-                        $return = $this->generateStudyPptx($filename, $study, $connectedUser, array($consultant));
-                        break;
-                    default :
-                        $return = false;
-                }
-
-                if (!$return) {
-                    $msg = "Error generating document with template " . $template->getId() . " and study " . $study->getId();
-                    $this->logger->error($msg);
-                    throw new KerosException($msg, 500);
-                }
-                //move file with replaced pattern in zip archive
-                $zip->addFile($filename, pathinfo($template->getName(), PATHINFO_FILENAME) . DIRECTORY_SEPARATOR . pathinfo($filename, PATHINFO_BASENAME));
-            }
-            $zip->close();
-            //delete every temporary file
-            foreach ($files as $filename)
-                unlink($filename);
-            $location = $ziplocation;
-
-        } else {//similar than if statement above
-            do {
-                $location = $this->temporaryDirectory . md5($template->getName() . microtime()) . '.' . pathinfo($template->getLocation(), PATHINFO_EXTENSION);
-            } while (file_exists($location));
-
-            copy($template->getLocation(), $location);
-
-            switch (pathinfo($template->getLocation(), PATHINFO_EXTENSION)) {
-                case 'docx':
-                    $return = $this->generateStudyDocx($location, $study, $connectedUser, $study->getConsultantsArray());
-                    break;
-                case 'pptx':
-                    $return = $this->generateStudyPptx($location, $study, $connectedUser, $study->getConsultantsArray());
-                    break;
-                default :
-                    $return = false;
-            }
-
-            if (!$return) {
-                $msg = "Error generating document with template " . $template->getId() . " and study " . $study->getId();
-                $this->logger->error($msg);
-                throw new KerosException($msg, 500);
-            }
+            $replacementArrays = array();
+            foreach ($study->getConsultantsArray() as $consultant)
+                $replacementArrays[] = $this->getStudyReplacementArray($study, $connectedUser, array($consultant));
+            $location = $this->generateMultipleDocument($template, $searchArray, $replacementArrays);
+        } else {
+            $replacementArray = $this->getStudyReplacementArray($study, $connectedUser, $study->getConsultantsArray());
+            $this->logger->info(json_encode($replacementArray));
+            $location = $this->generateSimpleDocument($template, $searchArray, $replacementArray);
         }
-
         return $location;
-
     }
 
     /**
      * @param $location
-     * @param $study
-     * @param $connectedUser
-     * @param $consultant
+     * @param $searchArray
+     * @param $replacementArray
      * @return bool
-     * @throws \Exception
      */
-    private function generateStudyDocx($location, $study, $connectedUser, $consultant): bool
+    private function generateDocx($location, $searchArray, $replacementArray): bool
     {
         //docx are zip
         $zip = new \ZipArchive();
         $fileToModify = 'word/document.xml';
-
-        $searchArray = $this->getSearchArray();
-        $replacementArray = $this->getReplacementArray($study, $connectedUser, $consultant);
 
         if ($zip->open($location) === TRUE) {
             $oldContents = $zip->getFromName($fileToModify);
@@ -281,18 +314,14 @@ class TemplateService
 
     /**
      * @param $location
-     * @param $study
-     * @param $connectedUser
-     * @param $consultant
+     * @param $searchArray
+     * @param $replacementArray
      * @return bool
-     * @throws \Exception
      */
-    private function generateStudyPptx($location, $study, $connectedUser, $consultant): bool
+    private function generatePptx($location, $searchArray, $replacementArray): bool
     {
         //pptx are zip. Same things like docx, just multiple xml to parse
         $zip = new \ZipArchive();
-        $searchArray = $this->getSearchArray();
-        $replacementArray = $this->getReplacementArray($study, $connectedUser, $consultant);
 
         if (true === $zip->open($location)) {
             $slide_number = 1;
@@ -316,7 +345,7 @@ class TemplateService
      * To add pattern, add here and in :getReplacementArray AT THE SAME INDEX
      * @return array
      */
-    private function getSearchArray(): array
+    public function getStudySearchArray(): array
     {
         return array(
             '${NOMENTREPRISE}',
@@ -367,7 +396,7 @@ class TemplateService
      * @return array
      * @throws \Exception
      */
-    private function getReplacementArray(Study $study, Member $connectedUser, array $consultants): array
+    public function getStudyReplacementArray(Study $study, Member $connectedUser, array $consultants): array
     {
         $contact = $study->getContacts()[0];
         $date = new DateTime();
@@ -429,7 +458,7 @@ class TemplateService
             ($study->getArchivedDate() != null) ? $study->getArchivedDate()->format('d/m/Y') : '${DATEFIN}',
             ($president != null) ? $president->getLastName() : '${NOMPRESIDENT}',
             ($president != null) ? $this->genderBuilder->getStringGender($president->getGender()) : '${CIVPRESIDENT}',
-            ($president != null) ? $president->getFirstName() : '${PRENOMPRESIDENT',
+            ($president != null) ? $president->getFirstName() : '${PRENOMPRESIDENT}',
             ($tresorier != null) ? $tresorier->getLastName() : '${NOMTRESORIER}',
             ($tresorier != null) ? $this->genderBuilder->getStringGender($tresorier->getGender()) : '${CIVTRESORIER}',
             ($tresorier != null) ? $tresorier->getFirstName() : '${PRENOMTRESORIER}',

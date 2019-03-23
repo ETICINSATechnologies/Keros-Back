@@ -143,11 +143,11 @@ class TemplateController
      * @return Response
      * @throws \Exception
      */
-    public function generateDocument(Request $request, Response $response, array $args)
+    public function generateStudyDocument(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Generating document with template " . $args["idTemplate"] . " from " . $request->getServerParams()["REMOTE_ADDR"]);
 
-        $location = $this->templateService->generateDocument($args["idStudy"], $args["idTemplate"], $request->getAttribute("userId"));
+        $location = $this->templateService->generateStudyDocument($args["idTemplate"], $args["idStudy"], $request->getAttribute("userId"));
         $filename = pathinfo($location, PATHINFO_BASENAME);
 
         return $response->withJson(array('location' => $this->kerosConfig['BACKEND_URL'] . "/generated/" . $filename), 200);
