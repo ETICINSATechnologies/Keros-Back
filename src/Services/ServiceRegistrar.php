@@ -24,6 +24,7 @@ use Keros\Services\Ua\FirmService;
 use Keros\Services\Ua\FirmTypeService;
 use Keros\Services\Ua\StatusService;
 use Keros\Services\Ua\StudyService;
+use Keros\Services\Ua\StudyTemplateService;
 use Psr\Container\ContainerInterface;
 
 class ServiceRegistrar
@@ -97,6 +98,9 @@ class ServiceRegistrar
         };
         $container[StudyService::class] = function ($container) {
             return new StudyService($container);
+        };
+        $container[StudyTemplateService::class] = function ($container) {
+            return new StudyTemplateService($container);
         };
     }
 }

@@ -4,19 +4,13 @@ namespace Keros\Controllers\Core;
 
 use Doctrine\ORM\EntityManager;
 use Keros\DataServices\Core\TemplateDataService;
-use Keros\Entities\Core\Member;
-use Keros\Entities\Ua\Study;
-use Keros\Error\KerosException;
-use Keros\Services\Core\MemberService;
 use Keros\Services\Core\TemplateService;
-use Keros\Services\Ua\StudyService;
+use Keros\Services\Ua\StudyTemplateService;
 use Keros\Tools\ConfigLoader;
-use Keros\Tools\GenderBuilder;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use DateTime;
 
 class TemplateController
 {
@@ -46,6 +40,10 @@ class TemplateController
      */
     private $kerosConfig;
 
+    /**
+     * @var StudyTemplateService
+     */
+    private $studyTemplateService;
 
     /**
      * TemplateController constructor.
@@ -58,6 +56,7 @@ class TemplateController
         $this->templateService = $container->get(TemplateService::class);
         $this->templateTypeService = $container->get(TemplateDataService::class);
         $this->kerosConfig = ConfigLoader::getConfig();
+        $this->studyTemplateService = $container->get(StudyTemplateService::class);
     }
 
     /**
@@ -147,7 +146,7 @@ class TemplateController
     {
         $this->logger->debug("Generating document with template " . $args["idTemplate"] . " from " . $request->getServerParams()["REMOTE_ADDR"]);
 
-        $location = $this->templateService->generateStudyDocument($args["idTemplate"], $args["idStudy"], $request->getAttribute("userId"));
+        $location = $this->studyTemplateService->generateStudyDocument($args["idTemplate"], $args["idStudy"], $request->getAttribute("userId"));
         $filename = pathinfo($location, PATHINFO_BASENAME);
 
         return $response->withJson(array('location' => $this->kerosConfig['BACKEND_URL'] . "/generated/" . $filename), 200);
