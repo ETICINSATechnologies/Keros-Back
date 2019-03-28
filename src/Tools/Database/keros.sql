@@ -307,6 +307,24 @@ CREATE TABLE `ua_study_document` (
   CONSTRAINT `fk_ua_study_document_core_template` FOREIGN KEY (`templateId`) REFERENCES core_template(`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS sg_member_inscription;
+CREATE TABLE sg_member_inscription (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  firstName varchar(255) NOT NULL,
+  lastName varchar(255) NOT NULL,
+  departmentId int(11) NOT NULL,
+  email varchar(255) NOT NULL,
+  phoneNumber varchar(255),
+  outYear int,
+  nationalityId int(11) NOT NULL,
+  wantedPoleId int(11) NOT NULL,
+  addressId int(11) NOT NULL,
+  PRIMARY KEY (id),
+  CONSTRAINT fk_sg_member_inscription_departement FOREIGN KEY (departmentId) REFERENCES core_department(id),
+  CONSTRAINT fk_sg_member_inscription_nationality FOREIGN KEY (nationalityId) REFERENCES core_country(id),
+  CONSTRAINT fk_sg_member_inscription_pole FOREIGN KEY (wantedPoleId) REFERENCES core_pole(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 SET AUTOCOMMIT = 1;
 SET FOREIGN_KEY_CHECKS = 1;
 SET UNIQUE_CHECKS = 1;

@@ -87,4 +87,9 @@ INSERT INTO `ua_study_document`(`id`, `studyId`, `templateId`, `date`, `name`, `
   (1, 1, 2, STR_TO_DATE('2019/2/14 10:40:10', '%Y/%m/%d %h:%i:%s'), 'test.php', 'study_1/template_2/test.php'),
   (2, 1, 2, STR_TO_DATE('2018/2/14 10:40:10', '%Y/%m/%d %h:%i:%s'), 'vieuxtest.php', 'study_1/template_2/location_ici.php');
 
+TRUNCATE TABLE sg_member_inscription;
+INSERT INTO sg_member_inscription (id, firstName, lastName, departmentId, email, phoneNumber, outYear, nationalityId, wantedPoleId, addressId) VALUES
+  (1, 'Bruce', 'Wayne', 3, 'bruce.wayne@batman.com', '0033123456789', 2020, 42, 2, 2),
+  (2, 'Clark', 'Kent', 2, 'clark.kent@dailyplanete.com', '0033123456789', 2019, 69, 4, 2);
+
 COMMIT;
