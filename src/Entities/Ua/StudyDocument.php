@@ -3,7 +3,7 @@
 namespace Keros\Entities\Ua;
 
 use JsonSerializable;
-use Keros\Entities\Core\Template;
+use Keros\Entities\Core\Document;
 
 /**
  * Class StudyDocument
@@ -11,15 +11,8 @@ use Keros\Entities\Core\Template;
  * @Entity
  * @Table(name="ua_study_document")
  */
-class StudyDocument implements JsonSerializable
+class StudyDocument extends Document implements JsonSerializable
 {
-
-    /**
-     * @Id
-     * @Column(type="integer")
-     * @GeneratedValue
-     */
-    protected $id;
 
     /**
      * @ManyToOne(targetEntity="Keros\Entities\Ua\Study")
@@ -28,37 +21,23 @@ class StudyDocument implements JsonSerializable
     protected $study;
 
     /**
-     * @ManyToOne(targetEntity="Keros\Entities\Core\Template")
-     * @JoinColumn(name="templateId", referencedColumnName="id")
+     * @ManyToOne(targetEntity="Keros\Entities\Ua\StudyDocumentType")
+     * @JoinColumn(name="studyDocumentTypeId", referencedColumnName="id")
      **/
-    protected $template;
-
-    /**
-     * @Column(type="datetime")
-     */
-    protected $date;
-
-    /** @Column(type="string", length=255) */
-    protected $name;
-
-    /** @Column(type="string", length=255) */
-    protected $location;
+    protected $studyDocumentType;
 
     /**
      * StudyDocument constructor.
-     * @param $study
-     * @param $template
      * @param $date
-     * @param $name
      * @param $location
+     * @param $study
+     * @param $studyDocumentType
      */
-    public function __construct($study, $template, $date, $name, $location)
+    public function __construct($date, $location, $study, $studyDocumentType)
     {
+        parent::__construct($date, $location);
         $this->study = $study;
-        $this->template = $template;
-        $this->date = $date;
-        $this->name = $name;
-        $this->location = $location;
+        $this->studyDocumentType = $studyDocumentType;
     }
 
     public function jsonSerialize()
@@ -66,31 +45,14 @@ class StudyDocument implements JsonSerializable
         return [
             'id' => $this->getId(),
             'study' => $this->getStudy(),
-            'template' => $this->getTemplate(),
-            'date' => $this->getDate(),
-            'name' => $this->getName(),
+            'studyDocumentType' => $this->getStudyDocumentType(),
+            'date' => $this->getUploadDate(),
             'location' => $this->getLocation(),
         ];
     }
 
     /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param mixed $id
-     */
-    public function setId($id): void
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * @return Study
+     * @return mixed
      */
     public function getStudy()
     {
@@ -106,66 +68,19 @@ class StudyDocument implements JsonSerializable
     }
 
     /**
-     * @return Template
-     */
-    public function getTemplate()
-    {
-        return $this->template;
-    }
-
-    /**
-     * @param mixed $template
-     */
-    public function setTemplate($template): void
-    {
-        $this->template = $template;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getDate()
-    {
-        return $this->date;
-    }
-
-    /**
-     * @param mixed $date
-     */
-    public function setDate($date): void
-    {
-        $this->date = $date;
-    }
-
-    /**
      * @return mixed
      */
-    public function getName()
+    public function getStudyDocumentType()
     {
-        return $this->name;
+        return $this->studyDocumentType;
     }
 
     /**
-     * @param mixed $name
+     * @param mixed $studyDocumentType
      */
-    public function setName($name): void
+    public function setStudyDocumentType($studyDocumentType): void
     {
-        $this->name = $name;
+        $this->studyDocumentType = $studyDocumentType;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getLocation()
-    {
-        return $this->location;
-    }
-
-    /**
-     * @param mixed $location
-     */
-    public function setLocation($location): void
-    {
-        $this->location = $location;
-    }
 }

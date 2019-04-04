@@ -12,8 +12,7 @@ use Keros\Controllers\Core\GenderController;
 use Keros\Controllers\Core\MemberController;
 use Keros\Controllers\Core\PoleController;
 use Keros\Controllers\Core\PositionController;
-use Keros\Controllers\Core\TemplateController;
-use Keros\Controllers\Core\TemplateTypeController;
+use Keros\Controllers\Core\DocumentTypeController;
 use Keros\Controllers\Ua\ContactController;
 use Keros\Controllers\Ua\FirmController;
 use Keros\Controllers\Ua\FirmTypeController;
@@ -107,7 +106,7 @@ class KerosApp
                     $this->post("", StudyController::class . ':createStudy');
                     $this->put("/{id:[0-9]+}", StudyController::class . ':updateStudy');
                     $this->delete("/{id:[0-9]+}", StudyController::class . ':deleteStudy');
-                    $this->get("/{idStudy:[0-9]+}/document/{idTemplate:[0-9]+}/generate", TemplateController::class . ':generateStudyDocument');
+                    $this->get("/{idStudy:[0-9]+}/document/{idTemplate:[0-9]+}/generate", StudyDocumentController::class . ':generateStudyDocument');
                     $this->get("/{id:[0-9]+}/documents", StudyController::class . ':getAllDocuments');
                     $this->post("/{studyId:[0-9]+}/document/{documentId:[0-9]+}", StudyDocumentController::class . ':createDocument');
                     $this->get("/{studyId:[0-9]+}/document/{documentId:[0-9]+}", StudyDocumentController::class . ':getDocument');
@@ -172,16 +171,11 @@ class KerosApp
                     $this->delete("/{id:[0-9]+}", TicketController::class . ':deleteTicket');
                 });
 
-                $this->group('/template-type', function () {
-                    $this->get("", TemplateTypeController::class . ':getAllTemplateType');
-                    $this->get('/{id:[0-9]+}', TemplateTypeController::class . ':getTemplateType');
-                });
-
                 $this->group('/template', function () {
-                    $this->post("", TemplateController::class . ':createTemplate');
-                    $this->get("", TemplateController::class . ':getAllTemplate');
-                    $this->get('/{id:[0-9]+}', TemplateController::class . ':getTemplate');
-                    $this->delete("/{id:[0-9]+}", TemplateController::class . ':deleteTemplate');
+                    $this->post("", DocumentTypeController::class . ':createTemplate');
+                    $this->get("", DocumentTypeController::class . ':getAllTemplate');
+                    $this->get('/{id:[0-9]+}', DocumentTypeController::class . ':getTemplate');
+                    $this->delete("/{id:[0-9]+}", DocumentTypeController::class . ':deleteTemplate');
                 });
 
             })->add($this->getContainer()->get(AuthenticationMiddleware::class));

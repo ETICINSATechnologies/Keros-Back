@@ -3,25 +3,25 @@
 namespace Keros\Controllers\Core;
 
 use Doctrine\ORM\EntityManager;
-use Keros\DataServices\Core\TemplateDataService;
-use Keros\Services\Core\TemplateService;
-use Keros\Services\Ua\StudyTemplateService;
+use Keros\DataServices\Core\DocumentTypeDataService;
+use Keros\Services\Ua\StudyDocumentTypeService;
 use Keros\Tools\ConfigLoader;
+use Keros\Tools\DirectoryManager;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class TemplateController
+class DocumentTypeController
 {
 
     /**
-     * @var TemplateService
+     * @var StudyDocumentTypeService
      */
     private $templateService;
 
     /**
-     * @var TemplateDataService
+     * @var DocumentTypeDataService
      */
     private $templateTypeService;
 
@@ -41,22 +41,29 @@ class TemplateController
     private $kerosConfig;
 
     /**
-     * @var StudyTemplateService
+     * @var DirectoryManager
      */
-    private $studyTemplateService;
+    private $directoryManager;
 
     /**
-     * TemplateController constructor.
+     * @var string
+     */
+    private $studyDocumentTypeDirectory;
+
+
+    /**
+     * DocumentTypeController constructor.
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get(Logger::class);
         $this->entityManager = $container->get(EntityManager::class);
-        $this->templateService = $container->get(TemplateService::class);
-        $this->templateTypeService = $container->get(TemplateDataService::class);
+        $this->templateService = $container->get(StudyDocumentTypeService::class);
+        $this->templateTypeService = $container->get(DocumentTypeDataService::class);
         $this->kerosConfig = ConfigLoader::getConfig();
-        $this->studyTemplateService = $container->get(StudyTemplateService::class);
+        $this->directoryManager = $container->get(DirectoryManager::class);
+        $this->studyDocumentTypeDirectory = $this->kerosConfig['TEMPLATE_DIRECTORY'];
     }
 
     /**
@@ -80,8 +87,6 @@ class TemplateController
      * @param Response $response
      * @param array $args
      * @return Response
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Keros\Error\KerosException
      */
     public function createTemplate(Request $request, Response $response, array $args)
@@ -94,7 +99,9 @@ class TemplateController
 
         $this->entityManager->beginTransaction();
         $template = $this->templateService->create($body);
-        $uploadedFile->moveTo($template->getLocation());
+        $location = $this->studyDocumentTypeDirectory . $template->getLocation();
+        $this->directoryManager->mkdir(pathinfo($location, PATHINFO_DIRNAME));
+        $uploadedFile->moveTo($location);
         $this->entityManager->commit();
 
         return $response->withJson($template, 201);
@@ -133,23 +140,6 @@ class TemplateController
         $templates = $this->templateService->getAll();
 
         return $response->withJson($templates, 200);
-    }
-
-    /**
-     * @param Request $request
-     * @param Response $response
-     * @param array $args
-     * @return Response
-     * @throws \Exception
-     */
-    public function generateStudyDocument(Request $request, Response $response, array $args)
-    {
-        $this->logger->debug("Generating document with template " . $args["idTemplate"] . " from " . $request->getServerParams()["REMOTE_ADDR"]);
-
-        $location = $this->studyTemplateService->generateStudyDocument($args["idTemplate"], $args["idStudy"], $request->getAttribute("userId"));
-        $filename = pathinfo($location, PATHINFO_BASENAME);
-
-        return $response->withJson(array('location' => $this->kerosConfig['BACKEND_URL'] . "/generated/" . $filename), 200);
     }
 
 

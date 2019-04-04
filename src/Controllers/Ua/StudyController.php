@@ -8,10 +8,11 @@ use Keros\Error\KerosException;
 use Keros\Services\Core\MemberService;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Ua\Study;
-use Keros\Services\Core\TemplateService;
+
 use Keros\Services\Ua\FieldService;
 use Keros\Services\Ua\ProvenanceService;
 use Keros\Services\Ua\StatusService;
+use Keros\Services\Ua\StudyDocumentTypeService;
 use Keros\Services\Ua\StudyService;
 use Keros\Tools\ConfigLoader;
 use Keros\Tools\Validator;
@@ -57,9 +58,9 @@ class StudyController
     private $memberService;
 
     /**
-     * @var TemplateService
+     * @var StudyDocumentTypeService
      */
-    private $templateService;
+    private $studyDocumentTypeService;
 
     /**
      * @var
@@ -75,7 +76,7 @@ class StudyController
         $this->fieldService = $container->get(FieldService::class);
         $this->statusService = $container->get(StatusService::class);
         $this->memberService = $container->get(MemberService::class);
-        $this->templateService = $container->get(TemplateService::class);
+        $this->studyDocumentTypeService = $container->get(StudyDocumentTypeService::class);
         $this->kerosConfig = ConfigLoader::getConfig();
     }
 
@@ -232,12 +233,12 @@ class StudyController
             throw new KerosException("Invalid consultant in study", 400);
 
         $templates = array();
-        foreach ($this->templateService->getAll() as $template) {
-            $templates[] = array('id' => $template->getId(),
-                'name' => $template->getName(),
-                'generateLocation' => $this->kerosConfig["BACK_URL"] . "/api/v1/ua/study/" . $args["id"] . "/template/" . $template->getId(),
-                'uploadLocation' => $this->kerosConfig["BACK_URL"] . "/api/v1/ua/study/" . $args["id"] . "/document/" . $template->getId(),
-                'downloadLocation' => $this->kerosConfig["BACK_URL"] . "/api/v1/ua/study/" . $args["id"] . "/document/" . $template->getId());
+        foreach ($this->studyDocumentTypeService->getAll() as $studyDocumentType) {
+            $templates[] = array('id' => $studyDocumentType->getId(),
+                'name' => pathinfo($studyDocumentType->getLocation(), PATHINFO_BASENAME),
+                'generateLocation' => $this->kerosConfig["BACK_URL"] . "/api/v1/ua/study/" . $args["id"] . "/template/" . $studyDocumentType->getId(),
+                'uploadLocation' => $this->kerosConfig["BACK_URL"] . "/api/v1/ua/study/" . $args["id"] . "/document/" . $studyDocumentType->getId(),
+                'downloadLocation' => $this->kerosConfig["BACK_URL"] . "/api/v1/ua/study/" . $args["id"] . "/document/" . $studyDocumentType->getId());
         }
 
         return $response->withJson(array('documents' => $templates), 200);

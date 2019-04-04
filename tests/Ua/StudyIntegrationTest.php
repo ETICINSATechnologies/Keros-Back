@@ -54,7 +54,7 @@ class StudyIntegrationTest extends AppTestCase
         $body = json_decode($response->getBody());
         $this->assertEquals(3, count($body->documents));
         $this->assertSame(1, $body->documents[0]->id);
-        $this->assertSame('testGet', $body->documents[0]->name);
+        $this->assertSame('document.docx', $body->documents[0]->name);
         $this->assertSame($kerosConfig['BACK_URL'] . '/api/v1/ua/study/2/template/1', $body->documents[0]->generateLocation);
         $this->assertSame($kerosConfig['BACK_URL'] . '/api/v1/ua/study/2/document/1', $body->documents[0]->uploadLocation);
         $this->assertSame($kerosConfig['BACK_URL'] . '/api/v1/ua/study/2/document/1', $body->documents[0]->downloadLocation);

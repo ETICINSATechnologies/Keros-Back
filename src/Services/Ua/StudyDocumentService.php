@@ -3,10 +3,9 @@
 namespace Keros\Services\Ua;
 
 use Keros\DataServices\Ua\StudyDocumentDataService;
-
 use Keros\Entities\Ua\StudyDocument;
 use Keros\Error\KerosException;
-use Keros\Services\Core\TemplateService;
+use Keros\Services\Core\DocumentTypeService;
 use Keros\Tools\ConfigLoader;
 use Keros\Tools\DirectoryManager;
 use Keros\Tools\Validator;
@@ -32,9 +31,9 @@ class StudyDocumentService
     private $studyService;
 
     /**
-     * @var TemplateService
+     * @var StudyDocumentTypeService
      */
-    private $templateService;
+    private $studyDocumentTypeService;
 
     /**
      * @var ConfigLoader
@@ -54,7 +53,7 @@ class StudyDocumentService
     {
         $this->logger = $container->get(Logger::class);
         $this->documentDataService = $container->get(StudyDocumentDataService::class);
-        $this->templateService = $container->get(TemplateService::class);
+        $this->studyDocumentTypeService = $container->get(StudyDocumentTypeService::class);
         $this->studyService = $container->get(StudyService::class);
         $this->kerosConfig = ConfigLoader::getConfig();
         $this->directoryManager = $container->get(DirectoryManager::class);
@@ -68,7 +67,7 @@ class StudyDocumentService
     public function create(array $fields): StudyDocument
     {
         $studyId = Validator::requiredInt(intval($fields['studyId']));
-        $templateId = Validator::requiredInt(intval($fields['documentId']));
+        $documentTypeId = Validator::requiredInt(intval($fields['documentId']));
         if ($fields['file'] == null) {
             $msg = 'File is empty in given parameters';
             $this->logger->error($msg);
@@ -77,14 +76,13 @@ class StudyDocumentService
         $file = $fields['file'];
 
         $study = $this->studyService->getOne($studyId);
-        $template = $this->templateService->getOne($templateId);
+        $studyDocumentType = $this->studyDocumentTypeService->getOne($documentTypeId);
         $date = new \DateTime();
-        $name = pathinfo($file, PATHINFO_BASENAME);
-        $location = 'study_' . $studyId . DIRECTORY_SEPARATOR . 'template_' . $templateId . DIRECTORY_SEPARATOR;
+        $location = 'study_' . $studyId . DIRECTORY_SEPARATOR . 'document_' . $documentTypeId . DIRECTORY_SEPARATOR;
         $location = $this->directoryManager->uniqueFilename($file, false, $location);
 
         $this->directoryManager->mkdir($this->kerosConfig['STUDY_DOCUMENT_DIRECTORY'] . pathinfo($location, PATHINFO_DIRNAME));
-        $document = new StudyDocument($study, $template, $date, $name, $location);
+        $document = new StudyDocument($date, $location, $study, $studyDocumentType);
 
         $this->documentDataService->persist($document);
 
@@ -124,18 +122,18 @@ class StudyDocumentService
      * @return StudyDocument
      * @throws KerosException
      */
-    public function getLatestDocumentFromStudyTemplate(int $studyId, int $templateId): StudyDocument
+    public function getLatestDocumentFromStudyDocumentType(int $studyId, int $templateId): StudyDocument
     {
         $documents = $this->documentDataService->getAll();
 
         $latestDocument = null;
         foreach ($documents as $document) {
-            if ($document->getStudy()->getId() == $studyId && $document->getTemplate()->getId() == $templateId)
-                if ($latestDocument == null || $document->getDate() > $latestDocument->getDate())
+            if ($document->getStudy()->getId() == $studyId && $document->getStudyDocumentType()->getId() == $templateId)
+                if ($latestDocument == null || $document->getUploadDate() > $latestDocument->getUploadDate())
                     $latestDocument = $document;
         }
         if ($latestDocument == null) {
-            $msg = "No file found for study " . $studyId . " and template " . $templateId;
+            $msg = "No file found for study " . $studyId . " and document " . $templateId;
             $this->logger->error($msg);
             throw new KerosException($msg, 400);
         }

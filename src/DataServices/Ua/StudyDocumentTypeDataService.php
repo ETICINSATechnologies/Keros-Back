@@ -1,61 +1,74 @@
 <?php
 
-namespace Keros\DataServices\Core;
+namespace Keros\DataServices\Ua;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use Keros\Entities\Core\Template;
+use Keros\Entities\Ua\StudyDocumentType;
 use Keros\Error\KerosException;
 use Keros\Tools\ConfigLoader;
+use Keros\Tools\DocumentGenerator;
 use Monolog\Logger;
 use PHPUnit\Runner\Exception;
 use Psr\Container\ContainerInterface;
 
-class TemplateDataService
+class StudyDocumentTypeDataService
 {
 
     /**
      * @var EntityManager
      */
-    private $entityManager;
+    protected $entityManager;
     /**
      * @var Logger
      */
-    private $logger;
+    protected $logger;
     /**
      * @var EntityRepository
      */
-    private $repository;
+    protected $repository;
 
     /**
      * @var string
      */
-    private $temporaryDirectory;
+    protected $temporaryDirectory;
 
     /**
      * @var
      */
-    private $kerosConfig;
+    protected $kerosConfig;
 
     /**
-     * TemplateDataService constructor.
+     * @var DocumentGenerator
+     */
+    protected $documentGenerator;
+
+    /**
+     * @var string
+     */
+    private $studyDocumentTypeDirectory;
+
+    /**
+     * StudyDocumentTypeDataService constructor.
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get(Logger::class);
         $this->entityManager = $container->get(EntityManager::class);
-        $this->repository = $this->entityManager->getRepository(Template::class);
+        $this->repository = $this->entityManager->getRepository(StudyDocumentType::class);
         $this->kerosConfig = ConfigLoader::getConfig();
         $this->temporaryDirectory = $this->kerosConfig['TEMPORARY_DIRECTORY'];
+        $this->documentGenerator = $container->get(DocumentGenerator::class);
+        $this->studyDocumentTypeDirectory = $this->kerosConfig['TEMPLATE_DIRECTORY'];
     }
 
     /**
      * @param int $id
-     * @return Template|null
+     * @return StudyDocumentType|null
      * @throws KerosException
      */
-    public function getOne(int $id): ?Template
+    public function getOne(int $id): ?StudyDocumentType
     {
         try {
             $template = $this->repository->find($id);
@@ -85,12 +98,12 @@ class TemplateDataService
 
 
     /**
-     * @param Template $template
+     * @param StudyDocumentType $template
      * @throws KerosException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function persist(Template $template)
+    public function persist(StudyDocumentType $template)
     {
         try {
             $this->entityManager->persist($template);
@@ -103,12 +116,12 @@ class TemplateDataService
     }
 
     /**
-     * @param Template $template
+     * @param StudyDocumentType $template
      * @throws KerosException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function delete(Template $template)
+    public function delete(StudyDocumentType $template)
     {
         try {
             $this->entityManager->remove($template);
@@ -122,17 +135,19 @@ class TemplateDataService
 
 
     /**
-     * @param Template $template
+     * @param StudyDocumentType $template
      * @param array $searchArray
      * @param array[] $replacementArrays Array of all replacement array
      * @return string
      * @throws KerosException
      */
-    public function generateMultipleDocument(Template $template, array $searchArray, array $replacementArrays)
+    public function generateMultipleDocument(StudyDocumentType $template, array $searchArray, array $replacementArrays)
     {
+        $documentTypeLocation = $this->studyDocumentTypeDirectory . $template->getLocation();
+
         //generate file name until it doesn't not actually exist
         do {
-            $zipLocation = $this->temporaryDirectory . md5($template->getName() . microtime()) . '.zip';
+            $zipLocation = $this->temporaryDirectory . md5(pathinfo($documentTypeLocation, PATHINFO_BASENAME) . microtime()) . '.zip';
         } while (file_exists($zipLocation));
         $zip = new \ZipArchive();
         if ($zip->open($zipLocation, \ZipArchive::CREATE) !== TRUE) {
@@ -147,18 +162,18 @@ class TemplateDataService
             $cpt++;
             //TODO use identifiant
             //$filename = $this->temporaryDirectory . pathinfo($template->getName(), PATHINFO_FILENAME) . '_' . $consultant->getId() . '.' . pathinfo($template->getLocation(), PATHINFO_EXTENSION);
-            $filename = $this->temporaryDirectory . pathinfo($template->getName(), PATHINFO_FILENAME) . '_' . $cpt . '.' . pathinfo($template->getLocation(), PATHINFO_EXTENSION);
+            $filename = $this->temporaryDirectory . pathinfo($documentTypeLocation, PATHINFO_FILENAME) . '_' . $cpt . '.' . pathinfo($documentTypeLocation, PATHINFO_EXTENSION);
             $files[] = $filename;
             //copy template
-            copy($template->getLocation(), $filename);
+            copy($documentTypeLocation, $filename);
 
             //open document and replace pattern
-            switch (pathinfo($template->getLocation(), PATHINFO_EXTENSION)) {
+            switch (pathinfo($documentTypeLocation, PATHINFO_EXTENSION)) {
                 case 'docx':
-                    $return = $this->generateDocx($filename, $searchArray, $replacementArray);
+                    $return = $this->documentGenerator->generateDocx($filename, $searchArray, $replacementArray);
                     break;
                 case 'pptx':
-                    $return = $this->generatePptx($filename, $searchArray, $replacementArray);
+                    $return = $this->documentGenerator->generatePptx($filename, $searchArray, $replacementArray);
                     break;
                 default :
                     $return = false;
@@ -170,7 +185,7 @@ class TemplateDataService
                 throw new KerosException($msg, 500);
             }
             //move file with replaced pattern in zip archive
-            $zip->addFile($filename, pathinfo($template->getName(), PATHINFO_FILENAME) . DIRECTORY_SEPARATOR . pathinfo($filename, PATHINFO_BASENAME));
+            $zip->addFile($filename, pathinfo($documentTypeLocation, PATHINFO_FILENAME) . DIRECTORY_SEPARATOR . pathinfo($filename, PATHINFO_BASENAME));
         }
         $zip->close();
         //delete every temporary file
@@ -182,26 +197,27 @@ class TemplateDataService
     }
 
     /**
-     * @param Template $template
+     * @param StudyDocumentType $template
      * @param array $searchArray
      * @param array $replacementArray
      * @return string
      * @throws KerosException
      */
-    public function generateSimpleDocument(Template $template, array $searchArray, array $replacementArray)
+    public function generateSimpleDocument(StudyDocumentType $template, array $searchArray, array $replacementArray)
     {
+        $documentTypeLocation = $this->studyDocumentTypeDirectory . DIRECTORY_SEPARATOR . $template->getLocation();
         do {
-            $location = $this->temporaryDirectory . md5($template->getName() . microtime()) . '.' . pathinfo($template->getLocation(), PATHINFO_EXTENSION);
+            $location = $this->temporaryDirectory . md5(pathinfo($documentTypeLocation, PATHINFO_BASENAME) . microtime()) . '.' . pathinfo($documentTypeLocation, PATHINFO_EXTENSION);
         } while (file_exists($location));
 
-        copy($template->getLocation(), $location);
+        copy($documentTypeLocation, $location);
 
-        switch (pathinfo($template->getLocation(), PATHINFO_EXTENSION)) {
+        switch (pathinfo($documentTypeLocation, PATHINFO_EXTENSION)) {
             case 'docx':
-                $return = $this->generateDocx($location, $searchArray, $replacementArray);
+                $return = $this->documentGenerator->generateDocx($location, $searchArray, $replacementArray);
                 break;
             case 'pptx':
-                $return = $this->generatePptx($location, $searchArray, $replacementArray);
+                $return = $this->documentGenerator->generatePptx($location, $searchArray, $replacementArray);
                 break;
             default :
                 $return = false;
@@ -213,63 +229,6 @@ class TemplateDataService
             throw new KerosException($msg, 500);
         }
         return $location;
-    }
-
-    /**
-     * @param $location
-     * @param $searchArray
-     * @param $replacementArray
-     * @return bool
-     */
-    private function generateDocx($location, $searchArray, $replacementArray): bool
-    {
-        //docx are zip
-        $zip = new \ZipArchive();
-        $fileToModify = 'word/document.xml';
-
-        if ($zip->open($location) === TRUE) {
-            $oldContents = $zip->getFromName($fileToModify);
-            //replace pattern
-            $newContents = str_replace($searchArray, $replacementArray, $oldContents);
-
-            $zip->deleteName($fileToModify);
-            $zip->addFromString($fileToModify, $newContents);
-            $return = $zip->close();
-            return $return;
-        } else {
-            return false;
-        }
-    }
-
-
-
-    /**
-     * @param $location
-     * @param $searchArray
-     * @param $replacementArray
-     * @return bool
-     */
-    private function generatePptx($location, $searchArray, $replacementArray): bool
-    {
-        //pptx are zip. Same things like docx, just multiple xml to parse
-        $zip = new \ZipArchive();
-
-        if (true === $zip->open($location)) {
-            $slide_number = 1;
-            while (($zip->locateName("ppt/slides/slide" . $slide_number . ".xml")) !== false) {
-                $fileToModify = "ppt/slides/slide" . $slide_number . ".xml";
-                $oldContents = $zip->getFromName("ppt/slides/slide" . $slide_number . ".xml");
-
-                $newContents = str_replace($searchArray, $replacementArray, $oldContents);
-
-                $zip->deleteName($fileToModify);
-                $zip->addFromString($fileToModify, $newContents);
-
-                $slide_number++;
-            }
-            return $zip->close();
-        }
-        return false;
     }
 
 }

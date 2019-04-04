@@ -3,16 +3,21 @@
 namespace Keros\Services\Ua;
 
 
+use Keros\DataServices\Ua\StudyDocumentTypeDataService;
+use Keros\Entities\Ua\StudyDocumentType;
 use Keros\Error\KerosException;
 use Keros\Services\Core\MemberService;
-use Keros\Services\Core\TemplateService;
+use Keros\Tools\ConfigLoader;
+use Keros\Tools\DirectoryManager;
 use Keros\Tools\GenderBuilder;
+use Keros\Tools\Validator;
+use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Keros\Entities\Ua\Study;
 use Keros\Entities\Core\Member;
 
 
-class StudyTemplateService extends TemplateService
+class StudyDocumentTypeService
 {
 
     /**
@@ -30,12 +35,107 @@ class StudyTemplateService extends TemplateService
      */
     private $memberService;
 
+    /**
+     * @var
+     */
+    private $kerosConfig;
+
+    /**
+     * @var Logger
+     */
+    protected $logger;
+
+    /**
+     * @var string
+     */
+    private $templateDirectory;
+
+    /**
+     * @var string
+     */
+    private $temporaryDirectory;
+
+    /**
+     * @var StudyDocumentTypeDataService
+     */
+    protected $studyDocumentTypeDataService;
+
+    /**
+     * @var DirectoryManager
+     */
+    protected $directoryManager;
+
     public function __construct(ContainerInterface $container)
     {
-        parent::__construct($container);
         $this->studyService = $container->get(StudyService::class);
         $this->memberService = $container->get(MemberService::class);
         $this->genderBuilder = $container->get(GenderBuilder::class);
+        $this->logger = $container->get(Logger::class);
+        $this->kerosConfig = ConfigLoader::getConfig();
+        $this->temporaryDirectory = $this->kerosConfig['TEMPORARY_DIRECTORY'];
+        $this->templateDirectory = $this->kerosConfig['TEMPLATE_DIRECTORY'];
+        $this->studyDocumentTypeDataService = $container->get(StudyDocumentTypeDataService::class);
+        $this->directoryManager = $container->get(DirectoryManager::class);
+    }
+
+
+    /**
+     * @param array $fields
+     * @return StudyDocumentType
+     * @throws KerosException
+     * @throws \Exception
+     */
+    public function create(array $fields): StudyDocumentType
+    {
+        $oneConsultant = Validator::requiredBool(boolval($fields["oneConsultant"]));
+        $isTemplatable = Validator::requiredBool(boolval($fields["isTemplatable"]));
+        $extension = Validator::requiredString($fields["extension"]);
+
+        $date = new \DateTime();
+        $location = $date->format('d-m-Y_H:i:s:u') . '.' . $extension;
+        $template = new StudyDocumentType($location, $isTemplatable, $oneConsultant);
+
+        $this->studyDocumentTypeDataService->persist($template);
+
+        return $template;
+    }
+
+    /**
+     * @param int $id
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Keros\Error\KerosException
+     */
+    public function delete(int $id): void
+    {
+        $id = Validator::requiredId($id);
+        $template = $this->getOne($id);
+        $this->studyDocumentTypeDataService->delete($template);
+    }
+
+    /**
+     * @param int $id
+     * @return StudyDocumentType
+     * @throws \Keros\Error\KerosException
+     */
+    public function getOne(int $id): StudyDocumentType
+    {
+        $id = Validator::requiredId($id);
+
+        $template = $this->studyDocumentTypeDataService->getOne($id);
+        if (!$template) {
+            throw new KerosException("The studyDocumentType could not be found", 404);
+        }
+        return $template;
+    }
+
+    /**
+     * @return StudyDocumentType[]
+     * @throws KerosException
+     */
+    public function getAll(): array
+    {
+        return $this->studyDocumentTypeDataService->getAll();
     }
 
     /**
@@ -63,6 +163,7 @@ class StudyTemplateService extends TemplateService
             throw new KerosException($msg, 400);
         }
 
+        $this->directoryManager->mkdir($this->kerosConfig["TEMPORARY_DIRECTORY"]);
         //Zip are done if one document per consultant is needed
         $doZip = $template->getOneConsultant() == 1;
         $searchArray = $this->getStudySearchArray();
@@ -71,11 +172,10 @@ class StudyTemplateService extends TemplateService
             $replacementArrays = array();
             foreach ($study->getConsultantsArray() as $consultant)
                 $replacementArrays[] = $this->getStudyReplacementArray($study, $connectedUser, array($consultant));
-            $location = $this->templateDataService->generateMultipleDocument($template, $searchArray, $replacementArrays);
+            $location = $this->studyDocumentTypeDataService->generateMultipleDocument($template, $searchArray, $replacementArrays);
         } else {
             $replacementArray = $this->getStudyReplacementArray($study, $connectedUser, $study->getConsultantsArray());
-            $this->logger->info(json_encode($replacementArray));
-            $location = $this->templateDataService->generateSimpleDocument($template, $searchArray, $replacementArray);
+            $location = $this->studyDocumentTypeDataService->generateSimpleDocument($template, $searchArray, $replacementArray);
         }
         return $location;
     }
@@ -174,7 +274,7 @@ class StudyTemplateService extends TemplateService
             ($study->getFirm()->getSiret() != null) ? $study->getFirm()->getSiret() : '${SIRETENTREPRISE}',
             ($study->getDescription() != null) ? $study->getDescription() : '${DESCRIPTIONETUDE}',
             ($study->getSignDate() != null) ? $study->getSignDate()->format('d/m/Y') : '${DATESIGCV}',
-            ($contact->getPosition() != null) ? $contact->getPosition() != null : '${FCTCONTACT}',
+            ($contact->getPosition() != null) ? $contact->getPosition() : '${FCTCONTACT}',
             $this->genderBuilder->getStringGender($contact->getGender()),
             $contact->getFirstName(),
             $contact->getLastName(),

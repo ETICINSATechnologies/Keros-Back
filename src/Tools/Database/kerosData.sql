@@ -76,15 +76,20 @@ INSERT INTO `ua_study_contact` (`contactId`, `studyId`) VALUES
   (1, 2),
   (2, 2);
 
-TRUNCATE TABLE core_template;
-INSERT INTO `core_template` (`id`, `name`, `location`, `typeId`, `oneConsultant`) VALUES
-  (1, 'testGet', 'null part', 1, 0),
-  (2, 'test', 'qlq part', 1, 0),
-  (3, 'one consutant template', 'pas ici', 1, 1);
+TRUNCATE TABLE ua_study_document_type;
+INSERT INTO ua_study_document_type(id, `location`, istemplatable, oneConsultant) VALUES
+  (1, 'document.docx', 1, 0),
+  (2, 'acompte.docx', 1, 1),
+  (3, 'undoc.docx', 0, 0);
+
+TRUNCATE TABLE core_document;
+INSERT INTO core_document(id, uploadDate, location, discr) VALUES
+  (1, STR_TO_DATE('2019/2/14 10:40:10', '%Y/%m/%d %h:%i:%s'), 'study_1/document_2/acompte.docx', 'ua_study_document'),
+  (2, STR_TO_DATE('2018/12/16 10:40:10', '%Y/%m/%d %h:%i:%s'), 'study_1/document_3/FE.docx', 'ua_study_document');
 
 TRUNCATE TABLE ua_study_document;
-INSERT INTO `ua_study_document`(`id`, `studyId`, `templateId`, `date`, `name`, `location`) VALUES
-  (1, 1, 2, STR_TO_DATE('2019/2/14 10:40:10', '%Y/%m/%d %h:%i:%s'), 'test.php', 'study_1/template_2/test.php'),
-  (2, 1, 2, STR_TO_DATE('2018/2/14 10:40:10', '%Y/%m/%d %h:%i:%s'), 'vieuxtest.php', 'study_1/template_2/location_ici.php');
+INSERT INTO `ua_study_document`(id, studyId, studyDocumentTypeId) VALUES
+  (1, 1, 2),
+  (2, 1, 3);
 
 COMMIT;

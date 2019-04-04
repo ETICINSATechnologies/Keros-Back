@@ -10,6 +10,7 @@ use Keros\Tools\Database\EntityManagerBuilder;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 
+
 class ToolRegistrar
 {
     public static function register(ContainerInterface $container)
@@ -37,6 +38,9 @@ class ToolRegistrar
         };
         $container[DirectoryManager::class] = function (){
             return new DirectoryManager();
+        };
+        $container[DocumentGenerator::class] = function ($container){
+            return new DocumentGenerator($container);
         };
     }
 }
