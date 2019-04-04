@@ -221,6 +221,7 @@ CREATE TABLE `ua_study` (
   `archivedDate` date,
   `firmId`      int(11)      NOT NULL,
   `confidential` boolean,
+  `mainLeader` int(11),
   PRIMARY KEY (`id`),
   CONSTRAINT `ua_study_fieldId_fk` FOREIGN KEY (`fieldId`) REFERENCES `ua_field` (`id`),
   CONSTRAINT `ua_study_provenanceId_fk` FOREIGN KEY (`provenanceId`) REFERENCES `ua_provenance` (`id`),

@@ -4,6 +4,8 @@ namespace Keros\Entities\Ua;
 
 use JsonSerializable;
 use Keros\Entities\Core\Member;
+use Keros\Tools\Validator;
+use Keros\Error\KerosException;
 
 /**
  * @Entity
@@ -90,6 +92,10 @@ class Study implements JsonSerializable
      */
     protected $leaders;
 
+    //The main leader's member ID
+    /** @Column(type="integer")*/
+    protected $mainLeader;
+
     /**
      * @ManyToMany(targetEntity="Keros\Entities\Core\Member", inversedBy="studiesAsQualityManager")
      * @JoinTable(name="ua_study_qualityManager",
@@ -159,6 +165,7 @@ class Study implements JsonSerializable
             'firm' => $this->getFirm(),
             'contacts' => $this->getContactsArray(),
             'leaders' => $this->getLeadersArray(),
+            'mainLeader' => $this->getMainLeader(),
             'consultants' => $this->getConsultantsArray(),
             'qualityManagers' => $this->getQualityManagersArray(),
             'confidential' => $this->getConfidential()
@@ -486,13 +493,25 @@ class Study implements JsonSerializable
      */
     public function getLeadersArray()
     {
-        $leaders = [];
-        foreach ($this->getLeaders() as $leader)
+        $leadersArray = [];
+        $leadersIDArray =[];
+        $leaders = $this->getLeaders();
+
+        foreach ($leaders as $leader)
         {
-            $leaders[] = $leader;
+            $leadersArray[] = $leader;
+            $leadersIDArray[] = $leader->getId();
         }
 
-        return $leaders;
+        //Putting the main leader at the top of the array
+        if (isset($this->mainLeader) && sizeof($leadersArray) >1){
+            $tmpKey = array_search($this->mainLeader, $leadersIDArray);
+            $tmpValue = $leadersArray[0];
+            $leadersArray[0] = $leadersArray[$tmpKey];
+            $leadersArray[$tmpKey] = $tmpValue;
+        }
+
+        return $leadersArray;
     }
 
     /**
@@ -578,4 +597,24 @@ class Study implements JsonSerializable
     {
         $this->confidential = $confidential;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getMainLeader() : int
+    {
+        return $this->mainLeader;
+    }
+
+    /**
+     * @param $mainLeader
+     * @throws \Keros\Error\KerosException
+     */
+    public function setMainLeader($mainLeader): void
+    {
+        Validator::requiredInt($mainLeader);
+        $this->mainLeader = $mainLeader;
+    }
+
+
 }
