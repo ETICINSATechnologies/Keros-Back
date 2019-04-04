@@ -12,7 +12,6 @@ class StudyIntegrationTest extends AppTestCase
 {
 
     public function testGetStudyWithMainLeaderManagerConsultant()
-
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',

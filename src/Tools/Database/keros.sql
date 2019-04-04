@@ -249,6 +249,7 @@ CREATE TABLE `ua_study` (
   `mainLeader` int(11),
   `mainQualityManager` int(11),
   `mainConsultant` int(11),
+
   PRIMARY KEY (`id`),
   CONSTRAINT `ua_study_fieldId_fk` FOREIGN KEY (`fieldId`) REFERENCES `ua_field` (`id`),
   CONSTRAINT `ua_study_provenanceId_fk` FOREIGN KEY (`provenanceId`) REFERENCES `ua_provenance` (`id`),

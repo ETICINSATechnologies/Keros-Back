@@ -61,6 +61,7 @@ INSERT INTO `ua_study` (`id`, `name`, `description`, `fieldId`, `provenanceId`, 
   (1, 'Développement IDE', 'Développement d''un IDE pour utilisation interne', 1, 1, 2, '2018-11-10', '2018-11-10', 12000000, 123, 12345, 12, 12324454, '2018-11-10', 1, null, null, null),
   (2, 'Tests d''acidité dans le Rhône', 'Créateur de IDE', 1, 1, 2, '2018-11-10', '2018-11-10', 12000000, 123, 12345, 12, 12324454, '2018-11-10', 2, 3, 2, 2);
 
+
 TRUNCATE TABLE ua_study_consultant;
 INSERT INTO `ua_study_consultant` (`consultantId`, `studyId`) VALUES
   (2, 2),

@@ -530,7 +530,7 @@ class Study implements JsonSerializable
         }
 
         //Putting the main leader at the top of the array
-        if (isset($this->mainLeader) && sizeof($leadersArray) >1){
+        if (isset($this->mainLeader) && sizeof($leadersIDArray) >1){
             $tmpKey = array_search($this->mainLeader, $leadersIDArray);
             $tmpValue = $leadersArray[0];
             $leadersArray[0] = $leadersArray[$tmpKey];
@@ -676,6 +676,9 @@ class Study implements JsonSerializable
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> main quality manager + test done
     /**
      * @return mixed
      */
@@ -694,6 +697,7 @@ class Study implements JsonSerializable
         $this->mainQualityManager = $mainQualityManager;
     }
 
+<<<<<<< HEAD
     /**
      * @return mixed
      */
@@ -713,5 +717,7 @@ class Study implements JsonSerializable
     }
 =======
 >>>>>>> main leader of a study done
+=======
+>>>>>>> main quality manager + test done
 
 }
