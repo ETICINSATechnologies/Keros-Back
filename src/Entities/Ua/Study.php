@@ -653,10 +653,14 @@ class Study implements JsonSerializable
      * @return mixed
      */
 <<<<<<< HEAD
+<<<<<<< HEAD
     public function getMainLeader()
 =======
     public function getMainLeader() : int
 >>>>>>> main leader of a study done
+=======
+    public function getMainLeader()
+>>>>>>> test main leader of a study done
     {
         return $this->mainLeader;
     }

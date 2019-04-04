@@ -12,6 +12,7 @@ class StudyIntegrationTest extends AppTestCase
 {
 
     public function testGetStudyWithMainLeaderManagerConsultant()
+
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
@@ -48,6 +49,7 @@ class StudyIntegrationTest extends AppTestCase
         $this->assertEquals("2", $body->mainConsultant);
         $this->assertEquals("2", $body->consultants[0]->id);
         $this->assertEquals("1", $body->consultants[1]->id);
+
     }
 
     public function testGetCurrentUserStudiesShouldReturn200()
