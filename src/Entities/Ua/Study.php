@@ -4,7 +4,10 @@ namespace Keros\Entities\Ua;
 
 use JsonSerializable;
 use Keros\Entities\Core\Member;
+<<<<<<< HEAD
 use Keros\Entities\Core\Consultant;
+=======
+>>>>>>> main leader of a study done
 use Keros\Tools\Validator;
 use Keros\Error\KerosException;
 
@@ -512,6 +515,7 @@ class Study implements JsonSerializable
         {
             $leadersArray[] = $leader;
             $leadersIDArray[] = $leader->getId();
+<<<<<<< HEAD
         }
 
         //Putting the main leader at the top of the array
@@ -522,6 +526,18 @@ class Study implements JsonSerializable
             $leadersArray[$tmpKey] = $tmpValue;
         }
 
+=======
+        }
+
+        //Putting the main leader at the top of the array
+        if (isset($this->mainLeader) && sizeof($leadersArray) >1){
+            $tmpKey = array_search($this->mainLeader, $leadersIDArray);
+            $tmpValue = $leadersArray[0];
+            $leadersArray[0] = $leadersArray[$tmpKey];
+            $leadersArray[$tmpKey] = $tmpValue;
+        }
+
+>>>>>>> main leader of a study done
         return $leadersArray;
     }
 
@@ -636,7 +652,11 @@ class Study implements JsonSerializable
     /**
      * @return mixed
      */
+<<<<<<< HEAD
     public function getMainLeader()
+=======
+    public function getMainLeader() : int
+>>>>>>> main leader of a study done
     {
         return $this->mainLeader;
     }
@@ -651,6 +671,7 @@ class Study implements JsonSerializable
         $this->mainLeader = $mainLeader;
     }
 
+<<<<<<< HEAD
     /**
      * @return mixed
      */
@@ -686,5 +707,7 @@ class Study implements JsonSerializable
         Validator::requiredInt($mainConsultant);
         $this->mainConsultant = $mainConsultant;
     }
+=======
+>>>>>>> main leader of a study done
 
 }
