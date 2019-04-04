@@ -612,6 +612,7 @@ class Study implements JsonSerializable
         {
             $consultantsArray[] = $consultant;
             $consultantsIDArray[] = $consultant->getId();
+<<<<<<< HEAD
         }
 
         //Putting the main consultant at the top of the array
@@ -622,6 +623,18 @@ class Study implements JsonSerializable
             $consultantsArray[$tmpKey] = $tmpValue;
         }
 
+=======
+        }
+
+        //Putting the main consultant at the top of the array
+        if (isset($this->mainConsultant) && sizeof($consultantsIDArray) >1){
+            $tmpKey = array_search($this->mainConsultant, $consultantsIDArray);
+            $tmpValue = $consultantsArray[0];
+            $consultantsArray[0] = $consultantsArray[$tmpKey];
+            $consultantsArray[$tmpKey] = $tmpValue;
+        }
+
+>>>>>>> main consultant + test done
         return $consultantsArray;
     }
 
@@ -698,6 +711,9 @@ class Study implements JsonSerializable
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> main consultant + test done
     /**
      * @return mixed
      */
@@ -715,9 +731,12 @@ class Study implements JsonSerializable
         Validator::requiredInt($mainConsultant);
         $this->mainConsultant = $mainConsultant;
     }
+<<<<<<< HEAD
 =======
 >>>>>>> main leader of a study done
 =======
 >>>>>>> main quality manager + test done
+=======
+>>>>>>> main consultant + test done
 
 }
