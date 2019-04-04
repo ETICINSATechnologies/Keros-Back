@@ -54,9 +54,9 @@ INSERT INTO `ua_contact` (`id`, `firstName`, `lastName`, `genderId`, `firmId`, `
   (4, 'Marah', 'Galy Adam', 1, 1, 'marah.galy@etic-insa.com', '0033646786532', NULL, NULL, NULL, 0);
 
 TRUNCATE TABLE ua_study;
-INSERT INTO `ua_study` (`id`, `name`, `description`, `fieldId`, `provenanceId`, `statusId`, `signDate`, `endDate`, `managementFee`, `realizationFee`, `rebilledFee`, `ecoparticipationFee`, `outsourcingFee`, `archivedDate`, `firmId`,`mainLeader`) VALUES
-  (1, 'Développement IDE', 'Développement d''un IDE pour utilisation interne', 1, 1, 2, '2018-11-10', '2018-11-10', 12000000, 123, 12345, 12, 12324454, '2018-11-10', 1, null),
-  (2, 'Tests d''acidité dans le Rhône', 'Créateur de IDE', 1, 1, 2, '2018-11-10', '2018-11-10', 12000000, 123, 12345, 12, 12324454, '2018-11-10', 2, 3);
+INSERT INTO `ua_study` (`id`, `name`, `description`, `fieldId`, `provenanceId`, `statusId`, `signDate`, `endDate`, `managementFee`, `realizationFee`, `rebilledFee`, `ecoparticipationFee`, `outsourcingFee`, `archivedDate`, `firmId`,`mainLeader`, `mainQualityManager`) VALUES
+  (1, 'Développement IDE', 'Développement d''un IDE pour utilisation interne', 1, 1, 2, '2018-11-10', '2018-11-10', 12000000, 123, 12345, 12, 12324454, '2018-11-10', 1, null, null),
+  (2, 'Tests d''acidité dans le Rhône', 'Créateur de IDE', 1, 1, 2, '2018-11-10', '2018-11-10', 12000000, 123, 12345, 12, 12324454, '2018-11-10', 2, 3, 2);
 
 TRUNCATE TABLE ua_study_consultant;
 INSERT INTO `ua_study_consultant` (`memberId`, `studyId`) VALUES
@@ -70,7 +70,8 @@ INSERT INTO `ua_study_leader` (`memberId`, `studyId`) VALUES
 
 TRUNCATE TABLE ua_study_qualityManager;
 INSERT INTO `ua_study_qualityManager` (`memberId`, `studyId`) VALUES
-  (2, 2);
+  (2, 2),
+  (1, 2);
 
 TRUNCATE TABLE ua_study_contact;
 INSERT INTO `ua_study_contact` (`contactId`, `studyId`) VALUES

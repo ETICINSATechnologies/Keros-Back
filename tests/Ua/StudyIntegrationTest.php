@@ -11,7 +11,7 @@ use Slim\Http\Request;
 class StudyIntegrationTest extends AppTestCase
 {
 
-    public function testGetStudyWithMainLeader()
+    public function testGetStudyWithMainLeaderManagerConsultant()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
@@ -24,7 +24,6 @@ class StudyIntegrationTest extends AppTestCase
 
         $this->assertSame(200, $response->getStatusCode());
         $body = json_decode($response->getBody());
-
 
         $this->assertEquals("2", $body->id);
         $this->assertEquals("Tests d'acidité dans le Rhône", $body->name);
@@ -40,6 +39,9 @@ class StudyIntegrationTest extends AppTestCase
         $this->assertEquals("3", $body->mainLeader);
         $this->assertEquals("3", $body->leaders[0]->id);
         $this->assertEquals("2", $body->leaders[1]->id);
+        $this->assertEquals("2", $body->mainQualityManager);
+        $this->assertEquals("2", $body->qualityManagers[0]->id);
+        $this->assertEquals("1", $body->qualityManagers[1]->id);
     }
 
     public function testGetCurrentUserStudiesShouldReturn200()

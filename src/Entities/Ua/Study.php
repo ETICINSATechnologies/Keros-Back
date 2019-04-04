@@ -105,6 +105,10 @@ class Study implements JsonSerializable
      */
     protected $qualityManagers;
 
+    //The main quality manager's member ID
+    /** @Column(type="integer")*/
+    protected $mainQualityManager;
+
     /**
      * @ManyToMany(targetEntity="Keros\Entities\Core\Member", inversedBy="studiesAsConsultant")
      * @JoinTable(name="ua_study_consultant",
@@ -168,6 +172,7 @@ class Study implements JsonSerializable
             'mainLeader' => $this->getMainLeader(),
             'consultants' => $this->getConsultantsArray(),
             'qualityManagers' => $this->getQualityManagersArray(),
+            'mainQualityManager' => $this->getMainQualityManager(),
             'confidential' => $this->getConfidential()
         ];
     }
@@ -504,7 +509,7 @@ class Study implements JsonSerializable
         }
 
         //Putting the main leader at the top of the array
-        if (isset($this->mainLeader) && sizeof($leadersArray) >1){
+        if (isset($this->mainLeader) && sizeof($leadersIDArray) >1){
             $tmpKey = array_search($this->mainLeader, $leadersIDArray);
             $tmpValue = $leadersArray[0];
             $leadersArray[0] = $leadersArray[$tmpKey];
@@ -535,13 +540,25 @@ class Study implements JsonSerializable
      */
     public function getQualityManagersArray()
     {
-        $qualityManagers = [];
-        foreach ($this->getQualityManagers() as $qualityManager)
+        $qualityManagersArray = [];
+        $qualityManagersIDArray =[];
+        $qualityManagers = $this->getQualityManagers();
+
+        foreach ($qualityManagers as $qualityManager)
         {
-            $qualityManagers[] = $qualityManager;
+            $qualityManagersArray[] = $qualityManager;
+            $qualityManagersIDArray[] = $qualityManager->getId();
         }
 
-        return $qualityManagers;
+        //Putting the main quality manager at the top of the array
+        if (isset($this->mainQualityManager) && sizeof($qualityManagersIDArray) >1){
+            $tmpKey = array_search($this->mainQualityManager, $qualityManagersIDArray);
+            $tmpValue = $qualityManagersArray[0];
+            $qualityManagersArray[0] = $qualityManagersArray[$tmpKey];
+            $qualityManagersArray[$tmpKey] = $tmpValue;
+        }
+
+        return $qualityManagersArray;
     }
 
     /**
@@ -614,6 +631,24 @@ class Study implements JsonSerializable
     {
         Validator::requiredInt($mainLeader);
         $this->mainLeader = $mainLeader;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMainQualityManager()
+    {
+        return $this->mainQualityManager;
+    }
+
+    /**
+     * @param $mainQualityManager
+     * @throws KerosException
+     */
+    public function setMainQualityManager($mainQualityManager): void
+    {
+        Validator::requiredInt($mainQualityManager);
+        $this->mainQualityManager = $mainQualityManager;
     }
 
 
