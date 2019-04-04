@@ -42,9 +42,9 @@ INSERT INTO core_member_position (id, memberId, positionId, isBoard, year) VALUE
   (8, 4, 9, FALSE, 2015);
 
 TRUNCATE TABLE ua_firm;
-INSERT INTO ua_firm (id, siret, name, addressId, typeId) VALUES
-  (1, '215437645', 'Google', 4, 3),
-  (2, '471245896', 'JetBrains', 5, 1);
+INSERT INTO ua_firm (id, siret, name, addressId, typeId, mainContact) VALUES
+  (1, '215437645', 'Google', 4, 3, 4),
+  (2, '471245896', 'JetBrains', 5, 1, null);
 
 TRUNCATE TABLE ua_contact;
 INSERT INTO `ua_contact` (`id`, `firstName`, `lastName`, `genderId`, `firmId`, `email`, `telephone`, `cellphone`, `position`, `notes`, `old`) VALUES
