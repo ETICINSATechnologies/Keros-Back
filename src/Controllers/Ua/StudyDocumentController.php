@@ -105,7 +105,7 @@ class StudyDocumentController
 
         $document = $this->studyDocumentService->getLatestDocumentFromStudyDocumentType($args["studyId"], $args['documentId']);
 
-        return $response->withJson(array('location' => $this->kerosConfig['BACKEND_URL'] . DIRECTORY_SEPARATOR . $this->kerosConfig['STUDY_DOCUMENT_DIRECTORY'] . $document->getLocation()), 200);
+        return $response->withJson(array('location' => $this->kerosConfig['BACK_URL'] . DIRECTORY_SEPARATOR . $this->kerosConfig['STUDY_DOCUMENT_DIRECTORY'] . $document->getLocation()), 200);
     }
 
     /**
@@ -122,7 +122,7 @@ class StudyDocumentController
         $location = $this->studyDocumentTypeService->generateStudyDocument($args["idTemplate"], $args["idStudy"], $request->getAttribute("userId"));
         $filename = pathinfo($location, PATHINFO_BASENAME);
 
-        return $response->withJson(array('location' => $this->kerosConfig['BACKEND_URL'] . "/generated/" . $this->kerosConfig["TEMPORARY_DIRECTORY"] . $filename), 200);
+        return $response->withJson(array('location' => $this->kerosConfig['BACK_URL'] . "/generated/" . $this->kerosConfig["TEMPORARY_DIRECTORY"] . $filename), 200);
     }
 
 }
