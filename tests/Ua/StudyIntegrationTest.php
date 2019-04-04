@@ -10,6 +10,38 @@ use Slim\Http\Request;
 
 class StudyIntegrationTest extends AppTestCase
 {
+
+    public function testGetStudyWithMainLeader()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/ua/study/2',
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(200, $response->getStatusCode());
+        $body = json_decode($response->getBody());
+
+
+        $this->assertEquals("2", $body->id);
+        $this->assertEquals("Tests d'acidité dans le Rhône", $body->name);
+        $this->assertEquals("Créateur de IDE", $body->description);
+        $this->assertEquals("1", $body->field->id);
+        $this->assertEquals("Web", $body->field->label);
+        $this->assertEquals("2", $body->status->id);
+        $this->assertEquals("En clôture", $body->status->label);
+        $this->assertEquals("1", $body->provenance->id);
+        $this->assertEquals("Site Web", $body->provenance->label);
+        $this->assertEquals("2018-11-10", $body->signDate);
+        $this->assertEquals("2", $body->firm->id);
+        $this->assertEquals("3", $body->mainLeader);
+        $this->assertEquals("3", $body->leaders[0]->id);
+        $this->assertEquals("2", $body->leaders[1]->id);
+    }
+
     public function testGetCurrentUserStudiesShouldReturn200()
     {
         $env = Environment::mock([

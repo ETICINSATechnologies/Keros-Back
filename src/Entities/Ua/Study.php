@@ -601,7 +601,7 @@ class Study implements JsonSerializable
     /**
      * @return mixed
      */
-    public function getMainLeader() : int
+    public function getMainLeader()
     {
         return $this->mainLeader;
     }
