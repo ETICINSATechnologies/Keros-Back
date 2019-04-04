@@ -118,6 +118,10 @@ class Study implements JsonSerializable
      */
     protected $consultants;
 
+    //The main consultant's member ID
+    /** @Column(type="integer")*/
+    protected $mainConsultant;
+
     /** @Column(type="boolean") */
     protected $confidential;
 
@@ -171,6 +175,7 @@ class Study implements JsonSerializable
             'leaders' => $this->getLeadersArray(),
             'mainLeader' => $this->getMainLeader(),
             'consultants' => $this->getConsultantsArray(),
+            'mainConsultant' => $this->getMainConsultant(),
             'qualityManagers' => $this->getQualityManagersArray(),
             'mainQualityManager' => $this->getMainQualityManager(),
             'confidential' => $this->getConfidential()
@@ -582,13 +587,25 @@ class Study implements JsonSerializable
      */
     public function getConsultantsArray()
     {
-        $consultants = [];
-        foreach ($this->getConsultants() as $consultant)
+        $consultantsArray = [];
+        $consultantsIDArray =[];
+        $consultants = $this->getConsultants();
+
+        foreach ($consultants as $consultant)
         {
-            $consultants[] = $consultant;
+            $consultantsArray[] = $consultant;
+            $consultantsIDArray[] = $consultant->getId();
         }
 
-        return $consultants;
+        //Putting the main consultant at the top of the array
+        if (isset($this->mainConsultant) && sizeof($consultantsIDArray) >1){
+            $tmpKey = array_search($this->mainConsultant, $consultantsIDArray);
+            $tmpValue = $consultantsArray[0];
+            $consultantsArray[0] = $consultantsArray[$tmpKey];
+            $consultantsArray[$tmpKey] = $tmpValue;
+        }
+
+        return $consultantsArray;
     }
 
     /**
@@ -651,5 +668,22 @@ class Study implements JsonSerializable
         $this->mainQualityManager = $mainQualityManager;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getMainConsultant()
+    {
+        return $this->mainConsultant;
+    }
+
+    /**
+     * @param $mainConsultant
+     * @throws KerosException
+     */
+    public function setMainConsultant($mainConsultant): void
+    {
+        Validator::requiredInt($mainConsultant);
+        $this->mainConsultant = $mainConsultant;
+    }
 
 }

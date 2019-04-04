@@ -36,12 +36,18 @@ class StudyIntegrationTest extends AppTestCase
         $this->assertEquals("Site Web", $body->provenance->label);
         $this->assertEquals("2018-11-10", $body->signDate);
         $this->assertEquals("2", $body->firm->id);
+
         $this->assertEquals("3", $body->mainLeader);
         $this->assertEquals("3", $body->leaders[0]->id);
         $this->assertEquals("2", $body->leaders[1]->id);
+
         $this->assertEquals("2", $body->mainQualityManager);
         $this->assertEquals("2", $body->qualityManagers[0]->id);
         $this->assertEquals("1", $body->qualityManagers[1]->id);
+
+        $this->assertEquals("2", $body->mainConsultant);
+        $this->assertEquals("2", $body->consultants[0]->id);
+        $this->assertEquals("1", $body->consultants[1]->id);
     }
 
     public function testGetCurrentUserStudiesShouldReturn200()
