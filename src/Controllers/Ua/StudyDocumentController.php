@@ -6,6 +6,7 @@ namespace Keros\Controllers\Ua;
 use Doctrine\ORM\EntityManager;
 use Keros\Error\KerosException;
 use Keros\Services\Ua\StudyDocumentService;
+use Keros\Services\Ua\StudyDocumentTypeService;
 use Keros\Tools\ConfigLoader;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
@@ -17,7 +18,7 @@ class StudyDocumentController
     /**
      * @var StudyDocumentService
      */
-    private $documentService;
+    private $studyDocumentService;
 
     /**
      * @var Logger
@@ -35,6 +36,11 @@ class StudyDocumentController
     private $kerosConfig;
 
     /**
+     * @var StudyDocumentTypeService
+     */
+    private $studyDocumentTypeService;
+
+    /**
      * StudyDocumentController constructor.
      * @param ContainerInterface $container
      */
@@ -42,8 +48,9 @@ class StudyDocumentController
     {
         $this->logger = $container->get(Logger::class);
         $this->entityManager = $container->get(EntityManager::class);
-        $this->documentService = $container->get(StudyDocumentService::class);
+        $this->studyDocumentService = $container->get(StudyDocumentService::class);
         $this->kerosConfig = ConfigLoader::getConfig();
+        $this->studyDocumentTypeService = $container->get(StudyDocumentTypeService::class);
     }
 
     /**
@@ -78,7 +85,7 @@ class StudyDocumentController
         $body['file'] = $uploadedFile->getClientFileName();
 
         $this->entityManager->beginTransaction();
-        $document = $this->documentService->create($body);
+        $document = $this->studyDocumentService->create($body);
         $uploadedFile->moveTo($this->kerosConfig['STUDY_DOCUMENT_DIRECTORY'] . $document->getLocation());
         $this->entityManager->commit();
 
@@ -94,10 +101,28 @@ class StudyDocumentController
      */
     public function getDocument(Request $request, Response $response, array $args)
     {
-        $this->logger->debug("Getting document path for study " . $args["studyId"] . " and template " . $args['documentId'] . " from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->logger->debug("Getting document path for study " . $args["studyId"] . " and document type " . $args['documentId'] . " from " . $request->getServerParams()["REMOTE_ADDR"]);
 
-        $document = $this->documentService->getLatestDocumentFromStudyTemplate($args["studyId"], $args['documentId']);
+        $document = $this->studyDocumentService->getLatestDocumentFromStudyDocumentType($args["studyId"], $args['documentId']);
 
-        return $response->withJson(array('location' => $this->kerosConfig['STUDY_DOCUMENT_DIRECTORY'] . $document->getLocation()), 200);
+        return $response->withJson(array('location' => $this->kerosConfig['BACK_URL'] . DIRECTORY_SEPARATOR . $this->kerosConfig['STUDY_DOCUMENT_DIRECTORY'] . $document->getLocation()), 200);
     }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     * @throws \Exception
+     */
+    public function generateStudyDocument(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Generating document with document type " . $args["idDocumentType"] . " from " . $request->getServerParams()["REMOTE_ADDR"]);
+
+        $location = $this->studyDocumentTypeService->generateStudyDocument($args["idDocumentType"], $args["idStudy"], $request->getAttribute("userId"));
+        $filename = pathinfo($location, PATHINFO_BASENAME);
+
+        return $response->withJson(array('location' => $this->kerosConfig['BACK_URL'] . "/generated/" . $this->kerosConfig["TEMPORARY_DIRECTORY"] . $filename), 200);
+    }
+
 }

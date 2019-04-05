@@ -25,7 +25,7 @@ class DocumentIntegrationTest extends AppTestCase
         $body = json_decode($response->getBody());
 
         $kerosConfig = ConfigLoader::getConfig();
-        $this->assertSame($kerosConfig['STUDY_DOCUMENT_DIRECTORY'] . 'study_1/template_2/test.php', $body->location);
+        $this->assertSame($kerosConfig["BACK_URL"] . DIRECTORY_SEPARATOR . $kerosConfig['STUDY_DOCUMENT_DIRECTORY'] . 'study_1/document_2/acompte.docx', $body->location);
     }
 
     public function testPostDocumentShouldReturn200()
@@ -57,10 +57,10 @@ class DocumentIntegrationTest extends AppTestCase
         $body = json_decode($response->getBody());
 
         $kerosConfig = ConfigLoader::getConfig();
-        $this->assertSame($kerosConfig['STUDY_DOCUMENT_DIRECTORY'] . 'study_1/template_2', pathinfo($body->location, PATHINFO_DIRNAME));
+        $this->assertSame($kerosConfig["BACK_URL"] . DIRECTORY_SEPARATOR . $kerosConfig['STUDY_DOCUMENT_DIRECTORY'] . 'study_1/document_2', pathinfo($body->location, PATHINFO_DIRNAME));
         $this->assertSame('txt', pathinfo($body->location, PATHINFO_EXTENSION));
-        unlink($body->location);
-        rmdir($kerosConfig['STUDY_DOCUMENT_DIRECTORY'] . 'study_1/template_2');
+        unlink($kerosConfig['STUDY_DOCUMENT_DIRECTORY'] . 'study_1/document_2/' . pathinfo($body->location, PATHINFO_BASENAME));
+        rmdir($kerosConfig['STUDY_DOCUMENT_DIRECTORY'] . 'study_1/document_2');
         rmdir($kerosConfig['STUDY_DOCUMENT_DIRECTORY'] . 'study_1');
         rmdir($kerosConfig['STUDY_DOCUMENT_DIRECTORY']);
     }

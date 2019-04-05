@@ -20,7 +20,6 @@ class TemplateIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
         $this->assertSame(200, $response->getStatusCode());
         $body = json_decode($response->getBody());
-        $this->assertSame("testGet", $body->name);
         $this->assertSame(1, $body->id);
         $this->assertSame(false, $body->oneConsultant);
     }

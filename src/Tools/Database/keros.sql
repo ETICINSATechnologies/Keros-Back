@@ -275,36 +275,33 @@ CREATE TABLE ua_study_qualityManager (
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
-DROP TABLE IF EXISTS core_template_type;
-CREATE TABLE core_template_type (
+DROP TABLE IF EXISTS ua_study_document_type;
+CREATE TABLE ua_study_document_type (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `label` varchar(64) NOT NULL,
-  PRIMARY KEY (`id`)
+  `location` varchar(255) NOT NULL UNIQUE,
+  isTemplatable boolean NOT NULL,
+  oneConsultant boolean NOT NULL DEFAULT 0,
+  PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS core_template;
-CREATE TABLE `core_template` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL UNIQUE,
+DROP TABLE IF EXISTS core_document;
+CREATE TABLE core_document (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  uploadDate datetime NOT NULL,
   `location` varchar(255) NOT NULL UNIQUE,
-  `typeId` int(11) NOT NULL,
-  `oneConsultant` boolean NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`),
-  KEY `fk_template_template_type` (`typeId`),
-  CONSTRAINT `fk_template_template_type` FOREIGN KEY (`typeId`) REFERENCES `core_template_type` (`id`)
+  discr varchar(255) NOT NULL,
+  PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS ua_study_document;
 CREATE TABLE `ua_study_document` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL,
   `studyId` int(11) NOT NULL,
-  `templateId` int(11) NOT NULL,
-  `date` datetime NOT NULL,
-  `location` varchar(255) NOT NULL UNIQUE,
-  `name` varchar(255) NOT NULL,
+  studyDocumentTypeId int(11) NOT NULL,
   PRIMARY KEY (id),
+  CONSTRAINT fk_study_document_core_document FOREIGN KEY (id) REFERENCES core_document(id),
   CONSTRAINT `fk_ua_study_document_ua_study` FOREIGN KEY (`studyId`) REFERENCES ua_study(`id`),
-  CONSTRAINT `fk_ua_study_document_core_template` FOREIGN KEY (`templateId`) REFERENCES core_template(`id`)
+  CONSTRAINT fk_study_document_study_document_type FOREIGN KEY (studyDocumentTypeId) REFERENCES ua_study_document_type(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 SET AUTOCOMMIT = 1;
@@ -443,9 +440,5 @@ INSERT INTO `ua_field` (`id`, `label`) VALUES
   (11, 'Benchmark'),
   (12, 'Productique'),
   (13, 'Traduction');
-
-INSERT INTO `core_template_type` (`id`, `label`) VALUES
-  (1, 'Study'),
-  (2, 'Membre');
 
 COMMIT;

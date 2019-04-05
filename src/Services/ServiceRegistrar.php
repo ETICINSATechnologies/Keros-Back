@@ -4,8 +4,6 @@
 namespace Keros\Services;
 
 use Keros\Services\Ua\StudyDocumentService;
-use Keros\Services\Core\TemplateService;
-use Keros\Services\Core\TemplateTypeService;
 use Keros\Services\Ua\ProvenanceService;
 use Keros\Services\Auth\LoginService;
 use Keros\Services\Core\AddressService;
@@ -24,6 +22,7 @@ use Keros\Services\Ua\FirmService;
 use Keros\Services\Ua\FirmTypeService;
 use Keros\Services\Ua\StatusService;
 use Keros\Services\Ua\StudyService;
+use Keros\Services\Ua\StudyDocumentTypeService;
 use Psr\Container\ContainerInterface;
 
 class ServiceRegistrar
@@ -66,15 +65,6 @@ class ServiceRegistrar
         $container[MemberPositionService::class] = function ($container) {
             return new MemberPositionService($container);
         };
-        $container[TemplateService::class] = function ($container) {
-            return new TemplateService($container);
-        };
-        $container[TemplateTypeService::class] = function ($container) {
-            return new TemplateTypeService($container);
-        };
-        $container[StudyDocumentService::class] = function ($container) {
-            return new StudyDocumentService($container);
-        };
 
         //UA
         $container[FirmTypeService::class] = function ($container) {
@@ -97,6 +87,12 @@ class ServiceRegistrar
         };
         $container[StudyService::class] = function ($container) {
             return new StudyService($container);
+        };
+        $container[StudyDocumentTypeService::class] = function ($container) {
+            return new StudyDocumentTypeService($container);
+        };
+        $container[StudyDocumentService::class] = function ($container) {
+            return new StudyDocumentService($container);
         };
     }
 }
