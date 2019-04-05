@@ -151,12 +151,16 @@ class StudyDocumentTypeService
         $documentType = $this->getOne($documentTypeId);
         $connectedUser = $this->memberService->getOne($connectedUserId);
 
+        if (!$documentType->getisTemplatable()) {
+            $msg = "Document type " . $documentType->getId() . " is not templatable";
+            $this->logger->error($msg);
+            throw new KerosException($msg, 400);
+        }
         if ($study->getContacts() == null || empty($study->getContacts())) {
             $msg = "No contact in study " . $study->getId();
             $this->logger->error($msg);
             throw new KerosException($msg, 400);
         }
-
         if (!$this->studyService->consultantAreValid($study->getId())) {
             $msg = "Invalid consultant in study " . $study->getId();
             $this->logger->error($msg);

@@ -41,7 +41,6 @@ class DocumentGenerator
         $fileToModify = 'word/document.xml';
 
         if ($zip->open($location) === TRUE) {
-            $this->logger->info('coucou');
             $oldContents = $zip->getFromName($fileToModify);
             //replace pattern
             $newContents = str_replace($searchArray, $replacementArray, $oldContents);
