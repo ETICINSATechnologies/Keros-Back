@@ -232,16 +232,16 @@ class StudyController
         if (!$this->studyService->consultantAreValid($args["id"]))
             throw new KerosException("Invalid consultant in study", 400);
 
-        $templates = array();
+        $documentTypes = array();
         foreach ($this->studyDocumentTypeService->getAll() as $studyDocumentType) {
-            $templates[] = array('id' => $studyDocumentType->getId(),
+            $documentTypes[] = array('id' => $studyDocumentType->getId(),
                 'name' => pathinfo($studyDocumentType->getLocation(), PATHINFO_BASENAME),
                 'generateLocation' => $this->kerosConfig["BACK_URL"] . "/api/v1/ua/study/" . $args["id"] . "/template/" . $studyDocumentType->getId(),
                 'uploadLocation' => $this->kerosConfig["BACK_URL"] . "/api/v1/ua/study/" . $args["id"] . "/document/" . $studyDocumentType->getId(),
                 'downloadLocation' => $this->kerosConfig["BACK_URL"] . "/api/v1/ua/study/" . $args["id"] . "/document/" . $studyDocumentType->getId());
         }
 
-        return $response->withJson(array('documents' => $templates), 200);
+        return $response->withJson(array('documents' => $documentTypes), 200);
     }
 
 }

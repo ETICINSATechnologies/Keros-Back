@@ -3,7 +3,6 @@
 namespace Keros\Controllers\Core;
 
 use Doctrine\ORM\EntityManager;
-use Keros\DataServices\Core\DocumentTypeDataService;
 use Keros\Services\Ua\StudyDocumentTypeService;
 use Keros\Tools\ConfigLoader;
 use Keros\Tools\DirectoryManager;
@@ -18,12 +17,8 @@ class DocumentTypeController
     /**
      * @var StudyDocumentTypeService
      */
-    private $templateService;
+    private $studyDocumentTypeService;
 
-    /**
-     * @var DocumentTypeDataService
-     */
-    private $templateTypeService;
 
     /**
      * @var Logger
@@ -59,11 +54,10 @@ class DocumentTypeController
     {
         $this->logger = $container->get(Logger::class);
         $this->entityManager = $container->get(EntityManager::class);
-        $this->templateService = $container->get(StudyDocumentTypeService::class);
-        $this->templateTypeService = $container->get(DocumentTypeDataService::class);
+        $this->studyDocumentTypeService = $container->get(StudyDocumentTypeService::class);
         $this->kerosConfig = ConfigLoader::getConfig();
         $this->directoryManager = $container->get(DirectoryManager::class);
-        $this->studyDocumentTypeDirectory = $this->kerosConfig['TEMPLATE_DIRECTORY'];
+        $this->studyDocumentTypeDirectory = $this->kerosConfig['DOCUMENT_TYPE_DIRECTORY'];
     }
 
     /**
@@ -73,13 +67,13 @@ class DocumentTypeController
      * @return Response
      * @throws \Keros\Error\KerosException
      */
-    public function getTemplate(Request $request, Response $response, array $args)
+    public function getDocumentType(Request $request, Response $response, array $args)
     {
-        $this->logger->debug("Getting template by ID from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->logger->debug("Getting document type by ID from " . $request->getServerParams()["REMOTE_ADDR"]);
 
-        $template = $this->templateService->getOne($args['id']);
+        $documentType = $this->studyDocumentTypeService->getOne($args['id']);
 
-        return $response->withJson($template, 200);
+        return $response->withJson($documentType, 200);
     }
 
     /**
@@ -89,22 +83,22 @@ class DocumentTypeController
      * @return Response
      * @throws \Keros\Error\KerosException
      */
-    public function createTemplate(Request $request, Response $response, array $args)
+    public function createDocumentType(Request $request, Response $response, array $args)
     {
-        $this->logger->debug("Creating template from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->logger->debug("Creating document type from " . $request->getServerParams()["REMOTE_ADDR"]);
         $body = $request->getParsedBody();
 
         $uploadedFile = $request->getUploadedFiles()['file'];
         $body["extension"] = pathinfo($uploadedFile->getClientFileName(), PATHINFO_EXTENSION);
 
         $this->entityManager->beginTransaction();
-        $template = $this->templateService->create($body);
-        $location = $this->studyDocumentTypeDirectory . $template->getLocation();
+        $documentType = $this->studyDocumentTypeService->create($body);
+        $location = $this->studyDocumentTypeDirectory . $documentType->getLocation();
         $this->directoryManager->mkdir(pathinfo($location, PATHINFO_DIRNAME));
         $uploadedFile->moveTo($location);
         $this->entityManager->commit();
 
-        return $response->withJson($template, 201);
+        return $response->withJson($documentType, 201);
     }
 
     /**
@@ -116,11 +110,11 @@ class DocumentTypeController
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Keros\Error\KerosException
      */
-    public function deleteTemplate(Request $request, Response $response, array $args)
+    public function deleteDocumentType(Request $request, Response $response, array $args)
     {
-        $this->logger->debug("Deleting template from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->logger->debug("Deleting document type from " . $request->getServerParams()["REMOTE_ADDR"]);
         $this->entityManager->beginTransaction();
-        $this->templateService->delete($args['id']);
+        $this->studyDocumentTypeService->delete($args['id']);
         $this->entityManager->commit();
 
         return $response->withStatus(204);
@@ -133,13 +127,13 @@ class DocumentTypeController
      * @return Response
      * @throws \Keros\Error\KerosException
      */
-    public function getAllTemplate(Request $request, Response $response, array $args)
+    public function getAllDocumentType(Request $request, Response $response, array $args)
     {
-        $this->logger->debug("Get all Templates from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->logger->debug("Get all Documents Types from " . $request->getServerParams()["REMOTE_ADDR"]);
 
-        $templates = $this->templateService->getAll();
+        $documentType = $this->studyDocumentTypeService->getAll();
 
-        return $response->withJson($templates, 200);
+        return $response->withJson($documentType, 200);
     }
 
 

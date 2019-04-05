@@ -4,8 +4,6 @@
 namespace Keros\Services;
 
 use Keros\Services\Ua\StudyDocumentService;
-use Keros\Services\Core\DocumentTypeService;
-use Keros\Services\Core\TemplateTypeService;
 use Keros\Services\Ua\ProvenanceService;
 use Keros\Services\Auth\LoginService;
 use Keros\Services\Core\AddressService;

@@ -60,7 +60,7 @@ class StudyDocumentTypeDataService
         $this->kerosConfig = ConfigLoader::getConfig();
         $this->temporaryDirectory = $this->kerosConfig['TEMPORARY_DIRECTORY'];
         $this->documentGenerator = $container->get(DocumentGenerator::class);
-        $this->studyDocumentTypeDirectory = $this->kerosConfig['TEMPLATE_DIRECTORY'];
+        $this->studyDocumentTypeDirectory = $this->kerosConfig['DOCUMENT_TYPE_DIRECTORY'];
     }
 
     /**
@@ -71,10 +71,10 @@ class StudyDocumentTypeDataService
     public function getOne(int $id): ?StudyDocumentType
     {
         try {
-            $template = $this->repository->find($id);
-            return $template;
+            $documentType = $this->repository->find($id);
+            return $documentType;
         } catch (Exception $e) {
-            $msg = "Error finding template with ID $id : " . $e->getMessage();
+            $msg = "Error finding document type with ID $id : " . $e->getMessage();
             $this->logger->error($msg);
             throw new KerosException($msg, 500);
         }
@@ -87,10 +87,10 @@ class StudyDocumentTypeDataService
     public function getAll(): array
     {
         try {
-            $template = $this->repository->findAll();
-            return $template;
+            $documentType = $this->repository->findAll();
+            return $documentType;
         } catch (Exception $e) {
-            $msg = "Error finding templates : " . $e->getMessage();
+            $msg = "Error finding document types : " . $e->getMessage();
             $this->logger->error($msg);
             throw new KerosException($msg, 500);
         }
@@ -98,36 +98,36 @@ class StudyDocumentTypeDataService
 
 
     /**
-     * @param StudyDocumentType $template
+     * @param StudyDocumentType $documentType
      * @throws KerosException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function persist(StudyDocumentType $template)
+    public function persist(StudyDocumentType $documentType)
     {
         try {
-            $this->entityManager->persist($template);
+            $this->entityManager->persist($documentType);
             $this->entityManager->flush();
         } catch (Exception $e) {
-            $msg = "Failed to persist template : " . $e->getMessage();
+            $msg = "Failed to persist document type : " . $e->getMessage();
             $this->logger->error($msg);
             throw new KerosException($msg, 500);
         }
     }
 
     /**
-     * @param StudyDocumentType $template
+     * @param StudyDocumentType $documentType
      * @throws KerosException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function delete(StudyDocumentType $template)
+    public function delete(StudyDocumentType $documentType)
     {
         try {
-            $this->entityManager->remove($template);
+            $this->entityManager->remove($documentType);
             $this->entityManager->flush();
         } catch (Exception $e) {
-            $msg = "Failed to delete template : " . $e->getMessage();
+            $msg = "Failed to delete document type : " . $e->getMessage();
             $this->logger->error($msg);
             throw new KerosException($msg, 500);
         }
@@ -135,15 +135,15 @@ class StudyDocumentTypeDataService
 
 
     /**
-     * @param StudyDocumentType $template
+     * @param StudyDocumentType $documentType
      * @param array $searchArray
      * @param array[] $replacementArrays Array of all replacement array
      * @return string
      * @throws KerosException
      */
-    public function generateMultipleDocument(StudyDocumentType $template, array $searchArray, array $replacementArrays)
+    public function generateMultipleDocument(StudyDocumentType $documentType, array $searchArray, array $replacementArrays)
     {
-        $documentTypeLocation = $this->studyDocumentTypeDirectory . $template->getLocation();
+        $documentTypeLocation = $this->studyDocumentTypeDirectory . $documentType->getLocation();
 
         //generate file name until it doesn't not actually exist
         do {
@@ -151,7 +151,7 @@ class StudyDocumentTypeDataService
         } while (file_exists($zipLocation));
         $zip = new \ZipArchive();
         if ($zip->open($zipLocation, \ZipArchive::CREATE) !== TRUE) {
-            $msg = "Error creating zip with template " . $template->getId();
+            $msg = "Error creating zip with document type " . $documentType->getId();
             $this->logger->error($msg);
             throw new KerosException($msg, 500);
         }
@@ -161,10 +161,9 @@ class StudyDocumentTypeDataService
         foreach ($replacementArrays as $replacementArray) {
             $cpt++;
             //TODO use identifiant
-            //$filename = $this->temporaryDirectory . pathinfo($template->getName(), PATHINFO_FILENAME) . '_' . $consultant->getId() . '.' . pathinfo($template->getLocation(), PATHINFO_EXTENSION);
             $filename = $this->temporaryDirectory . pathinfo($documentTypeLocation, PATHINFO_FILENAME) . '_' . $cpt . '.' . pathinfo($documentTypeLocation, PATHINFO_EXTENSION);
             $files[] = $filename;
-            //copy template
+            //copy document type
             copy($documentTypeLocation, $filename);
 
             //open document and replace pattern
@@ -180,7 +179,7 @@ class StudyDocumentTypeDataService
             }
 
             if (!$return) {
-                $msg = "Error generating document with template " . $template->getId();
+                $msg = "Error generating document with document type " . $documentType->getId();
                 $this->logger->error($msg);
                 throw new KerosException($msg, 500);
             }
@@ -197,15 +196,15 @@ class StudyDocumentTypeDataService
     }
 
     /**
-     * @param StudyDocumentType $template
+     * @param StudyDocumentType $documentType
      * @param array $searchArray
      * @param array $replacementArray
      * @return string
      * @throws KerosException
      */
-    public function generateSimpleDocument(StudyDocumentType $template, array $searchArray, array $replacementArray)
+    public function generateSimpleDocument(StudyDocumentType $documentType, array $searchArray, array $replacementArray)
     {
-        $documentTypeLocation = $this->studyDocumentTypeDirectory . DIRECTORY_SEPARATOR . $template->getLocation();
+        $documentTypeLocation = $this->studyDocumentTypeDirectory . DIRECTORY_SEPARATOR . $documentType->getLocation();
         do {
             $location = $this->temporaryDirectory . md5(pathinfo($documentTypeLocation, PATHINFO_BASENAME) . microtime()) . '.' . pathinfo($documentTypeLocation, PATHINFO_EXTENSION);
         } while (file_exists($location));
@@ -224,7 +223,7 @@ class StudyDocumentTypeDataService
         }
 
         if (!$return) {
-            $msg = "Error generating document with template " . $template->getId();
+            $msg = "Error generating document with document type " . $documentType->getId();
             $this->logger->error($msg);
             throw new KerosException($msg, 500);
         }

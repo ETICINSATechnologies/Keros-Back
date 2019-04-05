@@ -48,7 +48,7 @@ class StudyDocumentTypeService
     /**
      * @var string
      */
-    private $templateDirectory;
+    private $documentTypeDirectory;
 
     /**
      * @var string
@@ -73,7 +73,7 @@ class StudyDocumentTypeService
         $this->logger = $container->get(Logger::class);
         $this->kerosConfig = ConfigLoader::getConfig();
         $this->temporaryDirectory = $this->kerosConfig['TEMPORARY_DIRECTORY'];
-        $this->templateDirectory = $this->kerosConfig['TEMPLATE_DIRECTORY'];
+        $this->documentTypeDirectory = $this->kerosConfig['DOCUMENT_TYPE_DIRECTORY'];
         $this->studyDocumentTypeDataService = $container->get(StudyDocumentTypeDataService::class);
         $this->directoryManager = $container->get(DirectoryManager::class);
     }
@@ -93,11 +93,11 @@ class StudyDocumentTypeService
 
         $date = new \DateTime();
         $location = $date->format('d-m-Y_H:i:s:u') . '.' . $extension;
-        $template = new StudyDocumentType($location, $isTemplatable, $oneConsultant);
+        $documentType = new StudyDocumentType($location, $isTemplatable, $oneConsultant);
 
-        $this->studyDocumentTypeDataService->persist($template);
+        $this->studyDocumentTypeDataService->persist($documentType);
 
-        return $template;
+        return $documentType;
     }
 
     /**
@@ -109,8 +109,8 @@ class StudyDocumentTypeService
     public function delete(int $id): void
     {
         $id = Validator::requiredId($id);
-        $template = $this->getOne($id);
-        $this->studyDocumentTypeDataService->delete($template);
+        $documentType = $this->getOne($id);
+        $this->studyDocumentTypeDataService->delete($documentType);
     }
 
     /**
@@ -122,11 +122,11 @@ class StudyDocumentTypeService
     {
         $id = Validator::requiredId($id);
 
-        $template = $this->studyDocumentTypeDataService->getOne($id);
-        if (!$template) {
+        $documentType = $this->studyDocumentTypeDataService->getOne($id);
+        if (!$documentType) {
             throw new KerosException("The studyDocumentType could not be found", 404);
         }
-        return $template;
+        return $documentType;
     }
 
     /**
@@ -139,16 +139,16 @@ class StudyDocumentTypeService
     }
 
     /**
-     * @param int $templateId
+     * @param int $documentTypeId
      * @param int $studyId
      * @param int $connectedUserId
      * @return string
      * @throws \Exception
      */
-    public function generateStudyDocument(int $templateId, int $studyId, int $connectedUserId): string
+    public function generateStudyDocument(int $documentTypeId, int $studyId, int $connectedUserId): string
     {
         $study = $this->studyService->getOne($studyId);
-        $template = $this->getOne($templateId);
+        $documentType = $this->getOne($documentTypeId);
         $connectedUser = $this->memberService->getOne($connectedUserId);
 
         if ($study->getContacts() == null || empty($study->getContacts())) {
@@ -165,17 +165,17 @@ class StudyDocumentTypeService
 
         $this->directoryManager->mkdir($this->kerosConfig["TEMPORARY_DIRECTORY"]);
         //Zip are done if one document per consultant is needed
-        $doZip = $template->getOneConsultant() == 1;
+        $doZip = $documentType->getOneConsultant() == 1;
         $searchArray = $this->getStudySearchArray();
 
         if ($doZip) {
             $replacementArrays = array();
             foreach ($study->getConsultantsArray() as $consultant)
                 $replacementArrays[] = $this->getStudyReplacementArray($study, $connectedUser, array($consultant));
-            $location = $this->studyDocumentTypeDataService->generateMultipleDocument($template, $searchArray, $replacementArrays);
+            $location = $this->studyDocumentTypeDataService->generateMultipleDocument($documentType, $searchArray, $replacementArrays);
         } else {
             $replacementArray = $this->getStudyReplacementArray($study, $connectedUser, $study->getConsultantsArray());
-            $location = $this->studyDocumentTypeDataService->generateSimpleDocument($template, $searchArray, $replacementArray);
+            $location = $this->studyDocumentTypeDataService->generateSimpleDocument($documentType, $searchArray, $replacementArray);
         }
         return $location;
     }

@@ -106,7 +106,7 @@ class KerosApp
                     $this->post("", StudyController::class . ':createStudy');
                     $this->put("/{id:[0-9]+}", StudyController::class . ':updateStudy');
                     $this->delete("/{id:[0-9]+}", StudyController::class . ':deleteStudy');
-                    $this->get("/{idStudy:[0-9]+}/document/{idTemplate:[0-9]+}/generate", StudyDocumentController::class . ':generateStudyDocument');
+                    $this->get("/{idStudy:[0-9]+}/document/{idDocumentType:[0-9]+}/generate", StudyDocumentController::class . ':generateStudyDocument');
                     $this->get("/{id:[0-9]+}/documents", StudyController::class . ':getAllDocuments');
                     $this->post("/{studyId:[0-9]+}/document/{documentId:[0-9]+}", StudyDocumentController::class . ':createDocument');
                     $this->get("/{studyId:[0-9]+}/document/{documentId:[0-9]+}", StudyDocumentController::class . ':getDocument');
@@ -172,10 +172,10 @@ class KerosApp
                 });
 
                 $this->group('/template', function () {
-                    $this->post("", DocumentTypeController::class . ':createTemplate');
-                    $this->get("", DocumentTypeController::class . ':getAllTemplate');
-                    $this->get('/{id:[0-9]+}', DocumentTypeController::class . ':getTemplate');
-                    $this->delete("/{id:[0-9]+}", DocumentTypeController::class . ':deleteTemplate');
+                    $this->post("", DocumentTypeController::class . ':createDocumentType');
+                    $this->get("", DocumentTypeController::class . ':getAllDocumentType');
+                    $this->get('/{id:[0-9]+}', DocumentTypeController::class . ':getDocumentType');
+                    $this->delete("/{id:[0-9]+}", DocumentTypeController::class . ':deleteDocumentType');
                 });
 
             })->add($this->getContainer()->get(AuthenticationMiddleware::class));

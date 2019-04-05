@@ -118,22 +118,22 @@ class StudyDocumentService
 
     /**
      * @param int $studyId
-     * @param int $templateId
+     * @param int $documentType
      * @return StudyDocument
      * @throws KerosException
      */
-    public function getLatestDocumentFromStudyDocumentType(int $studyId, int $templateId): StudyDocument
+    public function getLatestDocumentFromStudyDocumentType(int $studyId, int $documentType): StudyDocument
     {
         $documents = $this->documentDataService->getAll();
 
         $latestDocument = null;
         foreach ($documents as $document) {
-            if ($document->getStudy()->getId() == $studyId && $document->getStudyDocumentType()->getId() == $templateId)
+            if ($document->getStudy()->getId() == $studyId && $document->getStudyDocumentType()->getId() == $documentType)
                 if ($latestDocument == null || $document->getUploadDate() > $latestDocument->getUploadDate())
                     $latestDocument = $document;
         }
         if ($latestDocument == null) {
-            $msg = "No file found for study " . $studyId . " and document " . $templateId;
+            $msg = "No file found for study " . $studyId . " and document " . $documentType;
             $this->logger->error($msg);
             throw new KerosException($msg, 400);
         }

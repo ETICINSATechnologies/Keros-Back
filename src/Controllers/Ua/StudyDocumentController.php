@@ -101,7 +101,7 @@ class StudyDocumentController
      */
     public function getDocument(Request $request, Response $response, array $args)
     {
-        $this->logger->debug("Getting document path for study " . $args["studyId"] . " and template " . $args['documentId'] . " from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->logger->debug("Getting document path for study " . $args["studyId"] . " and document type " . $args['documentId'] . " from " . $request->getServerParams()["REMOTE_ADDR"]);
 
         $document = $this->studyDocumentService->getLatestDocumentFromStudyDocumentType($args["studyId"], $args['documentId']);
 
@@ -117,9 +117,9 @@ class StudyDocumentController
      */
     public function generateStudyDocument(Request $request, Response $response, array $args)
     {
-        $this->logger->debug("Generating document with template " . $args["idTemplate"] . " from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->logger->debug("Generating document with document type " . $args["idDocumentType"] . " from " . $request->getServerParams()["REMOTE_ADDR"]);
 
-        $location = $this->studyDocumentTypeService->generateStudyDocument($args["idTemplate"], $args["idStudy"], $request->getAttribute("userId"));
+        $location = $this->studyDocumentTypeService->generateStudyDocument($args["idDocumentType"], $args["idStudy"], $request->getAttribute("userId"));
         $filename = pathinfo($location, PATHINFO_BASENAME);
 
         return $response->withJson(array('location' => $this->kerosConfig['BACK_URL'] . "/generated/" . $this->kerosConfig["TEMPORARY_DIRECTORY"] . $filename), 200);
