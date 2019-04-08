@@ -4,7 +4,6 @@
 namespace Keros\DataServices;
 
 use Keros\DataServices\Core\AddressDataService;
-use Keros\DataServices\Ua\StudyDocumentDataService;
 use Keros\DataServices\Core\TicketDataService;
 use Keros\DataServices\Core\CountryDataService;
 use Keros\DataServices\Core\DepartmentDataService;
@@ -14,6 +13,8 @@ use Keros\DataServices\Core\MemberPositionDataService;
 use Keros\DataServices\Core\PoleDataService;
 use Keros\DataServices\Core\PositionDataService;
 use Keros\DataServices\Core\UserDataService;
+use Keros\DataServices\Treso\FactureTypeDataService;
+use Keros\DataServices\Treso\FactureDataService;
 use Keros\DataServices\Ua\ContactDataService;
 use Keros\DataServices\Ua\FirmTypeDataService;
 use Keros\DataServices\Ua\FirmDataService;
@@ -22,6 +23,7 @@ use Keros\DataServices\Ua\FieldDataService;
 use Keros\DataServices\Ua\StatusDataService;
 use Keros\DataServices\Ua\StudyDataService;
 use Keros\DataServices\Ua\StudyDocumentTypeDataService;
+use Keros\DataServices\Ua\StudyDocumentDataService;
 use Psr\Container\ContainerInterface;
 
 class DataServiceRegistrar
@@ -88,5 +90,14 @@ class DataServiceRegistrar
         $container[StudyDocumentDataService::class] = function ($container) {
             return new StudyDocumentDataService($container);
         };
+
+        //Treso
+        $container[FactureTypeDataService::class] = function ($container) {
+            return new FactureTypeDataService($container);
+        };
+        $container[FactureDataService::class] = function ($container) {
+            return new FactureDataService($container);
+        };
+
     }
 }
