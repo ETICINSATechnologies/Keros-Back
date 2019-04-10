@@ -124,6 +124,29 @@ class PaymentSlipController
         return $response->withJson($paymentSlip, 201);
     }
 
+    public function validateUA(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Validating paymentSlip by UA from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $body = $request->getParsedBody();
+
+        $this->entityManager->beginTransaction();
+        $paymentSlip = $this->paymentSlipService->validateUA($args["id"],$request->getAttribute("userId"));
+        $this->entityManager->commit();
+
+        return $response->withJson($paymentSlip, 200);
+    }
+
+    public function validatePerf(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Validating paymentSlip by Perf from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $body = $request->getParsedBody();
+
+        $this->entityManager->beginTransaction();
+        $paymentSlip = $this->paymentSlipService->validatePerf($args["id"],$request->getAttribute("userId"));
+        $this->entityManager->commit();
+
+        return $response->withJson($paymentSlip, 200);
+    }
     public function getField(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Getting field by ID from " . $request->getServerParams()["REMOTE_ADDR"]);

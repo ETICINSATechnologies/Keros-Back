@@ -1,11 +1,12 @@
 <?php
 
-namespace Keros\DataServices\Ua;
+namespace Keros\DataServices\Treso;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Exception;
+use Keros\Entities\Core\Member;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Treso\PaymentSlip;
 use Keros\Error\KerosException;
@@ -131,5 +132,7 @@ class PaymentSlipDataService
         }
         return $count;
     }
+
+
 
 }

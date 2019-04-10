@@ -3,7 +3,8 @@
 
 namespace Keros\Services\Treso;
 
-use Keros\DataServices\Ua\PaymentSlipDataService;
+use DateTime;
+use Keros\DataServices\Treso\PaymentSlipDataService;
 use Keros\Entities\Core\Address;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Treso\PaymentSlip;
@@ -136,6 +137,43 @@ class PaymentSlipService
         if (!$paymentSlip) {
             throw new KerosException("The paymentSlip could not be found", 404);
         }
+        return $paymentSlip;
+    }
+
+    public function validateUA(int $id, int $idUA) : PaymentSlip
+    {
+        $id = Validator::requiredId($id);
+        $idUA = Validator::requiredId($idUA);
+
+        $paymentSlip = $this->paymentSlipDataService->getOne($id);
+        $UAMember = $this->memberService->getOne($idUA);
+        $dateString = date("d/m/Y");
+        $date = DateTime::createFromFormat('d/m/Y', $dateString);
+        $paymentSlip->setValidatedByUa(true);
+        $paymentSlip->setValidatedByUaDate($date);
+        $paymentSlip->setValidatedByUaMember($UAMember);
+
+        $this->paymentSlipDataService->persist($paymentSlip);
+
+        return $paymentSlip;
+    }
+
+    public function validatePerf(int $id, int $idPerf): PaymentSlip
+    {
+        $id = Validator::requiredId($id);
+        $idPerf = Validator::requiredId($idPerf);
+
+        $paymentSlip = $this->paymentSlipDataService->getOne($id);
+        $PerfMember = $this->memberService->getOne($idPerf);
+        $dateString = date("d/m/Y");
+        $date = DateTime::createFromFormat('d/m/Y', $dateString);
+
+        $paymentSlip->setvalidatedByPerf(true);
+        $paymentSlip->setValidatedByPerfDate($date);
+        $paymentSlip->setValidatedByPerfMember($PerfMember);
+
+        $this->paymentSlipDataService->persist($paymentSlip);
+
         return $paymentSlip;
     }
 

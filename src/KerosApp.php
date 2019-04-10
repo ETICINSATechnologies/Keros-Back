@@ -188,6 +188,9 @@ class KerosApp
                 $this->group('/payment-slip', function () {
                     $this->post("", PaymentSlipController::class . ':createPaymentSlip');
                     $this->get("", PaymentSlipController::class . ':getPagePaymentSlip');
+                    $this->get("/{id:[0-9]+}", PaymentSlipController::class . ':getPaymentSlip');
+                    $this->put("/{id:[0-9]+}/validate-ua", PaymentSlipController::class . ':validateUA');
+                    $this->put("/{id:[0-9]+}/validate-perf", PaymentSlipController::class . ':validatePerf');
                     });
             })->add($this->getContainer()->get(AuthenticationMiddleware::class));
         });

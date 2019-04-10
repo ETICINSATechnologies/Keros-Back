@@ -18,7 +18,7 @@ use Keros\DataServices\Core\UserDataService;
 use Keros\DataServices\Ua\ContactDataService;
 use Keros\DataServices\Ua\FirmTypeDataService;
 use Keros\DataServices\Ua\FirmDataService;
-use Keros\DataServices\Ua\PaymentSlipDataService;
+use Keros\DataServices\Treso\PaymentSlipDataService;
 use Keros\DataServices\Ua\ProvenanceDataService;
 use Keros\DataServices\Ua\FieldDataService;
 use Keros\DataServices\Ua\StatusDataService;
