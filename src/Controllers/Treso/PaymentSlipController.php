@@ -130,7 +130,7 @@ class PaymentSlipController
         $body = $request->getParsedBody();
 
         $this->entityManager->beginTransaction();
-        $paymentSlip = $this->paymentSlipService->validateUA($args["id"],$request->getAttribute("userId"));
+        $this->paymentSlipService->validateUA($args["id"],$request->getAttribute("userId"));
         $this->entityManager->commit();
 
         return $response->withStatus( 200);
@@ -142,10 +142,10 @@ class PaymentSlipController
         $body = $request->getParsedBody();
 
         $this->entityManager->beginTransaction();
-        $paymentSlip = $this->paymentSlipService->validatePerf($args["id"],$request->getAttribute("userId"));
+        $this->paymentSlipService->validatePerf($args["id"],$request->getAttribute("userId"));
         $this->entityManager->commit();
 
-        return $response->withJson($paymentSlip, 200);
+        return $response->withStatus( 200);
     }
     public function getField(Request $request, Response $response, array $args)
     {

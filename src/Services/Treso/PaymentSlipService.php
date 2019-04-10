@@ -140,7 +140,7 @@ class PaymentSlipService
         return $paymentSlip;
     }
 
-    public function validateUA(int $id, int $idUA) : PaymentSlip
+    public function validateUA(int $id, int $idUA)
     {
         $id = Validator::requiredId($id);
         $idUA = Validator::requiredId($idUA);
@@ -155,10 +155,10 @@ class PaymentSlipService
 
         $this->paymentSlipDataService->persist($paymentSlip);
 
-        return $paymentSlip;
+        return;
     }
 
-    public function validatePerf(int $id, int $idPerf): PaymentSlip
+    public function validatePerf(int $id, int $idPerf)
     {
         $id = Validator::requiredId($id);
         $idPerf = Validator::requiredId($idPerf);
@@ -174,7 +174,7 @@ class PaymentSlipService
 
         $this->paymentSlipDataService->persist($paymentSlip);
 
-        return $paymentSlip;
+        return;
     }
 
     public function getAll(): array
