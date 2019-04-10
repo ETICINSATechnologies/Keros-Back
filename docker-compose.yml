@@ -1,0 +1,20 @@
+version: "3.7"
+services:
+  keros-back:
+    build: .
+    image: "keros-back"
+    container_name: keros-back
+    restart: always
+    ports:
+      - "8000:80"
+    volumes:
+      - "./documents:/var/www/keros-api/documents"
+      - "./logs:/var/www/keros-api/logs"
+  mysql:
+    image: "mysql:5.7"
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_USER: 'root'
+      MYSQL_ROOT_PASSWORD: 'root'
