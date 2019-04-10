@@ -133,7 +133,7 @@ class PaymentSlipController
         $paymentSlip = $this->paymentSlipService->validateUA($args["id"],$request->getAttribute("userId"));
         $this->entityManager->commit();
 
-        return $response->withJson($paymentSlip, 200);
+        return $response->withStatus( 200);
     }
 
     public function validatePerf(Request $request, Response $response, array $args)
