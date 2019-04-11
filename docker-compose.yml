@@ -18,3 +18,9 @@ services:
     environment:
       MYSQL_USER: 'root'
       MYSQL_ROOT_PASSWORD: 'root'
+    volumes:
+      - "./src/Tools/Database:/opt/Database"
+      - "./.deploy:/opt/.deploy"
+    entrypoint:
+      - bash
+      - /opt/.deploy/mysql.entrypoint.sh
