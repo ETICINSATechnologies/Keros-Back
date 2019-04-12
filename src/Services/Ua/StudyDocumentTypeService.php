@@ -161,7 +161,8 @@ class StudyDocumentTypeService
             $this->logger->error($msg);
             throw new KerosException($msg, 400);
         }
-        if (!$this->studyService->consultantAreValid($study->getId())) {
+
+        if (!$this->studyService->consultantsAreValid($study->getId())) {
             $msg = "Invalid consultant in study " . $study->getId();
             $this->logger->error($msg);
             throw new KerosException($msg, 400);

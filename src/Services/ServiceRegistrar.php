@@ -16,6 +16,7 @@ use Keros\Services\Core\DepartmentService;
 use Keros\Services\Core\GenderService;
 use Keros\Services\Core\MemberPositionService;
 use Keros\Services\Core\MemberService;
+use Keros\Services\Core\ConsultantService;
 use Keros\Services\Core\PoleService;
 use Keros\Services\Core\PositionService;
 use Keros\Services\Core\TicketService;
@@ -68,6 +69,9 @@ class ServiceRegistrar
         };
         $container[MemberPositionService::class] = function ($container) {
             return new MemberPositionService($container);
+        };
+        $container[ConsultantService::class] = function ($container) {
+            return new ConsultantService($container);
         };
 
         //UA

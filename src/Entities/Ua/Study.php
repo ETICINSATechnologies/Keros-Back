@@ -4,6 +4,7 @@ namespace Keros\Entities\Ua;
 
 use JsonSerializable;
 use Keros\Entities\Core\Member;
+use Keros\Entities\Core\Consultant;
 use Keros\Tools\Validator;
 use Keros\Error\KerosException;
 
@@ -110,10 +111,10 @@ class Study implements JsonSerializable
     protected $mainQualityManager;
 
     /**
-     * @ManyToMany(targetEntity="Keros\Entities\Core\Member", inversedBy="studiesAsConsultant")
+     * @ManyToMany(targetEntity="Keros\Entities\Core\Consultant", inversedBy="studiesAsConsultant")
      * @JoinTable(name="ua_study_consultant",
      *      joinColumns={@JoinColumn(name="studyId", referencedColumnName="id")},
-     *      inverseJoinColumns={@JoinColumn(name="memberId", referencedColumnName="id")}
+     *      inverseJoinColumns={@JoinColumn(name="consultantId", referencedColumnName="id")}
      *      )
      */
     protected $consultants;
@@ -583,7 +584,7 @@ class Study implements JsonSerializable
     }
 
     /**
-     * @return Member[]
+     * @return Consultant[]
      */
     public function getConsultantsArray()
     {

@@ -206,7 +206,6 @@ class MemberService
             $this->memberPositionService->delete($memberPosition);
         $member->setStudiesAsQualityManager([]);
         $member->setStudiesAsLeader([]);
-        $member->setStudiesAsConsultant([]);
         $this->memberDataService->persist($member);
 
         $this->ticketDataService->deleteTicketsRelatedToMember($id);

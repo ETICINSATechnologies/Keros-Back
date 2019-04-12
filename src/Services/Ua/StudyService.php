@@ -3,11 +3,13 @@
 
 namespace Keros\Services\Ua;
 
+use Keros\DataServices\Core\ConsultantDataService;
 use Keros\DataServices\Ua\StudyDataService;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Ua\Study;
 use Keros\Error\KerosException;
 use Keros\Services\Core\AddressService;
+use Keros\Services\Core\ConsultantService;
 use Keros\Services\Core\GenderService;
 use Keros\Services\Core\MemberService;
 use Keros\Services\Core\PositionService;
@@ -64,6 +66,11 @@ class StudyService
     private $studyDataService;
 
     /**
+     * @var ConsultantService
+     */
+    private $consultantService;
+
+    /**
      * @var Logger
      */
     private $logger;
@@ -82,6 +89,7 @@ class StudyService
         $this->statusService = $container->get(StatusService::class);
         $this->provenanceService = $container->get(ProvenanceService::class);
         $this->studyDataService = $container->get(StudyDataService::class);
+        $this->consultantService = $container->get(ConsultantService::class);
     }
 
     /**
@@ -122,7 +130,7 @@ class StudyService
         $leaders = $this->memberService->getSome($leaderIds);
 
         $consultantIds = $fields["consultantIds"];
-        $consultants = $this->memberService->getSome($consultantIds);
+        $consultants = $this->consultantService->getSome($consultantIds);
 
         $qualityManagerIds = $fields["qualityManagerIds"];
         $qualityManagers = $this->memberService->getSome($qualityManagerIds);
@@ -234,7 +242,7 @@ class StudyService
         $leaders = $this->memberService->getSome($leaderIds);
 
         $consultantIds = $fields["consultantIds"];
-        $consultants = $this->memberService->getSome($consultantIds);
+        $consultants = $this->consultantService->getSome($consultantIds);
 
         $qualityManagerIds = $fields["qualityManagerIds"];
         $qualityManagers = $this->memberService->getSome($qualityManagerIds);
@@ -279,13 +287,14 @@ class StudyService
      * @return bool
      * @throws KerosException
      */
-    public function consultantAreValid(int $id): bool
+    public function consultantsAreValid(int $id): bool
     {
         $id = Validator::requiredId($id);
         $study = $this->getOne($id);
         if (empty($study->getConsultantsArray())) {
             return false;
         }
+        /*
         foreach ($study->getConsultantsArray() as $consultant) {
             $isConsultant = false;
             foreach ($consultant->getPositionsArray() as $position)
@@ -293,7 +302,7 @@ class StudyService
                     $isConsultant = true;
             if (!$isConsultant)
                 return false;
-        }
+        }*/
         return true;
     }
 }

@@ -30,6 +30,13 @@ INSERT INTO core_member (id, genderId, firstName, lastName, birthday, telephone,
   (3, 1, 'Laurence', 'Tainturière', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.mail3@fake.com', 3, 5, 2, NULL, NULL),
   (4, 3, 'Stéphane', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly@fake.com', 6, 3, 4, NULL, NULL);
 
+TRUNCATE TABLE core_consultant;
+INSERT INTO core_consultant (id, genderId, firstName, lastName, birthday, telephone, email, addressId, schoolYear, departmentId, company, profilePicture) VALUES
+  (1, 1, 'Conor', 'Breeze', STR_TO_DATE('1975-12-25', '%Y-%m-%d'), '+332541254', 'fake.mail@fake.com', 2, 3, 1, 'Google', 'http://picture.png'),
+  (2, 1, 'Marah', 'Cool', STR_TO_DATE('1976-10-27', '%Y-%m-%d'), '+332541541', 'fake.mail2@fake.com', 1, 3, 1, 'Amazon', NULL),
+  (3, 1, 'Laurence', 'Tainturière', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.mail3@fake.com', 3, 5, 2, NULL, NULL),
+  (4, 3, 'Stéphane', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly@fake.com', 6, 3, 4, NULL, NULL);
+
 TRUNCATE TABLE core_member_position;
 INSERT INTO core_member_position (id, memberId, positionId, isBoard, year) VALUES
   (1, 1, 3, TRUE, 2018),
@@ -59,7 +66,7 @@ INSERT INTO `ua_study` (`id`, `name`, `description`, `fieldId`, `provenanceId`, 
   (2, 'Tests d''acidité dans le Rhône', 'Créateur de IDE', 1, 1, 2, '2018-11-10', '2018-11-10', 12000000, 123, 12345, 12, 12324454, '2018-11-10', 2, 3, 2, 2);
 
 TRUNCATE TABLE ua_study_consultant;
-INSERT INTO `ua_study_consultant` (`memberId`, `studyId`) VALUES
+INSERT INTO `ua_study_consultant` (`consultantId`, `studyId`) VALUES
   (2, 2),
   (1, 2);
 
