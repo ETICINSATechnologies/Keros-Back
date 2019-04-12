@@ -64,6 +64,18 @@ class DataServiceRegistrar
         $container[MemberPositionDataService::class] = function ($container) {
             return new MemberPositionDataService($container);
         };
+        $container[TemplateDataService::class] = function ($container) {
+            return new TemplateDataService($container);
+        };
+        $container[TemplateTypeDataService::class] = function ($container) {
+            return new TemplateTypeDataService($container);
+        };
+        $container[StudyDocumentDataService::class] = function ($container) {
+            return new StudyDocumentDataService($container);
+        };
+        $container[ConsultantDataService::class] = function ($container) {
+            return new ConsultantDataService($container);
+        };
 
         $container[ConsultantDataService::class] = function ($container) {
             return new ConsultantDataService($container);

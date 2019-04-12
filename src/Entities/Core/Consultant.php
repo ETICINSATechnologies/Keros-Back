@@ -13,7 +13,11 @@ class Consultant implements JsonSerializable
     /**
      * @Id
      * @OneToOne(targetEntity="User")
+<<<<<<< HEAD
      * @JoinColumn(name="id", referencedColumnName="id",onDelete="CASCADE")
+=======
+     * @JoinColumn(name="id", referencedColumnName="id")
+>>>>>>> implementation of a new entity Consultant + controller/service/dataservice + tests, StudyIntegrationTest OK but not yet for MemberIntegrationTest and DocumentIntegrationTest
      **/
     protected $user;
 

@@ -5,9 +5,13 @@ namespace Keros\Entities\Ua;
 use JsonSerializable;
 use Keros\Entities\Core\Member;
 <<<<<<< HEAD
+<<<<<<< HEAD
 use Keros\Entities\Core\Consultant;
 =======
 >>>>>>> main leader of a study done
+=======
+use Keros\Entities\Core\Consultant;
+>>>>>>> implementation of a new entity Consultant + controller/service/dataservice + tests, StudyIntegrationTest OK but not yet for MemberIntegrationTest and DocumentIntegrationTest
 use Keros\Tools\Validator;
 use Keros\Error\KerosException;
 
