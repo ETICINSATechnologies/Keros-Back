@@ -145,9 +145,9 @@ class Address implements JsonSerializable, Searchable
     }
 
     /**
-     * @return mixed
+     * @return Country
      */
-    public function getCountry()
+    public function getCountry() : Country
     {
         return $this->country;
     }

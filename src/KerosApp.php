@@ -3,6 +3,7 @@
 namespace Keros;
 
 use Keros\Controllers\Auth\LoginController;
+use Keros\Controllers\Treso\FactureDocumentController;
 use Keros\Controllers\Ua\StudyDocumentController;
 use Keros\Controllers\Core\TicketController;
 use Keros\Controllers\Core\CountryController;
@@ -190,6 +191,7 @@ class KerosApp
                     $this->put("/{id:[0-9]+}", FactureController::class . ':updateFacture');
                     $this->post("/{id:[0-9]+}/validate-ua", FactureController::class . ':validateFactureByUa');
                     $this->post("/{id:[0-9]+}/validate-perf", FactureController::class . ':validateFactureByPerf');
+                    $this->get("/{idFacture:[0-9]+}/generateDocument", FactureDocumentController::class . ':generateFactureDocument');
                 });
             })->add($this->getContainer()->get(AuthenticationMiddleware::class));
         });

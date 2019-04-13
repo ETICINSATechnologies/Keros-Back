@@ -156,7 +156,7 @@ class StudyDocumentTypeService
             $this->logger->error($msg);
             throw new KerosException($msg, 400);
         }
-        if ($study->getContacts() == null || empty($study->getContacts())) {
+        if ($study->getContactsArray() == null || empty($study->getContactsArray())) {
             $msg = "No contact in study " . $study->getId();
             $this->logger->error($msg);
             throw new KerosException($msg, 400);
@@ -272,7 +272,7 @@ class StudyDocumentTypeService
         return array(
             $study->getFirm()->getName(),
             $study->getName(),
-            $study->getFirm()->getAddress()->getLine1() . ", " . $study->getFirm()->getAddress()->getLine2(),
+            $study->getFirm()->getAddress()->getLine1() . ", " . (($study->getFirm()->getAddress()->getLine2() != null) ? ", " . $study->getFirm()->getAddress()->getLine2() : ""),
             $study->getFirm()->getAddress()->getPostalCode(),
             $study->getFirm()->getAddress()->getCity(),
             ($study->getFirm()->getSiret() != null) ? $study->getFirm()->getSiret() : '${SIRETENTREPRISE}',

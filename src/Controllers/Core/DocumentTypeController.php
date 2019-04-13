@@ -3,6 +3,7 @@
 namespace Keros\Controllers\Core;
 
 use Doctrine\ORM\EntityManager;
+use Keros\Services\Treso\FactureDocumentTypeService;
 use Keros\Services\Ua\StudyDocumentTypeService;
 use Keros\Tools\ConfigLoader;
 use Keros\Tools\DirectoryManager;
@@ -54,7 +55,7 @@ class DocumentTypeController
     {
         $this->logger = $container->get(Logger::class);
         $this->entityManager = $container->get(EntityManager::class);
-        $this->studyDocumentTypeService = $container->get(StudyDocumentTypeService::class);
+        $this->studyDocumentTypeService = $container->get(FactureDocumentTypeService::class);
         $this->kerosConfig = ConfigLoader::getConfig();
         $this->directoryManager = $container->get(DirectoryManager::class);
         $this->studyDocumentTypeDirectory = $this->kerosConfig['DOCUMENT_TYPE_DIRECTORY'];

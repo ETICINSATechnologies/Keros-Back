@@ -1,9 +1,9 @@
 <?php
 
-namespace Keros\Services\Ua;
+namespace Keros\Services\Treso;
 
-use Keros\DataServices\Ua\StudyDocumentDataService;
-use Keros\Entities\Ua\StudyDocument;
+use Keros\DataServices\Treso\FactureDocumentDataService;
+use Keros\Entities\Treso\FactureDocument;
 use Keros\Error\KerosException;
 use Keros\Tools\ConfigLoader;
 use Keros\Tools\DirectoryManager;
@@ -11,7 +11,7 @@ use Keros\Tools\Validator;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 
-class StudyDocumentService
+class FactureDocumentService
 {
 
     /**
@@ -20,19 +20,19 @@ class StudyDocumentService
     private $logger;
 
     /**
-     * @var StudyDocumentDataService
+     * @var FactureDocumentDataService
      */
     private $documentDataService;
 
     /**
-     * @var StudyService
+     * @var FactureService
      */
-    private $studyService;
+    private $factureService;
 
     /**
-     * @var StudyDocumentTypeService
+     * @var FactureDocumentTypeService
      */
-    private $studyDocumentTypeService;
+    private $factureDocumentTypeService;
 
     /**
      * @var ConfigLoader
@@ -45,27 +45,27 @@ class StudyDocumentService
     private $directoryManager;
 
     /**
-     * StudyDocumentService constructor.
+     * FactureDocumentService constructor.
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get(Logger::class);
-        $this->documentDataService = $container->get(StudyDocumentDataService::class);
-        $this->studyDocumentTypeService = $container->get(StudyDocumentTypeService::class);
-        $this->studyService = $container->get(StudyService::class);
+        $this->documentDataService = $container->get(FactureDocumentDataService::class);
+        $this->factureDocumentTypeService = $container->get(FactureDocumentTypeService::class);
+        $this->factureService = $container->get(FactureService::class);
         $this->kerosConfig = ConfigLoader::getConfig();
         $this->directoryManager = $container->get(DirectoryManager::class);
     }
 
     /**
      * @param array $fields
-     * @return StudyDocument
+     * @return FactureDocument
      * @throws \Exception
      */
-    public function create(array $fields): StudyDocument
+    public function create(array $fields): FactureDocument
     {
-        $studyId = Validator::requiredInt(intval($fields['studyId']));
+        $factureId = Validator::requiredInt(intval($fields['factureId']));
         $documentTypeId = Validator::requiredInt(intval($fields['documentId']));
         if ($fields['file'] == null) {
             $msg = 'File is empty in given parameters';
@@ -74,15 +74,14 @@ class StudyDocumentService
         }
         $file = $fields['file'];
 
-        $study = $this->studyService->getOne($studyId);
-        $studyDocumentType = $this->studyDocumentTypeService->getOne($documentTypeId);
-
+        $facture = $this->factureService->getOne($factureId);
+        $factureDocumentType = $this->factureDocumentTypeService->getOne($documentTypeId);
         $date = new \DateTime();
-        $location = 'study_' . $studyId . DIRECTORY_SEPARATOR . 'document_' . $documentTypeId . DIRECTORY_SEPARATOR;
+        $location = 'facture_' . $factureId . DIRECTORY_SEPARATOR . 'document_' . $documentTypeId . DIRECTORY_SEPARATOR;
         $location = $this->directoryManager->uniqueFilename($file, false, $location);
 
-        $this->directoryManager->mkdir($this->kerosConfig['STUDY_DOCUMENT_DIRECTORY'] . pathinfo($location, PATHINFO_DIRNAME));
-        $document = new StudyDocument($date, $location, $study, $studyDocumentType);
+        $this->directoryManager->mkdir($this->kerosConfig['FACTURE_DOCUMENT_DIRECTORY'] . pathinfo($location, PATHINFO_DIRNAME));
+        $document = new FactureDocument($date, $location, $facture, $factureDocumentType);
 
         $this->documentDataService->persist($document);
 
@@ -91,10 +90,10 @@ class StudyDocumentService
 
     /**
      * @param int $id
-     * @return StudyDocument
+     * @return FactureDocument
      * @throws \Keros\Error\KerosException
      */
-    public function getOne(int $id): StudyDocument
+    public function getOne(int $id): FactureDocument
     {
         $id = Validator::requiredId($id);
 
@@ -117,23 +116,23 @@ class StudyDocumentService
     }
 
     /**
-     * @param int $studyId
+     * @param int $factureId
      * @param int $documentType
-     * @return StudyDocument
+     * @return FactureDocument
      * @throws KerosException
      */
-    public function getLatestDocumentFromStudyDocumentType(int $studyId, int $documentType): StudyDocument
+    public function getLatestDocumentFromFactureDocumentType(int $factureId, int $documentType): FactureDocument
     {
         $documents = $this->documentDataService->getAll();
 
         $latestDocument = null;
         foreach ($documents as $document) {
-            if ($document->getStudy()->getId() == $studyId && $document->getStudyDocumentType()->getId() == $documentType)
+            if ($document->getFacture()->getId() == $factureId && $document->getFactureDocumentType()->getId() == $documentType)
                 if ($latestDocument == null || $document->getUploadDate() > $latestDocument->getUploadDate())
                     $latestDocument = $document;
         }
         if ($latestDocument == null) {
-            $msg = "No file found for study " . $studyId . " and document " . $documentType;
+            $msg = "No file found for facture " . $factureId . " and document " . $documentType;
             $this->logger->error($msg);
             throw new KerosException($msg, 400);
         }

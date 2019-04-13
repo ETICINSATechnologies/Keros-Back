@@ -9,7 +9,11 @@ namespace Keros\Entities\Core;
  * @Table(name="core_document")
  * @InheritanceType("JOINED")
  * @DiscriminatorColumn(name="discr", type="string")
- * @DiscriminatorMap({"core_document" = "Document", "ua_study_document" = "Keros\Entities\Ua\StudyDocument"})
+ * @DiscriminatorMap({
+ *     "core_document" = "Document",
+ *     "ua_study_document" = "Keros\Entities\Ua\StudyDocument",
+ *     "treso_facture_document" = "Keros\Entities\Treso\FactureDocument"
+ * })
  */
 abstract class Document implements \JsonSerializable
 {
