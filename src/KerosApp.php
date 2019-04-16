@@ -169,13 +169,6 @@ class KerosApp
                     $this->delete("/{id:[0-9]+}", TicketController::class . ':deleteTicket');
                 });
 
-                $this->group('/template', function () {
-                    $this->post("", DocumentTypeController::class . ':createDocumentType');
-                    $this->get("", DocumentTypeController::class . ':getAllDocumentType');
-                    $this->get('/{id:[0-9]+}', DocumentTypeController::class . ':getDocumentType');
-                    $this->delete("/{id:[0-9]+}", DocumentTypeController::class . ':deleteDocumentType');
-                });
-
             })->add($this->getContainer()->get(AuthenticationMiddleware::class));
 
             $this->group('/treso', function () {

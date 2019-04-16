@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityRepository;
 use Keros\Entities\Treso\FactureDocumentType;
 use Keros\Error\KerosException;
 use Keros\Tools\ConfigLoader;
+use Keros\Tools\DirectoryManager;
 use Keros\Tools\DocumentGenerator;
 use Monolog\Logger;
 use PHPUnit\Runner\Exception;
@@ -44,6 +45,11 @@ class FactureDocumentTypeDataService
     protected $documentGenerator;
 
     /**
+     * @var DirectoryManager
+     */
+    protected $directoryManager;
+
+    /**
      * @var string
      */
     private $factureDocumentTypeDirectory;
@@ -61,6 +67,7 @@ class FactureDocumentTypeDataService
         $this->temporaryDirectory = $this->kerosConfig['TEMPORARY_DIRECTORY'];
         $this->documentGenerator = $container->get(DocumentGenerator::class);
         $this->factureDocumentTypeDirectory = $this->kerosConfig['DOCUMENT_TYPE_DIRECTORY'];
+        $this->directoryManager = $container->get(DirectoryManager::class);
     }
 
     /**
@@ -203,13 +210,15 @@ class FactureDocumentTypeDataService
      */
     public function generateSimpleDocument(FactureDocumentType $documentType, array $searchArray, array $replacementArray)
     {
-        $documentTypeLocation = $this->factureDocumentTypeDirectory . DIRECTORY_SEPARATOR . $documentType->getLocation();
-        do {
-            $location = $this->temporaryDirectory . md5(pathinfo($documentTypeLocation, PATHINFO_BASENAME) . microtime()) . '.' . pathinfo($documentTypeLocation, PATHINFO_EXTENSION);
-        } while (file_exists($location));
+        $documentTypeLocation = $this->factureDocumentTypeDirectory . $documentType->getLocation();
+        $this->logger->debug($documentTypeLocation);
+        $location = $this->directoryManager->uniqueFilename($documentType->getLocation(), false, $this->temporaryDirectory);
 
-        copy($documentTypeLocation, $location);
-
+        if(!copy($documentTypeLocation, $location)){
+            $msg = "Error copying document type " . $documentType->getId();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
         switch (pathinfo($documentTypeLocation, PATHINFO_EXTENSION)) {
             case 'docx':
                 $return = $this->documentGenerator->generateDocx($location, $searchArray, $replacementArray);

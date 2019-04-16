@@ -9,14 +9,12 @@ use Keros\Entities\Ua\Contact;
 use Keros\Error\KerosException;
 use Keros\DataServices\Ua\ContactDataService;
 use Keros\Services\Core\AddressService;
-use Keros\Services\Core\DepartmentService;
 use Keros\Services\Core\GenderService;
 use Keros\Services\Core\PositionService;
 use Keros\Services\Core\UserService;
 use Keros\Tools\Validator;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
-use Keros\Services\Core\StudyService;
 
 class ContactService
 {

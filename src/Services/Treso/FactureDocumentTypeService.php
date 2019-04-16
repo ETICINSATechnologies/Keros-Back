@@ -138,7 +138,6 @@ class FactureDocumentTypeService
     }
 
     /**
-     * @param int $documentTypeId
      * @param int $factureId
      * @param int $connectedUserId
      * @return string
@@ -150,12 +149,12 @@ class FactureDocumentTypeService
         $documentTypes = $this->getAll();
 
         $documentType = null;
-        foreach($documentTypes as $documentT)
-            if($documentT->getFactureType() != null && $facture->getType()->getId() == $documentT->getFactureType()->getId())
+        foreach ($documentTypes as $documentT)
+            if ($documentT->getFactureType() != null && $facture->getType()->getId() == $documentT->getFactureType()->getId())
                 $documentType = $documentT;
         $connectedUser = $this->memberService->getOne($connectedUserId);
 
-        if($documentType == null){
+        if ($documentType == null) {
             $msg = "No document type found for facture " . $facture->getId();
             $this->logger->error($msg);
             throw new KerosException($msg, 400);
@@ -218,7 +217,9 @@ class FactureDocumentTypeService
             '${TVAFACTURE}',
             '${DUEDATE}',
             '${CREATEDDATE}',
-            '${MONTANTTVAFACTURE}'
+            '${MONTANTTVAFACTURE}',
+            '${POURCENTAGEFACTURE}',
+            '${FENUMEROFACTURE}'
         );
     }
 
@@ -247,15 +248,25 @@ class FactureDocumentTypeService
                 }
             }
         }
+
+        $study = $facture->getStudy();
+        $totalFacture = $study->getEcoParticipationFee() + $study->getManagementFee() + $study->getOutsourcingFee() + $study->getRealizationFee() + $study->getRebilledFee();
+        $factureInCurrentMonth = $this->factureService->getAll();
+        $feMonthNumber = 1;
+        foreach ($factureInCurrentMonth as $factureInMonth) {
+            if ($factureInMonth->getCreatedDate()->format('m/Y') == $facture->getCreatedDate()->format('m/Y') && $factureInMonth->getCreatedDate() < $facture->getCreatedDate())
+                $feMonthNumber++;
+        }
+
         return array(
             $facture->getClientName(),
             $facture->getSubject(),
-            $facture->getFullAddress()->getLine1() . (($facture->getStudy()->getFirm()->getAddress()->getLine2() != null) ? ", " . $facture->getStudy()->getFirm()->getAddress()->getLine2() : ""),
+            $facture->getFullAddress()->getLine1() . (($facture->getFullAddress()->getLine2() != null) ? ", " . $facture->getFullAddress()->getLine2() : ""),
             $facture->getFullAddress()->getPostalCode(),
             $facture->getFullAddress()->getCity(),
             $facture->getFullAddress()->getCountry()->getLabel(),
-            ($facture->getStudy()->getFirm()->getSiret() != null) ? $facture->getStudy()->getFirm()->getSiret() : '${SIRETENTREPRISE}',
-            ($facture->getStudy()->getDescription() != null) ? $facture->getStudy()->getDescription() : '${DESCRIPTIONETUDE}',
+            ($study->getFirm()->getSiret() != null) ? $facture->getStudy()->getFirm()->getSiret() : '${SIRETENTREPRISE}',
+            ($study->getDescription() != null) ? $facture->getStudy()->getDescription() : '${DESCRIPTIONETUDE}',
             ($facture->getAgreementSignDate() != null) ? $facture->getAgreementSignDate()->format('d/m/Y') : '${DATESIGCV}',
             $date->format('d/m/Y'),
             $connectedUser->getLastName(),
@@ -279,7 +290,9 @@ class FactureDocumentTypeService
             ($facture->getTaxPercentage() != null) ? $facture->getTaxPercentage() : '${TVAFACTURE}',
             ($facture->getDueDate() != null) ? $facture->getDueDate()->format('d/m/Y') : '${DUEDATE}',
             ($facture->getCreatedDate() != null) ? $facture->getCreatedDate()->format('d/m/Y') : '${CREATEDDATE}',
-            ($facture->getAmountTTC() != null && $facture->getAmountHT() != null) ? $facture->getAmountTTC() - $facture->getAmountHT() : '${MONTANTTVAFACTURE}'
+            ($facture->getAmountTTC() != null && $facture->getAmountHT() != null) ? $facture->getAmountTTC() - $facture->getAmountHT() : '${MONTANTTVAFACTURE}',
+            number_format($facture->getAmountHT() * 100 / $totalFacture, 2),
+            'FE' . $facture->getCreatedDate()->format('Y') . $facture->getCreatedDate()->format('m')  . (($feMonthNumber < 10) ? "0" : "") . $feMonthNumber,
         );
     }
 }

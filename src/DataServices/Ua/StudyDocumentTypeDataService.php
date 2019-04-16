@@ -164,7 +164,11 @@ class StudyDocumentTypeDataService
             $filename = $this->temporaryDirectory . pathinfo($documentTypeLocation, PATHINFO_FILENAME) . '_' . $cpt . '.' . pathinfo($documentTypeLocation, PATHINFO_EXTENSION);
             $files[] = $filename;
             //copy document type
-            copy($documentTypeLocation, $filename);
+            if(!copy($documentTypeLocation, $filename)){
+                $msg = "Error copying document type " . $documentType->getId();
+                $this->logger->error($msg);
+                throw new KerosException($msg, 500);
+            }
 
             //open document and replace pattern
             switch (pathinfo($documentTypeLocation, PATHINFO_EXTENSION)) {
@@ -209,7 +213,11 @@ class StudyDocumentTypeDataService
             $location = $this->temporaryDirectory . md5(pathinfo($documentTypeLocation, PATHINFO_BASENAME) . microtime()) . '.' . pathinfo($documentTypeLocation, PATHINFO_EXTENSION);
         } while (file_exists($location));
 
-        copy($documentTypeLocation, $location);
+        if(!copy($documentTypeLocation, $location)){
+            $msg = "Error copying document type " . $documentType->getId();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
 
         switch (pathinfo($documentTypeLocation, PATHINFO_EXTENSION)) {
             case 'docx':

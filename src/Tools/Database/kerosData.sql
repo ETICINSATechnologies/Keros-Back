@@ -39,8 +39,7 @@ INSERT INTO core_member_position (id, memberId, positionId, isBoard, year) VALUE
   (5, 3, 3, FALSE, 2015),
   (6, 1, 6, FALSE, 2016),
   (7, 2, 6, FALSE, 2002),
-  (8, 4, 9, FALSE, 2015),
-  (9, 4, 23, TRUE, 2019);
+  (8, 4, 9, FALSE, 2015);
 
 TRUNCATE TABLE ua_firm;
 INSERT INTO ua_firm (id, siret, name, addressId, typeId) VALUES
@@ -101,11 +100,11 @@ INSERT INTO treso_facture (id, numero, addressId, clientName , contactName, cont
                             subject, agreementSignDate, amountHT, taxPercentage, dueDate , additionalInformation, createdDate, createdById,
                             validatedByUa, validatedByUaDate, validatedByUaMemberId, validatedByPerf, validatedByPerfDate,validatedByPerfMemberId) VALUES
 (1,'23023234', 6, 'Google', 'James Bond', 'mail@exemple.fr', 1, 1, 'Trois Euros', 'Sujet du projet', '2018-11-10', 234.34, 345.45, '2018-1-10',
-  'info supp', '2018-11-1', 2, true, '2017-11-10', 2, true, '2019-11-10', 2),
+  'info supp', '2018-11-4', 2, true, '2017-11-10', 2, true, '2019-11-10', 2),
 (2,'23023235', 6, 'Milka', 'Alexandre Lang', 'fauxmail@exemple.fr', 1, 2, 'deux cents trente quatre euros et trente quatre centimes', 'Sujet du projet', '2018-11-10', 234.34, 20.0, '2018-1-10',
-  'info supp', '2018-11-1', 2, false, null, null, false, null, null),
+  'info supp', '2018-11-23', 2, false, null, null, false, null, null),
 (3,'23023235', 6, 'Milka', 'Alexandre Lang', 'fauxmail@exemple.fr', 1, 3, 'deux cents trente quatre euros et trente quatre centimes', 'Sujet du projet', '2018-11-10', 234.34, 20.0, '2018-1-10',
- 'info supp', '2018-11-1', 2, false, null, null, false, null, null),
+ 'info supp', '2018-11-3', 2, false, null, null, false, null, null),
 (4,'23023235', 6, 'Milka', 'Alexandre Lang', 'fauxmail@exemple.fr', 1, 4, 'deux cents trente quatre euros et trente quatre centimes', 'Sujet du projet', '2018-11-10', 234.34, 20.0, '2018-1-10',
  'info supp', '2018-11-1', 2, false, null, null, false, null, null);
 
@@ -114,7 +113,7 @@ INSERT INTO treso_facture_document_type(id, location, istemplatable, factureType
   (4, 'Template FE de solde.docx', 1, 4),
   (3, 'Template FE intermédiaire.docx', 1, 3),
   (2, 'Template FE acompte.docx', 1, 2),
-  (1, 'proformat.docx', 1, null);
+  (1, 'Template FE pro-forma.docx', 1, 1);
 
 TRUNCATE TABLE treso_facture_document;
 INSERT INTO treso_facture_document(id, factureId, factureDocumentTypeId) VALUES

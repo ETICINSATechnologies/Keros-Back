@@ -2,8 +2,6 @@
 
 namespace KerosTest\Treso;
 
-use Keros\Tools\ConfigLoader;
-use Keros\Tools\Validator;
 use KerosTest\AppTestCase;
 use Slim\Http\Environment;
 use Slim\Http\Request;
@@ -74,7 +72,7 @@ class FactureIntegrationTest extends AppTestCase
         $this->assertSame(200, $response->getStatusCode());
         $body = json_decode($response->getBody());
 
-        $this->assertEquals(2, count($body->content));
+        $this->assertEquals(4, count($body->content));
     }
 
     public function testGetFactureShouldReturn200()
@@ -165,7 +163,7 @@ class FactureIntegrationTest extends AppTestCase
         $this->assertSame(false, $body->validatedByPerf);
         $this->assertSame(null, $body->validatedByPerfDate);
         $this->assertSame(null, $body->validatedByPerfMember);
-        $this->assertSame(344.45 * 20.3, $body->amountTTC);
+        $this->assertSame(344.45 * ((20.3 / 100) + 1), $body->amountTTC);
     }
 
     /**

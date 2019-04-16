@@ -3,11 +3,8 @@
 
 namespace Keros\Services\Core;
 
-use Keros\DataServices\Core\CountryDataService;
 use Keros\DataServices\Core\GenderDataService;
-use Keros\Entities\Core\Country;
 use Keros\Entities\Core\Gender;
-use Keros\Entities\Core\RequestParameters;
 use Keros\Error\KerosException;
 use Keros\Tools\Validator;
 use Psr\Container\ContainerInterface;
