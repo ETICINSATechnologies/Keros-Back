@@ -70,10 +70,6 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(2, sizeof($body->content));
         $this->assertSame(1, $body->content[0]->id);
         $this->assertSame(3, $body->content[0]->positions[0]->id);
-        $this->assertSame(3, $body->content[1]->id);
-        $this->assertSame(1, $body->content[1]->positions[0]->id);
-        $this->assertSame(2, $body->content[1]->positions[1]->id);
-        $this->assertSame(3, $body->content[1]->positions[2]->id);
     }
 
     public function testPutConnectedMemberEmptyBodyShouldReturn400()

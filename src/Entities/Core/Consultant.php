@@ -13,7 +13,7 @@ class Consultant implements JsonSerializable
     /**
      * @Id
      * @OneToOne(targetEntity="User")
-     * @JoinColumn(name="id", referencedColumnName="id")
+     * @JoinColumn(name="id", referencedColumnName="id",onDelete="CASCADE")
      **/
     protected $user;
 

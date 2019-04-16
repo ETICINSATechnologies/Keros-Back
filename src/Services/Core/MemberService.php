@@ -5,6 +5,7 @@ namespace Keros\Services\Core;
 
 use Keros\DataServices\Core\MemberDataService;
 use Keros\DataServices\Core\TicketDataService;
+use Keros\Entities\Core\Consultant;
 use Keros\Entities\Core\Member;
 use Keros\Entities\Core\Page;
 use Keros\Entities\Core\RequestParameters;
@@ -47,9 +48,15 @@ class MemberService
      * @var MemberPositionService
      */
     private $memberPositionService;
+
+    /**
+     * @var ConsultantService
+     */
+    private $consultantService;
     /**
      * @var Logger
      */
+
     private $logger;
 
     public function __construct(ContainerInterface $container)
@@ -60,6 +67,7 @@ class MemberService
         $this->genderService = $container->get(GenderService::class);
         $this->departmentService = $container->get(DepartmentService::class);
         $this->userService = $container->get(UserService::class);
+        $this->consultantService = $container->get(ConsultantService::class);
         $this->memberDataService = $container->get(MemberDataService::class);
         $this->ticketDataService = $container->get(TicketDataService::class);
     }
