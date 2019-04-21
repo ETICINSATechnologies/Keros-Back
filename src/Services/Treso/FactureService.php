@@ -116,6 +116,10 @@ class FactureService
         return $facture;
     }
 
+    /**
+     * @return Facture[]
+     * @throws KerosException
+     */
     public function getAll(): array
     {
         return $this->factureDataService->getAll();
@@ -187,7 +191,7 @@ class FactureService
      * @return Facture
      * @throws \Exception
      */
-    public function validateByUa(int $factureId, int $validateUaMemberId) : Facture
+    public function validateByUa(int $factureId, int $validateUaMemberId): Facture
     {
         $facture = $this->getOne($factureId);
         $member = $this->memberService->getOne($validateUaMemberId);
@@ -205,9 +209,9 @@ class FactureService
      * @param int $factureId
      * @param int $validateUaMemberId
      * @return Facture
-     * @throws KerosException
+     * @throws \Exception
      */
-    public function validateByPerf(int $factureId, int $validateUaMemberId) : Facture
+    public function validateByPerf(int $factureId, int $validateUaMemberId): Facture
     {
         $facture = $this->getOne($factureId);
         $member = $this->memberService->getOne($validateUaMemberId);

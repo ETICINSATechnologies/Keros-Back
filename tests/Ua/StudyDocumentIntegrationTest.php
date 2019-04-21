@@ -1,6 +1,6 @@
 <?php
 
-namespace KerosTest\Core;
+namespace KerosTest\Ua;
 
 
 use Keros\Tools\ConfigLoader;
@@ -9,7 +9,7 @@ use Slim\Http\Environment;
 use Slim\Http\Request;
 use Slim\Http\UploadedFile;
 
-class DocumentIntegrationTest extends AppTestCase
+class StudyDocumentIntegrationTest extends AppTestCase
 {
     public function testGetDocumentShouldReturn200()
     {
@@ -30,7 +30,7 @@ class DocumentIntegrationTest extends AppTestCase
 
     public function testPostDocumentShouldReturn200()
     {
-        fopen("test.txt", "w");
+        $handle = fopen("test.txt", "w");
         $file = new UploadedFile('test.txt', 'test.txt', 'text/plain', filesize('test.txt'));
 
         $env = Environment::mock([
@@ -42,6 +42,7 @@ class DocumentIntegrationTest extends AppTestCase
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
+        fclose($handle);
         $this->assertSame(200, $response->getStatusCode());
 
         //on test qu'il est maintenant bien retourné

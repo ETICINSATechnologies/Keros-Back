@@ -1,18 +1,19 @@
 <?php
 
-namespace Keros\DataServices\Ua;
+namespace Keros\DataServices\Treso;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use Keros\Entities\Ua\StudyDocumentType;
+use Keros\Entities\Treso\FactureDocumentType;
 use Keros\Error\KerosException;
 use Keros\Tools\ConfigLoader;
+use Keros\Tools\DirectoryManager;
 use Keros\Tools\DocumentGenerator;
 use Monolog\Logger;
 use PHPUnit\Runner\Exception;
 use Psr\Container\ContainerInterface;
 
-class StudyDocumentTypeDataService
+class FactureDocumentTypeDataService
 {
 
     /**
@@ -44,31 +45,37 @@ class StudyDocumentTypeDataService
     protected $documentGenerator;
 
     /**
-     * @var string
+     * @var DirectoryManager
      */
-    private $studyDocumentTypeDirectory;
+    protected $directoryManager;
 
     /**
-     * StudyDocumentTypeDataService constructor.
+     * @var string
+     */
+    private $factureDocumentTypeDirectory;
+
+    /**
+     * FactureDocumentTypeDataService constructor.
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get(Logger::class);
         $this->entityManager = $container->get(EntityManager::class);
-        $this->repository = $this->entityManager->getRepository(StudyDocumentType::class);
+        $this->repository = $this->entityManager->getRepository(FactureDocumentType::class);
         $this->kerosConfig = ConfigLoader::getConfig();
         $this->temporaryDirectory = $this->kerosConfig['TEMPORARY_DIRECTORY'];
         $this->documentGenerator = $container->get(DocumentGenerator::class);
-        $this->studyDocumentTypeDirectory = $this->kerosConfig['DOCUMENT_TYPE_DIRECTORY'];
+        $this->factureDocumentTypeDirectory = $this->kerosConfig['DOCUMENT_TYPE_DIRECTORY'];
+        $this->directoryManager = $container->get(DirectoryManager::class);
     }
 
     /**
      * @param int $id
-     * @return StudyDocumentType|null
+     * @return FactureDocumentType|null
      * @throws KerosException
      */
-    public function getOne(int $id): ?StudyDocumentType
+    public function getOne(int $id): ?FactureDocumentType
     {
         try {
             $documentType = $this->repository->find($id);
@@ -98,12 +105,12 @@ class StudyDocumentTypeDataService
 
 
     /**
-     * @param StudyDocumentType $documentType
+     * @param FactureDocumentType $documentType
      * @throws KerosException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function persist(StudyDocumentType $documentType)
+    public function persist(FactureDocumentType $documentType)
     {
         try {
             $this->entityManager->persist($documentType);
@@ -116,12 +123,12 @@ class StudyDocumentTypeDataService
     }
 
     /**
-     * @param StudyDocumentType $documentType
+     * @param FactureDocumentType $documentType
      * @throws KerosException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function delete(StudyDocumentType $documentType)
+    public function delete(FactureDocumentType $documentType)
     {
         try {
             $this->entityManager->remove($documentType);
@@ -135,15 +142,15 @@ class StudyDocumentTypeDataService
 
 
     /**
-     * @param StudyDocumentType $documentType
+     * @param FactureDocumentType $documentType
      * @param array $searchArray
      * @param array[] $replacementArrays Array of all replacement array
      * @return string
      * @throws KerosException
      */
-    public function generateMultipleDocument(StudyDocumentType $documentType, array $searchArray, array $replacementArrays)
+    public function generateMultipleDocument(FactureDocumentType $documentType, array $searchArray, array $replacementArrays)
     {
-        $documentTypeLocation = $this->studyDocumentTypeDirectory . $documentType->getLocation();
+        $documentTypeLocation = $this->factureDocumentTypeDirectory . $documentType->getLocation();
 
         //generate file name until it doesn't not actually exist
         do {
@@ -160,15 +167,10 @@ class StudyDocumentTypeDataService
         $cpt = -1;
         foreach ($replacementArrays as $replacementArray) {
             $cpt++;
-            //TODO use identifiant
             $filename = $this->temporaryDirectory . pathinfo($documentTypeLocation, PATHINFO_FILENAME) . '_' . $cpt . '.' . pathinfo($documentTypeLocation, PATHINFO_EXTENSION);
             $files[] = $filename;
             //copy document type
-            if(!copy($documentTypeLocation, $filename)){
-                $msg = "Error copying document type " . $documentType->getId();
-                $this->logger->error($msg);
-                throw new KerosException($msg, 500);
-            }
+            copy($documentTypeLocation, $filename);
 
             //open document and replace pattern
             switch (pathinfo($documentTypeLocation, PATHINFO_EXTENSION)) {
@@ -200,25 +202,23 @@ class StudyDocumentTypeDataService
     }
 
     /**
-     * @param StudyDocumentType $documentType
+     * @param FactureDocumentType $documentType
      * @param array $searchArray
      * @param array $replacementArray
      * @return string
      * @throws KerosException
      */
-    public function generateSimpleDocument(StudyDocumentType $documentType, array $searchArray, array $replacementArray)
+    public function generateSimpleDocument(FactureDocumentType $documentType, array $searchArray, array $replacementArray)
     {
-        $documentTypeLocation = $this->studyDocumentTypeDirectory . DIRECTORY_SEPARATOR . $documentType->getLocation();
-        do {
-            $location = $this->temporaryDirectory . md5(pathinfo($documentTypeLocation, PATHINFO_BASENAME) . microtime()) . '.' . pathinfo($documentTypeLocation, PATHINFO_EXTENSION);
-        } while (file_exists($location));
+        $documentTypeLocation = $this->factureDocumentTypeDirectory . $documentType->getLocation();
+        $this->logger->debug($documentTypeLocation);
+        $location = $this->directoryManager->uniqueFilename($documentType->getLocation(), false, $this->temporaryDirectory);
 
         if(!copy($documentTypeLocation, $location)){
             $msg = "Error copying document type " . $documentType->getId();
             $this->logger->error($msg);
             throw new KerosException($msg, 500);
         }
-
         switch (pathinfo($documentTypeLocation, PATHINFO_EXTENSION)) {
             case 'docx':
                 $return = $this->documentGenerator->generateDocx($location, $searchArray, $replacementArray);

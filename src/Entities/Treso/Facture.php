@@ -191,9 +191,9 @@ class Facture implements \JsonSerializable
     /**
      * @return float
      */
-    protected function getAmountTTC()
+    public function getAmountTTC()
     {
-        return $this->amountHT * $this->taxPercentage;
+        return $this->amountHT * (($this->taxPercentage / 100) + 1);
     }
 
     /**

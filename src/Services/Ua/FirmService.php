@@ -3,7 +3,6 @@
 
 namespace Keros\Services\Ua;
 
-use Keros\DataServices\Ua\ContactDataService;
 use Keros\DataServices\Ua\FirmDataService;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Ua\Firm;

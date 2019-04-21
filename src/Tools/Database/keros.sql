@@ -345,6 +345,27 @@ CREATE TABLE treso_facture (
   CONSTRAINT fk_facture_validatedByPerf_member FOREIGN KEY (validatedByPerfMemberId) REFERENCES core_member(id)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
+DROP TABLE IF EXISTS treso_facture_document_type;
+CREATE TABLE treso_facture_document_type (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  location varchar(255) NOT NULL UNIQUE,
+  isTemplatable boolean NOT NULL,
+  factureTypeId int(11) UNIQUE,
+  PRIMARY KEY (id),
+  CONSTRAINT fk_facture_document_type_facture_type FOREIGN KEY (factureTypeId) REFERENCES treso_facture_type(id)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+
+DROP TABLE IF EXISTS treso_facture_document;
+CREATE TABLE treso_facture_document (
+  id int(11) AUTO_INCREMENT,
+  factureId int(11) NOT NULL,
+  factureDocumentTypeId int(11) NOT NULL,
+  PRIMARY KEY (id),
+  CONSTRAINT fk_treso_document_core_document FOREIGN KEY (id) REFERENCES core_document(id),
+  CONSTRAINT `fk_treso_facture_document_treso_facture` FOREIGN KEY (factureId) REFERENCES treso_facture(`id`),
+  CONSTRAINT fk_treso_document_treso_document_type FOREIGN KEY (factureDocumentTypeId) REFERENCES treso_facture_document_type(id)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+
 SET AUTOCOMMIT = 1;
 SET FOREIGN_KEY_CHECKS = 1;
 SET UNIQUE_CHECKS = 1;

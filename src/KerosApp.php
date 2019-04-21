@@ -3,6 +3,7 @@
 namespace Keros;
 
 use Keros\Controllers\Auth\LoginController;
+use Keros\Controllers\Treso\FactureDocumentController;
 use Keros\Controllers\Ua\StudyDocumentController;
 use Keros\Controllers\Core\TicketController;
 use Keros\Controllers\Core\CountryController;
@@ -168,13 +169,6 @@ class KerosApp
                     $this->delete("/{id:[0-9]+}", TicketController::class . ':deleteTicket');
                 });
 
-                $this->group('/template', function () {
-                    $this->post("", DocumentTypeController::class . ':createDocumentType');
-                    $this->get("", DocumentTypeController::class . ':getAllDocumentType');
-                    $this->get('/{id:[0-9]+}', DocumentTypeController::class . ':getDocumentType');
-                    $this->delete("/{id:[0-9]+}", DocumentTypeController::class . ':deleteDocumentType');
-                });
-
             })->add($this->getContainer()->get(AuthenticationMiddleware::class));
 
             $this->group('/treso', function () {
@@ -190,6 +184,7 @@ class KerosApp
                     $this->put("/{id:[0-9]+}", FactureController::class . ':updateFacture');
                     $this->post("/{id:[0-9]+}/validate-ua", FactureController::class . ':validateFactureByUa');
                     $this->post("/{id:[0-9]+}/validate-perf", FactureController::class . ':validateFactureByPerf');
+                    $this->get("/{idFacture:[0-9]+}/generateDocument", FactureDocumentController::class . ':generateFactureDocument');
                 });
             })->add($this->getContainer()->get(AuthenticationMiddleware::class));
         });

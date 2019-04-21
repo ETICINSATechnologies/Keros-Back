@@ -74,7 +74,8 @@ INSERT INTO `ua_study_qualityManager` (`memberId`, `studyId`) VALUES
 TRUNCATE TABLE ua_study_contact;
 INSERT INTO `ua_study_contact` (`contactId`, `studyId`) VALUES
   (1, 2),
-  (2, 2);
+  (2, 2),
+  (2, 1);
 
 TRUNCATE TABLE ua_study_document_type;
 INSERT INTO ua_study_document_type(id, `location`, istemplatable, oneConsultant) VALUES
@@ -85,7 +86,9 @@ INSERT INTO ua_study_document_type(id, `location`, istemplatable, oneConsultant)
 TRUNCATE TABLE core_document;
 INSERT INTO core_document(id, uploadDate, location, discr) VALUES
   (1, STR_TO_DATE('2019/2/14 10:40:10', '%Y/%m/%d %h:%i:%s'), 'study_1/document_2/acompte.docx', 'ua_study_document'),
-  (2, STR_TO_DATE('2018/12/16 10:40:10', '%Y/%m/%d %h:%i:%s'), 'study_1/document_3/FE.docx', 'ua_study_document');
+  (2, STR_TO_DATE('2018/12/16 10:40:10', '%Y/%m/%d %h:%i:%s'), 'study_1/document_3/FE.docx', 'ua_study_document'),
+  (3, STR_TO_DATE('2018/12/16 10:40:10', '%Y/%m/%d %h:%i:%s'), 'facture_1/document_3/proformat.docx', 'treso_facture_document'),
+  (4, STR_TO_DATE('2019/04/19 10:40:10', '%Y/%m/%d %h:%i:%s'), 'facture_1/document_4/solde.docx', 'treso_facture_document');
 
 TRUNCATE TABLE ua_study_document;
 INSERT INTO `ua_study_document`(id, studyId, studyDocumentTypeId) VALUES
@@ -97,8 +100,24 @@ INSERT INTO treso_facture (id, numero, addressId, clientName , contactName, cont
                             subject, agreementSignDate, amountHT, taxPercentage, dueDate , additionalInformation, createdDate, createdById,
                             validatedByUa, validatedByUaDate, validatedByUaMemberId, validatedByPerf, validatedByPerfDate,validatedByPerfMemberId) VALUES
 (1,'23023234', 6, 'Google', 'James Bond', 'mail@exemple.fr', 1, 1, 'Trois Euros', 'Sujet du projet', '2018-11-10', 234.34, 345.45, '2018-1-10',
-  'info supp', '2018-11-1', 2, true, '2017-11-10', 2, true, '2019-11-10', 2),
-(2,'23023234', 6, 'Google', 'James Bond', 'mail@exemple.fr', 1, 1, 'Trois Euros', 'Sujet du projet', '2018-11-10', 234.34, 345.45, '2018-1-10',
-  'info supp', '2018-11-1', 2, false, null, null, false, null, null);
+  'info supp', '2018-11-4', 2, true, '2017-11-10', 2, true, '2019-11-10', 2),
+(2,'23023235', 6, 'Milka', 'Alexandre Lang', 'fauxmail@exemple.fr', 1, 2, 'deux cents trente quatre euros et trente quatre centimes', 'Sujet du projet', '2018-11-10', 234.34, 20.0, '2018-1-10',
+  'info supp', '2018-11-23', 2, false, null, null, false, null, null),
+(3,'23023235', 6, 'Milka', 'Alexandre Lang', 'fauxmail@exemple.fr', 1, 3, 'deux cents trente quatre euros et trente quatre centimes', 'Sujet du projet', '2018-11-10', 234.34, 20.0, '2018-1-10',
+ 'info supp', '2018-11-3', 2, false, null, null, false, null, null),
+(4,'23023235', 6, 'Milka', 'Alexandre Lang', 'fauxmail@exemple.fr', 1, 4, 'deux cents trente quatre euros et trente quatre centimes', 'Sujet du projet', '2018-11-10', 234.34, 20.0, '2018-1-10',
+ 'info supp', '2018-11-1', 2, false, null, null, false, null, null);
+
+TRUNCATE TABLE treso_facture_document_type;
+INSERT INTO treso_facture_document_type(id, location, istemplatable, factureTypeId) VALUES
+  (4, 'Template FE de solde.docx', 1, 4),
+  (3, 'Template FE intermédiaire.docx', 1, 3),
+  (2, 'Template FE acompte.docx', 1, 2),
+  (1, 'Template FE pro-forma.docx', 1, 1);
+
+TRUNCATE TABLE treso_facture_document;
+INSERT INTO treso_facture_document(id, factureId, factureDocumentTypeId) VALUES
+  (3, 1, 2),
+  (4, 1, 1);
 
 COMMIT;

@@ -13,6 +13,8 @@ use Keros\DataServices\Core\MemberPositionDataService;
 use Keros\DataServices\Core\PoleDataService;
 use Keros\DataServices\Core\PositionDataService;
 use Keros\DataServices\Core\UserDataService;
+use Keros\DataServices\Treso\FactureDocumentDataService;
+use Keros\DataServices\Treso\FactureDocumentTypeDataService;
 use Keros\DataServices\Treso\FactureTypeDataService;
 use Keros\DataServices\Treso\FactureDataService;
 use Keros\DataServices\Ua\ContactDataService;
@@ -97,6 +99,12 @@ class DataServiceRegistrar
         };
         $container[FactureDataService::class] = function ($container) {
             return new FactureDataService($container);
+        };
+        $container[FactureDocumentTypeDataService::class] = function ($container) {
+            return new FactureDocumentTypeDataService($container);
+        };
+        $container[FactureDocumentDataService::class] = function ($container) {
+            return new FactureDocumentDataService($container);
         };
 
     }

@@ -58,6 +58,10 @@ class FactureDataService
         }
     }
 
+    /**
+     * @return Facture[]
+     * @throws KerosException
+     */
     public function getAll(): array
     {
         try {
