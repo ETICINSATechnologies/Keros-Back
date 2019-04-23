@@ -9,7 +9,8 @@ use Slim\Http\Request;
 class FactureIntegrationTest extends AppTestCase
 {
 
-    public function testValidateByUaShouldReturn200(){
+    public function testValidateByUaShouldReturn200()
+    {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'POST',
             'REQUEST_URI' => '/api/v1/treso/facture/2/validate-ua',
@@ -21,7 +22,8 @@ class FactureIntegrationTest extends AppTestCase
         $this->assertSame(200, $response->getStatusCode());
     }
 
-    public function testValidateByPerfShouldReturn200(){
+    public function testValidateByPerfShouldReturn200()
+    {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'POST',
             'REQUEST_URI' => '/api/v1/treso/facture/2/validate-perf',
@@ -73,6 +75,13 @@ class FactureIntegrationTest extends AppTestCase
         $body = json_decode($response->getBody());
 
         $this->assertEquals(4, count($body->content));
+        $this->assertEquals(4, $body->meta->totalItems);
+        $this->assertSame('23023234', $body->content[0]->numero);
+        $this->assertSame(1, $body->content[0]->id);
+        $this->assertSame(1, $body->content[0]->documents[0]->id);
+        $this->assertSame(false, $body->content[0]->documents[0]->isUploaded);
+        $this->assertSame(4, $body->content[0]->documents[3]->id);
+        $this->assertSame(true, $body->content[0]->documents[3]->isUploaded);
     }
 
     public function testGetFactureShouldReturn200()
@@ -89,6 +98,12 @@ class FactureIntegrationTest extends AppTestCase
         $body = json_decode($response->getBody());
         $this->assertSame('23023234', $body->numero);
         $this->assertSame(1, $body->id);
+        $this->assertSame(1, $body->documents[0]->id);
+        $this->assertSame(false, $body->documents[0]->isUploaded);
+        $this->assertSame(true, $body->documents[0]->isTemplatable);
+        $this->assertSame('Template pro-forma', $body->documents[0]->name);
+        $this->assertSame(4, $body->documents[3]->id);
+        $this->assertSame(true, $body->documents[3]->isUploaded);
     }
 
     public function testGetFactureShouldReturn404()
@@ -164,6 +179,10 @@ class FactureIntegrationTest extends AppTestCase
         $this->assertSame(null, $body->validatedByPerfDate);
         $this->assertSame(null, $body->validatedByPerfMember);
         $this->assertSame(344.45 * ((20.3 / 100) + 1), $body->amountTTC);
+        $this->assertSame(false, $body->documents[0]->isUploaded);
+        $this->assertSame(false, $body->documents[1]->isUploaded);
+        $this->assertSame(false, $body->documents[2]->isUploaded);
+        $this->assertSame(false, $body->documents[3]->isUploaded);
     }
 
     /**
@@ -207,11 +226,14 @@ class FactureIntegrationTest extends AppTestCase
         $this->assertSame(false, $body->validatedByPerf);
         $this->assertSame(null, $body->validatedByPerfDate);
         $this->assertSame(null, $body->validatedByPerfMember);
+        $this->assertSame(false, $body->documents[0]->isUploaded);
+        $this->assertSame(false, $body->documents[1]->isUploaded);
+        $this->assertSame(false, $body->documents[2]->isUploaded);
+        $this->assertSame(false, $body->documents[3]->isUploaded);
     }
 
     public function testPutFactureShouldReturn200()
     {
-
         $post_body = array(
             'numero' => "2134",
             'studyId' => 2,
@@ -250,6 +272,10 @@ class FactureIntegrationTest extends AppTestCase
         $this->assertSame(20.3, $body->taxPercentage);
         $this->assertSame('2010-01-01', $body->dueDate);
         $this->assertSame('test', $body->additionalInformation);
+        $this->assertSame(false, $body->documents[0]->isUploaded);
+        $this->assertSame(false, $body->documents[1]->isUploaded);
+        $this->assertSame(true, $body->documents[2]->isUploaded);
+        $this->assertSame(true, $body->documents[3]->isUploaded);
     }
 
     public function testPutFactureWithEmptyBodyShouldReturn400()

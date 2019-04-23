@@ -2,6 +2,8 @@
 
 namespace Keros\Entities\Core;
 
+use JsonSerializable;
+
 /**
  * Class Document
  * @package Keros\Entities\Core
@@ -15,7 +17,7 @@ namespace Keros\Entities\Core;
  *     "treso_facture_document" = "Keros\Entities\Treso\FactureDocument"
  * })
  */
-abstract class Document implements \JsonSerializable
+abstract class Document implements JsonSerializable
 {
     /**
      * @Id
