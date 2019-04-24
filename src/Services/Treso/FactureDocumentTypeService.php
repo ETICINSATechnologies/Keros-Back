@@ -164,11 +164,6 @@ class FactureDocumentTypeService
             $this->logger->error($msg);
             throw new KerosException($msg, 400);
         }
-        if ($facture->getStudy()->getContacts() == null || empty($facture->getStudy()->getContactsArray())) {
-            $msg = "No contact in study " . $facture->getStudy()->getId();
-            $this->logger->error($msg);
-            throw new KerosException($msg, 400);
-        }
 
         $this->directoryManager->mkdir($this->kerosConfig["TEMPORARY_DIRECTORY"]);
         $searchArray = $this->getFactureSearchArray();

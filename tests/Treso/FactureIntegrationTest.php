@@ -112,7 +112,7 @@ class FactureIntegrationTest extends AppTestCase
         $post_body = array(
             'numero' => "2134",
             'studyId' => 2,
-            'type' => 'Acompte',
+            'type' => 'acompte',
             'fullAddress' => array(
                 'line1' => 'ici c\'est paris',
                 'line2' => null,
@@ -148,7 +148,7 @@ class FactureIntegrationTest extends AppTestCase
         $this->assertSame('exemple@email.fr', $body->contactEmail);
         $this->assertSame(2, $body->study->id);
         $this->assertSame('cent quatre euros', $body->amountDescription);
-        $this->assertSame('Acompte', $body->type);
+        $this->assertSame('acompte', $body->type);
         $this->assertSame('fin de la mission', $body->subject);
         $this->assertSame('2019-09-09', $body->agreementSignDate);
         $this->assertSame(344.45, $body->amountHT);
@@ -173,7 +173,7 @@ class FactureIntegrationTest extends AppTestCase
     {
         $post_body = array(
             'studyId' => 2,
-            'type' => 'Acompte',
+            'type' => 'acompte',
         );
         $env = Environment::mock([
             'REQUEST_METHOD' => 'POST',
@@ -192,7 +192,7 @@ class FactureIntegrationTest extends AppTestCase
         $this->assertSame(null, $body->contactEmail);
         $this->assertSame(2, $body->study->id);
         $this->assertSame(null, $body->amountDescription);
-        $this->assertSame('Acompte', $body->type);
+        $this->assertSame('acompte', $body->type);
         $this->assertSame(null, $body->subject);
         $this->assertSame(null, $body->agreementSignDate);
         $this->assertSame(null, $body->amountHT);
@@ -215,7 +215,7 @@ class FactureIntegrationTest extends AppTestCase
         $post_body = array(
             'numero' => "2134",
             'studyId' => 2,
-            'type' => 'Acompte',
+            'type' => 'acompte',
             'clientName' => 'Google',
             'contactName' => 'je sais pas',
             'contactEmail' => 'exemple@email.fr',
@@ -243,7 +243,7 @@ class FactureIntegrationTest extends AppTestCase
         $this->assertSame('exemple@email.fr', $body->contactEmail);
         $this->assertSame(2, $body->study->id);
         $this->assertSame('cent quatre euros', $body->amountDescription);
-        $this->assertSame('Acompte', $body->type);
+        $this->assertSame('acompte', $body->type);
         $this->assertSame('fin de la mission', $body->subject);
         $this->assertSame('2019-09-09', $body->agreementSignDate);
         $this->assertSame(344.45, $body->amountHT);
