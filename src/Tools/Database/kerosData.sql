@@ -120,4 +120,9 @@ INSERT INTO treso_facture_document(id, factureId, factureDocumentTypeId) VALUES
   (3, 1, 2),
   (4, 1, 1);
 
+TRUNCATE TABLE sg_member_inscription;
+INSERT INTO sg_member_inscription (id, firstName, lastName, departmentId, email, phoneNumber, outYear, nationalityId, wantedPoleId, addressId) VALUES
+(1, 'Bruce', 'Wayne', 3, 'bruce.wayne@batman.com', '0033123456789', 2020, 42, 2, 2),
+(2, 'Clark', 'Kent', 2, 'clark.kent@dailyplanete.com', '0033123456789', 2019, 69, 4, 2);
+
 COMMIT;
