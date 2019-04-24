@@ -504,9 +504,9 @@ INSERT INTO `ua_field` (`id`, `label`) VALUES
   (13, 'Traduction');
 
 INSERT INTO treso_facture_type (id, label) VALUES
-  (1, 'Pro-forma'),
-  (2, 'Acompte'),
-  (3, 'Intermédiaire'),
-  (4, 'Solde');
+  (1, 'proforma'),
+  (2, 'acompte'),
+  (3, 'intermediaire'),
+  (4, 'solde');
 
 COMMIT;
