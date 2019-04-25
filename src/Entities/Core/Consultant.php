@@ -1,9 +1,6 @@
 <?php
-
 namespace Keros\Entities\Core;
-
 use JsonSerializable;
-
 /**
  * @Entity
  * @Table(name="core_consultant")
@@ -16,55 +13,41 @@ class Consultant implements JsonSerializable
      * @JoinColumn(name="id", referencedColumnName="id")
      **/
     protected $user;
-
     /**
      * @ManyToOne(targetEntity="Gender")
      * @JoinColumn(name="GenderId", referencedColumnName="id")
      **/
     protected $gender;
-
     /** @Column(type="string", length=100) */
     protected $firstName;
-
     /** @Column(type="string", length=100) */
     protected $lastName;
-
     /** @Column(type="datetime") */
     protected $birthday;
-
     /** @Column(type="string", length=20) */
     protected $telephone;
-
     /** @Column(type="string", length=255) */
     protected $email;
-
     /**
      * @ManyToOne(targetEntity="Address")
      * @JoinColumn(name="AddressId", referencedColumnName="id")
      **/
     protected $address;
-
     /** @Column(type="integer") */
     protected $schoolYear;
-
     /**
      * @ManyToOne(targetEntity="Department")
      * @JoinColumn(name="DepartmentId", referencedColumnName="id")
      **/
     protected $department;
-
-
     /** @Column(type="string", length=20) */
     protected $company;
-
     /** @Column(type="string", length=200) */
     protected $profilePicture;
-
     /**
      * @ManyToMany(targetEntity="Keros\Entities\Ua\Study", mappedBy="consultants")
      */
     protected $studiesAsConsultant;
-
     public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture)
     {
         $this->firstName = $firstName;
@@ -78,7 +61,6 @@ class Consultant implements JsonSerializable
         $this->company = $company;
         $this->profilePicture = $profilePicture;
     }
-
     public function jsonSerialize()
     {
         return [
@@ -97,11 +79,9 @@ class Consultant implements JsonSerializable
             'profilePicture' => $this->getProfilePicture(),
         ];
     }
-
     public static function getSearchFields(): array {
         return ['firstName', 'lastName', 'company'];
     }
-
     // Getters and setters
     /**
      * @return mixed
@@ -110,7 +90,6 @@ class Consultant implements JsonSerializable
     {
         return $this->getUser()->getId();
     }
-
     /**
      * @return mixed
      */
@@ -118,7 +97,6 @@ class Consultant implements JsonSerializable
     {
         return $this->user;
     }
-
     /**
      * @param mixed $user
      */
@@ -126,7 +104,6 @@ class Consultant implements JsonSerializable
     {
         $this->user = $user;
     }
-
     /**
      * @return mixed
      */
@@ -134,7 +111,6 @@ class Consultant implements JsonSerializable
     {
         return $this->gender;
     }
-
     /**
      * @param mixed $gender
      */
@@ -142,7 +118,6 @@ class Consultant implements JsonSerializable
     {
         $this->gender = $gender;
     }
-
     /**
      * @return mixed
      */
@@ -150,7 +125,6 @@ class Consultant implements JsonSerializable
     {
         return $this->firstName;
     }
-
     /**
      * @param mixed $firstName
      */
@@ -158,7 +132,6 @@ class Consultant implements JsonSerializable
     {
         $this->firstName = $firstName;
     }
-
     /**
      * @return mixed
      */
@@ -166,7 +139,6 @@ class Consultant implements JsonSerializable
     {
         return $this->lastName;
     }
-
     /**
      * @param mixed $lastName
      */
@@ -174,7 +146,6 @@ class Consultant implements JsonSerializable
     {
         $this->lastName = $lastName;
     }
-
     /**
      * @return mixed
      */
@@ -182,7 +153,6 @@ class Consultant implements JsonSerializable
     {
         return $this->birthday;
     }
-
     /**
      * @param mixed $birthday
      */
@@ -190,7 +160,6 @@ class Consultant implements JsonSerializable
     {
         $this->birthday = $birthday;
     }
-
     /**
      * @return mixed
      */
@@ -198,7 +167,6 @@ class Consultant implements JsonSerializable
     {
         return $this->telephone;
     }
-
     /**
      * @param mixed $telephone
      */
@@ -206,7 +174,6 @@ class Consultant implements JsonSerializable
     {
         $this->telephone = $telephone;
     }
-
     /**
      * @return mixed
      */
@@ -214,7 +181,6 @@ class Consultant implements JsonSerializable
     {
         return $this->email;
     }
-
     /**
      * @param mixed $email
      */
@@ -222,7 +188,6 @@ class Consultant implements JsonSerializable
     {
         $this->email = $email;
     }
-
     /**
      * @return mixed
      */
@@ -230,7 +195,6 @@ class Consultant implements JsonSerializable
     {
         return $this->address;
     }
-
     /**
      * @param mixed $address
      */
@@ -238,7 +202,6 @@ class Consultant implements JsonSerializable
     {
         $this->address = $address;
     }
-
     /**
      * @return mixed
      */
@@ -246,7 +209,6 @@ class Consultant implements JsonSerializable
     {
         return $this->company;
     }
-
     /**
      * @param mixed $company
      */
@@ -254,7 +216,6 @@ class Consultant implements JsonSerializable
     {
         $this->company = $company;
     }
-
     /**
      * @return mixed
      */
@@ -262,7 +223,6 @@ class Consultant implements JsonSerializable
     {
         return $this->profilePicture;
     }
-
     /**
      * @param mixed $profilePicture
      */
@@ -270,7 +230,6 @@ class Consultant implements JsonSerializable
     {
         $this->profilePicture = $profilePicture;
     }
-
     /**
      * @return mixed
      */
@@ -278,7 +237,6 @@ class Consultant implements JsonSerializable
     {
         return $this->schoolYear;
     }
-
     /**
      * @param mixed $schoolYear
      */
@@ -286,7 +244,6 @@ class Consultant implements JsonSerializable
     {
         $this->schoolYear = $schoolYear;
     }
-
     /**
      * @return mixed
      */
@@ -294,7 +251,6 @@ class Consultant implements JsonSerializable
     {
         return $this->department;
     }
-
     /**
      * @param mixed $department
      */
@@ -302,8 +258,6 @@ class Consultant implements JsonSerializable
     {
         $this->department = $department;
     }
-
-
     /**
      * @return mixed
      */
@@ -314,10 +268,8 @@ class Consultant implements JsonSerializable
         {
             $studies[] = $study;
         }
-
         return $studies;
     }
-
     /**
      * @param mixed $studiesAsConsultant
      */
@@ -325,6 +277,4 @@ class Consultant implements JsonSerializable
     {
         $this->studiesAsConsultant = $studiesAsConsultant;
     }
-
-
 }

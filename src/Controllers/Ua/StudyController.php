@@ -97,7 +97,6 @@ class StudyController
     public function getAllStudies(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Get studies " . $request->getServerParams()["REMOTE_ADDR"]);
-
         $studies = $this->studyService->getAll();
 
         return $response->withJson($studies, 200);
