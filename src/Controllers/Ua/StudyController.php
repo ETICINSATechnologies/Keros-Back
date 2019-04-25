@@ -117,15 +117,16 @@ class StudyController
         return $response->withJson($page, 200);
     }
 
+    //only works if the current user is a member
     public function getCurrentUserStudies(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Searching for studies related to current user from " . $request->getServerParams()["REMOTE_ADDR"]);
         $member = $this->memberService->getOne($request->getAttribute("userId"));
-        $consultant = $this->consultantService->getOne($request->getAttribute("userId"));
+        //$consultant = $this->consultantService->getOne($request->getAttribute("userId"));
         $studies = [];
-        if (!empty($consultant->getStudiesAsConsultant())) {
+        /*if (!empty($consultant->getStudiesAsConsultant())) {
             $studies = array_unique(array_merge($studies, $consultant->getStudiesAsConsultant()), SORT_REGULAR);
-        }
+        }*/
         if (!empty($member->getStudiesAsLeader())) {
             $studies = array_unique(array_merge($studies, $member->getStudiesAsLeader()), SORT_REGULAR);
         }
