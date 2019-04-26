@@ -75,11 +75,9 @@ class FactureController
         $queryParams = $request->getQueryParams();
         $params = new RequestParameters($queryParams, Facture::getSearchFields());
         $facture = $this->factureService->getPage($params);
-        throw new KerosException("hi".json_encode($facture), 500);
         $totalCount = $this->factureService->getCount($params);
 
         $page = new Page($facture, $params, $totalCount);
-        throw new KerosException("hi", 500);
         return $response->withJson($page, 200);
     }
 
