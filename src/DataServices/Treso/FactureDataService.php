@@ -91,6 +91,7 @@ class FactureDataService
         try {
             $criteria = $requestParameters->getCriteria();
             $studies = $this->repository->matching($criteria)->getValues();
+            throw new KerosException(json_encode($studies), 400);
             return $studies;
         } catch (Exception $e) {
             $msg = "Error finding page of factures : " . $e->getMessage();

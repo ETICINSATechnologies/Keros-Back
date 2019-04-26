@@ -656,7 +656,7 @@ class Study implements JsonSerializable
     {
         return $this->mainConsultant;
     }
-    
+
     /**
      * @param $mainConsultant
      * @throws KerosException

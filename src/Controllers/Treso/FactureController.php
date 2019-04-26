@@ -9,6 +9,7 @@ use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Treso\Facture;
 use Keros\Services\Treso\FactureService;
 use Keros\Tools\ConfigLoader;
+use Keros\Error\KerosException;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -63,7 +64,6 @@ class FactureController
     public function getAllFactures(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Get factures " . $request->getServerParams()["REMOTE_ADDR"]);
-
         $studies = $this->factureService->getAll();
 
         return $response->withJson($studies, 200);
@@ -74,12 +74,12 @@ class FactureController
         $this->logger->debug("Get page factures from " . $request->getServerParams()["REMOTE_ADDR"]);
         $queryParams = $request->getQueryParams();
         $params = new RequestParameters($queryParams, Facture::getSearchFields());
-
         $facture = $this->factureService->getPage($params);
+        throw new KerosException("hi".json_encode($facture), 500);
         $totalCount = $this->factureService->getCount($params);
 
         $page = new Page($facture, $params, $totalCount);
-
+        throw new KerosException("hi", 500);
         return $response->withJson($page, 200);
     }
 
