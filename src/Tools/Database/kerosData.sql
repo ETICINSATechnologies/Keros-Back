@@ -110,11 +110,11 @@ INSERT INTO treso_facture (id, numero, addressId, clientName , contactName, cont
 (1,'23023234', 6, 'Google', 'James Bond', 'mail@exemple.fr', 1, 1, 'Trois Euros', 'Sujet du projet', '2018-11-10', 234.34, 345.45, '2018-1-10',
   'info supp', '2018-11-4', 3, true, '2017-11-10', 3, true, '2019-11-10', 3),
 (2,'23023235', 6, 'Milka', 'Alexandre Lang', 'fauxmail@exemple.fr', 1, 2, 'deux cents trente quatre euros et trente quatre centimes', 'Sujet du projet', '2018-11-10', 234.34, 20.0, '2018-1-10',
-  'info supp', '2018-11-23', 1, false, null, null, false, null, null),
+  'info supp', '2018-11-23', 3, false, null, null, false, null, null),
 (3,'23023235', 6, 'Milka', 'Alexandre Lang', 'fauxmail@exemple.fr', 1, 3, 'deux cents trente quatre euros et trente quatre centimes', 'Sujet du projet', '2018-11-10', 234.34, 20.0, '2018-1-10',
- 'info supp', '2018-11-3', 1, false, null, null, false, null, null),
+ 'info supp', '2018-11-3', 3, false, null, null, false, null, null),
 (4,'23023235', 6, 'Milka', 'Alexandre Lang', 'fauxmail@exemple.fr', 1, 4, 'deux cents trente quatre euros et trente quatre centimes', 'Sujet du projet', '2018-11-10', 234.34, 20.0, '2018-1-10',
- 'info supp', '2018-11-1', 1, false, null, null, false, null, null);
+ 'info supp', '2018-11-1', 3, false, null, null, false, null, null);
 
 TRUNCATE TABLE treso_facture_document_type;
 INSERT INTO treso_facture_document_type(id, location, istemplatable, factureTypeId) VALUES
