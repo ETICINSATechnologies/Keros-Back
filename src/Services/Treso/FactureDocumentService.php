@@ -10,6 +10,8 @@ use Keros\Tools\DirectoryManager;
 use Keros\Tools\Validator;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
+use DateTime;
+use Exception;
 
 class FactureDocumentService
 {
@@ -61,7 +63,7 @@ class FactureDocumentService
     /**
      * @param array $fields
      * @return FactureDocument
-     * @throws \Exception
+     * @throws Exception
      */
     public function create(array $fields): FactureDocument
     {
@@ -76,7 +78,7 @@ class FactureDocumentService
 
         $facture = $this->factureService->getOne($factureId);
         $factureDocumentType = $this->factureDocumentTypeService->getOne($documentTypeId);
-        $date = new \DateTime();
+        $date = new DateTime();
         $location = 'facture_' . $factureId . DIRECTORY_SEPARATOR . 'document_' . $documentTypeId . DIRECTORY_SEPARATOR;
         $location = $this->directoryManager->uniqueFilename($file, false, $location);
 
@@ -91,7 +93,7 @@ class FactureDocumentService
     /**
      * @param int $id
      * @return FactureDocument
-     * @throws \Keros\Error\KerosException
+     * @throws KerosException
      */
     public function getOne(int $id): FactureDocument
     {
@@ -138,5 +140,31 @@ class FactureDocumentService
         }
 
         return $latestDocument;
+    }
+
+    /**
+     * @return FactureDocument[]
+     * @throws KerosException
+     */
+    public function getAll(): array
+    {
+        return $this->documentDataService->getAll();
+    }
+
+
+    /**
+     * @param int $documentTypeid
+     * @param int $factureId
+     * @return bool
+     * @throws KerosException
+     */
+    public function documentTypeIsUploadedForFacture(int $documentTypeid, int $factureId): bool
+    {
+        $factureDocumentTypes = $this->getAll();
+        foreach ($factureDocumentTypes as $factureDocumentType) {
+            if ($factureDocumentType->getId() == $documentTypeid && $factureDocumentType->getFacture()->getId() == $factureId)
+                return true;
+        }
+        return false;
     }
 }

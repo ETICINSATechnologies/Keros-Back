@@ -2,7 +2,6 @@
 
 namespace Keros\Services\Treso;
 
-
 use Keros\DataServices\Treso\FactureDocumentTypeDataService;
 use Keros\Entities\Treso\FactureDocumentType;
 use Keros\Error\KerosException;
@@ -15,7 +14,10 @@ use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Keros\Entities\Treso\Facture;
 use Keros\Entities\Core\Member;
-
+use DateTime;
+use Exception;
+use \Doctrine\ORM\OptimisticLockException;
+use \Doctrine\ORM\ORMException;
 
 class FactureDocumentTypeService
 {
@@ -78,21 +80,21 @@ class FactureDocumentTypeService
         $this->directoryManager = $container->get(DirectoryManager::class);
     }
 
-
     /**
      * @param array $fields
      * @return FactureDocumentType
      * @throws KerosException
-     * @throws \Exception
+     * @throws Exception
      */
     public function create(array $fields): FactureDocumentType
     {
-        $isTemplatable = Validator::requiredBool(boolval($fields["isTemplatable"]));
+        $isTemplatable = Validator::requiredBool($fields["isTemplatable"]);
+        $name = Validator::requiredString($fields["name"]);
         $extension = Validator::requiredString($fields["extension"]);
 
-        $date = new \DateTime();
+        $date = new DateTime();
         $location = $date->format('d-m-Y_H:i:s:u') . '.' . $extension;
-        $documentType = new FactureDocumentType($location, $isTemplatable);
+        $documentType = new FactureDocumentType($name, $location, $isTemplatable);
 
         $this->factureDocumentTypeDataService->persist($documentType);
 
@@ -101,9 +103,9 @@ class FactureDocumentTypeService
 
     /**
      * @param int $id
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Keros\Error\KerosException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws KerosException
      */
     public function delete(int $id): void
     {
@@ -115,7 +117,7 @@ class FactureDocumentTypeService
     /**
      * @param int $id
      * @return FactureDocumentType
-     * @throws \Keros\Error\KerosException
+     * @throws KerosException
      */
     public function getOne(int $id): FactureDocumentType
     {
@@ -141,7 +143,7 @@ class FactureDocumentTypeService
      * @param int $factureId
      * @param int $connectedUserId
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public function generateFactureDocument(int $factureId, int $connectedUserId): string
     {
@@ -223,11 +225,11 @@ class FactureDocumentTypeService
      * @param Facture $facture
      * @param Member $connectedUser
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function getFactureReplacementArray(Facture $facture, Member $connectedUser): array
     {
-        $date = new \DateTime();
+        $date = new DateTime();
 
         //Information about actual board
         $tresorier = null;
@@ -287,7 +289,7 @@ class FactureDocumentTypeService
             ($facture->getCreatedDate() != null) ? $facture->getCreatedDate()->format('d/m/Y') : '${CREATEDDATE}',
             ($facture->getAmountTTC() != null && $facture->getAmountHT() != null) ? $facture->getAmountTTC() - $facture->getAmountHT() : '${MONTANTTVAFACTURE}',
             number_format($facture->getAmountHT() * 100 / $totalFacture, 2),
-            'FE' . $facture->getCreatedDate()->format('Y') . $facture->getCreatedDate()->format('m')  . (($feMonthNumber < 10) ? "0" : "") . $feMonthNumber,
+            'FE' . $facture->getCreatedDate()->format('Y') . $facture->getCreatedDate()->format('m') . (($feMonthNumber < 10) ? "0" : "") . $feMonthNumber,
         );
     }
 }

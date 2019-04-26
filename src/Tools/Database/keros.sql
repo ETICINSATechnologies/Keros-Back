@@ -349,6 +349,7 @@ DROP TABLE IF EXISTS treso_facture_document_type;
 CREATE TABLE treso_facture_document_type (
   id int(11) NOT NULL AUTO_INCREMENT,
   location varchar(255) NOT NULL UNIQUE,
+  name varchar(255) NOT NULL,
   isTemplatable boolean NOT NULL,
   factureTypeId int(11) UNIQUE,
   PRIMARY KEY (id),
