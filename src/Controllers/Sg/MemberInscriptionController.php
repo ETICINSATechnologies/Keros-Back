@@ -3,6 +3,7 @@
 namespace Keros\Controllers\Sg;
 
 use Doctrine\ORM\EntityManager;
+use Keros\Entities\Core\Page;
 use Keros\Entities\Sg\MemberInscription;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Services\Sg\MemberInscriptionService;
@@ -11,7 +12,6 @@ use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-
 
 class MemberInscriptionController
 {
@@ -64,9 +64,12 @@ class MemberInscriptionController
     {
         $this->logger->debug("Get page memberInscriptions from " . $request->getServerParams()["REMOTE_ADDR"]);
         $queryParams = $request->getQueryParams();
-        $requestParameters = new RequestParameters($queryParams, MemberInscription::getSearchFields());
+        $params = new RequestParameters($queryParams, MemberInscription::getSearchFields());
 
-        $page = $this->memberInscriptionService->getPage($requestParameters, $queryParams);
+        $memberInscriptions = $this->memberInscriptionService->getPage($params);
+        $count = $this->memberInscriptionService->getCount($params);
+
+        $page = new Page($memberInscriptions, $params, $count);
 
         return $response->withJson($page, 200);
     }
@@ -127,6 +130,13 @@ class MemberInscriptionController
         return $response->withStatus(204);
     }
 
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     * @throws KerosException
+     */
     public function validateMemberInscription(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Validating memberInscription from " . $request->getServerParams()["REMOTE_ADDR"]);

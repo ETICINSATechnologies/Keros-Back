@@ -4,7 +4,6 @@
 namespace Keros\Services\Sg;
 
 use Keros\DataServices\Sg\MemberInscriptionDataService;
-use Keros\Entities\Core\Member;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Sg\MemberInscription;
 use Keros\Error\KerosException;
@@ -17,6 +16,7 @@ use Keros\Services\Core\PoleService;
 use Keros\Tools\Validator;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
+use DateTime;
 
 class   MemberInscriptionService
 {
@@ -91,8 +91,11 @@ class   MemberInscriptionService
         $wantedPoleId = Validator::requiredId($fields["wantedPoleId"]);
         $wantedPole = $this->poleService->getOne($wantedPoleId);
         $address = $this->addressService->create($fields["address"]);
+        $genderId = Validator::requiredId($fields['genderId']);
+        $gender = $this->genderService->getOne($genderId);
+        $birthday = Validator::requiredDate($fields['birthday']);
 
-        $memberInscription = new MemberInscription($firstName, $lastName, $department, $email, $phoneNumber, $outYear, $nationality, $address, $wantedPole);
+        $memberInscription = new MemberInscription($firstName, $lastName, $gender, $birthday, $department, $email, $phoneNumber, $outYear, $nationality, $address, $wantedPole);
 
         $this->memberInscriptionDataService->persist($memberInscription);
 
@@ -192,20 +195,32 @@ class   MemberInscriptionService
         return $memberInscription;
     }
 
-
+    /**
+     * @param int $id
+     * @throws KerosException
+     */
     public function validateMemberInscription(int $id)
     {
         $id = Validator::requiredId($id);
         $memberInscription = $this->getOne($id);
+
+        $date = new DateTime();
+        $month = intval($date->format('m'));
+        $year = intval($date->format('Y'));
+        $schoolYear = $memberInscription->getOutYear() - $year;
+        if($month > 9 && $month < 12)
+            $schoolYear += 1;
+        else
+            $schoolYear += 2;
 
         $memberArray = array(
             "firstName" => $memberInscription->getFirstName(),
             "lastName" => $memberInscription->getLastName(),
             "email" => $memberInscription->getEmail(),
             "telephone" => $memberInscription->getPhoneNumber(),
-            "birthdate" => ,
-            "schoolYear" => ,
-            "genderId" => ,
+            "birthdate" => $memberInscription->getBirthday()->format('Y-m-d'),
+            "schoolYear" => $schoolYear,
+            "genderId" => $memberInscription->getGender()->getId(),
             "departementId" => $memberInscription->getDepartment()->getId(),
             "address" => array(
                 "line1" => $memberInscription->getAddress()->getLine1(),
@@ -217,5 +232,6 @@ class   MemberInscriptionService
         );
 
         $this->memberService->create($memberArray);
+        $this->delete($memberInscription->getId());
     }
 }

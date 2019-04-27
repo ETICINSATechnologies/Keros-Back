@@ -6,7 +6,9 @@ use JsonSerializable;
 use Keros\Entities\Core\Address;
 use Keros\Entities\Core\Country;
 use Keros\Entities\Core\Department;
+use Keros\Entities\Core\Gender;
 use Keros\Entities\Core\Pole;
+use DateTime;
 
 /**
  * @Entity
@@ -16,69 +18,103 @@ class MemberInscription implements JsonSerializable
 {
     /**
      * @var int
+     * @Id
+     * @Column(type="integer")
+     * @GeneratedValue
      */
     private $id;
 
-    /** @Column(type="string", length=255) */
+    /**
+     * @var string
+     * @Column(type="string", length=255)
+     */
     private $firstName;
 
-    /** @Column(type="string", length=255) */
+    /**
+     * @var string
+     * @Column(type="string", length=255)
+     */
     private $lastName;
 
     /**
-     * @Column(type="integer")
-     * @ManyToOne(targetEntity="Department")
+     * @var Gender
+     * @ManyToOne(targetEntity="Keros\Entities\Core\Gender")
+     * @JoinColumn(name="genderId", referencedColumnName="id")
+     **/
+    private $gender;
+
+    /**
+     * @var DateTime
+     * @Column(type="date")
+     */
+    private $birthday;
+
+    /**
+     * @var Department
+     * @ManyToOne(targetEntity="Keros\Entities\Core\Department")
      * @JoinColumn(name="departmentId", referencedColumnName="id")
      */
     private $department;
 
-    /** @Column(type="string", length=255) */
+    /**
+     * @var string
+     * @Column(type="string", length=255)
+     */
     private $email;
 
-    /** @Column(type="string", length=255) */
+    /**
+     * @var string
+     * @Column(type="string", length=255)
+     */
     private $phoneNumber;
 
-    /** @Column(type="integer") */
+    /**
+     * @var int
+     * @Column(type="integer")
+     */
     private $outYear;
 
     /**
-     * @Column(type="integer")
-     * @ManyToOne(targetEntity="Country")
+     * @var Country
+     * @ManyToOne(targetEntity="Keros\Entities\Core\Country")
      * @JoinColumn(name="nationalityId", referencedColumnName="id")
      */
     private $nationality;
 
     /**
-     * @Column(type="integer")
-     * @ManyToOne(targetEntity="Address")
+     * @var Address
+     * @ManyToOne(targetEntity="Keros\Entities\Core\Address")
      * @JoinColumn(name="addressId", referencedColumnName="id")
      */
     private $address;
 
     /**
      * @var Pole
-     * @Column(type="integer")
-     * @ManyToOne(targetEntity="Country")
-     * @JoinColumn(name="nationalityId", referencedColumnName="id")
+     * @ManyToOne(targetEntity="Keros\Entities\Core\Pole")
+     * @JoinColumn(name="wantedPoleId", referencedColumnName="id")
      */
     private $wantedPole;
 
     /**
      * MemberInscription constructor.
-     * @param $firstName
-     * @param $lastName
-     * @param $department
-     * @param $email
-     * @param $phoneNumber
-     * @param $outYear
-     * @param $nationality
-     * @param $address
-     * @param $wantedPole
+     * @param string $firstName
+     * @param string $lastName
+     * @param Gender $gender
+     * @param DateTime $birthday
+     * @param Department $department
+     * @param string $email
+     * @param string $phoneNumber
+     * @param int $outYear
+     * @param Country $nationality
+     * @param Address $address
+     * @param Pole $wantedPole
      */
-    public function __construct($firstName, $lastName, $department, $email, $phoneNumber, $outYear, $nationality, $address, $wantedPole)
+    public function __construct(string $firstName, string $lastName, Gender $gender, DateTime $birthday, Department $department, string $email, string $phoneNumber, int $outYear, Country $nationality, Address $address, Pole $wantedPole)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
+        $this->gender = $gender;
+        $this->birthday = $birthday;
         $this->department = $department;
         $this->email = $email;
         $this->phoneNumber = $phoneNumber;
@@ -88,15 +124,20 @@ class MemberInscription implements JsonSerializable
         $this->wantedPole = $wantedPole;
     }
 
+
     /**
      * @return array|mixed
      */
     public function jsonSerialize()
     {
         return [
+            'id' => $this->getId(),
             'firstName' => $this->getFirstName(),
             'lastName' => $this->getLastName(),
+            'gender' => $this->getGender(),
+            'birthday' => $this->getBirthday()->format('Y-m-d'),
             'department' => $this->getDepartment(),
+            'wantedPole' => $this->getWantedPole(),
             'email' => $this->getEmail(),
             'phoneNumber' => $this->getPhoneNumber(),
             'outYear' => $this->getOutYear(),
@@ -105,8 +146,9 @@ class MemberInscription implements JsonSerializable
         ];
     }
 
-    public static function getSearchFields(): array {
-        return ['firstName', 'lastName', 'email', 'departement', 'phoneNumber', 'outYear', 'wantedPole'];
+    public static function getSearchFields(): array
+    {
+        return ['firstName', 'lastName', 'email', 'phoneNumber', 'outYear'];
     }
 
     /**
@@ -147,6 +189,38 @@ class MemberInscription implements JsonSerializable
     public function setLastName(string $lastName): void
     {
         $this->lastName = $lastName;
+    }
+
+    /**
+     * @return Gender
+     */
+    public function getGender(): Gender
+    {
+        return $this->gender;
+    }
+
+    /**
+     * @param Gender $gender
+     */
+    public function setGender(Gender $gender): void
+    {
+        $this->gender = $gender;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getBirthday(): DateTime
+    {
+        return $this->birthday;
+    }
+
+    /**
+     * @param DateTime $birthday
+     */
+    public function setBirthday(DateTime $birthday): void
+    {
+        $this->birthday = $birthday;
     }
 
     /**
@@ -260,6 +334,5 @@ class MemberInscription implements JsonSerializable
     {
         $this->wantedPole = $wantedPole;
     }
-
 
 }

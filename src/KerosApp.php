@@ -190,12 +190,14 @@ class KerosApp
             })->add($this->getContainer()->get(AuthenticationMiddleware::class));
 
             $this->group('/sg', function () {
-                $this->get("", MemberInscriptionController::class . ':getPageMemberInscriptions');
-                $this->post("", MemberInscriptionController::class . ':createMemberInscription');
-                $this->get('/{id:[0-9]+}', MemberInscriptionController::class . ':getMemberInscription');
-                $this->delete("/{id:[0-9]+}", MemberInscriptionController::class . ':deleteMemberInscription');
-                $this->put("/{id:[0-9]+}", MemberInscriptionController::class . ':updateMemberInscription');
-                $this->post("/{id:[0-9]+}/validate", MemberInscriptionController::class . ':validateMemberInscription');
+                $this->group('/membre-inscription', function () {
+                    $this->get("", MemberInscriptionController::class . ':getPageMemberInscriptions');
+                    $this->post("", MemberInscriptionController::class . ':createMemberInscription');
+                    $this->get('/{id:[0-9]+}', MemberInscriptionController::class . ':getMemberInscription');
+                    $this->delete("/{id:[0-9]+}", MemberInscriptionController::class . ':deleteMemberInscription');
+                    $this->put("/{id:[0-9]+}", MemberInscriptionController::class . ':updateMemberInscription');
+                    $this->post("/{id:[0-9]+}/validate", MemberInscriptionController::class . ':validateMemberInscription');
+                });
             })->add($this->getContainer()->get(AuthenticationMiddleware::class));
 
         });
