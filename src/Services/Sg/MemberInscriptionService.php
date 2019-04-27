@@ -90,11 +90,11 @@ class   MemberInscriptionService
         $nationality = $this->countryService->getOne($nationalityId);
         $wantedPoleId = Validator::requiredId($fields["wantedPoleId"]);
         $wantedPole = $this->poleService->getOne($wantedPoleId);
-        $address = $this->addressService->create($fields["address"]);
         $genderId = Validator::requiredId($fields['genderId']);
         $gender = $this->genderService->getOne($genderId);
         $birthday = Validator::requiredDate($fields['birthday']);
 
+        $address = $this->addressService->create($fields["address"]);
         $memberInscription = new MemberInscription($firstName, $lastName, $gender, $birthday, $department, $email, $phoneNumber, $outYear, $nationality, $address, $wantedPole);
 
         $this->memberInscriptionDataService->persist($memberInscription);
@@ -179,6 +179,9 @@ class   MemberInscriptionService
         $nationality = $this->countryService->getOne($nationalityId);
         $wantedPoleId = Validator::optionalId(isset($fields["wantedPoleId"]) ? $fields["wantedPoleId"] : null);
         $wantedPole = $this->poleService->getOne($wantedPoleId);
+        $genderId = Validator::optionalId($fields["genderId"]);
+        $gender = $this->genderService->getOne($genderId);
+        $birthday = Validator::optionalDate($fields["birthday"]);
 
         $memberInscription->setFirstName($firstName);
         $memberInscription->setLastName($lastName);
@@ -188,6 +191,8 @@ class   MemberInscriptionService
         $memberInscription->setOutYear($outYear);
         $memberInscription->setNationality($nationality);
         $memberInscription->setWantedPole($wantedPole);
+        $memberInscription->setGender($gender);
+        $memberInscription->setBirthday($birthday);
         $this->addressService->update($memberInscription->getAddress()->getId(), $fields["address"]);
 
         $this->memberInscriptionDataService->persist($memberInscription);
@@ -203,25 +208,29 @@ class   MemberInscriptionService
     {
         $id = Validator::requiredId($id);
         $memberInscription = $this->getOne($id);
-
+        $this->logger->debug('coucou');
         $date = new DateTime();
         $month = intval($date->format('m'));
         $year = intval($date->format('Y'));
+
         $schoolYear = $memberInscription->getOutYear() - $year;
-        if($month > 9 && $month < 12)
+        if($month > 1 && $month < 8) //between January and August
             $schoolYear += 1;
-        else
-            $schoolYear += 2;
 
         $memberArray = array(
+            "username" => $memberInscription->getFirstName() . '.' . $memberInscription->getLastName(),
+            "password" => $memberInscription->getFirstName() . '.' . $memberInscription->getBirthday()->format('d/m/Y'),
             "firstName" => $memberInscription->getFirstName(),
             "lastName" => $memberInscription->getLastName(),
             "email" => $memberInscription->getEmail(),
             "telephone" => $memberInscription->getPhoneNumber(),
-            "birthdate" => $memberInscription->getBirthday()->format('Y-m-d'),
+            "birthday" => $memberInscription->getBirthday()->format('Y-m-d'),
             "schoolYear" => $schoolYear,
             "genderId" => $memberInscription->getGender()->getId(),
-            "departementId" => $memberInscription->getDepartment()->getId(),
+            "departmentId" => $memberInscription->getDepartment()->getId(),
+            "company" => null,
+            "profilePicture" => null,
+            "disabled" => false,
             "address" => array(
                 "line1" => $memberInscription->getAddress()->getLine1(),
                 "line2" => $memberInscription->getAddress()->getLine2(),
@@ -229,6 +238,7 @@ class   MemberInscriptionService
                 "city" => $memberInscription->getAddress()->getCity(),
                 "countryId" => $memberInscription->getAddress()->getCountry()->getId()
             ),
+            "positions" => array(),
         );
 
         $this->memberService->create($memberArray);
