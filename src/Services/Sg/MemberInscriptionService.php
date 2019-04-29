@@ -168,20 +168,20 @@ class   MemberInscriptionService
         $id = Validator::requiredId($id);
         $memberInscription = $this->getOne($id);
 
-        $firstName = Validator::optionalString(isset($fields["firstName"]) ? $fields["firstName"] : null);
-        $lastName = Validator::optionalString(isset($fields["lastName"]) ? $fields["lastName"] : null);
-        $departmentId = Validator::optionalId(isset($fields["departmentId"]) ? $fields["departmentId"] : null);
+        $firstName = Validator::requiredString($fields["firstName"]);
+        $lastName = Validator::requiredString($fields["lastName"]);
+        $departmentId = Validator::requiredId($fields["departmentId"]);
         $department = $this->departmentService->getOne($departmentId);
-        $email = Validator::optionalEmail(isset($fields["email"]) ? $fields["email"] : null);
+        $email = Validator::requiredEmail($fields["email"]);
         $phoneNumber = Validator::optionalPhone(isset($fields["phoneNumber"]) ? $fields["phoneNumber"] : null);
         $outYear = Validator::optionalInt(isset($fields["outYear"]) ? $fields["outYear"] : null);
-        $nationalityId = Validator::optionalId(isset($fields["nationalityId"]) ? $fields["nationalityId"] : null);
+        $nationalityId = Validator::requiredId($fields["nationalityId"]);
         $nationality = $this->countryService->getOne($nationalityId);
-        $wantedPoleId = Validator::optionalId(isset($fields["wantedPoleId"]) ? $fields["wantedPoleId"] : null);
+        $wantedPoleId = Validator::requiredId($fields["wantedPoleId"]);
         $wantedPole = $this->poleService->getOne($wantedPoleId);
-        $genderId = Validator::optionalId($fields["genderId"]);
+        $genderId = Validator::requiredId($fields['genderId']);
         $gender = $this->genderService->getOne($genderId);
-        $birthday = Validator::optionalDate($fields["birthday"]);
+        $birthday = Validator::requiredDate($fields['birthday']);
 
         $memberInscription->setFirstName($firstName);
         $memberInscription->setLastName($lastName);
