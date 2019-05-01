@@ -2,13 +2,14 @@ SET AUTOCOMMIT = 0;
 SET FOREIGN_KEY_CHECKS = 0;
 SET UNIQUE_CHECKS = 0;
 
-/* Passwords are, in order : hunter11 - hunter12 - hunter13 */
+/* Passwords are, in order : hunter11 - hunter12 - hunter13 - superuser */
 TRUNCATE TABLE core_user;
 INSERT INTO core_user (id, username, password, expiresAt) VALUES
   (1, 'username', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')),
   (2, 'mcool', '$2y$10$fWnWMRQKKWInygzk.FNIP.BsnTp8e8XvDwj5YdGgVuIFXsz/XvVgm' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')),
   (3, 'lswollo', '$2y$10$9R4lfhp18.iVzsP8amDL5e7eumi48DmPPkoa5YLAm/thAZWIHaOtW' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')),
-  (4, 'qualqual', '.$2y$10$9R4lfhp18iVzsP8amDL5e7eumi48DmPPkoa5YLAm/thAZWIHaOtW' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'));
+  (4, 'qualqual', '.$2y$10$9R4lfhp18iVzsP8amDL5e7eumi48DmPPkoa5YLAm/thAZWIHaOtW' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')),
+  (5, 'superuser', '$2y$10$fVPB3SLO54Ng5DjqUEr8/OSwOtOMy0gH4DiEqjvxXqRVdcM8hc7Du', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'));
 
 TRUNCATE TABLE core_address;
 INSERT INTO core_address (id, line1, line2, postalCode, city, countryId) VALUES
@@ -17,7 +18,8 @@ INSERT INTO core_address (id, line1, line2, postalCode, city, countryId) VALUES
   (3, '11 ETIC street', 'bat. b', '91002', 'paris', 1), # member 3
   (4, '11 Backbeat street', 'bat. a', '91004', 'djibouti', 3), # firm 1
   (5, '17 Watcha ave', 'porte 5', '674A4', 'Leicester', 40), # firm 2
-  (6, '17 Beat', 'Meat', '674A4', 'Paris', 40); # member 4
+  (6, '17 Beat', 'Meat', '674A4', 'Paris', 40), # member 4
+  (7, '11 supeRU', 'bis', '27277', 'SuperVille', 40); # member 5 - superuser
 
 TRUNCATE TABLE core_ticket;
 INSERT INTO core_ticket (id, userId, title, message, type, status) VALUES
@@ -28,7 +30,8 @@ INSERT INTO core_member (id, genderId, firstName, lastName, birthday, telephone,
   (1, 1, 'Conor', 'Breeze', STR_TO_DATE('1975-12-25', '%Y-%m-%d'), '+332541254', 'fake.mail@fake.com', 2, 3, 1, 'Google', 'http://picture.png'),
   (2, 1, 'Marah', 'Cool', STR_TO_DATE('1976-10-27', '%Y-%m-%d'), '+332541541', 'fake.mail2@fake.com', 1, 3, 1, 'Amazon', NULL),
   (3, 1, 'Laurence', 'Tainturière', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.mail3@fake.com', 3, 5, 2, NULL, NULL),
-  (4, 3, 'Stéphane', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly@fake.com', 6, 3, 4, NULL, NULL);
+  (4, 3, 'Stéphane', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly@fake.com', 6, 3, 4, NULL, NULL),
+  (5, 3, 'SuperPrenom', 'SuperNom', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'super@vraimentsuper.com', 7, 3, 4, NULL, NULL);
 
 TRUNCATE TABLE core_member_position;
 INSERT INTO core_member_position (id, memberId, positionId, isBoard, year) VALUES
@@ -39,7 +42,9 @@ INSERT INTO core_member_position (id, memberId, positionId, isBoard, year) VALUE
   (5, 3, 3, FALSE, 2015),
   (6, 1, 6, FALSE, 2016),
   (7, 2, 6, FALSE, 2002),
-  (8, 4, 9, FALSE, 2015);
+  (8, 4, 9, FALSE, 2015),
+  (9, 5, 19, TRUE, 2018),
+  (10, 5, 17, TRUE, 2018);
 
 TRUNCATE TABLE ua_firm;
 INSERT INTO ua_firm (id, siret, name, addressId, typeId) VALUES
@@ -65,7 +70,8 @@ INSERT INTO `ua_study_consultant` (`memberId`, `studyId`) VALUES
 
 TRUNCATE TABLE ua_study_leader;
 INSERT INTO `ua_study_leader` (`memberId`, `studyId`) VALUES
-  (3, 2);
+  (3, 2),
+  (5, 1);
 
 TRUNCATE TABLE ua_study_qualityManager;
 INSERT INTO `ua_study_qualityManager` (`memberId`, `studyId`) VALUES

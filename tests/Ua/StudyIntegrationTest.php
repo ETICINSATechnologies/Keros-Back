@@ -182,7 +182,7 @@ class StudyIntegrationTest extends AppTestCase
 
     public function testPutStudyShouldReturn200()
     {
-
+        $method = 'PUT';
         $post_body = array(
             "name"=>"Twitter",
             "description"=>"C est le feu",
@@ -197,11 +197,12 @@ class StudyIntegrationTest extends AppTestCase
             "confidential"=>true,
         );
         $env = Environment::mock([
-            'REQUEST_METHOD' => 'PUT',
+            'REQUEST_METHOD' => $method,
             'REQUEST_URI' => '/api/v1/ua/study/1',
         ]);
         $req = Request::createFromEnvironment($env);
         $req = $req->withParsedBody($post_body);
+        $req = $req->withAttribute("userId",5);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
         $this->assertSame(200, $response->getStatusCode());
@@ -217,6 +218,7 @@ class StudyIntegrationTest extends AppTestCase
             'REQUEST_URI' => '/api/v1/ua/study/1',
         ]);
         $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId",5);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 
