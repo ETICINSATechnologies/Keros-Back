@@ -105,7 +105,7 @@ class MemberIntegrationTest extends AppTestCase
 
         $body = json_decode($response->getBody());
         $this->assertNotNull($body->content);
-        $this->assertSame(2, sizeof($body->content));
+        $this->assertSame(3, sizeof($body->content));
         $this->assertSame(1, $body->content[0]->id);
         $this->assertSame(3, $body->content[0]->positions[0]->id);
         $this->assertSame(3, $body->content[1]->id);
@@ -348,6 +348,7 @@ class MemberIntegrationTest extends AppTestCase
 
         $req = Request::createFromEnvironment($env);
         $req = $req->withParsedBody($post_body);
+        $req = $req->withAttribute("userId",6);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 
@@ -449,4 +450,5 @@ class MemberIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
         $this->assertSame(400, $response->getStatusCode());
     }
+
 }

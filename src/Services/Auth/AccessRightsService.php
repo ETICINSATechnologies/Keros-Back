@@ -32,45 +32,49 @@ class AccessRightsService
      * AccessRights constructor.
      * @param Member $member
      */
-    public function __construct(Member $member){
+    public function __construct(Member $member)
+    {
         $this->currentMember = $member;
         $this->memberPositions = $this->currentMember->getMemberPositions();
     }
 
-    public function checkRightsPostMember() {
+    public function checkRightsPostMember()
+    {
         $accessAllowed = array(19); //secrétaire général
-        foreach($this->memberPositions as $memberPosition){
-            if (!in_array($memberPosition->getPosition()->getId(),$accessAllowed)){
-                throw new KerosException("You do not have the rights for creating a member", 404);
+        foreach ($this->memberPositions as $memberPosition) {
+            if (in_array($memberPosition->getPosition()->getId(), $accessAllowed)) {
+                return;
             }
         }
+        throw new KerosException("You do not have the rights for creating a member", 401);
     }
 
-    public function checkRightsConfidentialStudies(Study $study) {
+    public function checkRightsConfidentialStudies(Study $study)
+    {
 
         $accessAllowed = array(18, 17);
-        foreach($this->memberPositions as $memberPosition){
-            if ($memberPosition->getPosition()->getId() == 3){
+        foreach ($this->memberPositions as $memberPosition) {
+            if ($memberPosition->getPosition()->getId() == 3) {
                 $leadersArray = $study->getLeadersArray();
                 $isleader = false;
-                foreach ($leadersArray as $leader){
+                foreach ($leadersArray as $leader) {
                     $leader = Validator::requiredMember($leader);
-                    if ($leader->getId() == $this->currentMember->getId()){
+                    if ($leader->getId() == $this->currentMember->getId()) {
                         $isleader = true;
                     }
                 }
-                if ($isleader == false){
-                    throw new KerosException("You do not have the rights for accessing this confidential study", 404);
+                if ($isleader == false) {
+                    throw new KerosException("You do not have the rights for accessing this confidential study", 401);
                 }
-            }
-            else if (!in_array($memberPosition->getPosition()->getId(),$accessAllowed)){
-                throw new KerosException("You do not have the rights for accessing a confidential study", 404);
+            } else if (!in_array($memberPosition->getPosition()->getId(), $accessAllowed)) {
+                throw new KerosException("You do not have the rights for accessing a confidential study", 401);
             }
         }
     }
 
-    public function filterGetAllStudies(array $studies) : array {
-        $accessAllowed = array(18,17); //resp UA et resp qualité
+    public function filterGetAllStudies(array $studies): array
+    {
+        $accessAllowed = array(18, 17); //resp UA et resp qualité
         foreach ($this->memberPositions as $memberPosition) {
             if (in_array($memberPosition->getPosition()->getId(), $accessAllowed)) {
                 return $studies;
@@ -85,8 +89,7 @@ class AccessRightsService
                 {
                     $leadersArray = $study->getLeadersArray();
                     $isLeader = false;
-                    foreach ($leadersArray as $leader)
-                    {
+                    foreach ($leadersArray as $leader) {
                         $leader = Validator::requiredMember($leader);
                         if ($leader->getId() == $this->currentMember->getId()) {
                             $isLeader = true;
@@ -105,27 +108,29 @@ class AccessRightsService
         return $studies;
     }
 
-    public function checkRightsUpdateStudy(Study $study) {
+    public function checkRightsUpdateStudy(Study $study)
+    {
 
         $leadersArray = $study->getLeadersArray();
         $isleader = false;
-        foreach ($leadersArray as $leader){
-            $leader = Validator::requiredMember($leader);
-            if ($leader->getId() == $this->currentMember->getId()){
+        foreach ($leadersArray as $leader) {
+            if ($leader->getId() == $this->currentMember->getId()) {
                 $isleader = true;
             }
         }
-        if ($isleader == false){
-            throw new KerosException("You cannot update a study if you did not create it", 404);
+        if ($isleader == false) {
+            throw new KerosException("You cannot update a study if you did not create it", 401);
         }
     }
 
-    public function checkRightsAttributeQualityManager(){
-        $accessAllowed = array(17,18); //resp qualité et UA
-        foreach($this->memberPositions as $memberPosition){
-            if (!in_array($memberPosition->getPosition()->getId(),$accessAllowed)){
-                throw new KerosException("You cannot attribute a quality manager", 404);
+    public function checkRightsAttributeQualityManager()
+    {
+        $accessAllowed = array(17, 18); //resp qualité et UA
+        foreach ($this->memberPositions as $memberPosition) {
+            if (in_array($memberPosition->getPosition()->getId(), $accessAllowed)) {
+                return;
             }
         }
+        throw new KerosException("You cannot attribute a quality manager", 401);
     }
 }
