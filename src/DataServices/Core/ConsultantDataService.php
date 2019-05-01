@@ -88,7 +88,7 @@ class ConsultantDataService
             $whereParameters = array();
 
             foreach ($queryParams as $key => $value) {
-                if (in_array($key, ['search', 'poleId', 'positionId', 'year', 'firstName', 'lastName', 'company'])) {
+                if (in_array($key, ['search', 'firstName', 'lastName', 'company'])) {
                     if (!empty($whereStatement))
                         $whereStatement .= ' AND ';
 

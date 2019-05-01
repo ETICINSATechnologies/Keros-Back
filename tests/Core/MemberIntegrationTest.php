@@ -72,6 +72,24 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(3, $body->content[0]->positions[0]->id);
     }
 
+    public function testGetConnectedMemberEmptyBodyShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/core/member/me',
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+
+        $body = json_decode($response->getBody());
+        $this->assertNotNull($body);
+        $this->assertSame(1, $body->id);
+    }
+
     public function testPutConnectedMemberEmptyBodyShouldReturn400()
     {
         $env = Environment::mock([

@@ -1,6 +1,9 @@
 <?php
+
 namespace Keros\Entities\Core;
+
 use JsonSerializable;
+
 /**
  * @Entity
  * @Table(name="core_consultant")
@@ -76,7 +79,7 @@ class Consultant implements JsonSerializable
             'telephone' => $this->getTelephone(),
             'address' => $this->getAddress(),
             'company' => $this->getCompany(),
-            'profilePicture' => $this->getProfilePicture(),
+            'profilePicture' => $this->getProfilePicture()
         ];
     }
     public static function getSearchFields(): array {

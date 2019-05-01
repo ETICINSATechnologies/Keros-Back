@@ -2,7 +2,7 @@
 
 namespace Keros\Controllers\Core;
 
-use Doctrine\ORM\EntityMcanager;
+use Doctrine\ORM\EntityManager;
 use Keros\Entities\Core\Consultant;
 use Keros\Entities\Core\Page;
 use Keros\Entities\Core\RequestParameters;
