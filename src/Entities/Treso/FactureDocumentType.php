@@ -2,11 +2,13 @@
 
 namespace Keros\Entities\Treso;
 
+use JsonSerializable;
+
 /**
  * @Entity
  * @Table(name="treso_facture_document_type")
  */
-class FactureDocumentType implements \JsonSerializable
+class FactureDocumentType implements JsonSerializable
 {
 
     /**
@@ -19,6 +21,9 @@ class FactureDocumentType implements \JsonSerializable
     /** @Column(type="string", length=255) */
     protected $location;
 
+    /** @Column(type="string", length=255) */
+    protected $name;
+
     /** @Column(type="boolean") */
     protected $isTemplatable;
 
@@ -30,13 +35,15 @@ class FactureDocumentType implements \JsonSerializable
 
     /**
      * StudyDocumentType constructor.
+     * @param $name
      * @param $location
      * @param $isTemplatable
      */
-    public function __construct($location, $isTemplatable)
+    public function __construct($name, $location, $isTemplatable)
     {
         $this->location = $location;
         $this->isTemplatable = $isTemplatable;
+        $this->name = $name;
     }
 
     public function jsonSerialize()
@@ -45,6 +52,7 @@ class FactureDocumentType implements \JsonSerializable
             'id' => $this->getId(),
             'location' => $this->getLocation(),
             'isTemplatable' => $this->getIsTemplatable(),
+            'name' => $this->getName()
         ];
     }
 
@@ -102,6 +110,22 @@ class FactureDocumentType implements \JsonSerializable
     public function setFactureType($factureType): void
     {
         $this->factureType = $factureType;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param mixed $name
+     */
+    public function setName($name): void
+    {
+        $this->name = $name;
     }
 
 }

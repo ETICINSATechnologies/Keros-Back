@@ -102,14 +102,23 @@ class StudyService
         $name = Validator::requiredString($fields["name"]);
         $description = Validator::optionalString(isset($fields["description"]) ? $fields["description"] : null);
 
-        $fieldId = Validator::requiredId($fields["fieldId"]);
-        $field = $this->fieldService->getOne($fieldId);
+        $fieldId = Validator::optionalId(isset($fields["fieldId"]) ? $fields["fieldId"] : null);
+        if ($fieldId != null)
+            $field = $this->fieldService->getOne($fieldId);
+        else
+            $field = null;
 
-        $statusId = Validator::requiredId($fields["statusId"]);
-        $status = $this->statusService->getOne($statusId);
+        $statusId = Validator::optionalId(isset($fields["statusId"]) ? $field["statusId"] : null);
+        if ($statusId != null)
+            $status = $this->statusService->getOne($statusId);
+        else
+            $status = null;
 
-        $firmId = Validator::requiredId($fields["firmId"]);
-        $firm = $this->firmService->getOne($firmId);
+        $firmId = Validator::optionalId(isset($fields["firmId"]) ? $field["firmId"] : null);
+        if ($firmId != null)
+            $firm = $this->firmService->getOne($firmId);
+        else
+            $firm = null;
 
         $signDate = Validator::optionalDate(isset($fields["signDate"]) ? $fields["signDate"] : null);
 
@@ -123,17 +132,29 @@ class StudyService
 
         $archivedDate = Validator::optionalDate(isset($fields["archivedDate"]) ? $fields["archivedDate"] : null);
 
-        $contactIds = $fields["contactIds"];
-        $contacts = $this->contactService->getSome($contactIds);
+        if (isset($fields["contactIds"])) {
+            $contactIds = $fields["contactIds"];
+            $contacts = $this->contactService->getSome($contactIds);
+        } else
+            $contacts = array();
 
-        $leaderIds = $fields["leaderIds"];
-        $leaders = $this->memberService->getSome($leaderIds);
+        if (isset($fields["leaderIds"])) {
+            $leaderIds = $fields["leaderIds"];
+            $leaders = $this->memberService->getSome($leaderIds);
+        } else
+            $leaders = array();
 
-        $consultantIds = $fields["consultantIds"];
-        $consultants = $this->consultantService->getSome($consultantIds);
+        if (isset($fields["consultantIds"])) {
+            $consultantIds = $fields["consultantIds"];
+            $consultants = $this->consultantService->getSome($consultantIds);
+        } else
+            $consultants = array();
 
-        $qualityManagerIds = $fields["qualityManagerIds"];
-        $qualityManagers = $this->memberService->getSome($qualityManagerIds);
+        if (isset($fields["qualityManagerIds"])) {
+            $qualityManagerIds = $fields["qualityManagerIds"];
+            $qualityManagers = $this->memberService->getSome($qualityManagerIds);
+        } else
+            $qualityManagers = array();
 
         $provenance = null;
         $provenanceId = Validator::optionalId(isset($fields["provenanceId"]) ? $fields["provenanceId"] : null);
@@ -157,7 +178,6 @@ class StudyService
         $study->setConfidential($confidential);
 
         $this->studyDataService->persist($study);
-
         return $study;
     }
 
@@ -214,14 +234,23 @@ class StudyService
         $name = Validator::requiredString($fields["name"]);
         $description = Validator::optionalString(isset($fields["description"]) ? $fields["description"] : null);
 
-        $fieldId = Validator::requiredId($fields["fieldId"]);
-        $field = $this->fieldService->getOne($fieldId);
+        $fieldId = Validator::optionalId(isset($fields["fieldId"]) ? $fields["fieldId"] : null);
+        if ($fieldId != null)
+            $field = $this->fieldService->getOne($fieldId);
+        else
+            $field = null;
 
-        $statusId = Validator::requiredId($fields["statusId"]);
-        $status = $this->statusService->getOne($statusId);
+        $statusId = Validator::optionalId(isset($fields["statusId"]) ? $fields["statusId"] : null);
+        if ($statusId != null)
+            $status = $this->statusService->getOne($statusId);
+        else
+            $status = null;
 
-        $firmId = Validator::requiredId($fields["firmId"]);
-        $firm = $this->firmService->getOne($firmId);
+        $firmId = Validator::optionalId(isset($fields["firmId"]) ? $fields["firmId"] : null);
+        if ($firmId != null)
+            $firm = $this->firmService->getOne($firmId);
+        else
+            $firm = null;
 
         $signDate = Validator::optionalDate(isset($fields["signDate"]) ? $fields["signDate"] : null);
 
@@ -235,17 +264,29 @@ class StudyService
 
         $archivedDate = Validator::optionalDate(isset($fields["archivedDate"]) ? $fields["archivedDate"] : null);
 
-        $contactIds = $fields["contactIds"];
-        $contacts = $this->contactService->getSome($contactIds);
+        if (isset($fields["contactIds"])) {
+            $contactIds = $fields["contactIds"];
+            $contacts = $this->contactService->getSome($contactIds);
+        } else
+            $contacts = array();
 
-        $leaderIds = $fields["leaderIds"];
-        $leaders = $this->memberService->getSome($leaderIds);
+        if (isset($fields["leaderIds"])) {
+            $leaderIds = $fields["leaderIds"];
+            $leaders = $this->memberService->getSome($leaderIds);
+        } else
+            $leaders = array();
 
-        $consultantIds = $fields["consultantIds"];
-        $consultants = $this->consultantService->getSome($consultantIds);
+        if (isset($fields["consultantIds"])) {
+            $consultantIds = $fields["consultantIds"];
+            $consultants = $this->consultantService->getSome($consultantIds);
+        } else
+            $consultants = array();
 
-        $qualityManagerIds = $fields["qualityManagerIds"];
-        $qualityManagers = $this->memberService->getSome($qualityManagerIds);
+        if (isset($fields["qualityManagerIds"])) {
+            $qualityManagerIds = $fields["qualityManagerIds"];
+            $qualityManagers = $this->memberService->getSome($qualityManagerIds);
+        } else
+            $qualityManagers = array();
 
         $provenance = null;
         $provenanceId = Validator::optionalId(isset($fields["provenanceId"]) ? $fields["provenanceId"] : null);

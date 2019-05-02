@@ -118,15 +118,20 @@ INSERT INTO treso_facture (id, numero, addressId, clientName , contactName, cont
  'info supp', '2018-11-1', 3, false, null, null, false, null, null);
 
 TRUNCATE TABLE treso_facture_document_type;
-INSERT INTO treso_facture_document_type(id, location, istemplatable, factureTypeId) VALUES
-  (4, 'Template FE de solde.docx', 1, 4),
-  (3, 'Template FE intermédiaire.docx', 1, 3),
-  (2, 'Template FE acompte.docx', 1, 2),
-  (1, 'Template FE pro-forma.docx', 1, 1);
+INSERT INTO treso_facture_document_type(id, `name`, location, istemplatable, factureTypeId) VALUES
+  (4, 'Template Solde', 'Template FE de solde.docx', 1, 4),
+  (3, 'Tamplte facture intermédiaire', 'Template FE intermédiaire.docx', 1, 3),
+  (2, 'Template facture acompte', 'Template FE acompte.docx', 1, 2),
+  (1, 'Template pro-forma','Template FE pro-forma.docx', 1, 1);
 
 TRUNCATE TABLE treso_facture_document;
 INSERT INTO treso_facture_document(id, factureId, factureDocumentTypeId) VALUES
   (3, 1, 2),
   (4, 1, 1);
+
+TRUNCATE TABLE sg_member_inscription;
+INSERT INTO sg_member_inscription (id, firstName, lastName, genderId, birthday, departmentId, email, phoneNumber, outYear, nationalityId, wantedPoleId, addressId) VALUES
+(1, 'Bruce', 'Wayne', 1, STR_TO_DATE('2000/2/14', '%Y/%m/%d'), 3, 'bruce.wayne@batman.com', '0033123456789', 2021, 42, 2, 1),
+(2, 'Clark', 'Kent', 1, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 2, 'clark.kent@dailyplanete.com', '0033123456789', 2024, 69, 4, 1);
 
 COMMIT;

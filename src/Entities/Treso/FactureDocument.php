@@ -52,9 +52,9 @@ class FactureDocument extends Document implements JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return Facture
      */
-    public function getFacture()
+    public function getFacture() : Facture
     {
         return $this->facture;
     }

@@ -438,7 +438,7 @@ class Study implements JsonSerializable
     /**
      * @return mixed
      */
-    public function getFirm() : Firm
+    public function getFirm() : ?Firm
     {
         return $this->firm;
     }
