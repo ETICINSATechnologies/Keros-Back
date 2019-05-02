@@ -173,6 +173,36 @@ class StudyIntegrationTest extends AppTestCase
         $this->assertSame("Facebook", $body->name);
     }
 
+    public function testPostStudyShouldReturn201()
+    {
+        $post_body = array(
+            "name"=>"Twitter",
+            "description"=>"C est le feu",
+            "fieldId"=>1,
+            "provenanceId"=>1,
+            "statusId"=>1,
+            "firmId"=>1,
+            "contactIds"=>array(),
+            "leaderIds"=>array(),
+            "consultantIds"=>array(),
+            "qualityManagerIds"=>array(),
+            "confidential"=>true,
+        );
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => '/api/v1/ua/study',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withParsedBody($post_body);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(201, $response->getStatusCode());
+        $body = json_decode($response->getBody());
+        $this->assertSame(3, $body->id);
+        $this->assertSame("Twitter", $body->name);
+        $this->assertSame("C est le feu", $body->description);
+    }
+
     public function testPutStudyShouldReturn200()
     {
 
