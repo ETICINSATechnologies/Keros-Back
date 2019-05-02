@@ -5,6 +5,7 @@ namespace Keros\Services\Core;
 
 use Keros\DataServices\Core\MemberDataService;
 use Keros\DataServices\Core\TicketDataService;
+use Keros\DataServices\Treso\PaymentSlipDataService;
 use Keros\Entities\Core\Member;
 use Keros\Entities\Core\Page;
 use Keros\Entities\Core\RequestParameters;
@@ -40,6 +41,10 @@ class MemberService
      */
     private $ticketDataService;
     /**
+     * @var PaymentSlipDataService
+     */
+    private $paymentSlipDataService;
+    /**
      * @var MemberDataService
      */
     private $memberDataService;
@@ -62,6 +67,7 @@ class MemberService
         $this->userService = $container->get(UserService::class);
         $this->memberDataService = $container->get(MemberDataService::class);
         $this->ticketDataService = $container->get(TicketDataService::class);
+        $this->paymentSlipDataService = $container->get(PaymentSlipDataService::class);
     }
 
     /**
@@ -209,6 +215,7 @@ class MemberService
         $member->setStudiesAsConsultant([]);
         $this->memberDataService->persist($member);
 
+        $this->paymentSlipDataService->deletePaymentSlipsRelatedToMember($id);
         $this->ticketDataService->deleteTicketsRelatedToMember($id);
 
         $this->memberDataService->delete($member);

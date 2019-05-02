@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Exception;
 use Keros\Entities\Core\Member;
+use Keros\Tools\Validator;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Treso\PaymentSlip;
 use Keros\Error\KerosException;
@@ -133,6 +134,34 @@ class PaymentSlipDataService
         return $count;
     }
 
+
+    public function deletePaymentSlipsRelatedToMember(int $idMember)
+    {
+        $idMember = Validator::requiredId($idMember);
+        $paymentSlips = $this->getAll();
+
+        foreach ($paymentSlips as $paymentSlip) {
+            $consultant = $paymentSlip->getConsultant();
+            $consultantId = $consultant->getId();
+            $consultantId = Validator::requiredId($consultantId);
+
+            $creator = $paymentSlip->getCreatedBy();
+            $creatorId = $creator->getId();
+            $creatorId = Validator::requiredId($creatorId);
+
+            $UAValidator = $paymentSlip->getValidatedByUaMember();
+            $UAValidatorId = $UAValidator->getId();
+            $UAValidatorId = Validator::requiredId($UAValidatorId);
+
+            $PerfValidator = $paymentSlip->getValidatedByPerfMember();
+            $PerfValidatorId = $PerfValidator->getId();
+            $PerfValidatorId = Validator::requiredId($PerfValidatorId);
+
+            if ($consultantId == $idMember || $creatorId == $idMember || $UAValidatorId == $idMember || $PerfValidatorId == $idMember){
+                $this->delete($paymentSlip);
+            }
+        }
+    }
 
 
 }
