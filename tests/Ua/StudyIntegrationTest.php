@@ -48,10 +48,40 @@ class StudyIntegrationTest extends AppTestCase
         $this->assertEquals("2", $body->mainConsultant);
         $this->assertEquals("2", $body->consultants[0]->id);
 
-        $this->assertEquals("5", $body->consultants[1]->id);
     }
 
-    public function testGetCurrentUserStudiesShouldReturn200()
+    public function testGetCurrentUserConsultantStudiesShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/ua/study/me',
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId", 5);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(200, $response->getStatusCode());
+        $bodies = json_decode($response->getBody());
+
+        $bodies = Validator::requiredArray($bodies);
+        foreach ($bodies as $body) {
+            $this->assertEquals("1", $body->id);
+            $this->assertEquals("Développement IDE", $body->name);
+            $this->assertEquals("Développement d'un IDE pour utilisation interne", $body->description);
+            $this->assertEquals("1", $body->field->id);
+            $this->assertEquals("Web", $body->field->label);
+            $this->assertEquals("2", $body->status->id);
+            $this->assertEquals("En clôture", $body->status->label);
+            $this->assertEquals("1", $body->provenance->id);
+            $this->assertEquals("Site Web", $body->provenance->label);
+            $this->assertEquals("2018-11-10", $body->signDate);
+            $this->assertEquals("1", $body->firm->id);
+        }
+    }
+
+    public function testGetCurrentUserMemberStudiesShouldReturn200()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',

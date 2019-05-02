@@ -16,41 +16,54 @@ class Consultant implements JsonSerializable
      * @JoinColumn(name="id", referencedColumnName="id")
      **/
     protected $user;
+
     /**
      * @ManyToOne(targetEntity="Gender")
      * @JoinColumn(name="GenderId", referencedColumnName="id")
      **/
     protected $gender;
+
     /** @Column(type="string", length=100) */
     protected $firstName;
+
     /** @Column(type="string", length=100) */
     protected $lastName;
+
     /** @Column(type="datetime") */
     protected $birthday;
+
     /** @Column(type="string", length=20) */
     protected $telephone;
+
     /** @Column(type="string", length=255) */
     protected $email;
+
     /**
      * @ManyToOne(targetEntity="Address")
      * @JoinColumn(name="AddressId", referencedColumnName="id")
      **/
     protected $address;
+
     /** @Column(type="integer") */
     protected $schoolYear;
+
     /**
      * @ManyToOne(targetEntity="Department")
      * @JoinColumn(name="DepartmentId", referencedColumnName="id")
      **/
     protected $department;
+
     /** @Column(type="string", length=20) */
     protected $company;
+
     /** @Column(type="string", length=200) */
     protected $profilePicture;
+
     /**
      * @ManyToMany(targetEntity="Keros\Entities\Ua\Study", mappedBy="consultants")
      */
     protected $studiesAsConsultant;
+
     public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture)
     {
         $this->firstName = $firstName;

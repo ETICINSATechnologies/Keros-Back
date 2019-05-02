@@ -66,7 +66,7 @@ INSERT INTO `ua_study` (`id`, `name`, `description`, `fieldId`, `provenanceId`, 
 TRUNCATE TABLE ua_study_consultant;
 INSERT INTO `ua_study_consultant` (`consultantId`, `studyId`) VALUES
   (2, 2),
-  (5, 2);
+  (5, 1);
 
 TRUNCATE TABLE ua_study_leader;
 INSERT INTO `ua_study_leader` (`memberId`, `studyId`) VALUES

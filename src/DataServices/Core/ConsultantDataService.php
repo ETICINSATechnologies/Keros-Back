@@ -162,4 +162,16 @@ class ConsultantDataService
             throw new KerosException($msg, 500);
         }
     }
+
+    public function getAll(): array
+    {
+        try {
+            $consultants = $this->repository->findAll();
+            return $consultants;
+        } catch (Exception $e) {
+            $msg = "Error finding page of consultants : " . $e->getMessage();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
+    }
 }
