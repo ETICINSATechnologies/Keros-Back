@@ -161,6 +161,26 @@ class PaymentSlipDataService
                 $this->delete($paymentSlip);
             }
         }
+
+
+    }
+
+    public function deletePaymentSlipsRelatedToStudy(int $idStudy)
+    {
+        $idStudy = Validator::requiredId($idStudy);
+        $paymentSlips = $this->getAll();
+
+        foreach ($paymentSlips as $paymentSlip) {
+            $study = $paymentSlip->getStudy();
+            $studyId = $study->getId();
+            $studyId = Validator::requiredId($studyId);
+
+            if ($studyId == $idStudy){
+                $this->delete($paymentSlip);
+            }
+        }
+
+
     }
 
 

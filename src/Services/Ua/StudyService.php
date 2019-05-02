@@ -4,6 +4,7 @@
 namespace Keros\Services\Ua;
 
 use Keros\DataServices\Ua\StudyDataService;
+use Keros\DataServices\Treso\PaymentSlipDataService;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Ua\Study;
 use Keros\Error\KerosException;
@@ -62,6 +63,10 @@ class StudyService
      * @var StudyDataService
      */
     private $studyDataService;
+    /**
+     * @var PaymentSlipDataService
+     */
+    private $paymentSlipDataService;
 
     /**
      * @var Logger
@@ -82,6 +87,7 @@ class StudyService
         $this->statusService = $container->get(StatusService::class);
         $this->provenanceService = $container->get(ProvenanceService::class);
         $this->studyDataService = $container->get(StudyDataService::class);
+        $this->paymentSlipDataService = $container->get(PaymentSlipDataService::class);
     }
 
     /**
@@ -157,6 +163,9 @@ class StudyService
     {
         $id = Validator::requiredId($id);
         $study = $this->getOne($id);
+
+        $this->paymentSlipDataService->deletePaymentSlipsRelatedToStudy($id);
+
         $this->studyDataService->delete($study);
     }
 
