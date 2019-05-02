@@ -158,15 +158,6 @@ class StudyIntegrationTest extends AppTestCase
         $post_body = array(
             "id" =>3,
             "name"=>"Facebook",
-            "description"=>"C est le feu",
-            "fieldId"=>1,
-            "provenanceId"=>1,
-            "statusId"=>1,
-            "firmId"=>1,
-            "contactIds"=>array(),
-            "leaderIds"=>array(),
-            "consultantIds"=>array(),
-            "qualityManagerIds"=>array(),
         );
         $env = Environment::mock([
             'REQUEST_METHOD' => 'POST',
@@ -223,5 +214,25 @@ class StudyIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
 
         $this->assertSame(400, $response->getStatusCode());
+    }
+
+    public function testPutStudyWithOnlyRequiredParamsShouldReturn200()
+    {
+
+        $post_body = array(
+            "name"=>"Twitter",
+        );
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'PUT',
+            'REQUEST_URI' => '/api/v1/ua/study/1',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withParsedBody($post_body);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+        $body = json_decode($response->getBody());
+
+        $this->assertSame("Twitter", $body->name);
     }
 }
