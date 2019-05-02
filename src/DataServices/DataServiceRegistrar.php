@@ -13,6 +13,7 @@ use Keros\DataServices\Core\MemberPositionDataService;
 use Keros\DataServices\Core\PoleDataService;
 use Keros\DataServices\Core\PositionDataService;
 use Keros\DataServices\Core\UserDataService;
+use Keros\DataServices\Sg\MemberInscriptionDataService;
 use Keros\DataServices\Treso\FactureDocumentDataService;
 use Keros\DataServices\Treso\FactureDocumentTypeDataService;
 use Keros\DataServices\Treso\FactureTypeDataService;
@@ -107,5 +108,9 @@ class DataServiceRegistrar
             return new FactureDocumentDataService($container);
         };
 
+        //Sg
+        $container[MemberInscriptionDataService::class] = function ($container) {
+            return new MemberInscriptionDataService($container);
+        };
     }
 }

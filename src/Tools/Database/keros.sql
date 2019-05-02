@@ -367,6 +367,28 @@ CREATE TABLE treso_facture_document (
   CONSTRAINT fk_treso_document_treso_document_type FOREIGN KEY (factureDocumentTypeId) REFERENCES treso_facture_document_type(id)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
+DROP TABLE IF EXISTS sg_member_inscription;
+CREATE TABLE sg_member_inscription (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  firstName varchar(255) NOT NULL,
+  lastName varchar(255) NOT NULL,
+  birthday date NOT NULL,
+  genderId int(11) NOT NULL,
+  departmentId int(11) NOT NULL,
+  email varchar(255) NOT NULL,
+  phoneNumber varchar(255),
+  outYear int,
+  nationalityId int(11) NOT NULL,
+  wantedPoleId int(11) NOT NULL,
+  addressId int(11) NOT NULL,
+  PRIMARY KEY (id),
+  CONSTRAINT fk_sg_member_inscription_department FOREIGN KEY (departmentId) REFERENCES core_department(id),
+  CONSTRAINT fk_sg_member_inscription_nationality FOREIGN KEY (nationalityId) REFERENCES core_country(id),
+  CONSTRAINT fk_sg_member_inscription_pole FOREIGN KEY (wantedPoleId) REFERENCES core_pole(id),
+  CONSTRAINT fk_sg_member_inscription_gender FOREIGN KEY (genderId) REFERENCES core_gender(id),
+  CONSTRAINT fk_sg_member_inscription_address FOREIGN KEY (addressId) REFERENCES core_address(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 SET AUTOCOMMIT = 1;
 SET FOREIGN_KEY_CHECKS = 1;
 SET UNIQUE_CHECKS = 1;

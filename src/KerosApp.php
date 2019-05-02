@@ -3,6 +3,7 @@
 namespace Keros;
 
 use Keros\Controllers\Auth\LoginController;
+use Keros\Controllers\Sg\MemberInscriptionController;
 use Keros\Controllers\Treso\FactureDocumentController;
 use Keros\Controllers\Ua\StudyDocumentController;
 use Keros\Controllers\Core\TicketController;
@@ -187,6 +188,18 @@ class KerosApp
                     $this->get("/{idFacture:[0-9]+}/generateDocument", FactureDocumentController::class . ':generateFactureDocument');
                 });
             })->add($this->getContainer()->get(AuthenticationMiddleware::class));
+
+            $this->group('/sg', function () {
+                $this->group('/membre-inscription', function () {
+                    $this->get("", MemberInscriptionController::class . ':getPageMemberInscriptions');
+                    $this->post("", MemberInscriptionController::class . ':createMemberInscription');
+                    $this->get('/{id:[0-9]+}', MemberInscriptionController::class . ':getMemberInscription');
+                    $this->delete("/{id:[0-9]+}", MemberInscriptionController::class . ':deleteMemberInscription');
+                    $this->put("/{id:[0-9]+}", MemberInscriptionController::class . ':updateMemberInscription');
+                    $this->post("/{id:[0-9]+}/validate", MemberInscriptionController::class . ':validateMemberInscription');
+                });
+            })->add($this->getContainer()->get(AuthenticationMiddleware::class));
+
         });
 
         $this->app = $app;
