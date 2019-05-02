@@ -134,7 +134,7 @@ class StudyIntegrationTest extends AppTestCase
     public function testGetAllDocumentsShouldReturn400(){
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/api/v1/ua/study/1/documents',
+            'REQUEST_URI' => '/api/v1/ua/study/3/documents',
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
@@ -182,7 +182,7 @@ class StudyIntegrationTest extends AppTestCase
         $this->assertSame(200, $response->getStatusCode());
         $body = json_decode($response->getBody());
 
-        $this->assertEquals(2, count($body->content));
+        $this->assertEquals(3, count($body->content));
     }
 
     public function testGetStudyShouldReturn200()
@@ -249,7 +249,7 @@ class StudyIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
         $this->assertSame(201, $response->getStatusCode());
         $body = json_decode($response->getBody());
-        $this->assertSame(3, $body->id);
+        $this->assertSame(4, $body->id);
         $this->assertSame("Facebook", $body->name);
     }
 
