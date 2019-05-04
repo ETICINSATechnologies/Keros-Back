@@ -44,7 +44,10 @@ INSERT INTO core_member_position (id, memberId, positionId, isBoard, year) VALUE
   (7, 2, 6, FALSE, 2002),
   (8, 4, 9, FALSE, 2015),
   (9, 5, 19, TRUE, 2018),
-  (10, 5, 17, TRUE, 2018);
+  (10, 5, 17, TRUE, 2018),
+  (11, 5, 21, TRUE, 2018),
+  (12, 5, 22, TRUE, 2018),
+  (13, 5, 18, TRUE, 2018);
 
 TRUNCATE TABLE ua_firm;
 INSERT INTO ua_firm (id, siret, name, addressId, typeId) VALUES
@@ -59,9 +62,10 @@ INSERT INTO `ua_contact` (`id`, `firstName`, `lastName`, `genderId`, `firmId`, `
   (4, 'Marah', 'Galy Adam', 1, 1, 'marah.galy@etic-insa.com', '0033646786532', NULL, NULL, NULL, 0);
 
 TRUNCATE TABLE ua_study;
-INSERT INTO `ua_study` (`id`, `name`, `description`, `fieldId`, `provenanceId`, `statusId`, `signDate`, `endDate`, `managementFee`, `realizationFee`, `rebilledFee`, `ecoparticipationFee`, `outsourcingFee`, `archivedDate`, `firmId`) VALUES
-  (1, 'Développement IDE', 'Développement d''un IDE pour utilisation interne', 1, 1, 2, '2018-11-10', '2018-11-10', 12000000, 123, 12345, 12, 12324454, '2018-11-10', 1),
-  (2, 'Tests d''acidité dans le Rhône', 'Créateur de IDE', 1, 1, 2, '2018-11-10', '2018-11-10', 12000000, 123, 12345, 12, 12324454, '2018-11-10', 2);
+INSERT INTO `ua_study` (`id`, `name`, `description`, `fieldId`, `provenanceId`, `statusId`, `signDate`, `endDate`, `managementFee`, `realizationFee`, `rebilledFee`, `ecoparticipationFee`, `outsourcingFee`, `archivedDate`, `firmId`, confidential) VALUES
+  (1, 'Développement IDE', 'Développement d''un IDE pour utilisation interne', 1, 1, 2, '2018-11-10', '2018-11-10', 12000000, 123, 12345, 12, 12324454, '2018-11-10', 1, false),
+  (2, 'Tests d''acidité dans le Rhône', 'Créateur de IDE', 1, 1, 2, '2018-11-10', '2018-11-10', 12000000, 123, 12345, 12, 12324454, '2018-11-10', 2, false),
+  (3, 'Test d''équipement spatial', 'Création de la combinaison du futur pour astronaute', 11, 5, 1, '2019-04-01', '2019-10-31', 1300, 3000, 1745, 300, 230, null, 1, true);
 
 TRUNCATE TABLE ua_study_consultant;
 INSERT INTO `ua_study_consultant` (`memberId`, `studyId`) VALUES
@@ -71,7 +75,8 @@ INSERT INTO `ua_study_consultant` (`memberId`, `studyId`) VALUES
 TRUNCATE TABLE ua_study_leader;
 INSERT INTO `ua_study_leader` (`memberId`, `studyId`) VALUES
   (3, 2),
-  (5, 1);
+  (4, 1),
+  (2, 3);
 
 TRUNCATE TABLE ua_study_qualityManager;
 INSERT INTO `ua_study_qualityManager` (`memberId`, `studyId`) VALUES

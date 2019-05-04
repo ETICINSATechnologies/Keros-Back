@@ -289,7 +289,7 @@ class StudyService
         }
         foreach ($study->getConsultantsArray() as $consultant) {
             $isConsultant = false;
-            foreach ($consultant->getPositionsArray() as $position)
+            foreach ($consultant->getMemberPositionsArray() as $position)
                 if ($position->getPosition()->getLabel() == 'Consultant')
                     $isConsultant = true;
             if (!$isConsultant)
