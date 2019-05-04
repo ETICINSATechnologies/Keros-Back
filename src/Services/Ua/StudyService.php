@@ -349,7 +349,6 @@ class StudyService
         if (empty($study->getConsultantsArray())) {
             return false;
         }
-
         return true;
     }
 }

@@ -108,7 +108,7 @@ class Member implements JsonSerializable
             'schoolYear' => $this->getSchoolYear(),
             'telephone' => $this->getTelephone(),
             'address' => $this->getAddress(),
-            'positions' => $this->getPositionsArray(),
+            'positions' => $this->getMemberPositionsArray(),
             'company' => $this->getCompany(),
             'profilePicture' => $this->getProfilePicture(),
             'droitImage' => $this->isDroitImage(),
@@ -339,15 +339,15 @@ class Member implements JsonSerializable
     /**
      * @return MemberPosition[]
      */
-    public function getPositionsArray()
+    public function getMemberPositionsArray()
     {
-        $positions = [];
+        $memberPositions = [];
         foreach ($this->getMemberPositions() as $position)
         {
-            $positions[] = $position;
+            $memberPositions[] = $position;
         }
 
-        return $positions;
+        return $memberPositions;
     }
 
 

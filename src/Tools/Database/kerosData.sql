@@ -117,7 +117,10 @@ INSERT INTO core_member_position (id, memberId, positionId, isBoard, year) VALUE
   (7, 2, 6, FALSE, 2002),
   (8, 4, 9, FALSE, 2015),
   (9, 6, 19, TRUE, 2018),
-  (10, 6, 17, TRUE, 2018);
+  (10, 6, 17, TRUE, 2018),
+  (11, 6, 21, TRUE, 2018),
+  (12, 6, 22, TRUE, 2018),
+  (13, 6, 18, TRUE, 2018);
 
 TRUNCATE TABLE ua_firm;
 INSERT INTO ua_firm (id, siret, name, addressId, typeId, mainContact) VALUES
@@ -132,10 +135,10 @@ INSERT INTO `ua_contact` (`id`, `firstName`, `lastName`, `genderId`, `firmId`, `
   (4, 'Marah', 'Galy Adam', 1, 1, 'marah.galy@etic-insa.com', '0033646786532', NULL, NULL, NULL, 0);
 
 TRUNCATE TABLE ua_study;
-INSERT INTO `ua_study` (`id`, `name`, `description`, `fieldId`, `provenanceId`, `statusId`, `signDate`, `endDate`, `managementFee`, `realizationFee`, `rebilledFee`, `ecoparticipationFee`, `outsourcingFee`, `archivedDate`, `firmId`,`mainLeader`, `mainQualityManager`, `mainConsultant`) VALUES
-  (1, 'Développement IDE', 'Développement d''un IDE pour utilisation interne', 1, 1, 2, '2018-11-10', '2018-11-10', 12000000, 123, 12345, 12, 12324454, '2018-11-10', 1, null, null, null),
-  (2, 'Tests d''acidité dans le Rhône', 'Créateur de IDE', 1, 1, 2, '2018-11-10', '2018-11-10', 12000000, 123, 12345, 12, 12324454, '2018-11-10', 2, 4, 4, 2),
-  (3, 'Développement app mobile', 'Développement d''une app pour scanner des images', 1, 1, 2, '2018-11-10', '2018-11-10', 12000000, 123, 12345, 12, 12324454, '2018-11-10', 1, null, null, null);
+INSERT INTO `ua_study` (`id`, `name`, `description`, `fieldId`, `provenanceId`, `statusId`, `signDate`, `endDate`, `managementFee`, `realizationFee`, `rebilledFee`, `ecoparticipationFee`, `outsourcingFee`, `archivedDate`, `firmId`,`confidential`,`mainLeader`, `mainQualityManager`, `mainConsultant`) VALUES
+  (1, 'Développement IDE', 'Développement d''un IDE pour utilisation interne', 1, 1, 2, '2018-11-10', '2018-11-10', 12000000, 123, 12345, 12, 12324454, '2018-11-10', 1,FALSE, null, null, null),
+  (2, 'Tests d''acidité dans le Rhône', 'Créateur de IDE', 1, 1, 2, '2018-11-10', '2018-11-10', 12000000, 123, 12345, 12, 12324454, '2018-11-10', 2, FALSE,4, 4, 2),
+  (3, 'Développement app mobile', 'Développement d''une app pour scanner des images', 1, 1, 2, '2018-11-10', '2018-11-10', 12000000, 123, 12345, 12, 12324454, '2018-11-10', 1, TRUE,null, null, null);
 
 
 TRUNCATE TABLE ua_study_consultant;
@@ -146,9 +149,12 @@ INSERT INTO `ua_study_consultant` (`consultantId`, `studyId`) VALUES
 TRUNCATE TABLE ua_study_leader;
 INSERT INTO `ua_study_leader` (`memberId`, `studyId`) VALUES
   (3, 2),
+  (3, 3),
   (1, 2),
   (4, 2),
-  (6, 1);
+  (6, 1),
+  (4, 1),
+  (2, 3);
 
 TRUNCATE TABLE ua_study_qualityManager;
 INSERT INTO `ua_study_qualityManager` (`memberId`, `studyId`) VALUES

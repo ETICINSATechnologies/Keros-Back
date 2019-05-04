@@ -2,46 +2,47 @@
 
 namespace Keros\Services\Auth;
 
-use Keros\Services\Core\MemberPositionService;
-use Keros\Tools\Validator;
-use phpDocumentor\Reflection\Types\Boolean;
-use Psr\Http\Message\ServerRequestInterface as Request;
+use Keros\Services\Core\MemberService;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
-use Keros\Services\Core\MemberService;
-use Keros\Services\Ua\StudyService;
-use Keros\Entities\core\Member;
 use Keros\Entities\UA\Study;
-use Keros\Entities\core\MemberPosition;
 use Keros\Error\KerosException;
+use Psr\Http\Message\ServerRequestInterface as Request;
 
 class AccessRightsService
 {
-    /**
-     * @var Member
-     */
-    private $currentMember;
 
     /**
-     * @var MemberPosition[]
+     * @var Logger
      */
-    private $memberPositions;
-
+    protected $logger;
 
     /**
-     * AccessRights constructor.
-     * @param Member $member
+     * @var MemberService
      */
-    public function __construct(Member $member)
+    protected $memberService;
+
+    /**
+     * AccessRightsService constructor.
+     * @param ContainerInterface $container
+     */
+    public function __construct(ContainerInterface $container)
     {
-        $this->currentMember = $member;
-        $this->memberPositions = $this->currentMember->getMemberPositions();
+        $this->memberService = $container->get(MemberService::class);
+        $this->logger = $container->get(Logger::class);
     }
 
-    public function checkRightsPostMember()
+    /**
+     * @param Request $request
+     * @throws KerosException
+     */
+    public function checkRightsPostMember(Request $request)
     {
-        $accessAllowed = array(19); //secrétaire général
-        foreach ($this->memberPositions as $memberPosition) {
+        $accessAllowed = array(19, 22); //resp RH et secrétaire général
+
+        $currentMember = $this->memberService->getOne($request->getAttribute("userId"));
+        $memberPositions = $currentMember->getMemberPositions();
+        foreach ($memberPositions as $memberPosition) {
             if (in_array($memberPosition->getPosition()->getId(), $accessAllowed)) {
                 return;
             }
@@ -49,33 +50,40 @@ class AccessRightsService
         throw new KerosException("You do not have the rights for creating a member", 401);
     }
 
-    public function checkRightsConfidentialStudies(Study $study)
+    public function checkRightsConfidentialStudies(Request $request, Study $study)
     {
+        $accessAllowed = array(21); //resp UA
+        $currentMember = $this->memberService->getOne($request->getAttribute("userId"));
+        $memberPositions = $currentMember->getMemberPositions();
 
-        $accessAllowed = array(18, 17);
-        foreach ($this->memberPositions as $memberPosition) {
-            if ($memberPosition->getPosition()->getId() == 3) {
+        foreach ($memberPositions as $memberPosition) {
+            if ($memberPosition->getPosition()->getId() == 3) { // si chargé d'affaire
                 $leadersArray = $study->getLeadersArray();
-                $isleader = false;
                 foreach ($leadersArray as $leader) {
-                    $leader = Validator::requiredMember($leader);
-                    if ($leader->getId() == $this->currentMember->getId()) {
-                        $isleader = true;
+                    if ($leader->getId() == $currentMember->getId()) { // si il est en charge de cette étude
+                        return;
                     }
                 }
-                if ($isleader == false) {
-                    throw new KerosException("You do not have the rights for accessing this confidential study", 401);
-                }
-            } else if (!in_array($memberPosition->getPosition()->getId(), $accessAllowed)) {
-                throw new KerosException("You do not have the rights for accessing a confidential study", 401);
+            } else if (in_array($memberPosition->getPosition()->getId(), $accessAllowed)) {
+                return;
             }
         }
+        throw new KerosException("You do not have the rights for accessing a confidential study", 401);
     }
 
-    public function filterGetAllStudies(array $studies): array
+    /**
+     * @param Request $request
+     * @param Study[] $studies
+     * @return array
+     * @throws KerosException
+     */
+    public function filterGetAllStudies(Request $request, array $studies): array
     {
-        $accessAllowed = array(18, 17); //resp UA et resp qualité
-        foreach ($this->memberPositions as $memberPosition) {
+        $accessAllowed = array(21, 18); //resp UA et resp qualité
+        $currentMember = $this->memberService->getOne($request->getAttribute("userId"));
+        $memberPositions = $currentMember->getMemberPositionsArray();
+
+        foreach ($memberPositions as $memberPosition) {
             if (in_array($memberPosition->getPosition()->getId(), $accessAllowed)) {
                 return $studies;
             }
@@ -83,50 +91,55 @@ class AccessRightsService
 
         $index = 0;
         foreach ($studies as $study) {
-            $study = Validator::requiredStudy($study);
             if ($study->getConfidential() == true) {
-                if (in_array(3, $this->memberPositions)) // si c'est le chargé d'affaires
-                {
-                    $leadersArray = $study->getLeadersArray();
-                    $isLeader = false;
-                    foreach ($leadersArray as $leader) {
-                        $leader = Validator::requiredMember($leader);
-                        if ($leader->getId() == $this->currentMember->getId()) {
-                            $isLeader = true;
-                        }
+                $isLeader = false;
+                foreach ($study->getLeadersArray() as $leader) {
+                    if ($leader->getId() == $currentMember->getId()) {
+                        $isLeader = true;
                     }
-                    if ($isLeader == false) {
-                        unset($studies[$index]);
-                    }
-                } else {
+                }
+                if ($isLeader == false) {
                     unset($studies[$index]);
                 }
             }
             $index += 1;
         }
+
         $studies = array_values($studies);
         return $studies;
     }
 
-    public function checkRightsUpdateStudy(Study $study)
+    public function checkRightsUpdateStudy(Request $request, Study $study)
     {
+        $accessAllowed = array(21); //resp UA
+        $currentMember = $this->memberService->getOne($request->getAttribute("userId"));
+        $memberPositions = $currentMember->getMemberPositionsArray();
 
-        $leadersArray = $study->getLeadersArray();
-        $isleader = false;
-        foreach ($leadersArray as $leader) {
-            if ($leader->getId() == $this->currentMember->getId()) {
-                $isleader = true;
+        foreach ($memberPositions as $memberPosition) {
+            if (in_array($memberPosition->getPosition()->getId(), $accessAllowed)) {
+                return;
             }
         }
-        if ($isleader == false) {
-            throw new KerosException("You cannot update a study if you did not create it", 401);
+
+        $leadersArray = $study->getLeadersArray();
+        $isLeader = false;
+        foreach ($leadersArray as $leader) {
+            if ($leader->getId() == $currentMember->getId()) {
+                $isLeader = true;
+            }
+        }
+        if ($isLeader == false) {
+            throw new KerosException("You cannot update a study if you are not a leader of this study", 401);
         }
     }
 
-    public function checkRightsAttributeQualityManager()
+    public function checkRightsAttributeQualityManager(Request $request)
     {
-        $accessAllowed = array(17, 18); //resp qualité et UA
-        foreach ($this->memberPositions as $memberPosition) {
+        $accessAllowed = array(18, 21); //resp qualité et UA
+        $currentMember = $this->memberService->getOne($request->getAttribute("userId"));
+        $memberPositions = $currentMember->getMemberPositions();
+
+        foreach ($memberPositions as $memberPosition) {
             if (in_array($memberPosition->getPosition()->getId(), $accessAllowed)) {
                 return;
             }

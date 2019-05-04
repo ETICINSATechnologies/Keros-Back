@@ -108,7 +108,8 @@ class StudyIntegrationTest extends AppTestCase
         }
     }
 
-    public function testGetAllDocumentsShouldReturn200(){
+    public function testGetAllDocumentsShouldReturn200()
+    {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
             'REQUEST_URI' => '/api/v1/ua/study/2/documents',
@@ -128,7 +129,8 @@ class StudyIntegrationTest extends AppTestCase
         $this->assertSame($kerosConfig['BACK_URL'] . '/api/v1/ua/study/2/document/1', $body->documents[0]->downloadLocation);
     }
 
-    public function testGetAllDocumentsShouldReturn400(){
+    public function testGetAllDocumentsShouldReturn400()
+    {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
             'REQUEST_URI' => '/api/v1/ua/study/3/documents',
@@ -140,7 +142,7 @@ class StudyIntegrationTest extends AppTestCase
         $this->assertSame(400, $response->getStatusCode());
     }
 
-    public function testDeleteStudyShouldReturn204 ()
+    public function testDeleteStudyShouldReturn204()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'DELETE',
@@ -153,7 +155,7 @@ class StudyIntegrationTest extends AppTestCase
         $this->assertSame(204, $response->getStatusCode());
     }
 
-    public function testDeleteStudyShouldReturn404 ()
+    public function testDeleteStudyShouldReturn404()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'DELETE',
@@ -166,13 +168,47 @@ class StudyIntegrationTest extends AppTestCase
         $this->assertSame(404, $response->getStatusCode());
     }
 
-    public function testGetAllStudyShouldReturn200()
+    public function testGetAllStudyWithoutBeingLeaderShouldReturn200()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
             'REQUEST_URI' => '/api/v1/ua/study',
         ]);
         $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(200, $response->getStatusCode());
+        $body = json_decode($response->getBody());
+
+        $this->assertEquals(2, count($body->content));
+    }
+
+    public function testGetAllStudyWithLeaderShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/ua/study',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId", 3);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(200, $response->getStatusCode());
+        $body = json_decode($response->getBody());
+
+        $this->assertEquals(3, count($body->content));
+    }
+
+    public function testGetAllStudyWithRightShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/ua/study',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId", 6);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 
@@ -218,6 +254,54 @@ class StudyIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
 
         $this->assertSame(404, $response->getStatusCode());
+    }
+
+    public function testGetStudyConfidentialWithoutRightShouldReturn401()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/ua/study/3',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId", 9);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(401, $response->getStatusCode());
+    }
+
+    public function testGetConfidentialStudyWithEnoughRightShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/ua/study/3',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId", 6);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(200, $response->getStatusCode());
+        $body = json_decode($response->getBody());
+
+        $this->assertEquals(3, $body->id);
+    }
+
+    public function testGetConfidentialStudyWithLeaderMemberShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/ua/study/3',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId", 3);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(200, $response->getStatusCode());
+        $body = json_decode($response->getBody());
+
+        $this->assertEquals(3, $body->id);
     }
 
     public function testPostStudyOnlyWithOnlyRequiredParamsShouldReturn201()
@@ -271,23 +355,24 @@ class StudyIntegrationTest extends AppTestCase
         $this->assertSame(4, $body->id);
         $this->assertSame("Twitter", $body->name);
         $this->assertSame("C est le feu", $body->description);
+
     }
 
     public function testPutStudyShouldReturn200()
     {
         $method = 'PUT';
         $post_body = array(
-            "name"=>"Twitter",
-            "description"=>"C est le feu",
-            "fieldId"=>1,
-            "provenanceId"=>1,
-            "statusId"=>1,
-            "firmId"=>1,
-            "contactIds"=>array(),
-            "leaderIds"=>array(),
-            "consultantIds"=>array(),
-            "qualityManagerIds"=>array(),
-            "confidential"=>true,
+            "name" => "Twitter",
+            "description" => "C est le feu",
+            "fieldId" => 1,
+            "provenanceId" => 1,
+            "statusId" => 1,
+            "firmId" => 1,
+            "contactIds" => array(),
+            "leaderIds" => array(),
+            "consultantIds" => array(),
+            "qualityManagerIds" => array(),
+            "confidential" => true,
         );
         $env = Environment::mock([
             'REQUEST_METHOD' => $method,
@@ -296,12 +381,97 @@ class StudyIntegrationTest extends AppTestCase
         $req = Request::createFromEnvironment($env);
         $req = $req->withParsedBody($post_body);
         $req = $req->withAttribute("userId",6);
+
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
         $this->assertSame(200, $response->getStatusCode());
         $body = json_decode($response->getBody());
 
         $this->assertSame("Twitter", $body->name);
+    }
+
+    public function testPutStudyWithoutRightShouldReturn401()
+    {
+        $method = 'PUT';
+        $post_body = array(
+            "name" => "Twitter",
+            "description" => "C est le feu",
+            "fieldId" => 1,
+            "provenanceId" => 1,
+            "statusId" => 1,
+            "firmId" => 1,
+            "contactIds" => array(),
+            "leaderIds" => array(),
+            "consultantIds" => array(),
+            "qualityManagerIds" => array(),
+            "confidential" => true,
+        );
+        $env = Environment::mock([
+            'REQUEST_METHOD' => $method,
+            'REQUEST_URI' => '/api/v1/ua/study/1',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withParsedBody($post_body);
+        $req = $req->withAttribute("userId", 1);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(401, $response->getStatusCode());
+    }
+
+    public function testPutStudyUpdateQualityManagerWithoutRightShouldReturn401()
+    {
+        $method = 'PUT';
+        $post_body = array(
+            "name" => "Twitter",
+            "description" => "C est le feu",
+            "fieldId" => 1,
+            "provenanceId" => 1,
+            "statusId" => 1,
+            "firmId" => 1,
+            "contactIds" => array(),
+            "leaderIds" => array(),
+            "consultantIds" => array(),
+            "qualityManagerIds" => array(1),
+            "confidential" => true,
+        );
+        $env = Environment::mock([
+            'REQUEST_METHOD' => $method,
+            'REQUEST_URI' => '/api/v1/ua/study/1',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withParsedBody($post_body);
+        $req = $req->withAttribute("userId", 1);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(401, $response->getStatusCode());
+    }
+
+    public function testPutStudyUpdateQualityManagerWithRightShouldReturn200()
+    {
+        $method = 'PUT';
+        $post_body = array(
+            "name" => "Twitter",
+            "description" => "C est le feu",
+            "fieldId" => 1,
+            "provenanceId" => 1,
+            "statusId" => 1,
+            "firmId" => 1,
+            "contactIds" => array(),
+            "leaderIds" => array(),
+            "consultantIds" => array(),
+            "qualityManagerIds" => array(1),
+            "confidential" => true,
+        );
+        $env = Environment::mock([
+            'REQUEST_METHOD' => $method,
+            'REQUEST_URI' => '/api/v1/ua/study/1',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withParsedBody($post_body);
+        $req = $req->withAttribute("userId", 6);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
     }
 
     public function testPutStudyWithEmptyBodyShouldReturn400()
@@ -312,6 +482,7 @@ class StudyIntegrationTest extends AppTestCase
         ]);
         $req = Request::createFromEnvironment($env);
         $req = $req->withAttribute("userId",6);
+
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 
