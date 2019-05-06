@@ -96,6 +96,12 @@ class MemberInscription implements JsonSerializable
     private $wantedPole;
 
     /**
+     * @var boolean
+     * @Column(type="boolean")
+     */
+    private $hasPaid;
+
+    /**
      * MemberInscription constructor.
      * @param string $firstName
      * @param string $lastName
@@ -109,7 +115,7 @@ class MemberInscription implements JsonSerializable
      * @param Address $address
      * @param Pole $wantedPole
      */
-    public function __construct(string $firstName, string $lastName, Gender $gender, DateTime $birthday, Department $department, string $email, string $phoneNumber, int $outYear, Country $nationality, Address $address, Pole $wantedPole)
+    public function __construct(string $firstName, string $lastName, Gender $gender, DateTime $birthday, Department $department, string $email, string $phoneNumber, int $outYear, Country $nationality, Address $address, Pole $wantedPole, bool $hasPaid)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -122,6 +128,7 @@ class MemberInscription implements JsonSerializable
         $this->nationality = $nationality;
         $this->address = $address;
         $this->wantedPole = $wantedPole;
+        $this->hasPaid = $hasPaid;
     }
 
 
@@ -143,6 +150,7 @@ class MemberInscription implements JsonSerializable
             'outYear' => $this->getOutYear(),
             'nationality' => $this->getNationality(),
             'address' => $this->getAddress(),
+            'hasPaid' => $this->isHasPaid(),
         ];
     }
 
@@ -333,6 +341,22 @@ class MemberInscription implements JsonSerializable
     public function setWantedPole(Pole $wantedPole): void
     {
         $this->wantedPole = $wantedPole;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isHasPaid(): bool
+    {
+        return $this->hasPaid;
+    }
+
+    /**
+     * @param bool $hasPaid
+     */
+    public function setHasPaid(bool $hasPaid): void
+    {
+        $this->hasPaid = $hasPaid;
     }
 
 }
