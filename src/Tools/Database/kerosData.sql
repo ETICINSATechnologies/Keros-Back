@@ -33,7 +33,7 @@ INSERT INTO core_member (id, genderId, firstName, lastName, birthday, telephone,
 
 TRUNCATE TABLE core_consultant;
 INSERT INTO core_consultant (id, genderId, firstName, lastName, birthday, telephone, email, addressId, schoolYear, departmentId, company, profilePicture) VALUES
-  (2, 1, 'Marah', 'Cool', STR_TO_DATE('1976-10-27', '%Y-%m-%d'), '+332541541', 'fake.mail2@fake.com', 1, 3, 1, 'Amazon', NULL),
+  (2, 1, 'Marah', 'Cool', STR_TO_DATE('1976-10-27', '%Y-%m-%d'), '+332541541', 'fake.mail2@fake.com', 2, 3, 1, 'Amazon', NULL),
   (5, 3, 'Stéphane', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.mail3@fake.com', 6, 3, 4, NULL, NULL);
 
 TRUNCATE TABLE core_member_position;
