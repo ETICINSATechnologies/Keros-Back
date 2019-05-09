@@ -15,11 +15,13 @@ INSERT INTO core_user (id, username, password, expiresAt) VALUES
 TRUNCATE TABLE core_address;
 INSERT INTO core_address (id, line1, line2, postalCode, city, countryId) VALUES
   (1, '13 Rue du renard', null, '69100', 'lyon', 1), # member 1
-  (2, '11 Baker street', 'appt 501', '6930A', 'dublin', 2), # member 2
+  (2, '11 Baker street', 'appt 501', '6930A', 'dublin', 2), # member 1
   (3, '11 ETIC street', 'bat. b', '91002', 'paris', 1), # member 3
   (4, '11 Backbeat street', 'bat. a', '91004', 'djibouti', 3), # firm 1
   (5, '17 Watcha ave', 'porte 5', '674A4', 'Leicester', 40), # firm 2
-  (6, '17 Beat', 'Meat', '674A4', 'Paris', 40); # member 4
+  (6, '17 Beat', 'Meat', '674A4', 'Paris', 40), # member 4
+  (7, '60 Gold street', 'bat. j', '69100','Villeurbanne',1), #consultant 5
+  (8, '20 avenue Albert Einstein', 'bat. g', '50100', 'Cherbourg',1); #consultant 2
 
 TRUNCATE TABLE core_ticket;
 INSERT INTO core_ticket (id, userId, title, message, type, status) VALUES
@@ -33,8 +35,8 @@ INSERT INTO core_member (id, genderId, firstName, lastName, birthday, telephone,
 
 TRUNCATE TABLE core_consultant;
 INSERT INTO core_consultant (id, genderId, firstName, lastName, birthday, telephone, email, addressId, schoolYear, departmentId, company, profilePicture) VALUES
-  (2, 1, 'Marah', 'Cool', STR_TO_DATE('1976-10-27', '%Y-%m-%d'), '+332541541', 'fake.mail2@fake.com', 2, 3, 1, 'Amazon', NULL),
-  (5, 3, 'Stéphane', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.mail3@fake.com', 6, 3, 4, NULL, NULL);
+  (2, 1, 'Marah', 'Cool', STR_TO_DATE('1976-10-27', '%Y-%m-%d'), '+332541541', 'fake.mail2@fake.com', 8, 3, 1, 'Amazon', NULL),
+  (5, 3, 'Louis', 'Ung', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.mail3@fake.com', 7, 3, 4, NULL, NULL);
 
 TRUNCATE TABLE core_member_position;
 INSERT INTO core_member_position (id, memberId, positionId, isBoard, year) VALUES

@@ -227,7 +227,7 @@ class StudyIntegrationTest extends AppTestCase
     {
 
         $post_body = array(
-            "id" =>3,
+            "id" =>4,
             "name"=>"Facebook",
         );
         $env = Environment::mock([
