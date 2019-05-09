@@ -102,19 +102,13 @@ class StudyService
         $name = Validator::requiredString($fields["name"]);
         $description = Validator::optionalString(isset($fields["description"]) ? $fields["description"] : null);
 
-        $fieldId = Validator::optionalId(isset($fields["fieldId"]) ? $fields["fieldId"] : null);
-        if ($fieldId != null)
-            $field = $this->fieldService->getOne($fieldId);
-        else
-            $field = null;
-
-        $statusId = Validator::optionalId(isset($fields["statusId"]) ? $field["statusId"] : null);
+        $statusId = Validator::optionalId(isset($fields["statusId"]) ? $fields["statusId"] : null);
         if ($statusId != null)
             $status = $this->statusService->getOne($statusId);
         else
             $status = null;
 
-        $firmId = Validator::optionalId(isset($fields["firmId"]) ? $field["firmId"] : null);
+        $firmId = Validator::optionalId(isset($fields["firmId"]) ? $fields["firmId"] : null);
         if ($firmId != null)
             $firm = $this->firmService->getOne($firmId);
         else
@@ -163,6 +157,12 @@ class StudyService
         }
 
         $confidential = Validator::optionalBool(isset($fields["confidential"]) ? $fields["confidential"] : null);
+
+        $fieldId = Validator::optionalId(isset($fields["fieldId"]) ? $fields["fieldId"] : null);
+        if ($fieldId != null)
+            $field = $this->fieldService->getOne($fieldId);
+        else
+            $field = null;
 
         $study = new Study($name, $description, $field, $status, $firm, $contacts, $leaders, $consultants, $qualityManagers, $confidential);
 
@@ -234,12 +234,6 @@ class StudyService
         $name = Validator::requiredString($fields["name"]);
         $description = Validator::optionalString(isset($fields["description"]) ? $fields["description"] : null);
 
-        $fieldId = Validator::optionalId(isset($fields["fieldId"]) ? $fields["fieldId"] : null);
-        if ($fieldId != null)
-            $field = $this->fieldService->getOne($fieldId);
-        else
-            $field = null;
-
         $statusId = Validator::optionalId(isset($fields["statusId"]) ? $fields["statusId"] : null);
         if ($statusId != null)
             $status = $this->statusService->getOne($statusId);
@@ -294,6 +288,11 @@ class StudyService
             $provenance = $this->provenanceService->getOne($provenanceId);
         }
 
+        $fieldId = Validator::optionalId(isset($fields["fieldId"]) ? $fields["fieldId"] : null);
+        if ($fieldId != null)
+            $field = $this->fieldService->getOne($fieldId);
+        else
+            $field = null;
 
         $confidential = Validator::optionalBool(isset($fields["confidential"]) ? $fields["confidential"] : null);
 

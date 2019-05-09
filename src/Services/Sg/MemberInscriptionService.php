@@ -93,9 +93,10 @@ class   MemberInscriptionService
         $genderId = Validator::requiredId($fields['genderId']);
         $gender = $this->genderService->getOne($genderId);
         $birthday = Validator::requiredDate($fields['birthday']);
+        $hasPaid = Validator::optionalBool(isset($fields['hasPaid']) ? $fields['hasPaid'] : false);
 
         $address = $this->addressService->create($fields["address"]);
-        $memberInscription = new MemberInscription($firstName, $lastName, $gender, $birthday, $department, $email, $phoneNumber, $outYear, $nationality, $address, $wantedPole);
+        $memberInscription = new MemberInscription($firstName, $lastName, $gender, $birthday, $department, $email, $phoneNumber, $outYear, $nationality, $address, $wantedPole, $hasPaid);
 
         $this->memberInscriptionDataService->persist($memberInscription);
 
@@ -182,6 +183,7 @@ class   MemberInscriptionService
         $genderId = Validator::requiredId($fields['genderId']);
         $gender = $this->genderService->getOne($genderId);
         $birthday = Validator::requiredDate($fields['birthday']);
+        $hasPaid = Validator::optionalBool(isset($fields['hasPaid']) ? $fields['hasPaid'] : false);
 
         $memberInscription->setFirstName($firstName);
         $memberInscription->setLastName($lastName);
@@ -193,6 +195,7 @@ class   MemberInscriptionService
         $memberInscription->setWantedPole($wantedPole);
         $memberInscription->setGender($gender);
         $memberInscription->setBirthday($birthday);
+        $memberInscription->setHasPaid($hasPaid);
         $this->addressService->update($memberInscription->getAddress()->getId(), $fields["address"]);
 
         $this->memberInscriptionDataService->persist($memberInscription);

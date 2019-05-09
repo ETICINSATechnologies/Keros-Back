@@ -6,7 +6,6 @@ namespace KerosTest\Sg;
 use KerosTest\AppTestCase;
 use Slim\Http\Environment;
 use Slim\Http\Request;
-//use DateTime;
 use \Slim\Exception\MethodNotAllowedException;
 use \Slim\Exception\NotFoundException;
 
@@ -42,6 +41,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->assertSame(42, $body->content[0]->nationality->id);
         $this->assertSame(2, $body->content[0]->wantedPole->id);
         $this->assertSame(1, $body->content[0]->address->id);
+        $this->assertSame(false, $body->content[0]->hasPaid);
         $this->assertSame(2, $body->meta->totalItems);
         $this->assertSame(1, $body->meta->totalPages);
         $this->assertSame(0, $body->meta->page);
@@ -72,6 +72,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
                 'postalCode' => 66666,
                 'countryId' => 133,
             ),
+            'hasPaid' => true,
         );
 
         $env = Environment::mock([
@@ -97,6 +98,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->assertSame(5, $body->wantedPole->id);
         $this->assertSame('je sais pas quoi mettre', $body->address->line1);
         $this->assertSame('Lorem ipsum', $body->address->city);
+        $this->assertSame(true, $body->hasPaid);
     }
 
     /**
@@ -127,6 +129,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->assertSame(42, $body->nationality->id);
         $this->assertSame(2, $body->wantedPole->id);
         $this->assertSame(1, $body->address->id);
+        $this->assertSame(false, $body->hasPaid);
     }
 
     /**
@@ -242,6 +245,10 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->assertSame(404, $response->getStatusCode());
     }
 
+    /**
+     * @throws MethodNotAllowedException
+     * @throws NotFoundException
+     */
     public function testDoubleValidateMemberInscriptionShouldReturn204and404()
     {
         $env = Environment::mock([
@@ -290,6 +297,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
                 'postalCode' => 66666,
                 'countryId' => 133,
             ),
+            'hasPaid' => true,
         );
 
         $env = Environment::mock([
@@ -315,6 +323,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->assertSame(5, $body->wantedPole->id);
         $this->assertSame('je sais pas quoi mettre', $body->address->line1);
         $this->assertSame('Lorem ipsum', $body->address->city);
+        $this->assertSame(true, $body->hasPaid);
     }
 
     /**
@@ -342,6 +351,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
                 'postalCode' => 66666,
                 'countryId' => 133,
             ),
+            'hasPaid' => true,
         );
 
         $env = Environment::mock([

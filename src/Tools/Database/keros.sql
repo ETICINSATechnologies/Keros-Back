@@ -410,6 +410,7 @@ CREATE TABLE sg_member_inscription (
   nationalityId int(11) NOT NULL,
   wantedPoleId int(11) NOT NULL,
   addressId int(11) NOT NULL,
+  hasPaid boolean DEFAULT FALSE,
   PRIMARY KEY (id),
   CONSTRAINT fk_sg_member_inscription_department FOREIGN KEY (departmentId) REFERENCES core_department(id),
   CONSTRAINT fk_sg_member_inscription_nationality FOREIGN KEY (nationalityId) REFERENCES core_country(id),
