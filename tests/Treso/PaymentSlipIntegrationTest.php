@@ -14,7 +14,7 @@ class PaymentSlipIntegrationTest extends AppTestCase
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/api/v1/treso/paymentSlip',
+            'REQUEST_URI' => '/api/v1/treso/payment-slip',
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
@@ -30,7 +30,7 @@ class PaymentSlipIntegrationTest extends AppTestCase
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/api/v1/ua/paymentSlip/1',
+            'REQUEST_URI' => '/api/v1/treso/payment-slip/1',
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
@@ -65,7 +65,7 @@ class PaymentSlipIntegrationTest extends AppTestCase
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/api/v1/ua/paymentSlip/100',
+            'REQUEST_URI' => '/api/v1/treso/payment-slip/100',
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
