@@ -10,68 +10,11 @@ use Slim\Http\Request;
 
 class PaymentSlipIntegrationTest extends AppTestCase
 {
-
-    public function testGetAllDocumentsShouldReturn200(){
-        $env = Environment::mock([
-            'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/api/v1/ua/paymentSlip/2/documents',
-        ]);
-        $req = Request::createFromEnvironment($env);
-        $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(false);
-        $kerosConfig = ConfigLoader::getConfig();
-
-        $this->assertSame(200, $response->getStatusCode());
-        $body = json_decode($response->getBody());
-        $this->assertEquals(3, count($body->documents));
-        $this->assertSame(1, $body->documents[0]->id);
-        $this->assertSame('testGet', $body->documents[0]->name);
-        $this->assertSame($kerosConfig['BACK_URL'] . '/api/v1/ua/paymentSlip/2/template/1', $body->documents[0]->generateLocation);
-    }
-
-    public function testGetAllDocumentsShouldReturn400(){
-        $env = Environment::mock([
-            'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/api/v1/ua/paymentSlip/1/documents',
-        ]);
-        $req = Request::createFromEnvironment($env);
-        $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(false);
-
-        $this->assertSame(400, $response->getStatusCode());
-    }
-
-    public function testDeletePaymentSlipShouldReturn204 ()
-    {
-        $env = Environment::mock([
-            'REQUEST_METHOD' => 'DELETE',
-            'REQUEST_URI' => '/api/v1/ua/paymentSlip/2',
-        ]);
-        $req = Request::createFromEnvironment($env);
-        $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(false);
-
-        $this->assertSame(204, $response->getStatusCode());
-    }
-
-    public function testDeletePaymentSlipShouldReturn404 ()
-    {
-        $env = Environment::mock([
-            'REQUEST_METHOD' => 'DELETE',
-            'REQUEST_URI' => '/api/v1/ua/paymentSlip/5',
-        ]);
-        $req = Request::createFromEnvironment($env);
-        $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(false);
-
-        $this->assertSame(404, $response->getStatusCode());
-    }
-
     public function testGetAllPaymentSlipShouldReturn200()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/api/v1/ua/paymentSlip',
+            'REQUEST_URI' => '/api/v1/treso/paymentSlip',
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
@@ -80,7 +23,7 @@ class PaymentSlipIntegrationTest extends AppTestCase
         $this->assertSame(200, $response->getStatusCode());
         $body = json_decode($response->getBody());
 
-        $this->assertEquals(2, count($body->content));
+        $this->assertEquals(1, count($body->content));
     }
 
     public function testGetPaymentSlipShouldReturn200()
@@ -96,16 +39,26 @@ class PaymentSlipIntegrationTest extends AppTestCase
         $this->assertSame(200, $response->getStatusCode());
         $body = json_decode($response->getBody());
 
-        $this->assertEquals("Développement IDE", $body->name);
-        $this->assertEquals("Développement d'un IDE pour utilisation interne", $body->description);
-        $this->assertEquals("1", $body->field->id);
-        $this->assertEquals("Web", $body->field->label);
-        $this->assertEquals("2", $body->status->id);
-        $this->assertEquals("En clôture", $body->status->label);
-        $this->assertEquals("1", $body->provenance->id);
-        $this->assertEquals("Site Web", $body->provenance->label);
-        $this->assertEquals("2018-11-10", $body->signDate);
-        $this->assertEquals("1", $body->firm->id);
+        $this->assertEquals("102383203", $body->missionRecapNumber);
+        $this->assertEquals("Shrek", $body->consultantName);
+        $this->assertEquals("12320183", $body->consultantSocialSecurityNumber);
+        $this->assertEquals("1", $body->address->id);
+        $this->assertEquals("shrek@fortfortlointain.fr", $body->email);
+        $this->assertEquals("1", $body->study->id);
+        $this->assertEquals("L'âne", $body->clientName);
+        $this->assertEquals("Le chat Potté", $body->projectLead);
+        $this->assertEquals("1", $body->consultant->id);
+        $this->assertEquals("0", $body->isTotalJeh);
+        $this->assertEquals("0", $body->isStudyPaid);
+        $this->assertEquals("Facture payée", $body->amountDescription);
+        $this->assertEquals("2022-05-15", $body->createdDate);
+        $this->assertEquals("1", $body->createdBy->id);
+        $this->assertEquals("0", $body->validatedByUa);
+        $this->assertEquals("2022-05-15", $body->validatedByUaDate);
+        $this->assertEquals("2", $body->validatedByUaMember->id);
+        $this->assertEquals("0", $body->validatedByPerf);
+        $this->assertEquals("2022-05-15", $body->validatedByPerfDate);
+        $this->assertEquals("3", $body->validatedByPerfMember->id);
     }
 
     public function testGetPaymentSlipShouldReturn404()
@@ -119,78 +72,5 @@ class PaymentSlipIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
 
         $this->assertSame(404, $response->getStatusCode());
-    }
-
-    public function testPostPaymentSlipOnlyWithOnlyRequiredParamsShouldReturn201()
-    {
-
-        $post_body = array(
-            "id" =>3,
-            "name"=>"Facebook",
-            "description"=>"C est le feu",
-            "fieldId"=>1,
-            "provenanceId"=>1,
-            "statusId"=>1,
-            "firmId"=>1,
-            "contactIds"=>array(),
-            "leaderIds"=>array(),
-            "consultantIds"=>array(),
-            "qualityManagerIds"=>array(),
-        );
-        $env = Environment::mock([
-            'REQUEST_METHOD' => 'POST',
-            'REQUEST_URI' => '/api/v1/ua/paymentSlip',
-        ]);
-        $req = Request::createFromEnvironment($env);
-        $req = $req->withParsedBody($post_body);
-        $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(false);
-        $this->assertSame(201, $response->getStatusCode());
-        $body = json_decode($response->getBody());
-        $this->assertSame(3, $body->id);
-        $this->assertSame("Facebook", $body->name);
-    }
-
-    public function testPutPaymentSlipShouldReturn200()
-    {
-
-        $post_body = array(
-            "name"=>"Twitter",
-            "description"=>"C est le feu",
-            "fieldId"=>1,
-            "provenanceId"=>1,
-            "statusId"=>1,
-            "firmId"=>1,
-            "contactIds"=>array(),
-            "leaderIds"=>array(),
-            "consultantIds"=>array(),
-            "qualityManagerIds"=>array(),
-            "confidential"=>true,
-        );
-        $env = Environment::mock([
-            'REQUEST_METHOD' => 'PUT',
-            'REQUEST_URI' => '/api/v1/ua/paymentSlip/1',
-        ]);
-        $req = Request::createFromEnvironment($env);
-        $req = $req->withParsedBody($post_body);
-        $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(false);
-        $this->assertSame(200, $response->getStatusCode());
-        $body = json_decode($response->getBody());
-
-        $this->assertSame("Twitter", $body->name);
-    }
-
-    public function testPutPaymentSlipWithEmptyBodyShouldReturn400()
-    {
-        $env = Environment::mock([
-            'REQUEST_METHOD' => 'PUT',
-            'REQUEST_URI' => '/api/v1/ua/paymentSlip/1',
-        ]);
-        $req = Request::createFromEnvironment($env);
-        $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(false);
-
-        $this->assertSame(400, $response->getStatusCode());
     }
 }
