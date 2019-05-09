@@ -47,18 +47,18 @@ class PaymentSlipIntegrationTest extends AppTestCase
         $this->assertEquals(1, $body->study->id);
         $this->assertEquals("L'âne", $body->clientName);
         $this->assertEquals("Le chat Potté", $body->projectLead);
-        //$this->assertEquals(1, $body->consultant->id);
+        $this->assertEquals(1, $body->consultant->consultantId);
         $this->assertEquals(false, $body->isTotalJeh);
         $this->assertEquals(false, $body->isStudyPaid);
         $this->assertEquals("Facture payée", $body->amountDescription);
-        $this->assertEquals("2022-05-15", $body->createdDate);
+        $this->assertEquals("2022-05-15 00:00:00.000000", $body->createdDate->date);
         $this->assertEquals(1, $body->createdBy->id);
         $this->assertEquals(false, $body->validatedByUa);
-        $this->assertEquals("2022-05-15", $body->validatedByUaDate);
-        $this->assertEquals(1, $body->validatedByUaMember->id);
+        $this->assertEquals("2022-05-15 00:00:00.000000", $body->validatedByUaDate->date);
+        $this->assertEquals(2, $body->validatedByUaMember->id);
         $this->assertEquals(false, $body->validatedByPerf);
-        $this->assertEquals("2022-05-15", $body->validatedByPerfDate);
-        $this->assertEquals(1, $body->validatedByPerfMember->id);
+        $this->assertEquals("2022-05-15 00:00:00.000000", $body->validatedByPerfDate->date);
+        $this->assertEquals(3, $body->validatedByPerfMember->id);
     }
 
     public function testGetPaymentSlipShouldReturn404()
