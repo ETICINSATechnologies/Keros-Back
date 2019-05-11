@@ -51,6 +51,7 @@ class DirectoryManager
      * @throws KerosException
      */
     public function symlink(string $target, string $link){
+        $this->mkdir(pathinfo($link, PATHINFO_DIRNAME));
         if(!symlink($target, $link)){
             $msg = 'Error during symlink';
             $this->logger->err($msg);
