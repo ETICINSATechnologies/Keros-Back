@@ -8,10 +8,12 @@ use Keros\Error\KerosException;
 use Keros\Services\Ua\StudyDocumentService;
 use Keros\Services\Ua\StudyDocumentTypeService;
 use Keros\Tools\ConfigLoader;
+use Keros\Tools\DirectoryManager;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use \Exception;
 
 class StudyDocumentController
 {
@@ -41,6 +43,11 @@ class StudyDocumentController
     private $studyDocumentTypeService;
 
     /**
+     * @var DirectoryManager
+     */
+    private $directoryManager;
+
+    /**
      * StudyDocumentController constructor.
      * @param ContainerInterface $container
      */
@@ -51,6 +58,7 @@ class StudyDocumentController
         $this->studyDocumentService = $container->get(StudyDocumentService::class);
         $this->kerosConfig = ConfigLoader::getConfig();
         $this->studyDocumentTypeService = $container->get(StudyDocumentTypeService::class);
+        $this->directoryManager = $container->get(DirectoryManager::class);
     }
 
     /**
@@ -58,7 +66,7 @@ class StudyDocumentController
      * @param Response $response
      * @param array $args
      * @return Response
-     * @throws \Exception
+     * @throws Exception
      */
     public function createDocument(Request $request, Response $response, array $args)
     {
@@ -97,7 +105,7 @@ class StudyDocumentController
      * @param Response $response
      * @param array $args
      * @return Response
-     * @throws \Keros\Error\KerosException
+     * @throws KerosException
      */
     public function getDocument(Request $request, Response $response, array $args)
     {
@@ -105,7 +113,10 @@ class StudyDocumentController
 
         $document = $this->studyDocumentService->getLatestDocumentFromStudyDocumentType($args["studyId"], $args['documentId']);
 
-        return $response->withJson(array('location' => $this->kerosConfig['BACK_URL'] . DIRECTORY_SEPARATOR . $this->kerosConfig['STUDY_DOCUMENT_DIRECTORY'] . $document->getLocation()), 200);
+        $location = $this->directoryManager->uniqueFilename($document->getLocation(), false, $this->kerosConfig['TEMPORARY_DIRECTORY']);
+        $this->directoryManager->symlink($this->kerosConfig['STUDY_DOCUMENT_DIRECTORY'] . $document->getLocation(), $location);
+
+        return $response->withJson(array('location' => $this->kerosConfig['BACK_URL'] . DIRECTORY_SEPARATOR . '/generated/' . pathinfo($location, PATHINFO_BASENAME)), 200);
     }
 
     /**
@@ -113,7 +124,7 @@ class StudyDocumentController
      * @param Response $response
      * @param array $args
      * @return Response
-     * @throws \Exception
+     * @throws Exception
      */
     public function generateStudyDocument(Request $request, Response $response, array $args)
     {
@@ -122,7 +133,7 @@ class StudyDocumentController
         $location = $this->studyDocumentTypeService->generateStudyDocument($args["idDocumentType"], $args["idStudy"], $request->getAttribute("userId"));
         $filename = pathinfo($location, PATHINFO_BASENAME);
 
-        return $response->withJson(array('location' => $this->kerosConfig['BACK_URL'] . "/generated/" . $this->kerosConfig["TEMPORARY_DIRECTORY"] . $filename), 200);
+        return $response->withJson(array('location' => $this->kerosConfig['BACK_URL'] . "/generated/" . $filename), 200);
     }
 
 }
