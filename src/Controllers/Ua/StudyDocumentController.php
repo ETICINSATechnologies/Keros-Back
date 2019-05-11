@@ -114,8 +114,7 @@ class StudyDocumentController
         $document = $this->studyDocumentService->getLatestDocumentFromStudyDocumentType($args["studyId"], $args['documentId']);
 
         $location = $this->directoryManager->uniqueFilename($document->getLocation(), false, $this->kerosConfig['TEMPORARY_DIRECTORY']);
-
-        $this->directoryManager->symlink('../../' . $this->kerosConfig['STUDY_DOCUMENT_DIRECTORY'] . $document->getLocation(), $location);
+        $this->directoryManager->symlink($this->kerosConfig['STUDY_DOCUMENT_DIRECTORY'] . $document->getLocation(), $location);
 
         return $response->withJson(array('location' => $this->kerosConfig['BACK_URL'] . DIRECTORY_SEPARATOR . '/generated/' . pathinfo($location, PATHINFO_BASENAME)), 200);
     }
