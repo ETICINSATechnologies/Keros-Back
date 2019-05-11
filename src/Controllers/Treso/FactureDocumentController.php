@@ -104,7 +104,7 @@ class FactureDocumentController
         $this->logger->debug("Getting document path for facture " . $args["factureId"] . " and document type " . $args['documentId'] . " from " . $request->getServerParams()["REMOTE_ADDR"]);
 
         $document = $this->factureDocumentService->getLatestDocumentFromFactureDocumentType($args["factureId"], $args['documentId']);
-
+        //Url de download non valide. Si jamais cette méthode est implémentée, il faudra la modifier (à la manière du download pour les study)
         return $response->withJson(array('location' => $this->kerosConfig['BACK_URL'] . DIRECTORY_SEPARATOR . $this->kerosConfig['FACTURE_DOCUMENT_DIRECTORY'] . $document->getLocation()), 200);
     }
 
@@ -117,13 +117,12 @@ class FactureDocumentController
      */
     public function generateFactureDocument(Request $request, Response $response, array $args)
     {
-        $this->logger->debug("Generating document with document type " . $args["idDocumentType"] . " from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->logger->debug("Generating document for facture " . $args["idFacture"] . " from " . $request->getServerParams()["REMOTE_ADDR"]);
 
-        //TODO à voir pour l'id du document
         $location = $this->factureDocumentTypeService->generateFactureDocument($args["idFacture"], $request->getAttribute("userId"));
         $filename = pathinfo($location, PATHINFO_BASENAME);
 
-        return $response->withJson(array('location' => $this->kerosConfig['BACK_URL'] . "/generated/" . $this->kerosConfig["TEMPORARY_DIRECTORY"] . $filename), 200);
+        return $response->withJson(array('location' => $this->kerosConfig['BACK_URL'] . "/generated/" . $filename), 200);
     }
 
 }
