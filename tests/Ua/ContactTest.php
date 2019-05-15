@@ -20,7 +20,7 @@ class ContactTest extends TestCase
     public function testContactShouldCreateWithParams()
     {
         $gender = new Gender("label");
-        $firm = new Firm("name", "siret", "address", null);
+        $firm = new Firm("name", "siret", "address", null, null);
         $Contact = new Contact("Marah", "Tainturier", $gender, $firm,
                                "marah.laurent@gmail.com",true);
 
