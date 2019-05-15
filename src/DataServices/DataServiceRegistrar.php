@@ -72,10 +72,6 @@ class DataServiceRegistrar
             return new ConsultantDataService($container);
         };
 
-        $container[ConsultantDataService::class] = function ($container) {
-            return new ConsultantDataService($container);
-        };
-
         //UA
         $container[FirmTypeDataService::class] = function ($container) {
             return new FirmTypeDataService($container);

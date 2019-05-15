@@ -114,6 +114,7 @@ class MemberInscription implements JsonSerializable
      * @param Country $nationality
      * @param Address $address
      * @param Pole $wantedPole
+     * @param bool $hasPaid
      */
     public function __construct(string $firstName, string $lastName, Gender $gender, DateTime $birthday, Department $department, string $email, string $phoneNumber, int $outYear, Country $nationality, Address $address, Pole $wantedPole, bool $hasPaid)
     {

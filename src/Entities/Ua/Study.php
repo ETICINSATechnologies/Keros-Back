@@ -1,6 +1,7 @@
 <?php
 namespace Keros\Entities\Ua;
 use JsonSerializable;
+use Keros\Tools\Validator;
 use Keros\Entities\Core\Member;
 /**
  * @Entity
@@ -115,8 +116,10 @@ class Study implements JsonSerializable
     /** @Column(type="integer")*/
     protected $mainQualityManager;
 
-    //The main consultant's member ID
-    /** @Column(type="integer")*/
+    /**
+     * The main consultant's member ID
+     * @Column(type="integer")
+     */
     protected $mainConsultant;
 
     /**
@@ -132,7 +135,7 @@ class Study implements JsonSerializable
      * @param $consultants
      * @param $confidential
      */
-    public function __construct($name, $description, $field, $status, $firm, $contacts, $leaders, $qualityManagers, $consultants, $confidential)
+    public function __construct($name, $description, $field, $status, $firm, $contacts, $leaders, $qualityManagers, $consultants, $confidential, $mainLeader, $mainQualityManager, $mainConsultant)
     {
         $this->name = $name;
         $this->description = $description;
@@ -144,6 +147,9 @@ class Study implements JsonSerializable
         $this->qualityManagers = $qualityManagers;
         $this->consultants = $consultants;
         $this->confidential = $confidential;
+        $this->mainLeader = $mainLeader;
+        $this->mainQualityManager = $mainQualityManager;
+        $this->mainConsultant = $mainConsultant;
     }
 
     public function jsonSerialize()
@@ -167,11 +173,7 @@ class Study implements JsonSerializable
             'contacts' => $this->getContactsArray(),
             'leaders' => $this->getLeadersArray(),
             'consultants' => $this->getConsultantsArray(),
-            'qualityManagers' => $this->getQualityManagersArray(),
-            'confidential' => $this->getConfidential(),
-            'mainLeader' => $this->getMainLeader(),
-            'mainQualityManager' => $this->getMainQualityManager(),
-            'mainConsultant' => $this->getMainConsultant()
+            'qualityManagers' => $this->getQualityManagersArray()
         ];
     }
 
@@ -620,14 +622,14 @@ class Study implements JsonSerializable
     {
         return $this->mainLeader;
     }
+
     /**
      * @param $mainLeader
      * @throws \Keros\Error\KerosException
      */
-
     public function setMainLeader($mainLeader): void
     {
-        Validator::requiredInt($mainLeader);
+        Validator::optionalInt($mainLeader);
         $this->mainLeader = $mainLeader;
     }
 
@@ -645,7 +647,7 @@ class Study implements JsonSerializable
      */
     public function setMainQualityManager($mainQualityManager): void
     {
-        Validator::requiredInt($mainQualityManager);
+        Validator::optionalInt($mainQualityManager);
         $this->mainQualityManager = $mainQualityManager;
     }
 
@@ -663,7 +665,7 @@ class Study implements JsonSerializable
      */
     public function setMainConsultant($mainConsultant): void
     {
-        Validator::requiredInt($mainConsultant);
+        Validator::optionalInt($mainConsultant);
         $this->mainConsultant = $mainConsultant;
     }
 }

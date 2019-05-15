@@ -158,13 +158,17 @@ class StudyService
 
         $confidential = Validator::optionalBool(isset($fields["confidential"]) ? $fields["confidential"] : null);
 
+        $mainLeader = Validator::optionalInt(isset($fields["mainLeader"]) ? $fields["mainLeader"] : null);
+        $mainQualityManager = Validator::optionalInt(isset($fields["mainQualityManager"]) ? $fields["mainQualityManager"] : null);
+        $mainConsultant = Validator::optionalInt(isset($fields["mainConsultant"]) ? $fields["mainConsultant"] : null);
+
         $fieldId = Validator::optionalId(isset($fields["fieldId"]) ? $fields["fieldId"] : null);
         if ($fieldId != null)
             $field = $this->fieldService->getOne($fieldId);
         else
             $field = null;
 
-        $study = new Study($name, $description, $field, $status, $firm, $contacts, $leaders, $consultants, $qualityManagers, $confidential);
+        $study = new Study($name, $description, $field, $status, $firm, $contacts, $leaders, $consultants, $qualityManagers, $confidential, $mainLeader, $mainQualityManager, $mainConsultant);
 
         $study->setProvenance($provenance);
         $study->setSignDate($signDate);
@@ -176,6 +180,9 @@ class StudyService
         $study->setOutsourcingFee($outsourcingFee);
         $study->setArchivedDate($archivedDate);
         $study->setConfidential($confidential);
+        $study->setMainLeader($mainLeader);
+        $study->setMainConsultant($mainConsultant);
+        $study->setMainQualityManager($mainQualityManager);
 
         $this->studyDataService->persist($study);
         return $study;
@@ -296,6 +303,10 @@ class StudyService
 
         $confidential = Validator::optionalBool(isset($fields["confidential"]) ? $fields["confidential"] : null);
 
+        $mainLeader = Validator::optionalInt(isset($fields["mainLeader"]) ? $fields["mainLeader"] : null);
+        $mainQualityManager = Validator::optionalInt(isset($fields["mainQualityManager"]) ? $fields["mainQualityManager"] : null);
+        $mainConsultant = Validator::optionalInt(isset($fields["mainConsultant"]) ? $fields["mainConsultant"] : null);
+
         $study->setName($name);
         $study->setDescription($description);
         $study->setField($field);
@@ -315,6 +326,9 @@ class StudyService
         $study->setOutsourcingFee($outsourcingFee);
         $study->setArchivedDate($archivedDate);
         $study->setConfidential($confidential);
+        $study->setMainLeader($mainLeader);
+        $study->setMainConsultant($mainConsultant);
+        $study->setMainQualityManager($mainQualityManager);
 
         $this->studyDataService->persist($study);
 
@@ -334,15 +348,7 @@ class StudyService
         if (empty($study->getConsultantsArray())) {
             return false;
         }
-        /*
-        foreach ($study->getConsultantsArray() as $consultant) {
-            $isConsultant = false;
-            foreach ($consultant->getPositionsArray() as $position)
-                if ($position->getPosition()->getLabel() == 'Consultant')
-                    $isConsultant = true;
-            if (!$isConsultant)
-                return false;
-        }*/
+
         return true;
     }
 }

@@ -29,7 +29,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame("Cool", $body->content[0]->lastName);
     }
 
-    public function testSearchConsuShouldReturn200()
+    public function testSearchConsultantShouldReturn200()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',

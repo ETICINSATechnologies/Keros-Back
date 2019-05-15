@@ -14,7 +14,7 @@ INSERT INTO core_user (id, username, password, expiresAt) VALUES
 
 TRUNCATE TABLE core_address;
 INSERT INTO core_address (id, line1, line2, postalCode, city, countryId) VALUES
-  (1, '13 Rue du renard', null, '69100', 'lyon', 1), # member 1
+  (1, '13 Rue du renard', null, '69100', 'lyon', 1), # member inscription
   (2, '11 Baker street', 'appt 501', '6930A', 'dublin', 2), # member 1
   (3, '11 ETIC street', 'bat. b', '91002', 'paris', 1), # member 3
   (4, '11 Backbeat street', 'bat. a', '91004', 'djibouti', 3), # firm 1

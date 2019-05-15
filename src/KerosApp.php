@@ -165,8 +165,8 @@ class KerosApp
 
                 $this->group('/consultant', function () {
                     $this->get("", ConsultantController::class . ':getPageConsultants');
-                    $this->get("/me", ConsultantController::class . ':getConnectedUser');
-                    $this->put("/me", ConsultantController::class . ':updateConnectedUser');
+                    $this->get("/me", ConsultantController::class . ':getConnectedConsultant');
+                    $this->put("/me", ConsultantController::class . ':updateConnectedConsultant');
                     $this->get('/{id:[0-9]+}', ConsultantController::class . ':getConsultant');
                     $this->post("", ConsultantController::class . ':createConsultant');
                     $this->put("/{id:[0-9]+}", ConsultantController::class . ':updateConsultant');

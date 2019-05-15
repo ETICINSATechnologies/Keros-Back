@@ -37,15 +37,12 @@ class StudyIntegrationTest extends AppTestCase
         $this->assertEquals("2018-11-10", $body->signDate);
         $this->assertEquals("2", $body->firm->id);
 
-        $this->assertEquals("4", $body->mainLeader);
         $this->assertEquals("4", $body->leaders[0]->id);
         $this->assertEquals("3", $body->leaders[1]->id);
 
-        $this->assertEquals("4", $body->mainQualityManager);
         $this->assertEquals("4", $body->qualityManagers[0]->id);
         $this->assertEquals("3", $body->qualityManagers[1]->id);
 
-        $this->assertEquals("2", $body->mainConsultant);
         $this->assertEquals("2", $body->consultants[0]->id);
 
     }
@@ -257,6 +254,9 @@ class StudyIntegrationTest extends AppTestCase
             "consultantIds"=>array(),
             "qualityManagerIds"=>array(),
             "confidential"=>true,
+            "mainLeader"=>null,
+            "mainQualityManager"=>null,
+            "mainConsultant"=>null
         );
         $env = Environment::mock([
             'REQUEST_METHOD' => 'POST',

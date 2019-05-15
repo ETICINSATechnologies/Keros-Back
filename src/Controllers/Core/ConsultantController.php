@@ -50,7 +50,7 @@ class ConsultantController
         return $response->withJson($consultant, 200);
     }
 
-    public function getConnectedUser(Request $request, Response $response, array $args)
+    public function getConnectedConsultant(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Getting connected user from " . $request->getServerParams()["REMOTE_ADDR"]);
 
@@ -60,7 +60,7 @@ class ConsultantController
     }
 
 
-    public function updateConnectedUser(Request $request, Response $response, array $args)
+    public function updateConnectedConsultant(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Getting updated user from " . $request->getServerParams()["REMOTE_ADDR"]);
 
