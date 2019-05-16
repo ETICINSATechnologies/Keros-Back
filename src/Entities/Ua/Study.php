@@ -173,7 +173,8 @@ class Study implements JsonSerializable
             'contacts' => $this->getContactsArray(),
             'leaders' => $this->getLeadersArray(),
             'consultants' => $this->getConsultantsArray(),
-            'qualityManagers' => $this->getQualityManagersArray()
+            'qualityManagers' => $this->getQualityManagersArray(),
+            'confidential' => $this->getConfidential()
         ];
     }
 
