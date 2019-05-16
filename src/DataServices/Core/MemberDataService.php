@@ -74,7 +74,7 @@ class MemberDataService
     /**
      * @param RequestParameters $requestParameters
      * @param $queryParams
-     * @return Page
+     * @return array
      * @throws KerosException
      */
     public function getPage(RequestParameters $requestParameters, array $queryParams)
@@ -135,8 +135,8 @@ class MemberDataService
 
             $order = $requestParameters->getParameters()['order'];
             $orderBy = $requestParameters->getParameters()['orderBy'];
-            $pageSize = $requestParameters->getParameters()['pageSize'];
-            $firstResult = $pageSize * $requestParameters->getParameters()['pageNumber'];
+            //$pageSize = $requestParameters->getParameters()['pageSize'];
+            //$firstResult = $pageSize * $requestParameters->getParameters()['pageNumber'];
 
             if (!empty($whereStatement)) {
                 $this->queryBuilder
@@ -147,15 +147,17 @@ class MemberDataService
             if (isset($orderBy)) {
                 $this->queryBuilder->orderBy($orderBy, $order);
             }
-
+/*
             $this->queryBuilder
                 ->setFirstResult($firstResult)
                 ->setMaxResults($pageSize);
+*/
+            $query = $this->queryBuilder->getQuery();//sql ok ici
+    //        $paginator = new Paginator($query, $fetchJoinCollection = false);
+      //      $this->logger->debug(count($paginator->getIterator()->getArrayCopy()));
+  //          $page = new Page($query->execute(), $requestParameters, count($paginator));
 
-            $query = $this->queryBuilder->getQuery();
-            $paginator = new Paginator($query, $fetchJoinCollection = true);
-
-            return new Page($query->execute(), $requestParameters, count($paginator));
+            return $query->execute();
 
         } catch (Exception $e) {
             $msg = "Error finding page of members : " . $e->getMessage();

@@ -86,7 +86,9 @@ class MemberController
         $queryParams = $request->getQueryParams();
         $requestParameters = new RequestParameters($queryParams, Member::getSearchFields());
 
-        $page = $this->memberService->getPage($requestParameters, $queryParams);
+        $members = $this->memberService->getPage($requestParameters, $queryParams);
+
+        $page = new Page($members, $requestParameters, count($members));
 
         return $response->withJson($page, 200);
     }

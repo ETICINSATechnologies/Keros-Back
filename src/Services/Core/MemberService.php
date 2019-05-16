@@ -119,13 +119,18 @@ class MemberService
         return $member;
     }
 
-    public function getPage(RequestParameters $requestParameters, array $queryParams): Page
+    public function getPage(RequestParameters $requestParameters, array $queryParams): array
     {
         if (isset($queryParams['year']) && $queryParams['year'] == 'latest') {
             $queryParams['year'] = $this->memberPositionService->getLatestYear();
         }
 
-        return $this->memberDataService->getPage($requestParameters, $queryParams);
+        $members = $this->memberDataService->getPage($requestParameters, $queryParams);
+        $pageSize = $requestParameters->getParameters()['pageSize'];
+        $firstResult = $pageSize * $requestParameters->getParameters()['pageNumber'];
+        $members = array_slice($members, $firstResult, $pageSize);
+
+        return $members;
     }
 
     public function getSome(array $ids): array
