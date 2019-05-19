@@ -14,6 +14,7 @@ class Validator
         if ($id == null) {
             throw new KerosException("The provided id cannot be null", 400);
         }
+        $id = filter_var($id, FILTER_VALIDATE_INT);
         if (!is_int($id)) {
             throw new KerosException("The provided id is not an integer", 400);
         }
@@ -28,6 +29,7 @@ class Validator
         if ($id == null) {
             return null;
         }
+        $id = filter_var($id, FILTER_VALIDATE_INT);
         if (!is_int($id)) {
             throw new KerosException("The provided id is not an integer", 400);
         }
@@ -42,6 +44,7 @@ class Validator
         if ($int == null) {
             return null;
         }
+        $int = filter_var($int, FILTER_VALIDATE_INT);
         if (!is_int($int)) {
             throw new KerosException("The provided value is not an integer", 400);
         }
@@ -107,6 +110,7 @@ class Validator
         if ($float == null) {
             throw new KerosException("The provided float cannot be null", 400);
         }
+        $float = filter_var($float, FILTER_VALIDATE_FLOAT);
         if (is_int($float)) {
             $float = floatval($float);
         }
@@ -129,6 +133,7 @@ class Validator
         if ($int == null) {
             throw new KerosException("The provided int cannot be null", 400);
         }
+        $int = filter_var($int, FILTER_VALIDATE_INT);
         if (!is_int($int)) {
             throw new KerosException("The value provided is not actually a int", 400);
         }
@@ -141,7 +146,16 @@ class Validator
             throw new KerosException("The provided boolean cannot be null", 400);
         }
         if (!is_bool($bool)) {
-            throw new KerosException("The provided boolean is not a boolean", 400);
+            if (is_string($bool)) {
+                if (strtolower($bool) === "true")
+                    $bool = true;
+                elseif (strtolower($bool) === "false")
+                    $bool = false;
+                else
+                    throw new KerosException("The provided boolean is not a boolean", 400);
+            } else {
+                throw new KerosException("The provided boolean is not a boolean", 400);
+            }
         }
 
         return $bool;
@@ -152,7 +166,16 @@ class Validator
         if ($bool == null)
             return 0;
         if (!is_bool($bool)) {
-            throw new KerosException("The provided boolean is not a boolean", 400);
+            if (is_string($bool)) {
+                if (strtolower($bool) === "true")
+                    $bool = true;
+                elseif (strtolower($bool) === "false")
+                    $bool = false;
+                else
+                    throw new KerosException("The provided boolean is not a boolean", 400);
+            } else {
+                throw new KerosException("The provided boolean is not a boolean", 400);
+            }
         }
         return $bool;
     }
@@ -171,7 +194,7 @@ class Validator
 
     public static function optionalDate($date): ?DateTime
     {
-        if($date == null || empty($date)){
+        if ($date == null || empty($date)) {
             return null;
         }
         return self::requiredDate($date);
@@ -208,8 +231,7 @@ class Validator
         $telephone = trim($telephone);
         if (strlen($telephone) == 0) {
             return null;
-        }
-        elseif (strlen($telephone) < 8 || strlen($telephone) > 16){
+        } elseif (strlen($telephone) < 8 || strlen($telephone) > 16) {
             throw new KerosException("The provided phone number is invalid", 400);
         }
         return $telephone;
@@ -260,7 +282,7 @@ class Validator
         return $array;
     }
 
-    public static function requiredContact($contact) : Contact
+    public static function requiredContact($contact): Contact
     {
         if (!$contact) {
             throw new KerosException("The contact could not be found", 400);
@@ -269,7 +291,7 @@ class Validator
         return $contact;
     }
 
-    public static function requiredStudy($study) : Study
+    public static function requiredStudy($study): Study
     {
         if (!$study) {
             throw new KerosException("The study could not be found", 400);
