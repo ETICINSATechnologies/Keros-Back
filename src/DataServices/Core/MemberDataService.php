@@ -3,15 +3,12 @@
 namespace Keros\DataServices\Core;
 
 
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use Exception;
 use Keros\Entities\Core\Member;
 use Keros\Entities\Core\MemberPosition;
-use Keros\Entities\Core\Page;
 use Keros\Entities\Core\Pole;
 use Keros\Entities\Core\Position;
 use Keros\Entities\Core\RequestParameters;
@@ -135,8 +132,6 @@ class MemberDataService
 
             $order = $requestParameters->getParameters()['order'];
             $orderBy = $requestParameters->getParameters()['orderBy'];
-            //$pageSize = $requestParameters->getParameters()['pageSize'];
-            //$firstResult = $pageSize * $requestParameters->getParameters()['pageNumber'];
 
             if (!empty($whereStatement)) {
                 $this->queryBuilder
@@ -147,18 +142,9 @@ class MemberDataService
             if (isset($orderBy)) {
                 $this->queryBuilder->orderBy($orderBy, $order);
             }
-/*
-            $this->queryBuilder
-                ->setFirstResult($firstResult)
-                ->setMaxResults($pageSize);
-*/
+
             $query = $this->queryBuilder->getQuery();//sql ok ici
-    //        $paginator = new Paginator($query, $fetchJoinCollection = false);
-      //      $this->logger->debug(count($paginator->getIterator()->getArrayCopy()));
-  //          $page = new Page($query->execute(), $requestParameters, count($paginator));
-
             return $query->execute();
-
         } catch (Exception $e) {
             $msg = "Error finding page of members : " . $e->getMessage();
             $this->logger->error($msg);

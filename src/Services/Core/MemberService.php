@@ -6,7 +6,6 @@ namespace Keros\Services\Core;
 use Keros\DataServices\Core\MemberDataService;
 use Keros\DataServices\Core\TicketDataService;
 use Keros\Entities\Core\Member;
-use Keros\Entities\Core\Page;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Error\KerosException;
 use Keros\Tools\Validator;

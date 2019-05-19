@@ -4,7 +4,6 @@ namespace Keros\Controllers\Core;
 
 use Doctrine\ORM\EntityManager;
 use Keros\Entities\core\Member;
-use Keros\Entities\Core\MemberPosition;
 use Keros\Entities\Core\Page;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Services\Core\MemberService;
