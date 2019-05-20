@@ -105,6 +105,58 @@ class MemberInscriptionIntegrationTest extends AppTestCase
      * @throws MethodNotAllowedException
      * @throws NotFoundException
      */
+    public function testPostMemberInscriptionOnlyRequiredFieldsShouldReturn201()
+    {
+
+        $post_body = array(
+            'firstName' => 'Thanos',
+            'lastName' => 'Tueur de monde',
+            'genderId' => 4,
+            'birthday' => '1000-01-01',
+            'departmentId' => 4,
+            'email' => 'thanos@claquementdedoigts.com',
+            'nationalityId' => 133,
+            'wantedPoleId' => 5,
+            'address' => array(
+                'line1' => 'je sais pas quoi mettre',
+                'line2' => "",
+                'city' => 'Lorem ipsum',
+                'postalCode' => 66666,
+                'countryId' => 133,
+            ),
+            'hasPaid' => true,
+        );
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => '/api/v1/sg/membre-inscription',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withParsedBody($post_body);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $body = json_decode($response->getBody());
+        $this->assertSame(201, $response->getStatusCode());
+        $this->assertSame('Thanos', $body->firstName);
+        $this->assertSame('Tueur de monde', $body->lastName);
+        $this->assertSame(4, $body->gender->id);
+        $this->assertSame('1000-01-01', $body->birthday);
+        $this->assertSame(4, $body->department->id);
+        $this->assertSame('thanos@claquementdedoigts.com', $body->email);
+        $this->assertSame(null, $body->phoneNumber);
+        $this->assertSame(null, $body->outYear);
+        $this->assertSame(133, $body->nationality->id);
+        $this->assertSame(5, $body->wantedPole->id);
+        $this->assertSame('je sais pas quoi mettre', $body->address->line1);
+        $this->assertSame('Lorem ipsum', $body->address->city);
+        $this->assertSame(true, $body->hasPaid);
+    }
+
+    /**
+     * @throws MethodNotAllowedException
+     * @throws NotFoundException
+     */
     public function testGetMemberInscriptionShouldReturn200()
     {
         $env = Environment::mock([
