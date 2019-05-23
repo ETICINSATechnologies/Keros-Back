@@ -3,6 +3,7 @@
 namespace Keros\Controllers\Ua;
 
 use Doctrine\ORM\EntityManager;
+use Exception;
 use Keros\Entities\Core\Page;
 use Keros\Error\KerosException;
 use Keros\Services\Core\ConsultantService;
@@ -121,11 +122,30 @@ class StudyController
         $this->logger->debug("Searching for studies related to current user from " . $request->getServerParams()["REMOTE_ADDR"]);
 
         $studies = [];
-        $members = $this->memberService->getAll();
-        $consultants = $this->consultantService->getAll();
         $userId = $request->getAttribute("userId");
 
         //if the current user is a member
+        try{
+            $member = $this->memberService->getOne($userId);
+            if (!empty($member->getStudiesAsLeader())) {
+                $studies = array_unique(array_merge($studies, $member->getStudiesAsLeader()), SORT_REGULAR);
+            }
+            if (!empty($member->getStudiesAsQualityManager())) {
+                $studies = array_unique(array_merge($studies, $member->getStudiesAsQualityManager()), SORT_REGULAR);
+            }
+        }catch(Exception $e){
+            //if the current user is a consultant
+            $consultant = $this->consultantService->getOne($userId);
+            if ($consultant->getId() == $userId) {
+                $consultant = $this->consultantService->getOne($userId);
+                if (!empty($consultant->getStudiesAsConsultant())) {
+                    $studies = array_unique(array_merge($studies, $consultant->getStudiesAsConsultant()), SORT_REGULAR);
+                }
+            }
+        }
+
+
+        /*
         foreach ($members as $member) {
             if ($member->getId() == $userId) {
                 if (!empty($member->getStudiesAsLeader())) {
@@ -147,7 +167,7 @@ class StudyController
                 }
                 break;
             }
-        }
+        }*/
 
         return $response->withJson($studies, 200);
     }

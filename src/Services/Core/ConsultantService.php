@@ -185,13 +185,4 @@ class ConsultantService
 
     }
 
-    /**
-     * @return Consultant[]
-     * @throws KerosException
-     */
-    public function getAll() : array
-    {
-        return $this->consultantDataService->getAll();
-    }
-
 }

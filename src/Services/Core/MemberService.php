@@ -232,13 +232,4 @@ class MemberService
         return $boardMembers;
 
     }
-
-    /**
-     * @return Member[]
-     * @throws KerosException
-     */
-    public function getAll() : array
-    {
-        return $this->memberDataService->getAll();
-    }
 }
