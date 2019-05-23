@@ -62,7 +62,32 @@ INSERT INTO core_address (id, line1, line2, postalCode, city, countryId) VALUES
   (25, 'rue test 25', 'Meat', '674A4', 'Paris', 40), # member 23
   (26, 'rue test 26', 'Meat', '674A4', 'Paris', 40), # member 24
   (27, 'rue test 27', 'Meat', '674A4', 'Paris', 40), # member 25
-  (28, 'rue test 28', 'Meat', '674A4', 'Paris', 40); # member 26
+  (28, 'rue test 28', 'Meat', '674A4', 'Paris', 40), # member 26
+  (29, 'rue firm 3', 'Meat', '674A4', 'Paris', 40), # firm 3
+  (30, 'rue firm 4', 'Meat', '674A4', 'Paris', 40), # firm 4
+  (31, 'rue firm 5', 'Meat', '674A4', 'Paris', 40), # firm 5
+  (32, 'rue firm 6', 'Meat', '674A4', 'Paris', 40), # firm 6
+  (33, 'rue firm 7', 'Meat', '674A4', 'Paris', 40), # firm 7
+  (34, 'rue firm 8', 'Meat', '674A4', 'Paris', 40), # firm 8
+  (35, 'rue firm 9', 'Meat', '674A4', 'Paris', 40), # firm 9
+  (36, 'rue firm 10', 'Meat', '674A4', 'Paris', 40), # firm 10
+  (37, 'rue firm 11', 'Meat', '674A4', 'Paris', 40), # firm 11
+  (38, 'rue firm 12', 'Meat', '674A4', 'Paris', 40), # firm 12
+  (39, 'rue firm 13', 'Meat', '674A4', 'Paris', 40), # firm 13
+  (40, 'rue firm 14', 'Meat', '674A4', 'Paris', 40), # firm 14
+  (41, 'rue firm 15', 'Meat', '674A4', 'Paris', 40), # firm 15
+  (42, 'rue firm 16', 'Meat', '674A4', 'Paris', 40), # firm 16
+  (43, 'rue firm 17', 'Meat', '674A4', 'Paris', 40), # firm 17
+  (44, 'rue firm 18', 'Meat', '674A4', 'Paris', 40), # firm 18
+  (45, 'rue firm 19', 'Meat', '674A4', 'Paris', 40), # firm 19
+  (46, 'rue firm 20', 'Meat', '674A4', 'Paris', 40), # firm 20
+  (47, 'rue firm 21', 'Meat', '674A4', 'Paris', 40), # firm 21
+  (48, 'rue firm 22', 'Meat', '674A4', 'Paris', 40), # firm 22
+  (49, 'rue firm 23', 'Meat', '674A4', 'Paris', 40), # firm 23
+  (50, 'rue firm 24', 'Meat', '674A4', 'Paris', 40), # firm 24
+  (51, 'rue firm 25', 'Meat', '674A4', 'Paris', 40), # firm 25
+  (52, 'rue firm 26', 'Meat', '674A4', 'Paris', 40); # firm 26
+
 
 TRUNCATE TABLE core_ticket;
 INSERT INTO core_ticket (id, userId, title, message, type, status) VALUES
@@ -112,7 +137,31 @@ INSERT INTO core_member_position (id, memberId, positionId, isBoard, year) VALUE
 TRUNCATE TABLE ua_firm;
 INSERT INTO ua_firm (id, siret, name, addressId, typeId) VALUES
   (1, '215437645', 'Google', 4, 3),
-  (2, '471245896', 'JetBrains', 5, 1);
+  (2, '471245896', 'JetBrains', 5, 1),
+  (3, '471245236', 'Firm 3', 29, 2),
+  (4, '471245346', 'Firm 4', 30, 3),
+  (5, '471345236', 'Firm 5', 31, 4),
+  (6, '471223896', 'Firm 6', 32, 5),
+  (7, '471254896', 'Firm 7', 33, 6),
+  (8, '451245896', 'Firm 8', 34, 7),
+  (9, '471267896', 'Firm 9', 35, 3),
+  (10, '471247896', 'Firm 10', 36, 2),
+  (11, '423245896', 'Firm 11', 37, 4),
+  (12, '471455896', 'Firm 12', 38, 5),
+  (13, '473455896', 'Firm 13', 39, 6),
+  (14, '471262896', 'Firm 14', 40, 7),
+  (15, '471237896', 'Firm 15', 41, 2),
+  (16, '471246896', 'Firm 16', 42, 4),
+  (17, '471278896', 'Firm 17', 43, 3),
+  (18, '371234896', 'Firm 18', 44, 1),
+  (19, '471289896', 'Firm 19', 45, 1),
+  (20, '471202896', 'Firm 20', 46, 2),
+  (21, '471245456', 'Firm 21', 47, 4),
+  (22, '471245845', 'Firm 22', 48, 3),
+  (23, '473445896', 'Firm 23', 49, 6),
+  (24, '471244596', 'Firm 24', 50, 5),
+  (25, '471243496', 'Firm 25', 51, 7),
+  (26, '471346796', 'Firm 26', 52, 1);
 
 TRUNCATE TABLE ua_contact;
 INSERT INTO `ua_contact` (`id`, `firstName`, `lastName`, `genderId`, `firmId`, `email`, `telephone`, `cellphone`, `position`, `notes`, `old`) VALUES
