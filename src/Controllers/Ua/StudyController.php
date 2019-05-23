@@ -133,41 +133,15 @@ class StudyController
             if (!empty($member->getStudiesAsQualityManager())) {
                 $studies = array_unique(array_merge($studies, $member->getStudiesAsQualityManager()), SORT_REGULAR);
             }
-        }catch(Exception $e){
+        }catch(KerosException $e){
             //if the current user is a consultant
             $consultant = $this->consultantService->getOne($userId);
             if ($consultant->getId() == $userId) {
-                $consultant = $this->consultantService->getOne($userId);
                 if (!empty($consultant->getStudiesAsConsultant())) {
                     $studies = array_unique(array_merge($studies, $consultant->getStudiesAsConsultant()), SORT_REGULAR);
                 }
             }
         }
-
-
-        /*
-        foreach ($members as $member) {
-            if ($member->getId() == $userId) {
-                if (!empty($member->getStudiesAsLeader())) {
-                    $studies = array_unique(array_merge($studies, $member->getStudiesAsLeader()), SORT_REGULAR);
-                }
-                if (!empty($member->getStudiesAsQualityManager())) {
-                    $studies = array_unique(array_merge($studies, $member->getStudiesAsQualityManager()), SORT_REGULAR);
-                }
-                break;
-            }
-        }
-
-        //if the current user is a consultant
-        foreach ($consultants as $consultant) {
-            if ($consultant->getId() == $userId) {
-                $consultant = $this->consultantService->getOne($userId);
-                if (!empty($consultant->getStudiesAsConsultant())) {
-                    $studies = array_unique(array_merge($studies, $consultant->getStudiesAsConsultant()), SORT_REGULAR);
-                }
-                break;
-            }
-        }*/
 
         return $response->withJson($studies, 200);
     }
