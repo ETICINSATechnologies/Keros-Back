@@ -63,13 +63,13 @@ class MemberInscription implements JsonSerializable
     private $email;
 
     /**
-     * @var string
+     * @var string|null
      * @Column(type="string", length=255)
      */
     private $phoneNumber;
 
     /**
-     * @var int
+     * @var int|null
      * @Column(type="integer")
      */
     private $outYear;
@@ -109,14 +109,14 @@ class MemberInscription implements JsonSerializable
      * @param DateTime $birthday
      * @param Department $department
      * @param string $email
-     * @param string $phoneNumber
-     * @param int $outYear
+     * @param string|null $phoneNumber
+     * @param int|null $outYear
      * @param Country $nationality
      * @param Address $address
      * @param Pole $wantedPole
      * @param bool $hasPaid
      */
-    public function __construct(string $firstName, string $lastName, Gender $gender, DateTime $birthday, Department $department, string $email, string $phoneNumber, int $outYear, Country $nationality, Address $address, Pole $wantedPole, bool $hasPaid)
+    public function __construct(string $firstName, string $lastName, Gender $gender, DateTime $birthday, Department $department, string $email, ?string $phoneNumber, ?int $outYear, Country $nationality, Address $address, Pole $wantedPole, bool $hasPaid)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -265,33 +265,33 @@ class MemberInscription implements JsonSerializable
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getPhoneNumber(): string
+    public function getPhoneNumber(): ?string
     {
         return $this->phoneNumber;
     }
 
     /**
-     * @param string $phoneNumber
+     * @param string|null $phoneNumber
      */
-    public function setPhoneNumber(string $phoneNumber): void
+    public function setPhoneNumber(?string $phoneNumber): void
     {
         $this->phoneNumber = $phoneNumber;
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getOutYear(): int
+    public function getOutYear(): ?int
     {
         return $this->outYear;
     }
 
     /**
-     * @param int $outYear
+     * @param int|null $outYear
      */
-    public function setOutYear(int $outYear): void
+    public function setOutYear(?int $outYear): void
     {
         $this->outYear = $outYear;
     }

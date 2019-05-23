@@ -86,7 +86,8 @@ class MemberDataService
                 ->innerJoin(User::class, 'u', 'WITH', 'm.user = u')
                 ->leftJoin(MemberPosition::class, 'mp', 'WITH', 'u.id = mp.member')
                 ->leftJoin(Position::class, 'p', 'WITH', 'mp.position = p')
-                ->leftJoin(Pole::class, 'pole', 'WITH', 'p.pole = pole.id');
+                ->leftJoin(Pole::class, 'pole', 'WITH', 'p.pole = pole.id')
+                ->groupBy('u.id');
 
             $whereStatement = '';
             $whereParameters = array();
