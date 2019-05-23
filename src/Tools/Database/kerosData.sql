@@ -119,7 +119,31 @@ INSERT INTO core_member_position (id, memberId, positionId, isBoard, year) VALUE
 TRUNCATE TABLE ua_firm;
 INSERT INTO ua_firm (id, siret, name, addressId, typeId, mainContact) VALUES
   (1, '215437645', 'Google', 4, 3, 4),
-  (2, '471245896', 'JetBrains', 5, 1, null);
+  (2, '471245896', 'JetBrains', 5, 1, null),
+  (3, '471245236', 'Firm 3', 29, 2, null),
+  (4, '471245346', 'Firm 4', 30, 3, null),
+  (5, '471345236', 'Firm 5', 31, 4, null),
+  (6, '471223896', 'Firm 6', 32, 5, null),
+  (7, '471254896', 'Firm 7', 33, 6, null),
+  (8, '451245896', 'Firm 8', 34, 7, null),
+  (9, '471267896', 'Firm 9', 35, 3, null),
+  (10, '471247896', 'Firm 10', 36, 2, null),
+  (11, '423245896', 'Firm 11', 37, 4, null),
+  (12, '471455896', 'Firm 12', 38, 5, null),
+  (13, '473455896', 'Firm 13', 39, 6, null),
+  (14, '471262896', 'Firm 14', 40, 7, null),
+  (15, '471237896', 'Firm 15', 41, 2, null),
+  (16, '471246896', 'Firm 16', 42, 4, null),
+  (17, '471278896', 'Firm 17', 43, 3, null),
+  (18, '371234896', 'Firm 18', 44, 1, null),
+  (19, '471289896', 'Firm 19', 45, 1, null),
+  (20, '471202896', 'Firm 20', 46, 2, null),
+  (21, '471245456', 'Firm 21', 47, 4, null),
+  (22, '471245845', 'Firm 22', 48, 3, null),
+  (23, '473445896', 'Firm 23', 49, 6, null),
+  (24, '471244596', 'Firm 24', 50, 5, null),
+  (25, '471243496', 'Firm 25', 51, 7, null),
+  (26, '471346796', 'Firm 26', 52, 1, null);
 
 TRUNCATE TABLE ua_contact;
 INSERT INTO `ua_contact` (`id`, `firstName`, `lastName`, `genderId`, `firmId`, `email`, `telephone`, `cellphone`, `position`, `notes`, `old`) VALUES
