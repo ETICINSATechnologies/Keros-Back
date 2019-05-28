@@ -247,4 +247,20 @@ class   MemberInscriptionService
         $this->memberService->create($memberArray);
         $this->delete($memberInscription->getId());
     }
+
+    /**
+     * @param int $id
+     * @throws KerosException
+     */
+    public function confirmPaymentMemberInscription(int $id): MemberInscription
+    {
+        $id = Validator::requiredId($id);
+        $memberInscription = $this->getOne($id);
+
+        $memberInscription->setHasPaid(true);
+
+        $this->memberInscriptionDataService->persist($memberInscription);
+
+        return $memberInscription;
+    }
 }

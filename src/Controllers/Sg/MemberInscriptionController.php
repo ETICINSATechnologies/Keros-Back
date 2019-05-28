@@ -147,4 +147,22 @@ class MemberInscriptionController
 
         return $response->withStatus(204);
     }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     * @throws KerosException
+     */
+    public function confirmPaymentMemberInscription(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Confirming payment memberInscription from " . $request->getServerParams()["REMOTE_ADDR"]);
+
+        $this->entityManager->beginTransaction();
+        $this->memberInscriptionService->confirmPaymentMemberInscription($args['id']);
+        $this->entityManager->commit();
+
+        return $response->withStatus(204);
+    }
 }
