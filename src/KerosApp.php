@@ -197,6 +197,7 @@ class KerosApp
                     $this->delete("/{id:[0-9]+}", MemberInscriptionController::class . ':deleteMemberInscription');
                     $this->put("/{id:[0-9]+}", MemberInscriptionController::class . ':updateMemberInscription');
                     $this->post("/{id:[0-9]+}/validate", MemberInscriptionController::class . ':validateMemberInscription');
+                    $this->post("/{id:[0-9]+}/confirm-payment", MemberInscriptionController::class . ':confirmPaymentMemberInscription');
                 });
             })->add($this->getContainer()->get(AuthenticationMiddleware::class));
 

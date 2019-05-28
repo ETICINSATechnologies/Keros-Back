@@ -417,4 +417,42 @@ class MemberInscriptionIntegrationTest extends AppTestCase
 
         $this->assertSame(404, $response->getStatusCode());
     }
+
+    /**
+     * @throws MethodNotAllowedException
+     * @throws NotFoundException
+     */
+    public function testPostConfirmPaymentMemberInscriptionShouldReturn204()
+    {
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => '/api/v1/sg/membre-inscription/1/confirm-payment',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $body = json_decode($response->getBody());
+        $this->assertSame(204, $response->getStatusCode());
+        $this->assertSame(true, $body->hasPaid);
+    }
+
+    /**
+     * @throws MethodNotAllowedException
+     * @throws NotFoundException
+     */
+    public function testPostConfirmPaymentMemberInscriptionShouldReturn404()
+    {
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => '/api/v1/sg/membre-inscription/1000/confirm-payment',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(404, $response->getStatusCode());
+    }
 }
