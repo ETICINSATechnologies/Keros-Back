@@ -433,9 +433,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 
-        $body = json_decode($response->getBody());
         $this->assertSame(204, $response->getStatusCode());
-        $this->assertSame(true, $body->hasPaid);
     }
 
     /**
