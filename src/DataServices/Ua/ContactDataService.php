@@ -117,9 +117,9 @@ class ContactDataService
                                 $searchStatement .= ' AND ';
 
                             $searchStatement .=
-                                '(c.firstName = :search' . $i
-                                . ' OR c.lastName = :search' . $i . ')';
-                            $whereParameters[':search' . $i] = $field;
+                                '(c.firstName like :search' . $i
+                                . ' OR c.lastName like :search' . $i . ')';
+                            $whereParameters[':search' . $i] = '%' . $field . '%';
                         }
 
                         $whereStatement .= $searchStatement;
