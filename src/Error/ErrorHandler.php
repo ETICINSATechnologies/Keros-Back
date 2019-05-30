@@ -50,11 +50,11 @@ class ErrorHandler
         $traces = $exception->getTrace();
         $traces = array_slice($traces, 0, 5);
         foreach ($traces as $trace) {
-            $callStack .= "\r\n" . "\t" . 'at ' . (isset($trace['file']) ? $trace['file'] : '') . ' ' . $trace['function'] . ':' . (isset($trace['line']) ? $trace['line'] : '');
+            $callStack .= "\r\n\tat " . (isset($trace['file']) ? $trace['file'] : '') . ' ' . $trace['function'] . ':' . (isset($trace['line']) ? $trace['line'] : '');
         }
 
         $fullMessage = "File : $file. Line : $line. Message : $message.$callStack";
-        $this->logger->error($fullMessage/*, ['exception' => $exception]*/);
+        $this->logger->error($fullMessage);
 
         if ($exception instanceof KerosException) {
             $errorResponse = new ErrorResponse($fullMessage, $exception->getStatus());
