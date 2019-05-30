@@ -6,12 +6,13 @@ use Keros\Entities\Core\Address;
 use Keros\Entities\Core\Member;
 use Keros\Entities\Ua\Study;
 use \DateTime;
+use JsonSerializable;
 
 /**
  * @Entity
  * @Table(name="treso_facture")
  */
-class Facture implements \JsonSerializable
+class Facture implements JsonSerializable
 {
     /**
      * @Id
@@ -194,7 +195,9 @@ class Facture implements \JsonSerializable
      */
     public function getAmountTTC()
     {
-        return number_format($this->amountHT * (($this->taxPercentage / 100) + 1), 2);
+        if($this->amountHT == null)
+            return null;
+        return (float) number_format($this->amountHT * (($this->taxPercentage / 100) + 1), 2);
     }
 
     /**
@@ -348,7 +351,9 @@ class Facture implements \JsonSerializable
      */
     public function getAmountHT()
     {
-        return number_format($this->amountHT, 2);
+        if($this->amountHT == null)
+            return null;
+        return (float) number_format($this->amountHT, 2);
     }
 
     /**
@@ -364,7 +369,9 @@ class Facture implements \JsonSerializable
      */
     public function getTaxPercentage()
     {
-        return number_format($this->taxPercentage, 2);
+        if($this->taxPercentage == null)
+            return null;
+        return (float) number_format($this->taxPercentage, 2);
     }
 
     /**
