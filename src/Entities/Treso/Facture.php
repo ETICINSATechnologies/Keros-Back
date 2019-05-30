@@ -5,6 +5,7 @@ namespace Keros\Entities\Treso;
 use Keros\Entities\Core\Address;
 use Keros\Entities\Core\Member;
 use Keros\Entities\Ua\Study;
+use \DateTime;
 
 /**
  * @Entity
@@ -193,7 +194,7 @@ class Facture implements \JsonSerializable
      */
     public function getAmountTTC()
     {
-        return $this->amountHT * (($this->taxPercentage / 100) + 1);
+        return number_format($this->amountHT * (($this->taxPercentage / 100) + 1), 2);
     }
 
     /**
@@ -317,7 +318,7 @@ class Facture implements \JsonSerializable
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getAgreementSignDate()
     {
@@ -335,7 +336,7 @@ class Facture implements \JsonSerializable
     }
 
     /**
-     * @param \DateTime $agreementSignDate
+     * @param DateTime $agreementSignDate
      */
     public function setAgreementSignDate($agreementSignDate): void
     {
@@ -347,7 +348,7 @@ class Facture implements \JsonSerializable
      */
     public function getAmountHT()
     {
-        return $this->amountHT;
+        return number_format($this->amountHT, 2);
     }
 
     /**
@@ -363,7 +364,7 @@ class Facture implements \JsonSerializable
      */
     public function getTaxPercentage()
     {
-        return $this->taxPercentage;
+        return number_format($this->taxPercentage, 2);
     }
 
     /**
@@ -375,7 +376,7 @@ class Facture implements \JsonSerializable
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDueDate()
     {
@@ -394,7 +395,7 @@ class Facture implements \JsonSerializable
     }
 
     /**
-     * @param \DateTime $dueDate
+     * @param DateTime $dueDate
      */
     public function setDueDate($dueDate): void
     {
@@ -418,7 +419,7 @@ class Facture implements \JsonSerializable
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreatedDate()
     {
@@ -437,7 +438,7 @@ class Facture implements \JsonSerializable
     }
 
     /**
-     * @param \DateTime $createdDate
+     * @param DateTime $createdDate
      */
     public function setCreatedDate($createdDate): void
     {
@@ -477,7 +478,7 @@ class Facture implements \JsonSerializable
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getValidatedByUaDate()
     {
@@ -496,7 +497,7 @@ class Facture implements \JsonSerializable
     }
 
     /**
-     * @param \DateTime $validatedByUaDate
+     * @param DateTime $validatedByUaDate
      */
     public function setValidatedByUaDate($validatedByUaDate): void
     {
@@ -536,7 +537,7 @@ class Facture implements \JsonSerializable
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getValidatedByPerfDate()
     {
@@ -555,7 +556,7 @@ class Facture implements \JsonSerializable
     }
 
     /**
-     * @param \DateTime $validatedByPerfDate
+     * @param DateTime $validatedByPerfDate
      */
     public function setValidatedByPerfDate($validatedByPerfDate): void
     {

@@ -354,7 +354,7 @@ CREATE TABLE treso_facture (
   subject varchar(255),
   agreementSignDate date,
   amountHT float,
-  taxPercentage float,
+  taxPercentage float DEFAULT 20.0,
   dueDate date,
   additionalInformation varchar(2048),
   createdDate date,
