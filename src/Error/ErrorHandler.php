@@ -46,15 +46,21 @@ class ErrorHandler
         $file = $exception->getFile();
         $line = $exception->getLine();
         $message = $exception->getMessage();
-        $fullMessage = "File : $file. Line : $line. Message : $message.";
-        $this->logger->error($fullMessage);
+        $callStack = '';
+        $traces = $exception->getTrace();
+        $traces = array_slice($traces, 0, 5);
+        foreach ($traces as $trace) {
+            $callStack .= "\r\n" . "\t" . 'at ' . (isset($trace['file']) ? $trace['file'] : '') . ' ' . $trace['function'] . ':' . (isset($trace['line']) ? $trace['line'] : '');
+        }
+
+        $fullMessage = "File : $file. Line : $line. Message : $message.$callStack";
+        $this->logger->error($fullMessage/*, ['exception' => $exception]*/);
 
         if ($exception instanceof KerosException) {
-            $errorResponse = new ErrorResponse($exception);
+            $errorResponse = new ErrorResponse($fullMessage, $exception->getStatus());
         } else {
 
-            $errorResponse = new ErrorResponse(
-                new KerosException("Internal Service Error. " . $fullMessage, 500));
+            $errorResponse = new ErrorResponse("Internal Service Error. " . $fullMessage, 500);
         }
         return $response
             ->withStatus($errorResponse->status)

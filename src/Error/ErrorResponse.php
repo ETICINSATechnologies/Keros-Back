@@ -12,9 +12,9 @@ class ErrorResponse
     public $message;
     public $status;
 
-    public function __construct(KerosException $exception)
+    public function __construct($message, $status)
     {
-        $this->message = $exception->getMessage();
-        $this->status = $exception->getStatus();
+        $this->message = $message;
+        $this->status = $status;
     }
 }
