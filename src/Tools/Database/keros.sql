@@ -390,6 +390,27 @@ CREATE TABLE sg_member_inscription (
   CONSTRAINT fk_sg_member_inscription_address FOREIGN KEY (addressId) REFERENCES core_address(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS sg_member_inscription_document_type;
+CREATE TABLE sg_member_inscription_document_type (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `location` varchar(255) NOT NULL UNIQUE,
+  `name` varchar(255) NOT NULL,
+  isTemplatable boolean NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS sg_member_inscription_document;
+CREATE TABLE `sg_member_inscription_document` (
+  `id` int(11) NOT NULL,
+  `memberInscriptionId` int(11) NOT NULL,
+  memberInscriptionDocumentTypeId int(11) NOT NULL,
+  PRIMARY KEY (id),
+  CONSTRAINT fk_sg_member_insc_document_core_document FOREIGN KEY (id) REFERENCES core_document(id),
+  CONSTRAINT `fk_sg_member_insc_document_sg_member_inscription` FOREIGN KEY (`memberInscriptionId`) REFERENCES ua_study(`id`),
+  CONSTRAINT fk_sg_member_insc_document_member_insc_document_type FOREIGN KEY (memberInscriptionDocumentTypeId) REFERENCES ua_study_document_type(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 SET AUTOCOMMIT = 1;
 SET FOREIGN_KEY_CHECKS = 1;
 SET UNIQUE_CHECKS = 1;

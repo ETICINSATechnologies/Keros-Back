@@ -3,6 +3,8 @@
 namespace Keros\Tools;
 
 
+use Keros\Entities\Sg\MemberInscriptionDocumentType;
+use Keros\Error\KerosException;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 
@@ -20,12 +22,36 @@ class DocumentGenerator
     private $logger;
 
     /**
+     * @var DirectoryManager
+     */
+    private $directoryManager;
+
+    /**
+     * @var string
+     */
+    private $documentTypeDirectory;
+
+    /**
+     * @var
+     */
+    protected $kerosConfig;
+
+    /**
+     * @var string
+     */
+    protected $temporaryDirectory;
+
+    /**
      * DocumentGenerator constructor.
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get(Logger::class);
+        $this->directoryManager = $container->get(DirectoryManager::class);
+        $this->kerosConfig = ConfigLoader::getConfig();
+        $this->temporaryDirectory = $this->kerosConfig['TEMPORARY_DIRECTORY'];
+        $this->documentTypeDirectory = $this->kerosConfig['DOCUMENT_TYPE_DIRECTORY'];
     }
 
     /**
@@ -81,5 +107,82 @@ class DocumentGenerator
             return $zip->close();
         }
         return false;
+    }
+
+    /**
+     * @param $documentType
+     * DocumentType to publiposte (FactureDocumentType, StudyDocumentType, MemberInscriptionDocumentType ...).
+     * This DocumentType need to implement getLocation() (that return path to documentType) and getId()
+     * @param array $replacementArray
+     * @return string
+     * @throws KerosException
+     */
+    public function generateSimpleDocument($documentType, array $replacementArray)
+    {
+        $this->directoryManager->mkdir($this->kerosConfig["TEMPORARY_DIRECTORY"]);
+        $documentTypeLocation = $this->documentTypeDirectory . $documentType->getLocation();
+        $location = $this->directoryManager->uniqueFilename($documentType->getLocation(), false, $this->temporaryDirectory);
+
+        if (!copy($documentTypeLocation, $location)) {
+            $msg = "Error copying document type " . $documentType->getId();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
+        switch (pathinfo($documentTypeLocation, PATHINFO_EXTENSION)) {
+            case 'docx':
+                $return = $this->generateDocx($location, array_keys($replacementArray), array_values($replacementArray));
+                break;
+            case 'pptx':
+                $return = $this->generatePptx($location, array_keys($replacementArray), array_values($replacementArray));
+                break;
+            case 'pdf':
+                $return = $this->fillPdf($location, $documentTypeLocation, $replacementArray);
+                break;
+            default :
+                //log
+                $return = false;
+        }
+
+        if (!$return) {
+            $msg = "Error generating document with document type " . $documentType->getId();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
+
+        return $location;
+    }
+
+    /**
+     * from https://www.sitepoint.com/filling-pdf-forms-pdftk-php/
+     * @param string $location
+     * @param string $documentTypeLocation
+     * @param array $replacementArray
+     * @return bool
+     */
+    public function fillPdf(string $location, string $documentTypeLocation, array $replacementArray)
+    {
+
+        //c'est bizarre mais il faut laisser les retours à la ligne
+        $fdf = '%FDF-1.2 
+1 0 obj<</FDF<< /Fields[';
+
+        foreach ($replacementArray as $key => $value) {
+            $fdf .= '<</T(' . $key . ')/V(' . utf8_decode(utf8_decode($value)) . ')>>';
+        }
+
+        $fdf .= "] >> >> 
+endobj 
+trailer 
+<</Root 1 0 R>> 
+%%EOF";
+
+        $fdf_file = pathinfo($location, PATHINFO_DIRNAME) . '/' . pathinfo($location, PATHINFO_FILENAME) . 'tmp.pdf';
+
+        file_put_contents($fdf_file, $fdf);
+        exec("pdftk $documentTypeLocation fill_form $fdf_file output $location flatten");
+        unlink($fdf_file);
+
+        return true;
+
     }
 }

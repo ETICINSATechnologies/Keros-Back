@@ -156,7 +156,8 @@ INSERT INTO core_document(id, uploadDate, location, discr) VALUES
   (1, STR_TO_DATE('2019/2/14 10:40:10', '%Y/%m/%d %h:%i:%s'), 'study_1/document_2/acompte.docx', 'ua_study_document'),
   (2, STR_TO_DATE('2018/12/16 10:40:10', '%Y/%m/%d %h:%i:%s'), 'study_1/document_3/FE.docx', 'ua_study_document'),
   (3, STR_TO_DATE('2018/12/16 10:40:10', '%Y/%m/%d %h:%i:%s'), 'facture_1/document_3/proformat.docx', 'treso_facture_document'),
-  (4, STR_TO_DATE('2019/04/19 10:40:10', '%Y/%m/%d %h:%i:%s'), 'facture_1/document_4/solde.docx', 'treso_facture_document');
+  (4, STR_TO_DATE('2019/04/19 10:40:10', '%Y/%m/%d %h:%i:%s'), 'facture_1/document_4/solde.docx', 'treso_facture_document'),
+  (5, STR_TO_DATE('2019/04/19 10:40:10', '%Y/%m/%d %h:%i:%s'), 'member_inscription_1/document_1/Fiche inscription membre actif.pdf', 'sg_member_inscription');
 
 TRUNCATE TABLE ua_study_document;
 INSERT INTO `ua_study_document`(id, studyId, studyDocumentTypeId) VALUES
@@ -192,5 +193,14 @@ TRUNCATE TABLE sg_member_inscription;
 INSERT INTO sg_member_inscription (id, firstName, lastName, genderId, birthday, departmentId, email, phoneNumber, outYear, nationalityId, wantedPoleId, addressId, hasPaid) VALUES
 (1, 'Bruce', 'Wayne', 1, STR_TO_DATE('2000/2/14', '%Y/%m/%d'), 3, 'bruce.wayne@batman.com', '0033123456789', 2021, 42, 2, 1, false),
 (2, 'Clark', 'Kent', 1, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 2, 'clark.kent@dailyplanete.com', '0033123456789', 2024, 69, 4, 1, true);
+
+TRUNCATE TABLE sg_member_inscription_document_type;
+INSERT INTO sg_member_inscription_document_type(id, location, `name`, isTemplatable) VALUES
+    (1, 'Fiche_inscription_membre_actif.pdf', 'Fiche inscription membre', true);
+
+TRUNCATE TABLE sg_member_inscription_document;
+INSERT INTO sg_member_inscription_document(id, memberInscriptionId, memberInscriptionDocumentTypeId) VALUES
+    (5, 1, 1);
+
 
 COMMIT;
