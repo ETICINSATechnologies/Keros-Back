@@ -102,6 +102,12 @@ class MemberInscription implements JsonSerializable
     private $hasPaid;
 
     /**
+     * @var boolean
+     * @Column(type="boolean")
+     */
+    private $droitImage;
+
+    /**
      * MemberInscription constructor.
      * @param string $firstName
      * @param string $lastName
@@ -115,8 +121,9 @@ class MemberInscription implements JsonSerializable
      * @param Address $address
      * @param Pole $wantedPole
      * @param bool $hasPaid
+     * @param bool $droitImage
      */
-    public function __construct(string $firstName, string $lastName, Gender $gender, DateTime $birthday, Department $department, string $email, ?string $phoneNumber, ?int $outYear, Country $nationality, Address $address, Pole $wantedPole, bool $hasPaid)
+    public function __construct(string $firstName, string $lastName, Gender $gender, DateTime $birthday, Department $department, string $email, ?string $phoneNumber, ?int $outYear, Country $nationality, Address $address, Pole $wantedPole, bool $hasPaid, bool $droitImage)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -130,6 +137,7 @@ class MemberInscription implements JsonSerializable
         $this->address = $address;
         $this->wantedPole = $wantedPole;
         $this->hasPaid = $hasPaid;
+        $this->droitImage = $droitImage;
     }
 
 
@@ -152,6 +160,7 @@ class MemberInscription implements JsonSerializable
             'nationality' => $this->getNationality(),
             'address' => $this->getAddress(),
             'hasPaid' => $this->isHasPaid(),
+            'droitImage' => $this->isDroitImage()
         ];
     }
 
@@ -358,6 +367,22 @@ class MemberInscription implements JsonSerializable
     public function setHasPaid(bool $hasPaid): void
     {
         $this->hasPaid = $hasPaid;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDroitImage(): bool
+    {
+        return $this->droitImage;
+    }
+
+    /**
+     * @param bool $droitImage
+     */
+    public function setDroitImage(bool $droitImage): void
+    {
+        $this->droitImage = $droitImage;
     }
 
 }
