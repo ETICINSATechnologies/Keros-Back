@@ -109,6 +109,7 @@ CREATE TABLE `core_member` (
   `departmentId` int(11)     DEFAULT NULL,
   `company` varchar(255)     DEFAULT NULL,
   `profilePicture` varchar(255)     DEFAULT NULL,
+  `droitImage` boolean DEFAULT FALSE,
   PRIMARY KEY (`id`),
   CONSTRAINT `core_user_userId_fk` FOREIGN KEY (`id`) REFERENCES `core_user` (`id`),
   CONSTRAINT `core_user_genderId_fk` FOREIGN KEY (`genderId`) REFERENCES `core_gender` (`id`),

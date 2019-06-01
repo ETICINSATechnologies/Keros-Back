@@ -231,7 +231,6 @@ class   MemberInscriptionService
             "email" => $memberInscription->getEmail(),
             "telephone" => $memberInscription->getPhoneNumber(),
             "birthday" => $memberInscription->getBirthday()->format('Y-m-d'),
-            "schoolYear" => $schoolYear,
             "genderId" => $memberInscription->getGender()->getId(),
             "departmentId" => $memberInscription->getDepartment()->getId(),
             "company" => null,
@@ -245,6 +244,7 @@ class   MemberInscriptionService
                 "countryId" => $memberInscription->getAddress()->getCountry()->getId()
             ),
             "positions" => array(),
+            "droitImage" => $memberInscription->isDroitImage()
         );
 
         $this->memberService->create($memberArray);

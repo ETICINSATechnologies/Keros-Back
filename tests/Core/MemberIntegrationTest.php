@@ -161,7 +161,8 @@ class MemberIntegrationTest extends AppTestCase
                 )
             ],
             "company" => "Amazon",
-            "profilePicture" => "http://image.png"
+            "profilePicture" => "http://image.png",
+            "droitImage" => true
         );
 
         $env = Environment::mock([
@@ -192,6 +193,7 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertNotNull($body->address->id);
         $this->assertSame(3, $body->positions[0]->id);
         $this->assertSame(4, $body->positions[1]->id);
+        $this->assertSame(true, $body->droitImage);
     }
 
     public function testDeleteMembersShouldReturn204()
@@ -267,6 +269,7 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame("+332541254", $body->telephone);
         $this->assertSame("fake.mail@fake.com", $body->email);
         $this->assertSame(2, $body->address->id);
+        $this->assertSame(true, $body->droitImage);
     }
 
     public function testGetMemberShouldReturn404()
@@ -316,7 +319,8 @@ class MemberIntegrationTest extends AppTestCase
                 )
             ],
             "company" => "Amazon",
-            "profilePicture" => "http://image.png"
+            "profilePicture" => "http://image.png",
+            "droitImage" => false
         );
 
         $env = Environment::mock([
@@ -345,6 +349,7 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame("http://image.png", $body->profilePicture);
         $this->assertSame(3, $body->positions[0]->id);
         $this->assertSame(4, $body->positions[1]->id);
+        $this->assertSame(false, $body->droitImage);
     }
     public function testPutMemberShouldReturn200()
     {
@@ -411,6 +416,7 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertNotNull($body->address->id);
         $this->assertSame(3, $body->positions[0]->id);
         $this->assertSame(4, $body->positions[1]->id);
+        $this->assertSame(true, $body->droitImage);
     }
 
     public function testPutMemberEmptyBodyShouldReturn400()
