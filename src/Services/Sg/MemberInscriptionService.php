@@ -219,10 +219,6 @@ class   MemberInscriptionService
         $month = intval($date->format('m'));
         $year = intval($date->format('Y'));
 
-        $schoolYear = $memberInscription->getOutYear() - $year;
-        if($month > 1 && $month < 8) //between January and August
-            $schoolYear += 1;
-
         $memberArray = array(
             "username" => $memberInscription->getFirstName() . '.' . $memberInscription->getLastName(),
             "password" => $memberInscription->getFirstName() . '.' . $memberInscription->getBirthday()->format('d/m/Y'),
@@ -246,6 +242,13 @@ class   MemberInscriptionService
             "positions" => array(),
             "droitImage" => $memberInscription->isDroitImage()
         );
+
+        if ($memberInscription->getOutYear()) {
+            $schoolYear = $memberInscription->getOutYear() - $year;
+            if($month > 1 && $month < 8) //between January and August
+                $schoolYear += 1;
+            $memberArray["schoolYear"] = $schoolYear;
+        }
 
         $this->memberService->create($memberArray);
         $this->delete($memberInscription->getId());
