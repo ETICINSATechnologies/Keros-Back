@@ -5,6 +5,7 @@ namespace Keros\Error;
 use Doctrine\ORM\EntityManager;
 use Error;
 use Exception;
+use Keros\Tools\ConfigLoader;
 use Keros\Tools\LoggerBuilder;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
@@ -42,25 +43,27 @@ class ErrorHandler
         } catch (Exception $e) {
             // No transaction active, nothing to do
         };
-
+        
         $file = $exception->getFile();
         $line = $exception->getLine();
         $message = $exception->getMessage();
         $callStack = '';
-        $traces = $exception->getTrace();
-        $traces = array_slice($traces, 0, 5);
-        foreach ($traces as $trace) {
-            $callStack .= "\r\n\tat " . (isset($trace['file']) ? $trace['file'] : '') . ' ' . $trace['function'] . ':' . (isset($trace['line']) ? $trace['line'] : '');
+        if(ConfigLoader::getConfig()["isTesting"] === true) {
+            $traces = $exception->getTrace();
+            $traces = array_slice($traces, 0, 5);
+            foreach ($traces as $trace) {
+                $callStack .= "\r\n\tat " . (isset($trace['file']) ? $trace['file'] : '') . ' ' . $trace['function'] . ':' . (isset($trace['line']) ? $trace['line'] : '');
+            }
         }
 
         $fullMessage = "File : $file. Line : $line. Message : $message.$callStack";
         $this->logger->error($fullMessage);
 
         if ($exception instanceof KerosException) {
-            $errorResponse = new ErrorResponse($fullMessage, $exception->getStatus());
+            $errorResponse = new ErrorResponse(new KerosException($fullMessage, $exception->getStatus()));
         } else {
 
-            $errorResponse = new ErrorResponse("Internal Service Error. " . $fullMessage, 500);
+            $errorResponse = new ErrorResponse(new KerosException("Internal Service Error. " . $fullMessage, 500));
         }
         return $response
             ->withStatus($errorResponse->status)
