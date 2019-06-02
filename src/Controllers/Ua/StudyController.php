@@ -3,8 +3,10 @@
 namespace Keros\Controllers\Ua;
 
 use Doctrine\ORM\EntityManager;
+use Exception;
 use Keros\Entities\Core\Page;
 use Keros\Error\KerosException;
+use Keros\Services\Core\ConsultantService;
 use Keros\Services\Core\MemberService;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Ua\Study;
@@ -65,6 +67,11 @@ class StudyController
      */
     private $kerosConfig;
 
+    /**
+     * @var ConsultantService
+     */
+    private $consultantService;
+
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get(Logger::class);
@@ -75,6 +82,7 @@ class StudyController
         $this->statusService = $container->get(StatusService::class);
         $this->memberService = $container->get(MemberService::class);
         $this->studyDocumentTypeService = $container->get(StudyDocumentTypeService::class);
+        $this->consultantService = $container->get(ConsultantService::class);
         $this->kerosConfig = ConfigLoader::getConfig();
     }
 
@@ -90,7 +98,6 @@ class StudyController
     public function getAllStudies(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Get studies " . $request->getServerParams()["REMOTE_ADDR"]);
-
         $studies = $this->studyService->getAll();
 
         return $response->withJson($studies, 200);
@@ -113,16 +120,27 @@ class StudyController
     public function getCurrentUserStudies(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Searching for studies related to current user from " . $request->getServerParams()["REMOTE_ADDR"]);
-        $member = $this->memberService->getOne($request->getAttribute("userId"));
+
         $studies = [];
-        if (!empty($member->getStudiesAsConsultant())) {
-            $studies = array_unique(array_merge($studies, $member->getStudiesAsConsultant()), SORT_REGULAR);
-        }
-        if (!empty($member->getStudiesAsLeader())) {
-            $studies = array_unique(array_merge($studies, $member->getStudiesAsLeader()), SORT_REGULAR);
-        }
-        if (!empty($member->getStudiesAsQualityManager())) {
-            $studies = array_unique(array_merge($studies, $member->getStudiesAsQualityManager()), SORT_REGULAR);
+        $userId = $request->getAttribute("userId");
+
+        //if the current user is a member
+        try{
+            $member = $this->memberService->getOne($userId);
+            if (!empty($member->getStudiesAsLeader())) {
+                $studies = array_unique(array_merge($studies, $member->getStudiesAsLeader()), SORT_REGULAR);
+            }
+            if (!empty($member->getStudiesAsQualityManager())) {
+                $studies = array_unique(array_merge($studies, $member->getStudiesAsQualityManager()), SORT_REGULAR);
+            }
+        }catch(KerosException $e){
+            //if the current user is a consultant
+            $consultant = $this->consultantService->getOne($userId);
+            if ($consultant->getId() == $userId) {
+                if (!empty($consultant->getStudiesAsConsultant())) {
+                    $studies = array_unique(array_merge($studies, $consultant->getStudiesAsConsultant()), SORT_REGULAR);
+                }
+            }
         }
 
         return $response->withJson($studies, 200);
@@ -227,7 +245,7 @@ class StudyController
     {
         $this->logger->debug("Get all documents for study " . $args["id"] . " " . $request->getServerParams()["REMOTE_ADDR"]);
 
-        if (!$this->studyService->consultantAreValid($args["id"]))
+        if (!$this->studyService->consultantsAreValid($args["id"]))
             throw new KerosException("Invalid consultant in study", 400);
 
         $documentTypes = array();

@@ -18,6 +18,7 @@ use Keros\DataServices\Treso\FactureDocumentDataService;
 use Keros\DataServices\Treso\FactureDocumentTypeDataService;
 use Keros\DataServices\Treso\FactureTypeDataService;
 use Keros\DataServices\Treso\FactureDataService;
+use Keros\DataServices\Core\ConsultantDataService;
 use Keros\DataServices\Ua\ContactDataService;
 use Keros\DataServices\Ua\FirmTypeDataService;
 use Keros\DataServices\Ua\FirmDataService;
@@ -63,6 +64,12 @@ class DataServiceRegistrar
         };
         $container[MemberPositionDataService::class] = function ($container) {
             return new MemberPositionDataService($container);
+        };
+        $container[StudyDocumentDataService::class] = function ($container) {
+            return new StudyDocumentDataService($container);
+        };
+        $container[ConsultantDataService::class] = function ($container) {
+            return new ConsultantDataService($container);
         };
 
         //UA

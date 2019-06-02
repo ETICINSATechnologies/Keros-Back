@@ -1,6 +1,6 @@
 <?php
 
-namespace Keros\DataServices\Ua;
+namespace Keros\DataServices\Core;
 
 
 use Doctrine\Common\Collections\Criteria;
@@ -9,16 +9,17 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Exception;
+use Keros\Entities\Core\Consultant;
 use Keros\Entities\Core\Page;
+use Keros\Entities\Core\Pole;
+use Keros\Entities\Core\Position;
 use Keros\Entities\Core\RequestParameters;
-use Keros\Entities\Ua\Contact;
-use Keros\Entities\Ua\Firm;
+use Keros\Entities\Core\User;
 use Keros\Error\KerosException;
-use Keros\Tools\Validator;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 
-class ContactDataService
+class ConsultantDataService
 {
     /**
      * @var EntityManager
@@ -41,71 +42,53 @@ class ContactDataService
     {
         $this->logger = $container->get(Logger::class);
         $this->entityManager = $container->get(EntityManager::class);
-        $this->repository = $this->entityManager->getRepository(Contact::class);
+        $this->repository = $this->entityManager->getRepository(Consultant::class);
         $this->queryBuilder = $this->entityManager->createQueryBuilder();
     }
 
-    public function delete(Contact $contact) : void
+    public function persist(Consultant $consultant): void
     {
         try {
-            $this->entityManager->remove($contact);
+            $this->entityManager->persist($consultant);
             $this->entityManager->flush();
         } catch (Exception $e) {
-            $msg = "Failed to delete contact : " . $e->getMessage();
+            $msg = "Failed to persist consultant : " . $e->getMessage();
             $this->logger->error($msg);
             throw new KerosException($msg, 500);
         }
     }
 
-    public function persist(Contact $contact): void
+    public function getOne(int $id): ?Consultant
     {
         try {
-            $this->entityManager->persist($contact);
-            $this->entityManager->flush();
+            $consultant = $this->repository->find($id);
+            return $consultant;
         } catch (Exception $e) {
-            $msg = "Failed to persist contact : " . $e->getMessage();
+            $msg = "Error finding consultant with ID $id : " . $e->getMessage();
             $this->logger->error($msg);
             throw new KerosException($msg, 500);
         }
     }
 
-    public function getAll(): array
-    {
-        try {
-            $contacts = $this->repository->findAll();
-            return $contacts;
-        } catch (Exception $e) {
-            $msg = "Error finding page of contacts : " . $e->getMessage();
-            $this->logger->error($msg);
-            throw new KerosException($msg, 500);
-        }
-    }
-
-    public function getOne(int $id): ?Contact
-    {
-        try {
-            $contact = $this->repository->find($id);
-            return $contact;
-        } catch (Exception $e) {
-            $msg = "Error finding contact with ID $id : " . $e->getMessage();
-            $this->logger->error($msg);
-            throw new KerosException($msg, 500);
-        }
-    }
-
-    public function getPage(RequestParameters $requestParameters, array $queryParams): Page
+    /**
+     * @param RequestParameters $requestParameters
+     * @param $queryParams
+     * @return Page
+     * @throws KerosException
+     */
+    public function getPage(RequestParameters $requestParameters, array $queryParams)
     {
         try {
             $this->queryBuilder
                 ->select('c')
-                ->from(Contact::class, 'c')
-                ->leftJoin(Firm::class, 'f', 'WITH', 'c.firm = f');
+                ->from(Consultant::class, 'c')
+                ->innerJoin(User::class, 'u', 'WITH', 'c.user = u');
 
             $whereStatement = '';
             $whereParameters = array();
 
             foreach ($queryParams as $key => $value) {
-                if (in_array($key, ['search', 'firmId', 'firstName', 'lastName'])) {
+                if (in_array($key, ['search', 'firstName', 'lastName', 'company'])) {
                     if (!empty($whereStatement))
                         $whereStatement .= ' AND ';
 
@@ -118,23 +101,22 @@ class ContactDataService
 
                             $searchStatement .=
                                 '(c.firstName = :search' . $i
-                                . ' OR c.lastName = :search' . $i . ')';
+                                . ' OR c.lastName = :search' . $i
+                                . ' OR c.company = :search' . $i . ')';
                             $whereParameters[':search' . $i] = $field;
                         }
 
                         $whereStatement .= $searchStatement;
                     } else {
-                        if ($key == 'firmId') {
-                            $whereStatement .= 'f.id = :firmId';
+                        if ($key == 'company') {
+                            $whereStatement .= 'c.' . $key . ' = :' . $key;
                             $whereParameters[':' . $key] = $value;
-
-                        }elseif ($key == 'firstName' || $key == 'lastName') {
+                        } elseif ($key == 'firstName' || $key == 'lastName') {
+                            // where with the form: 'c.key = :key'
                             $whereStatement .= 'c.' . $key . ' LIKE :' . $key;
                             $whereParameters[':' . $key] = '%' . $value . '%';
                         }
-
                     }
-
                 }
             }
 
@@ -149,12 +131,8 @@ class ContactDataService
                     ->setParameters($whereParameters);
             }
 
-            //main contact as first result
-            $this->queryBuilder->addSelect('(CASE WHEN f.mainContact = c.id THEN 1 ELSE 0 END) AS HIDDEN mainSort');
-            $this->queryBuilder->orderBy('mainSort', 'DESC');
-
             if (isset($orderBy)) {
-                $this->queryBuilder->addOrderBy($orderBy, $order);
+                $this->queryBuilder->orderBy($orderBy, $order);
             }
 
             $this->queryBuilder
@@ -167,31 +145,21 @@ class ContactDataService
             return new Page($query->execute(), $requestParameters, count($paginator));
 
         } catch (Exception $e) {
-            $msg = "Error finding page of contacts : " . $e->getMessage();
+            $msg = "Error finding page of consultants : " . $e->getMessage();
             $this->logger->error($msg);
             throw new KerosException($msg, 500);
         }
     }
 
-    public function getCount(?RequestParameters $requestParameters): int
+    public function delete(Consultant $consultant): void
     {
-        if ($requestParameters != null) {
-            $countCriteria = $requestParameters->getCountCriteria();
-            $count = $this->repository->matching($countCriteria)->count();
-        } else {
-            $count = $this->repository->matching(Criteria::create())->count();
+        try {
+            $this->entityManager->remove($consultant);
+            $this->entityManager->flush();
+        } catch (Exception $e) {
+            $msg = "Failed to delete consultant : " . $e->getMessage();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
         }
-        return $count;
-    }
-  
-    public function getAllStudies(Contact $contact): array
-    {
-        $studies = [];
-        foreach ($contact->getStudies() as $study)
-        {
-            $studies[] = $study;
-        }
-
-        return $studies;
     }
 }
