@@ -99,13 +99,49 @@ class MemberInscriptionDocumentTypeService
      */
     public function getMemberInscriptionReplacementArray(MemberInscription $memberInscription): array
     {
+        switch ($memberInscription->getWantedPole()->getId()) {
+            case (1) :
+                $wantedPole = "comm";
+                break;
+            case (3):
+                $wantedPole = "devCo";
+                break;
+            case (4):
+                $wantedPole = "perf";
+                break;
+            case (6):
+                $wantedPole = "rh";
+                break;
+            case (7):
+                $wantedPole = "si";
+                break;
+            case (8):
+                $wantedPole = "treso";
+                break;
+            case (9):
+                $wantedPole = "affaires";
+                break;
+            default:
+                $wantedPole = "Off";
+        }
+
         return array(
-            'firstName' => $memberInscription->getFirstName(),
             'lastName' => $memberInscription->getLastName(),
-            'year' => $memberInscription->getOutYear(),
-            'nationality' => $memberInscription->getNationality()->getLabel(),
+            'firstName' => $memberInscription->getFirstName(),
             'email' => $memberInscription->getEmail(),
-            'phone' => $memberInscription->getPhoneNumber()
+            'address.line1' => $memberInscription->getAddress()->getLine1() . ' ' . $memberInscription->getAddress()->getLine2(),
+            'address.line2' => $memberInscription->getAddress()->getCity() . ' ' . $memberInscription->getAddress()->getPostalCode() . ' ' . $memberInscription->getAddress()->getCountry()->getLabel(),
+            //TODO Ajouter l'année
+            'annee_departement' => $memberInscription->getDepartment()->getLabel(),
+            'nationalite' => $memberInscription->getNationality()->getLabel(),
+            'phoneNumber' => $memberInscription->getPhoneNumber(),
+            'outYear' => $memberInscription->getOutYear(),
+            'wantedPole' => $wantedPole,
+            'RI' => "Yes",
+            'RSE' => "Yes",
+            'donnees' => "Yes",
+            //TODO utiliser le nouvel attribut -> PAS MERGE
+            'photo' => "Off",
         );
     }
 

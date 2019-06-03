@@ -2,11 +2,11 @@
 
 namespace Keros\Tools;
 
-
-use Keros\Entities\Sg\MemberInscriptionDocumentType;
+use \ZipArchive;
 use Keros\Error\KerosException;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
+use \Exception;
 
 /**
  * Lien pour le publipostage https://stackoverflow.com/questions/19503653/how-to-extract-text-from-word-file-doc-docx-xlsx-pptx-php/19503654#19503654
@@ -63,7 +63,7 @@ class DocumentGenerator
     public function generateDocx($location, $searchArray, $replacementArray): bool
     {
         //docx are zip
-        $zip = new \ZipArchive();
+        $zip = new ZipArchive();
         $fileToModify = 'word/document.xml';
 
         if ($zip->open($location) === TRUE) {
@@ -89,7 +89,7 @@ class DocumentGenerator
     public function generatePptx($location, $searchArray, $replacementArray): bool
     {
         //pptx are zip. Same things like docx, just multiple xml to parse
-        $zip = new \ZipArchive();
+        $zip = new ZipArchive();
 
         if (true === $zip->open($location)) {
             $slide_number = 1;
@@ -115,7 +115,7 @@ class DocumentGenerator
      * This DocumentType need to implement getLocation() (that return path to documentType) and getId()
      * @param array $replacementArray
      * @return string
-     * @throws KerosException
+     * @throws Exception
      */
     public function generateSimpleDocument($documentType, array $replacementArray)
     {
