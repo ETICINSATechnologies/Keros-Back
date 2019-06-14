@@ -179,7 +179,7 @@ trailer
         $fdf_file = pathinfo($location, PATHINFO_DIRNAME) . '/' . pathinfo($location, PATHINFO_FILENAME) . 'tmp.pdf';
 
         file_put_contents($fdf_file, $fdf);
-        exec("pdftk $documentTypeLocation fill_form $fdf_file output $location flatten");
+        exec("pdftk $documentTypeLocation fill_form $fdf_file output $location");
         unlink($fdf_file);
 
         return true;

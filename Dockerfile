@@ -7,9 +7,9 @@ COPY . ./keros-api
 RUN a2enmod rewrite \
     # General preparation
     && apt-get update \
-    && apt-get install git zip unzip pdftk -yq \
+    && apt-get install git zip unzip pdftk zlib1g-dev -yq \
     # Install Apache PHP MySQL modules
-    && docker-php-ext-install -j$(nproc) pdo pdo_mysql \
+    && docker-php-ext-install -j$(nproc) pdo pdo_mysql zip \
     # Go into project folder
     && cd keros-api \
     # Move custom Apache configuration to default location
