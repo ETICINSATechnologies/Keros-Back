@@ -7,6 +7,7 @@ use Keros\Error\KerosException;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use \Exception;
+use mikehaertl\pdftk\Pdf;
 
 /**
  * Lien pour le publipostage https://stackoverflow.com/questions/19503653/how-to-extract-text-from-word-file-doc-docx-xlsx-pptx-php/19503654#19503654
@@ -154,35 +155,27 @@ class DocumentGenerator
 
     /**
      * from https://www.sitepoint.com/filling-pdf-forms-pdftk-php/
+     * et https://github.com/mikehaertl/php-pdftk
      * @param string $location
      * @param string $documentTypeLocation
      * @param array $replacementArray
      * @return bool
+     * @throws KerosException
      */
     public function fillPdf(string $location, string $documentTypeLocation, array $replacementArray)
     {
+        // Fill form with data array
+        $pdf = new Pdf($documentTypeLocation);
+        $this->logger->info(mb_detect_encoding($replacementArray["firstName"]));
+        $pdf->fillForm(array_map(function($val){return utf8_decode($val);},$replacementArray))
+            ->needAppearances();
 
-        //c'est bizarre mais il faut laisser les retours à la ligne
-        $fdf = '%FDF-1.2 
-1 0 obj<</FDF<< /Fields[';
-
-        foreach ($replacementArray as $key => $value) {
-            $fdf .= '<</T(' . $key . ')/V(' . utf8_decode(utf8_decode($value)) . ')>>';
+        // Check for errors
+        if (!$pdf->saveAs($location)) {
+            $msg = "Error generating pdf file " . $pdf->getError();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
         }
-
-        $fdf .= "] >> >> 
-endobj 
-trailer 
-<</Root 1 0 R>> 
-%%EOF";
-
-        $fdf_file = pathinfo($location, PATHINFO_DIRNAME) . '/' . pathinfo($location, PATHINFO_FILENAME) . 'tmp.pdf';
-
-        file_put_contents($fdf_file, $fdf);
-        exec("pdftk $documentTypeLocation fill_form $fdf_file output $location");
-        unlink($fdf_file);
-
         return true;
-
     }
 }
