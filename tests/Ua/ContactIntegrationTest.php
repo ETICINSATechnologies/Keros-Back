@@ -8,6 +8,26 @@ use Slim\Http\Request;
 
 class ContactIntegrationTest extends AppTestCase
 {
+    public function testFirmIdWithMainContact()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/ua/contact?firmId=1',
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(200, $response->getStatusCode());
+
+        $body = json_decode($response->getBody());
+        $this->assertNotNull($body->content);
+        $this->assertSame(3, sizeof($body->content));
+        $this->assertSame(4, $body->content[0]->id);
+        $this->assertSame(2, $body->content[1]->id);
+        $this->assertSame(3, $body->content[2]->id);
+    }
 
     public function testSearchLikeContactShouldReturn200()
     {

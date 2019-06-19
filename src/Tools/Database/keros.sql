@@ -111,10 +111,34 @@ CREATE TABLE `core_member` (
   `profilePicture` varchar(255)     DEFAULT NULL,
   `droitImage` boolean DEFAULT FALSE,
   PRIMARY KEY (`id`),
-  CONSTRAINT `core_user_userId_fk` FOREIGN KEY (`id`) REFERENCES `core_user` (`id`),
-  CONSTRAINT `core_user_genderId_fk` FOREIGN KEY (`genderId`) REFERENCES `core_gender` (`id`),
-  CONSTRAINT `core_user_addressId_fk` FOREIGN KEY (`addressId`) REFERENCES `core_address` (`id`),
-  CONSTRAINT `core_user_departmentId_fk` FOREIGN KEY (`departmentId`) REFERENCES `core_department` (`id`)
+  CONSTRAINT `core_member_userId_fk` FOREIGN KEY (`id`) REFERENCES `core_user` (`id`),
+  CONSTRAINT `core_member_genderId_fk` FOREIGN KEY (`genderId`) REFERENCES `core_gender` (`id`),
+  CONSTRAINT `core_member_addressId_fk` FOREIGN KEY (`addressId`) REFERENCES `core_address` (`id`),
+  CONSTRAINT `core_member_departmentId_fk` FOREIGN KEY (`departmentId`) REFERENCES `core_department` (`id`)
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+
+-- L'ID de core_consultant est le même que celui de core_user qui lui est attaché
+DROP TABLE IF EXISTS core_consultant;
+CREATE TABLE `core_consultant` (
+  `id`           int(11)      NOT NULL,
+  `genderId`     int(1)       NOT NULL,
+  `firstName`    varchar(100) NOT NULL,
+  `lastName`     varchar(100) NOT NULL,
+  `birthday`     date        DEFAULT NULL,
+  `telephone`    varchar(20) DEFAULT NULL,
+  `email`        varchar(255) NOT NULL UNIQUE,
+  `addressId`    int(11)      NOT NULL UNIQUE,
+  `schoolYear`   int(11)     DEFAULT NULL,
+  `departmentId` int(11)     DEFAULT NULL,
+  `company` varchar(255)     DEFAULT NULL,
+  `profilePicture` varchar(255)     DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `core_consultant_userId_fk` FOREIGN KEY (`id`) REFERENCES `core_user` (`id`),
+  CONSTRAINT `core_consultant_genderId_fk` FOREIGN KEY (`genderId`) REFERENCES `core_gender` (`id`),
+  CONSTRAINT `core_consultant_addressId_fk` FOREIGN KEY (`addressId`) REFERENCES `core_address` (`id`),
+  CONSTRAINT `core_consultant_departmentId_fk` FOREIGN KEY (`departmentId`) REFERENCES `core_department` (`id`)
 )
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
@@ -149,6 +173,7 @@ CREATE TABLE `ua_firm` (
   `name`      varchar(64) NOT NULL UNIQUE,
   `addressId` int(11)     NOT NULL UNIQUE,
   `typeId`    int(11)     NOT NULL,
+  `mainContact`  int(11),
   PRIMARY KEY (`id`),
   CONSTRAINT `ua_firm_address_addressId_fk` FOREIGN KEY (`addressId`) REFERENCES `core_address` (`id`),
   CONSTRAINT `ua_firm_type_typeId_fk` FOREIGN KEY (`typeId`) REFERENCES `ua_firm_type` (`id`)
@@ -222,6 +247,10 @@ CREATE TABLE `ua_study` (
   `archivedDate` date,
   `firmId`      int(11),
   `confidential` boolean,
+  `mainLeader` int(11),
+  `mainQualityManager` int(11),
+  `mainConsultant` int(11),
+
   PRIMARY KEY (`id`),
   CONSTRAINT `ua_study_fieldId_fk` FOREIGN KEY (`fieldId`) REFERENCES `ua_field` (`id`),
   CONSTRAINT `ua_study_provenanceId_fk` FOREIGN KEY (`provenanceId`) REFERENCES `ua_provenance` (`id`),
@@ -256,11 +285,11 @@ CREATE TABLE ua_study_leader (
 
 DROP TABLE IF EXISTS ua_study_consultant;
 CREATE TABLE ua_study_consultant (
-  `memberId`   int(11) NOT NULL,
+  `consultantId`   int(11) NOT NULL,
   `studyId`     int(11) NOT NULL,
-  PRIMARY KEY (`memberId`, `studyId`),
+  PRIMARY KEY (`consultantId`, `studyId`),
   CONSTRAINT `ua_study_consultant_studyId_fk` FOREIGN KEY (`studyId`) REFERENCES `ua_study` (`id`),
-  CONSTRAINT `ua_study_consultant_memberId_fk` FOREIGN KEY (`memberId`) REFERENCES `core_member` (`id`)
+  CONSTRAINT `ua_study_consultant_consultantId_fk` FOREIGN KEY (`consultantId`) REFERENCES `core_consultant` (`id`)
 )
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8;

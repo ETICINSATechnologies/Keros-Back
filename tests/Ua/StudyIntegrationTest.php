@@ -10,7 +10,75 @@ use Slim\Http\Request;
 
 class StudyIntegrationTest extends AppTestCase
 {
-    public function testGetCurrentUserStudiesShouldReturn200()
+
+    public function testGetStudyWithMainLeaderManagerConsultant()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/ua/study/2',
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(200, $response->getStatusCode());
+        $body = json_decode($response->getBody());
+
+        $this->assertEquals("2", $body->id);
+        $this->assertEquals("Tests d'acidité dans le Rhône", $body->name);
+        $this->assertEquals("Créateur de IDE", $body->description);
+        $this->assertEquals("1", $body->field->id);
+        $this->assertEquals("Web", $body->field->label);
+        $this->assertEquals("2", $body->status->id);
+        $this->assertEquals("En clôture", $body->status->label);
+        $this->assertEquals("1", $body->provenance->id);
+        $this->assertEquals("Site Web", $body->provenance->label);
+        $this->assertEquals("2018-11-10", $body->signDate);
+        $this->assertEquals("2", $body->firm->id);
+
+        $this->assertEquals("4", $body->leaders[0]->id);
+        $this->assertEquals("3", $body->leaders[1]->id);
+
+        $this->assertEquals("4", $body->qualityManagers[0]->id);
+        $this->assertEquals("3", $body->qualityManagers[1]->id);
+
+        $this->assertEquals("2", $body->consultants[0]->id);
+
+    }
+
+    public function testGetCurrentUserConsultantStudiesShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/ua/study/me',
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId", 5);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(200, $response->getStatusCode());
+        $bodies = json_decode($response->getBody());
+
+        $bodies = Validator::requiredArray($bodies);
+        foreach ($bodies as $body) {
+            $this->assertEquals("1", $body->id);
+            $this->assertEquals("Développement IDE", $body->name);
+            $this->assertEquals("Développement d'un IDE pour utilisation interne", $body->description);
+            $this->assertEquals("1", $body->field->id);
+            $this->assertEquals("Web", $body->field->label);
+            $this->assertEquals("2", $body->status->id);
+            $this->assertEquals("En clôture", $body->status->label);
+            $this->assertEquals("1", $body->provenance->id);
+            $this->assertEquals("Site Web", $body->provenance->label);
+            $this->assertEquals("2018-11-10", $body->signDate);
+            $this->assertEquals("1", $body->firm->id);
+        }
+    }
+
+    public function testGetCurrentUserMemberStudiesShouldReturn200()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
@@ -63,7 +131,7 @@ class StudyIntegrationTest extends AppTestCase
     public function testGetAllDocumentsShouldReturn400(){
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/api/v1/ua/study/1/documents',
+            'REQUEST_URI' => '/api/v1/ua/study/3/documents',
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
@@ -111,7 +179,7 @@ class StudyIntegrationTest extends AppTestCase
         $this->assertSame(200, $response->getStatusCode());
         $body = json_decode($response->getBody());
 
-        $this->assertEquals(2, count($body->content));
+        $this->assertEquals(3, count($body->content));
     }
 
     public function testGetStudyShouldReturn200()
@@ -156,7 +224,7 @@ class StudyIntegrationTest extends AppTestCase
     {
 
         $post_body = array(
-            "id" =>3,
+            "id" =>4,
             "name"=>"Facebook",
         );
         $env = Environment::mock([
@@ -169,7 +237,7 @@ class StudyIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
         $this->assertSame(201, $response->getStatusCode());
         $body = json_decode($response->getBody());
-        $this->assertSame(3, $body->id);
+        $this->assertSame(4, $body->id);
         $this->assertSame("Facebook", $body->name);
     }
 
@@ -178,7 +246,6 @@ class StudyIntegrationTest extends AppTestCase
         $post_body = array(
             "name"=>"Twitter",
             "description"=>"C est le feu",
-            "fieldId"=>1,
             "provenanceId"=>1,
             "statusId"=>1,
             "firmId"=>1,
@@ -187,6 +254,9 @@ class StudyIntegrationTest extends AppTestCase
             "consultantIds"=>array(),
             "qualityManagerIds"=>array(),
             "confidential"=>true,
+            "mainLeader"=>null,
+            "mainQualityManager"=>null,
+            "mainConsultant"=>null
         );
         $env = Environment::mock([
             'REQUEST_METHOD' => 'POST',
@@ -198,7 +268,7 @@ class StudyIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
         $this->assertSame(201, $response->getStatusCode());
         $body = json_decode($response->getBody());
-        $this->assertSame(3, $body->id);
+        $this->assertSame(4, $body->id);
         $this->assertSame("Twitter", $body->name);
         $this->assertSame("C est le feu", $body->description);
     }
