@@ -88,7 +88,7 @@ class ConsultantIntegrationTest extends AppTestCase
             "departmentId" => 1,
             "company" => "Amazon",
             "profilePicture" => "http://image.png",
-            "profilePicture" => true
+            "droitImage" => true
         );
 
         $env = Environment::mock([
@@ -295,7 +295,7 @@ class ConsultantIntegrationTest extends AppTestCase
             ],
             "company" => "Amazon",
             "profilePicture" => "http://image.png",
-            "profilePicture" => true
+            "droitImage" => true
         );
 
         $env = Environment::mock([
