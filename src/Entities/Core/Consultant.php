@@ -60,11 +60,16 @@ class Consultant implements JsonSerializable
     protected $profilePicture;
 
     /**
+     * @Column(type="boolean")
+     */
+    protected $droitImage;
+
+    /**
      * @ManyToMany(targetEntity="Keros\Entities\Ua\Study", mappedBy="consultants")
      */
     protected $studiesAsConsultant;
 
-    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture)
+    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -76,6 +81,7 @@ class Consultant implements JsonSerializable
         $this->department = $department;
         $this->company = $company;
         $this->profilePicture = $profilePicture;
+        $this->droitImage = $droitImage;
     }
     public function jsonSerialize()
     {
@@ -92,7 +98,8 @@ class Consultant implements JsonSerializable
             'telephone' => $this->getTelephone(),
             'address' => $this->getAddress(),
             'company' => $this->getCompany(),
-            'profilePicture' => $this->getProfilePicture()
+            'profilePicture' => $this->getProfilePicture(),
+            'droitImage' => $this->isDroitImage(),
         ];
     }
     public static function getSearchFields(): array {
@@ -292,5 +299,21 @@ class Consultant implements JsonSerializable
     public function setStudiesAsConsultant($studiesAsConsultant): void
     {
         $this->studiesAsConsultant = $studiesAsConsultant;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDroitImage(): bool
+    {
+        return $this->droitImage;
+    }
+
+    /**
+     * @param bool $droitImage
+     */
+    public function setDroitImage(bool $droitImage): void
+    {
+        $this->droitImage = $droitImage;
     }
 }

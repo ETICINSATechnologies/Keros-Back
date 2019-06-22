@@ -87,7 +87,8 @@ class ConsultantIntegrationTest extends AppTestCase
             "schoolYear" => 1,
             "departmentId" => 1,
             "company" => "Amazon",
-            "profilePicture" => "http://image.png"
+            "profilePicture" => "http://image.png",
+            "profilePicture" => true
         );
 
         $env = Environment::mock([
@@ -117,6 +118,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame("Amazon", $body->company);
         $this->assertSame("http://image.png", $body->profilePicture);
         $this->assertNotNull($body->address->id);
+        $this->assertSame(true,$body->droitImage);
     }
 
     public function testDeleteConsultantShouldReturn204()
@@ -229,7 +231,8 @@ class ConsultantIntegrationTest extends AppTestCase
             ],
             "disabled" => null,
             "company" => "Amazon",
-            "profilePicture" => "http://image.png"
+            "profilePicture" => "http://image.png",
+            "droitImage" => true
         );
 
         $env = Environment::mock([
@@ -256,6 +259,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame("0033675385495", $body->telephone);
         $this->assertSame("Amazon", $body->company);
         $this->assertSame("http://image.png", $body->profilePicture);
+        $this->assertSame(true,$body->droitImage);
     }
     public function testPutConsultantShouldReturn200()
     {
@@ -290,7 +294,8 @@ class ConsultantIntegrationTest extends AppTestCase
                 )
             ],
             "company" => "Amazon",
-            "profilePicture" => "http://image.png"
+            "profilePicture" => "http://image.png",
+            "profilePicture" => true
         );
 
         $env = Environment::mock([
@@ -320,6 +325,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame("Amazon", $body->company);
         $this->assertSame("http://image.png", $body->profilePicture);
         $this->assertNotNull($body->address->id);
+        $this->assertSame(true,$body->droitImage);
     }
 
     public function testPutConsultantEmptyBodyShouldReturn400()

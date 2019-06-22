@@ -67,7 +67,7 @@ class Member implements JsonSerializable
     /**
      * @Column(type="boolean")
      */
-    private $droitImage;
+    protected $droitImage;
 
     /**
      * @ManyToMany(targetEntity="Keros\Entities\Ua\Study", mappedBy="qualityManagers")
