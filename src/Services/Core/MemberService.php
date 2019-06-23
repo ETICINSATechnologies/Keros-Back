@@ -89,8 +89,9 @@ class MemberService
 
         $company = Validator::optionalString($fields["company"]);
         $profilePicture = Validator::optionalString($fields["profilePicture"]);
+        $droitImage = Validator::requiredBool($fields['droitImage']);
 
-        $member = new Member($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture);
+        $member = new Member($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage);
 
         $user = $this->userService->create($fields);
         $address = $this->addressService->create($fields["address"]);

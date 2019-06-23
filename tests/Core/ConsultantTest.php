@@ -25,7 +25,8 @@ class ConsultantTest extends TestCase
                 new Gender("Femme"),
                 new Department(1, "IF", "Informatique"),
                 "Google",
-                "http://photoprofile.jpg"));
+                "http://photoprofile.jpg",
+                true));
     }
 
     public function testConsultantShouldCreateWithParams()
@@ -39,7 +40,8 @@ class ConsultantTest extends TestCase
             new Gender("Femme"),
             new Department(1, "IF", "Informatique"),
             "Google",
-            "http://photoprofile.jpg");
+            "http://photoprofile.jpg",
+            true);
 
 
         $this->assertInstanceOf(Consultant::class, $consultant);
@@ -51,5 +53,6 @@ class ConsultantTest extends TestCase
         $this->assertEquals("2018", $consultant->getSchoolYear());
         $this->assertEquals("Google", $consultant->getCompany());
         $this->assertEquals("http://photoprofile.jpg", $consultant->getProfilePicture());
+        $this->assertEquals(true, $consultant->isDroitImage());
     }
 }

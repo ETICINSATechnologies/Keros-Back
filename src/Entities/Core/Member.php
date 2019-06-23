@@ -65,6 +65,11 @@ class Member implements JsonSerializable
     protected $profilePicture;
 
     /**
+     * @Column(type="boolean")
+     */
+    protected $droitImage;
+
+    /**
      * @ManyToMany(targetEntity="Keros\Entities\Ua\Study", mappedBy="qualityManagers")
      */
     protected $studiesAsQualityManager;
@@ -74,7 +79,7 @@ class Member implements JsonSerializable
      */
     protected $studiesAsLeader;
     
-    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture)
+    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -86,6 +91,7 @@ class Member implements JsonSerializable
         $this->department = $department;
         $this->company = $company;
         $this->profilePicture = $profilePicture;
+        $this->droitImage = $droitImage;
     }
 
     public function jsonSerialize()
@@ -105,6 +111,7 @@ class Member implements JsonSerializable
             'positions' => $this->getPositionsArray(),
             'company' => $this->getCompany(),
             'profilePicture' => $this->getProfilePicture(),
+            'droitImage' => $this->isDroitImage(),
         ];
     }
 
@@ -386,6 +393,22 @@ class Member implements JsonSerializable
     public function setStudiesAsLeader($studiesAsLeader): void
     {
         $this->studiesAsLeader = $studiesAsLeader;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDroitImage(): bool
+    {
+        return $this->droitImage;
+    }
+
+    /**
+     * @param bool $droitImage
+     */
+    public function setDroitImage(bool $droitImage): void
+    {
+        $this->droitImage = $droitImage;
     }
 
 }
