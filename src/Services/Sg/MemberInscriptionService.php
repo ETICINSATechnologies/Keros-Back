@@ -244,8 +244,8 @@ class   MemberInscriptionService
         );
 
         if ($memberInscription->getOutYear()) {
-            $schoolYear = $memberInscription->getOutYear() - $year;
-            if($month > 1 && $month < 8) //between January and August
+            $schoolYear = 5 - ($memberInscription->getOutYear() - $year);
+            if($month > 8 && $month <= 12) //between September and December
                 $schoolYear += 1;
             $memberArray["schoolYear"] = $schoolYear;
         }
