@@ -113,7 +113,7 @@ class MemberController
     public function createMember(Request $request, Response $response, array $args)
     {
         //check access rights
-        $this->accessRightsService->checkRightsPostMember($request);
+        $this->accessRightsService->checkRightsCreateMember($request);
 
         $this->logger->debug("Creating member from " . $request->getServerParams()["REMOTE_ADDR"]);
         $body = $request->getParsedBody();
