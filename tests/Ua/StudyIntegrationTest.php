@@ -192,6 +192,7 @@ class StudyIntegrationTest extends AppTestCase
         ]);
         $req = Request::createFromEnvironment($env);
         $req = $req->withAttribute("userId", 3);
+
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 
@@ -264,6 +265,7 @@ class StudyIntegrationTest extends AppTestCase
         ]);
         $req = Request::createFromEnvironment($env);
         $req = $req->withAttribute("userId", 9);
+
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 
@@ -278,6 +280,7 @@ class StudyIntegrationTest extends AppTestCase
         ]);
         $req = Request::createFromEnvironment($env);
         $req = $req->withAttribute("userId", 6);
+
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 
@@ -295,6 +298,7 @@ class StudyIntegrationTest extends AppTestCase
         ]);
         $req = Request::createFromEnvironment($env);
         $req = $req->withAttribute("userId", 3);
+
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 
@@ -310,6 +314,7 @@ class StudyIntegrationTest extends AppTestCase
         $post_body = array(
             "id" =>4,
             "name"=>"Facebook",
+
         );
         $env = Environment::mock([
             'REQUEST_METHOD' => 'POST',
@@ -469,6 +474,7 @@ class StudyIntegrationTest extends AppTestCase
         $req = Request::createFromEnvironment($env);
         $req = $req->withParsedBody($post_body);
         $req = $req->withAttribute("userId", 6);
+
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
         $this->assertSame(200, $response->getStatusCode());
