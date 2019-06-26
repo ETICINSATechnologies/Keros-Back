@@ -36,7 +36,7 @@ class AccessRightsService
      * @param Request $request
      * @throws KerosException
      */
-    public function checkRightsPostMember(Request $request)
+    public function checkRightsCreateMember(Request $request)
     {
         $accessAllowed = array(19, 22); //resp RH et secrétaire général
 

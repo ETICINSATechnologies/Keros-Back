@@ -301,12 +301,4 @@ class Validator
         return $study;
     }
 
-    public static function requiredMember($member) : Member
-    {
-        if (!$member) {
-            throw new KerosException("The member could not be found", 400);
-        }
-
-        return $member;
-    }
 }
