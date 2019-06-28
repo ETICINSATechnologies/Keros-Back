@@ -3,7 +3,6 @@
 
 namespace Keros\Services\Sg;
 
-
 use Keros\DataServices\Sg\MemberInscriptionDocumentTypeDataService;
 use Keros\Entities\Sg\MemberInscription;
 use Keros\Entities\Sg\MemberInscriptionDocumentType;
@@ -13,6 +12,7 @@ use Keros\Tools\DocumentGenerator;
 use Keros\Tools\Validator;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
+use \Exception;
 
 class MemberInscriptionDocumentTypeService
 {
@@ -74,7 +74,7 @@ class MemberInscriptionDocumentTypeService
      * @param int $memberInscriptionId
      * @param int $documentTypeId
      * @return string
-     * @throws KerosException
+     * @throws Exception
      */
     public function generateMemberInscriptionDocument(int $memberInscriptionId, int $documentTypeId): string
     {

@@ -117,8 +117,5 @@ class DataServiceRegistrar
         $container[MemberInscriptionDocumentTypeDataService::class] = function ($container) {
             return new MemberInscriptionDocumentTypeDataService($container);
         };
-        $container[MemberInscriptionDocumentDataService::class] = function ($container) {
-            return new MemberInscriptionDocumentDataService($container);
-        };
     }
 }
