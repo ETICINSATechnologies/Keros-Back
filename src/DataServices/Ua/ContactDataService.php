@@ -117,9 +117,9 @@ class ContactDataService
                                 $searchStatement .= ' AND ';
 
                             $searchStatement .=
-                                '(c.firstName like :search' . $i
-                                . ' OR c.lastName like :search' . $i . ')';
-                            $whereParameters[':search' . $i] = '%' . $field . '%';
+                                '(c.firstName = :search' . $i
+                                . ' OR c.lastName = :search' . $i . ')';
+                            $whereParameters[':search' . $i] = $field;
                         }
 
                         $whereStatement .= $searchStatement;
@@ -127,7 +127,6 @@ class ContactDataService
                         if ($key == 'firmId') {
                             $whereStatement .= 'f.id = :firmId';
                             $whereParameters[':' . $key] = $value;
-
                         }elseif ($key == 'firstName' || $key == 'lastName') {
                             $whereStatement .= 'c.' . $key . ' LIKE :' . $key;
                             $whereParameters[':' . $key] = '%' . $value . '%';
@@ -149,12 +148,8 @@ class ContactDataService
                     ->setParameters($whereParameters);
             }
 
-            //main contact as first result
-            $this->queryBuilder->addSelect('(CASE WHEN f.mainContact = c.id THEN 1 ELSE 0 END) AS HIDDEN mainSort');
-            $this->queryBuilder->orderBy('mainSort', 'DESC');
-
             if (isset($orderBy)) {
-                $this->queryBuilder->addOrderBy($orderBy, $order);
+                $this->queryBuilder->orderBy($orderBy, $order);
             }
 
             $this->queryBuilder

@@ -105,10 +105,10 @@ class MemberDataService
                                 $searchStatement .= ' AND ';
 
                             $searchStatement .=
-                                '(m.firstName like :search' . $i
-                                . ' OR m.lastName like :search' . $i
-                                . ' OR m.company like :search' . $i . ')';
-                            $whereParameters[':search' . $i] = '%' . $field . '%';
+                                '(m.firstName = :search' . $i
+                                . ' OR m.lastName = :search' . $i
+                                . ' OR m.company = :search' . $i . ')';
+                            $whereParameters[':search' . $i] = $field;
                         }
 
                         $whereStatement .= $searchStatement;
@@ -176,5 +176,4 @@ class MemberDataService
             throw new KerosException($msg, 500);
         }
     }
-
 }

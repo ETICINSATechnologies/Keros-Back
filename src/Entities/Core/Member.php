@@ -70,6 +70,11 @@ class Member implements JsonSerializable
     protected $studiesAsQualityManager;
 
     /**
+     * @ManyToMany(targetEntity="Keros\Entities\Ua\Study", mappedBy="consultants")
+     */
+    protected $studiesAsConsultant;
+
+    /**
      * @ManyToMany(targetEntity="Keros\Entities\Ua\Study", mappedBy="leaders")
      */
     protected $studiesAsLeader;
@@ -364,6 +369,28 @@ class Member implements JsonSerializable
     public function setStudiesAsQualityManager($studiesAsQualityManager): void
     {
         $this->studiesAsQualityManager = $studiesAsQualityManager;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStudiesAsConsultant()
+    {
+        $studies = [];
+        foreach ($this->studiesAsConsultant as $study)
+        {
+            $studies[] = $study;
+        }
+
+        return $studies;
+    }
+
+    /**
+     * @param mixed $studiesAsConsultant
+     */
+    public function setStudiesAsConsultant($studiesAsConsultant): void
+    {
+        $this->studiesAsConsultant = $studiesAsConsultant;
     }
 
     /**

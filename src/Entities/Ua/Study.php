@@ -1,8 +1,10 @@
 <?php
+
 namespace Keros\Entities\Ua;
+
 use JsonSerializable;
-use Keros\Tools\Validator;
 use Keros\Entities\Core\Member;
+
 /**
  * @Entity
  * @Table(name="ua_study")
@@ -96,31 +98,18 @@ class Study implements JsonSerializable
      *      )
      */
     protected $qualityManagers;
+
     /**
-     * @ManyToMany(targetEntity="Keros\Entities\Core\Consultant", inversedBy="studiesAsConsultant")
+     * @ManyToMany(targetEntity="Keros\Entities\Core\Member", inversedBy="studiesAsConsultant")
      * @JoinTable(name="ua_study_consultant",
      *      joinColumns={@JoinColumn(name="studyId", referencedColumnName="id")},
-     *      inverseJoinColumns={@JoinColumn(name="consultantId", referencedColumnName="id")}
+     *      inverseJoinColumns={@JoinColumn(name="memberId", referencedColumnName="id")}
      *      )
      */
     protected $consultants;
 
     /** @Column(type="boolean") */
     protected $confidential;
-
-    //The main leader's member ID
-    /** @Column(type="integer")*/
-    protected $mainLeader;
-
-    //The main quality manager's member ID
-    /** @Column(type="integer")*/
-    protected $mainQualityManager;
-
-    /**
-     * The main consultant's member ID
-     * @Column(type="integer")
-     */
-    protected $mainConsultant;
 
     /**
      * Study constructor.
@@ -135,7 +124,8 @@ class Study implements JsonSerializable
      * @param $consultants
      * @param $confidential
      */
-    public function __construct($name, $description, $field, $status, $firm, $contacts, $leaders, $qualityManagers, $consultants, $confidential, $mainLeader, $mainQualityManager, $mainConsultant)
+
+    public function __construct($name, $description, $field, $status, $firm, $contacts, $leaders, $qualityManagers, $consultants, $confidential)
     {
         $this->name = $name;
         $this->description = $description;
@@ -147,9 +137,6 @@ class Study implements JsonSerializable
         $this->qualityManagers = $qualityManagers;
         $this->consultants = $consultants;
         $this->confidential = $confidential;
-        $this->mainLeader = $mainLeader;
-        $this->mainQualityManager = $mainQualityManager;
-        $this->mainConsultant = $mainConsultant;
     }
 
     public function jsonSerialize()
@@ -294,7 +281,7 @@ class Study implements JsonSerializable
     {
         if ($this->getSignDate() == null)
             return null;
-
+        
         return $this->getsignDate()->format('Y-m-d');
     }
 
@@ -321,6 +308,7 @@ class Study implements JsonSerializable
     {
         if ($this->getEndDate() == null)
             return null;
+
         return $this->getEndDate()->format('Y-m-d');
     }
 
@@ -427,6 +415,7 @@ class Study implements JsonSerializable
     {
         if ($this->getarchivedDate() == null)
             return null;
+
         return $this->getarchivedDate()->format('Y-m-d');
     }
 
@@ -472,6 +461,7 @@ class Study implements JsonSerializable
         {
             $contacts[] = $contact;
         }
+
         return $contacts;
     }
 
@@ -496,22 +486,13 @@ class Study implements JsonSerializable
      */
     public function getLeadersArray()
     {
-        $leadersArray = [];
-        $leadersIDArray =[];
-        $leaders = $this->getLeaders();
-        foreach ($leaders as $leader)
+        $leaders = [];
+        foreach ($this->getLeaders() as $leader)
         {
-            $leadersArray[] = $leader;
-            $leadersIDArray[] = $leader->getId();
+            $leaders[] = $leader;
         }
-        //Putting the main leader at the top of the array
-        if (isset($this->mainLeader) && sizeof($leadersIDArray) >1){
-            $tmpKey = array_search($this->mainLeader, $leadersIDArray);
-            $tmpValue = $leadersArray[0];
-            $leadersArray[0] = $leadersArray[$tmpKey];
-            $leadersArray[$tmpKey] = $tmpValue;
-        }
-        return $leadersArray;
+
+        return $leaders;
     }
 
     /**
@@ -535,22 +516,13 @@ class Study implements JsonSerializable
      */
     public function getQualityManagersArray()
     {
-        $qualityManagersArray = [];
-        $qualityManagersIDArray =[];
-        $qualityManagers = $this->getQualityManagers();
-        foreach ($qualityManagers as $qualityManager)
+        $qualityManagers = [];
+        foreach ($this->getQualityManagers() as $qualityManager)
         {
-            $qualityManagersArray[] = $qualityManager;
-            $qualityManagersIDArray[] = $qualityManager->getId();
+            $qualityManagers[] = $qualityManager;
         }
-        //Putting the main quality manager at the top of the array
-        if (isset($this->mainQualityManager) && sizeof($qualityManagersIDArray) >1){
-            $tmpKey = array_search($this->mainQualityManager, $qualityManagersIDArray);
-            $tmpValue = $qualityManagersArray[0];
-            $qualityManagersArray[0] = $qualityManagersArray[$tmpKey];
-            $qualityManagersArray[$tmpKey] = $tmpValue;
-        }
-        return $qualityManagersArray;
+
+        return $qualityManagers;
     }
 
     /**
@@ -574,22 +546,13 @@ class Study implements JsonSerializable
      */
     public function getConsultantsArray()
     {
-        $consultantsArray = [];
-        $consultantsIDArray =[];
-        $consultants = $this->getConsultants();
-        foreach ($consultants as $consultant)
+        $consultants = [];
+        foreach ($this->getConsultants() as $consultant)
         {
-            $consultantsArray[] = $consultant;
-            $consultantsIDArray[] = $consultant->getId();
+            $consultants[] = $consultant;
         }
-        //Putting the main consultant at the top of the array
-        if (isset($this->mainConsultant) && sizeof($consultantsIDArray) >1){
-            $tmpKey = array_search($this->mainConsultant, $consultantsIDArray);
-            $tmpValue = $consultantsArray[0];
-            $consultantsArray[0] = $consultantsArray[$tmpKey];
-            $consultantsArray[$tmpKey] = $tmpValue;
-        }
-        return $consultantsArray;
+
+        return $consultants;
     }
 
     /**
@@ -614,59 +577,5 @@ class Study implements JsonSerializable
     public function setConfidential($confidential)
     {
         $this->confidential = $confidential;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMainLeader()
-    {
-        return $this->mainLeader;
-    }
-
-    /**
-     * @param $mainLeader
-     * @throws \Keros\Error\KerosException
-     */
-    public function setMainLeader($mainLeader): void
-    {
-        Validator::optionalInt($mainLeader);
-        $this->mainLeader = $mainLeader;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMainQualityManager()
-    {
-        return $this->mainQualityManager;
-    }
-
-    /**
-     * @param $mainQualityManager
-     * @throws KerosException
-     */
-    public function setMainQualityManager($mainQualityManager): void
-    {
-        Validator::optionalInt($mainQualityManager);
-        $this->mainQualityManager = $mainQualityManager;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMainConsultant()
-    {
-        return $this->mainConsultant;
-    }
-
-    /**
-     * @param $mainConsultant
-     * @throws KerosException
-     */
-    public function setMainConsultant($mainConsultant): void
-    {
-        Validator::optionalInt($mainConsultant);
-        $this->mainConsultant = $mainConsultant;
     }
 }

@@ -3,13 +3,11 @@
 
 namespace Keros\Services\Ua;
 
-use Keros\DataServices\Core\ConsultantDataService;
 use Keros\DataServices\Ua\StudyDataService;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Ua\Study;
 use Keros\Error\KerosException;
 use Keros\Services\Core\AddressService;
-use Keros\Services\Core\ConsultantService;
 use Keros\Services\Core\GenderService;
 use Keros\Services\Core\MemberService;
 use Keros\Services\Core\PositionService;
@@ -66,11 +64,6 @@ class StudyService
     private $studyDataService;
 
     /**
-     * @var ConsultantService
-     */
-    private $consultantService;
-
-    /**
      * @var Logger
      */
     private $logger;
@@ -89,7 +82,6 @@ class StudyService
         $this->statusService = $container->get(StatusService::class);
         $this->provenanceService = $container->get(ProvenanceService::class);
         $this->studyDataService = $container->get(StudyDataService::class);
-        $this->consultantService = $container->get(ConsultantService::class);
     }
 
     /**
@@ -140,7 +132,7 @@ class StudyService
 
         if (isset($fields["consultantIds"])) {
             $consultantIds = $fields["consultantIds"];
-            $consultants = $this->consultantService->getSome($consultantIds);
+            $consultants = $this->memberService->getSome($consultantIds);
         } else
             $consultants = array();
 
@@ -158,17 +150,13 @@ class StudyService
 
         $confidential = Validator::optionalBool(isset($fields["confidential"]) ? $fields["confidential"] : null);
 
-        $mainLeader = Validator::optionalInt(isset($fields["mainLeader"]) ? $fields["mainLeader"] : null);
-        $mainQualityManager = Validator::optionalInt(isset($fields["mainQualityManager"]) ? $fields["mainQualityManager"] : null);
-        $mainConsultant = Validator::optionalInt(isset($fields["mainConsultant"]) ? $fields["mainConsultant"] : null);
-
         $fieldId = Validator::optionalId(isset($fields["fieldId"]) ? $fields["fieldId"] : null);
         if ($fieldId != null)
             $field = $this->fieldService->getOne($fieldId);
         else
             $field = null;
 
-        $study = new Study($name, $description, $field, $status, $firm, $contacts, $leaders, $consultants, $qualityManagers, $confidential, $mainLeader, $mainQualityManager, $mainConsultant);
+        $study = new Study($name, $description, $field, $status, $firm, $contacts, $leaders, $consultants, $qualityManagers, $confidential);
 
         $study->setProvenance($provenance);
         $study->setSignDate($signDate);
@@ -180,9 +168,6 @@ class StudyService
         $study->setOutsourcingFee($outsourcingFee);
         $study->setArchivedDate($archivedDate);
         $study->setConfidential($confidential);
-        $study->setMainLeader($mainLeader);
-        $study->setMainConsultant($mainConsultant);
-        $study->setMainQualityManager($mainQualityManager);
 
         $this->studyDataService->persist($study);
         return $study;
@@ -279,7 +264,7 @@ class StudyService
 
         if (isset($fields["consultantIds"])) {
             $consultantIds = $fields["consultantIds"];
-            $consultants = $this->consultantService->getSome($consultantIds);
+            $consultants = $this->memberService->getSome($consultantIds);
         } else
             $consultants = array();
 
@@ -303,10 +288,6 @@ class StudyService
 
         $confidential = Validator::optionalBool(isset($fields["confidential"]) ? $fields["confidential"] : null);
 
-        $mainLeader = Validator::optionalInt(isset($fields["mainLeader"]) ? $fields["mainLeader"] : null);
-        $mainQualityManager = Validator::optionalInt(isset($fields["mainQualityManager"]) ? $fields["mainQualityManager"] : null);
-        $mainConsultant = Validator::optionalInt(isset($fields["mainConsultant"]) ? $fields["mainConsultant"] : null);
-
         $study->setName($name);
         $study->setDescription($description);
         $study->setField($field);
@@ -326,9 +307,6 @@ class StudyService
         $study->setOutsourcingFee($outsourcingFee);
         $study->setArchivedDate($archivedDate);
         $study->setConfidential($confidential);
-        $study->setMainLeader($mainLeader);
-        $study->setMainConsultant($mainConsultant);
-        $study->setMainQualityManager($mainQualityManager);
 
         $this->studyDataService->persist($study);
 
@@ -341,14 +319,21 @@ class StudyService
      * @return bool
      * @throws KerosException
      */
-    public function consultantsAreValid(int $id): bool
+    public function consultantAreValid(int $id): bool
     {
         $id = Validator::requiredId($id);
         $study = $this->getOne($id);
         if (empty($study->getConsultantsArray())) {
             return false;
         }
-
+        foreach ($study->getConsultantsArray() as $consultant) {
+            $isConsultant = false;
+            foreach ($consultant->getPositionsArray() as $position)
+                if ($position->getPosition()->getLabel() == 'Consultant')
+                    $isConsultant = true;
+            if (!$isConsultant)
+                return false;
+        }
         return true;
     }
 }

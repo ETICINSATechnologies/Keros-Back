@@ -254,7 +254,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         //On vérifie maintenant que le membre a bien été ajouté.
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/api/v1/core/member/29', //On get le dernier membre (max de kerosData.sql + 1)
+            'REQUEST_URI' => '/api/v1/core/member/27', //On get le dernier membre (max de kerosData.sql + 1)
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;

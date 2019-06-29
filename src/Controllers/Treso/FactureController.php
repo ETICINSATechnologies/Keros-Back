@@ -11,11 +11,11 @@ use Keros\Services\Treso\FactureDocumentService;
 use Keros\Services\Treso\FactureDocumentTypeService;
 use Keros\Services\Treso\FactureService;
 use Keros\Tools\ConfigLoader;
-use Keros\Error\KerosException;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use \Keros\Error\KerosException;
 use Exception;
 
 class FactureController

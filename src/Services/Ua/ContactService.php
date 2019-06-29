@@ -99,6 +99,7 @@ class ContactService
     public function deleteContactsRelatedToFirm (int $idFirm) : void
     {
         $firm = $this->firmService->getOne($idFirm);
+        //$this->contactDataService->deleteContactsRelatedtoFirm($firm);
 
         $contacts = $this->getAll();
         foreach ($contacts as $contact) {

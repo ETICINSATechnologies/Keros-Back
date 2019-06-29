@@ -28,12 +28,9 @@ class AuthenticationMiddleware
 
     public function __invoke(Request $request, Response $response, callable $next)
     {
-        if (ConfigLoader::getConfig()['isTesting']) {
-            if ($request->getAttribute("userId") == null) {
-                $response = $next($request->withAttribute("userId", 1), $response);
-            } else {
-                $response = $next($request, $response);
-            }
+        // If testing, assume user 1 is connected
+        if(ConfigLoader::getConfig()['isTesting']){
+            $response = $next($request->withAttribute("userId",1), $response);
             return $response;
         }
 

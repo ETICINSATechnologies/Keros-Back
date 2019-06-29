@@ -49,5 +49,8 @@ class LoginIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
 
         $this->assertSame(401, $response->getStatusCode());
+
+        $body = json_decode($response->getBody());
+        $this->assertEquals($body->message, "Authentication failed");
     }
 }
