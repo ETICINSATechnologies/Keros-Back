@@ -447,9 +447,9 @@ class MemberIntegrationTest extends AppTestCase
 
     public function testPostMemberPhotoShouldReturn204()
     {
-        $fileName = "tempPhoto.jpg";
-        $handle = fopen($fileName, "w");
-        $file = new UploadedFile($fileName, $fileName, 'image/jpeg', filesize($fileName));
+        $temp_fileName = "tempPhoto.jpg";
+        $handle = fopen($temp_fileName, 'w') or die('Cannot open file:  '.$temp_fileName);
+        $file = new UploadedFile($temp_fileName, $temp_fileName, 'image/jpeg', filesize($temp_fileName));
 
         $env = Environment::mock([
             'REQUEST_METHOD' => 'POST',
@@ -461,7 +461,6 @@ class MemberIntegrationTest extends AppTestCase
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
         fclose($handle);
-        unlink($fileName);
         $this->assertSame(204, $response->getStatusCode());
     }
 
@@ -490,7 +489,6 @@ class MemberIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
         $this->assertSame(200, $response->getStatusCode());
         fclose($handle);
-        unlink($fileName);
     }
 
     public function testGetMemberPhotoShouldReturn404()
@@ -520,7 +518,6 @@ class MemberIntegrationTest extends AppTestCase
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
-        unlink($fileName);
 
         $env = Environment::mock([
             'REQUEST_METHOD' => 'DELETE',
