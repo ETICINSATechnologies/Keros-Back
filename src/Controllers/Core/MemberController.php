@@ -3,6 +3,7 @@
 namespace Keros\Controllers\Core;
 
 use Doctrine\ORM\EntityManager;
+use Keros\Error\KerosException;
 use Keros\Entities\core\Member;
 use Keros\Entities\Core\MemberPosition;
 use Keros\Entities\Core\Page;
@@ -12,6 +13,7 @@ use Keros\Services\Core\MemberPositionService;
 use Keros\Tools\Authorization\JwtCodec;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
+use Keros\Tools\ConfigLoader;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -36,6 +38,10 @@ class MemberController
      */
     private $jwtCodec;
     /**
+     * @var ConfigLoader
+     */
+    private $kerosConfig;
+    /**
      * @var MemberPositionService
      */
     private $memberPositionService;
@@ -46,6 +52,7 @@ class MemberController
         $this->entityManager = $container->get(EntityManager::class);
         $this->memberService = $container->get(MemberService::class);
         $this->memberPositionService = $container->get(MemberPositionService::class);
+        $this->kerosConfig = ConfigLoader::getConfig();
     }
 
     public function getMember(Request $request, Response $response, array $args)
@@ -133,5 +140,63 @@ class MemberController
         $latestBoard = $this->memberService->getLatestBoard();
 
         return $response->withJson($latestBoard, 200);
+    }
+
+    public function createProfilePicture(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Uploading profile picture for member " . $args['id'] . " from " . $request->getServerParams()["REMOTE_ADDR"]);
+        
+        if ($request->getUploadedFiles() == null) {
+            $msg = 'No file given';
+            $this->logger->error($msg);
+            throw new KerosException($msg, 400);
+        }
+
+        $uploadedFile = $request->getUploadedFiles()['file'];
+        if ($uploadedFile == null) {
+            $msg = 'File is empty';
+            $this->logger->error($msg);
+            throw new KerosException($msg, 400);
+        }
+        if ($uploadedFile->getError() !== UPLOAD_ERR_OK) {
+            $msg = "Error during file uploading";
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
+        $body = $args;
+        $body['file'] = $uploadedFile->getClientFileName();
+        
+        $this->entityManager->beginTransaction();
+        $filename = $this->memberService->createPhoto($args['id'], $body);
+        $uploadedFile->moveTo($this->kerosConfig['MEMBER_PHOTO_DIRECTORY'] . $filename);
+        $this->entityManager->commit();
+
+        return $response->withStatus(200);
+    }
+
+    public function getProfilePicture(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Getting profile picture for member " . $args['id'] . " from " . $request->getServerParams()["REMOTE_ADDR"]);
+
+        $filepath = $this->memberService->getPhoto($args["id"]);
+
+        $response   = $response->withHeader('Content-Type', 'application/image');
+        $response   = $response->withHeader('Content-Disposition', 'attachment; filename="' .basename("$filepath") . '"');
+        $response   = $response->withHeader('Content-Length', filesize($filepath));
+
+        readfile($filepath);
+
+        return $response;
+    }
+
+    public function deleteProfilePicture(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Deleting profile picture for member " . $args['id'] . " from " . $request->getServerParams()["REMOTE_ADDR"]);
+
+        $this->entityManager->beginTransaction();
+        $this->memberService->deletePhoto($args['id']);
+        $this->entityManager->commit();
+
+        return $response->withStatus(204);
     }
 }

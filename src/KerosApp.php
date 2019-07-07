@@ -161,6 +161,9 @@ class KerosApp
                     $this->put("/{id:[0-9]+}", MemberController::class . ':updateMember');
                     $this->delete("/{id:[0-9]+}", MemberController::class . ':deleteMember');
                     $this->get("/board/latest", MemberController::class . ':getLatestBoard');
+                    $this->post("/{id:[0-9]+}/photo", MemberController::class . ':createProfilePicture');
+                    $this->get("/{id:[0-9]+}/photo", MemberController::class . ':getProfilePicture');
+                    $this->delete("/{id:[0-9]+}/photo", MemberController::class . ':deleteProfilePicture');
                 });
 
                 $this->group('/consultant', function () {

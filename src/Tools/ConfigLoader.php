@@ -37,6 +37,7 @@ class ConfigLoader
             'TEMPORARY_DIRECTORY' => $absoluteDirPath . $config['TEMPORARY_DIRECTORY'],
             'STUDY_DOCUMENT_DIRECTORY' => $absoluteDirPath . $config['STUDY_DOCUMENT_DIRECTORY'],
             'FACTURE_DOCUMENT_DIRECTORY' => $absoluteDirPath . $config['FACTURE_DOCUMENT_DIRECTORY'],
+				'MEMBER_PHOTO_DIRECTORY' => $absoluteDirPath . $config['MEMBER_PHOTO_DIRECTORY'],
         );
 
         return $absoluteConfig;

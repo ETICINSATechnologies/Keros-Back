@@ -179,7 +179,6 @@ class MemberIntegrationTest extends AppTestCase
                 )
             ],
             "company" => "Amazon",
-            "profilePicture" => "http://image.png",
             "droitImage" => true
         );
 
@@ -207,7 +206,6 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(1, $body->schoolYear);
         $this->assertSame("0033675385495", $body->telephone);
         $this->assertSame("Amazon", $body->company);
-        $this->assertSame("http://image.png", $body->profilePicture);
         $this->assertNotNull($body->address->id);
         $this->assertSame(3, $body->positions[0]->id);
         $this->assertSame(4, $body->positions[1]->id);
@@ -337,7 +335,6 @@ class MemberIntegrationTest extends AppTestCase
                 )
             ],
             "company" => "Amazon",
-            "profilePicture" => "http://image.png",
             "droitImage" => false
         );
 
@@ -364,7 +361,6 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(1, $body->schoolYear);
         $this->assertSame("0033675385495", $body->telephone);
         $this->assertSame("Amazon", $body->company);
-        $this->assertSame("http://image.png", $body->profilePicture);
         $this->assertSame(3, $body->positions[0]->id);
         $this->assertSame(4, $body->positions[1]->id);
         $this->assertSame(false, $body->droitImage);
@@ -402,7 +398,6 @@ class MemberIntegrationTest extends AppTestCase
                 )
             ],
             "company" => "Amazon",
-            "profilePicture" => "http://image.png"
         );
 
         $env = Environment::mock([
@@ -430,7 +425,6 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(1, $body->schoolYear);
         $this->assertSame("0033675385495", $body->telephone);
         $this->assertSame("Amazon", $body->company);
-        $this->assertSame("http://image.png", $body->profilePicture);
         $this->assertNotNull($body->address->id);
         $this->assertSame(3, $body->positions[0]->id);
         $this->assertSame(4, $body->positions[1]->id);
