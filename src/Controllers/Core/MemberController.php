@@ -168,10 +168,13 @@ class MemberController
         
         $this->entityManager->beginTransaction();
         $filename = $this->memberService->createPhoto($args['id'], $body);
-        $uploadedFile->moveTo($this->kerosConfig['MEMBER_PHOTO_DIRECTORY'] . $filename);
         $this->entityManager->commit();
 
-        return $response->withStatus(200);
+        $filepath = $this->kerosConfig['MEMBER_PHOTO_DIRECTORY'] . $filename;
+
+        $uploadedFile->moveTo($filepath);
+
+        return $response->withStatus(204);
     }
 
     public function getProfilePicture(Request $request, Response $response, array $args)

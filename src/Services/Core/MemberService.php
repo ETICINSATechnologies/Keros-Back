@@ -307,7 +307,10 @@ class MemberService
 
         $filepath =  $this->kerosConfig['MEMBER_PHOTO_DIRECTORY'] . $filename;
 
-        unlink($filepath);
+        if (file_exists($filepath)){
+            unlink($filepath);
+        }
+
         $member->setProfilePicture(null);
         $this->memberDataService->persist($member);
     }
@@ -330,10 +333,14 @@ class MemberService
         $filename = $member->getProfilePicture();
 
         if (!$filename) {
-            throw new KerosException("Profile picture could not be found", 404);
+            throw new KerosException("No profile picture for this member", 404);
         }
 
         $filepath =  $this->kerosConfig['MEMBER_PHOTO_DIRECTORY'] . $filename;
+        
+        if (!file_exists($filepath)) {
+            throw new KerosException("Profile picture could not be found", 404);
+        }
 
         return $filepath;
     }

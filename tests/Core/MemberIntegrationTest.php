@@ -5,6 +5,7 @@ namespace KerosTest\Member;
 use KerosTest\AppTestCase;
 use Slim\Http\Environment;
 use Slim\Http\Request;
+use Slim\Http\UploadedFile;
 
 class MemberIntegrationTest extends AppTestCase
 {
@@ -442,5 +443,104 @@ class MemberIntegrationTest extends AppTestCase
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
         $this->assertSame(400, $response->getStatusCode());
+    }
+
+    public function testPostMemberPhotoShouldReturn204()
+    {
+        $fileName = "tempPhoto.jpg";
+        $handle = fopen($fileName, "w");
+        fclose($handle);
+        $file = new UploadedFile($fileName, $fileName, 'image/jpeg', filesize($fileName));
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => '/api/v1/core/member/1/photo',
+            'slim.files' => ['file' => $file],
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        unlink($fileName);
+        $this->assertSame(204, $response->getStatusCode());
+    }
+
+    public function testGetMemberPhotoShouldReturn200()
+    {
+        $fileName = "tempPhoto.jpg";
+        $handle = fopen($fileName, "w");
+        fclose($handle);
+        $file = new UploadedFile($fileName, $fileName, 'image/jpeg', filesize($fileName));
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => '/api/v1/core/member/1/photo',
+            'slim.files' => ['file' => $file],
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/core/member/1/photo',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+        unlink($fileName);
+    }
+
+    public function testGetMemberPhotoShouldReturn404()
+    {   
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/core/member/2/photo',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(404, $response->getStatusCode());
+    }
+
+    public function testDeleteMemberPhotoShouldReturn204()
+    {   $fileName = "tempPhoto.jpg";
+        $handle = fopen($fileName, "w");
+        fclose($handle);
+        $file = new UploadedFile($fileName, $fileName, 'image/jpeg', filesize($fileName));
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => '/api/v1/core/member/1/photo',
+            'slim.files' => ['file' => $file],
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        unlink($fileName);
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'DELETE',
+            'REQUEST_URI' => '/api/v1/core/member/1/photo',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(204, $response->getStatusCode());
+    }
+
+    public function testDeleteMemberPhotoShouldReturn404()
+    {   
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'DELETE',
+            'REQUEST_URI' => '/api/v1/core/member/2/photo',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(404, $response->getStatusCode());
     }
 }
