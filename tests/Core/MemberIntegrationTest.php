@@ -449,7 +449,6 @@ class MemberIntegrationTest extends AppTestCase
     {
         $fileName = "tempPhoto.jpg";
         $handle = fopen($fileName, "w");
-        fclose($handle);
         $file = new UploadedFile($fileName, $fileName, 'image/jpeg', filesize($fileName));
 
         $env = Environment::mock([
@@ -461,6 +460,7 @@ class MemberIntegrationTest extends AppTestCase
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
+        fclose($handle);
         unlink($fileName);
         $this->assertSame(204, $response->getStatusCode());
     }
@@ -469,7 +469,6 @@ class MemberIntegrationTest extends AppTestCase
     {
         $fileName = "tempPhoto.jpg";
         $handle = fopen($fileName, "w");
-        fclose($handle);
         $file = new UploadedFile($fileName, $fileName, 'image/jpeg', filesize($fileName));
 
         $env = Environment::mock([
@@ -490,6 +489,7 @@ class MemberIntegrationTest extends AppTestCase
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
         $this->assertSame(200, $response->getStatusCode());
+        fclose($handle);
         unlink($fileName);
     }
 
