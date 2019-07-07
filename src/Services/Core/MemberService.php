@@ -226,7 +226,9 @@ class MemberService
         $this->userService->delete($id);
         $this->addressService->delete($address->getId());
         $filepath =  $this->kerosConfig['MEMBER_PHOTO_DIRECTORY'] . $profilepicture;
-        unlink($filepath);
+        if (file_exists($filepath)){
+            unlink($filepath);
+        }
     }
 
     /**
