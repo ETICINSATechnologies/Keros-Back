@@ -58,7 +58,7 @@ class AccessRightsService
 
     public function checkRightsConfidentialStudies(Request $request, Study $study)
     {
-        $accessAllowed = array(21); //resp UA
+        $accessAllowed = array(self::UA_MANAGER_ID);
         $currentMember = $this->memberService->getOne($request->getAttribute("userId"));
         $memberPositions = $currentMember->getMemberPositions();
 
