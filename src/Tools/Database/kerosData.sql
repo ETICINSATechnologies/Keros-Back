@@ -10,7 +10,7 @@ INSERT INTO core_user (id, username, password, expiresAt) VALUES
   (3, 'lswollo', '$2y$10$9R4lfhp18.iVzsP8amDL5e7eumi48DmPPkoa5YLAm/thAZWIHaOtW' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #hunter12
   (4, 'qualqual', '$2y$10$9R4lfhp18.iVzsP8amDL5e7eumi48DmPPkoa5YLAm/thAZWIHaOtW' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #hunter13
   (5, 'lung', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (6, 'user6', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+  (6, 'superuser', '$2y$10$fVPB3SLO54Ng5DjqUEr8/OSwOtOMy0gH4DiEqjvxXqRVdcM8hc7Du' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #superuser
   (7, 'user7', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
   (8, 'user8', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
   (9, 'user9', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
@@ -44,7 +44,7 @@ INSERT INTO core_address (id, line1, line2, postalCode, city, countryId) VALUES
   (6, '17 Beat', 'Meat', '674A4', 'Paris', 40), # member 4
   (7, '60 Gold street', 'bat. j', '69100','Villeurbanne',1), #consultant 5
   (8, '20 avenue Albert Einstein', 'bat. g', '50100', 'Cherbourg',1), #consultant 2
-  (9, 'rue test 9', 'Meat', '674A4', 'Paris', 40), # member 6
+  (9, '11 supeRU', 'bis', '27277', 'SuperVille', 40), # member 6 - superuser
   (10, 'rue test 10', 'Meat', '674A4', 'Paris', 40), # member 7
   (11, 'rue test 11', 'Meat', '674A4', 'Paris', 40), # member 8
   (12, 'rue test 12', 'Meat', '674A4', 'Paris', 40), # member 9
@@ -77,7 +77,7 @@ INSERT INTO core_member (id, genderId, firstName, lastName, birthday, telephone,
   (1, 1, 'Conor', 'Breeze', STR_TO_DATE('1975-12-25', '%Y-%m-%d'), '+332541254', 'fake.mail@fake.com', 2, 3, 1, 'Google', 'http://picture.png', true),
   (3, 1, 'Laurence', 'Tainturière', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.mail3@fake.com', 3, 5, 2, NULL, NULL, true),
   (4, 3, 'Stéphane4', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly4@fake.com', 6, 3, 4, NULL, NULL, false),
-  (6, 3, 'Stéphane6', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly6@fake.com', 9, 3, 4, NULL, NULL, true),
+  (6, 3, 'SuperPrenom', 'SuperNom', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'super@vraimentsuper.com', 9, 3, 4, NULL, NULL, true),
   (7, 3, 'Stéphane7', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly7@fake.com', 10, 3, 4, NULL, NULL, true),
   (8, 3, 'Stéphane8', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly8@fake.com', 11, 3, 4, NULL, NULL, true),
   (9, 3, 'Stéphane9', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly9@fake.com', 12, 3, 4, NULL, NULL, true),
@@ -114,7 +114,13 @@ INSERT INTO core_member_position (id, memberId, positionId, isBoard, year) VALUE
   (4, 3, 2, TRUE, 1990),
   (5, 3, 3, FALSE, 2015),
   (6, 1, 6, FALSE, 2016),
-  (8, 4, 9, FALSE, 2015);
+  (7, 2, 6, FALSE, 2002),
+  (8, 4, 9, FALSE, 2015),
+  (9, 6, 19, TRUE, 2018),
+  (10, 6, 17, TRUE, 2018),
+  (11, 6, 21, TRUE, 2018),
+  (12, 6, 22, TRUE, 2018),
+  (13, 6, 18, TRUE, 2018);
 
 TRUNCATE TABLE ua_firm;
 INSERT INTO ua_firm (id, siret, name, addressId, typeId, mainContact) VALUES
@@ -129,11 +135,10 @@ INSERT INTO `ua_contact` (`id`, `firstName`, `lastName`, `genderId`, `firmId`, `
   (4, 'Marah', 'Galy Adam', 1, 1, 'marah.galy@etic-insa.com', '0033646786532', NULL, NULL, NULL, 0);
 
 TRUNCATE TABLE ua_study;
-INSERT INTO `ua_study` (`id`, `name`, `description`, `fieldId`, `provenanceId`, `statusId`, `signDate`, `endDate`, `managementFee`, `realizationFee`, `rebilledFee`, `ecoparticipationFee`, `outsourcingFee`, `archivedDate`, `firmId`,`mainLeader`, `mainQualityManager`, `mainConsultant`) VALUES
-  (1, 'Développement IDE', 'Développement d''un IDE pour utilisation interne', 1, 1, 2, '2018-11-10', '2018-11-10', 12000000, 123, 12345, 12, 12324454, '2018-11-10', 1, null, null, null),
-  (2, 'Tests d''acidité dans le Rhône', 'Créateur de IDE', 1, 1, 2, '2018-11-10', '2018-11-10', 12000000, 123, 12345, 12, 12324454, '2018-11-10', 2, 4, 4, 2),
-  (3, 'Développement app mobile', 'Développement d''une app pour scanner des images', 1, 1, 2, '2018-11-10', '2018-11-10', 12000000, 123, 12345, 12, 12324454, '2018-11-10', 1, null, null, null);
-
+INSERT INTO `ua_study` (`id`, `name`, `description`, `fieldId`, `provenanceId`, `statusId`, `signDate`, `endDate`, `managementFee`, `realizationFee`, `rebilledFee`, `ecoparticipationFee`, `outsourcingFee`, `archivedDate`, `firmId`,`confidential`,`mainLeader`, `mainQualityManager`, `mainConsultant`) VALUES
+  (1, 'Développement IDE', 'Développement d''un IDE pour utilisation interne', 1, 1, 2, '2018-11-10', '2018-11-10', 12000000, 123, 12345, 12, 12324454, '2018-11-10', 1,FALSE, null, null, null),
+  (2, 'Tests d''acidité dans le Rhône', 'Créateur de IDE', 1, 1, 2, '2018-11-10', '2018-11-10', 12000000, 123, 12345, 12, 12324454, '2018-11-10', 2, FALSE,4, 4, 2),
+  (3, 'Développement app mobile', 'Développement d''une app pour scanner des images', 1, 1, 2, '2018-11-10', '2018-11-10', 12000000, 123, 12345, 12, 12324454, '2018-11-10', 1, TRUE,null, null, null);
 
 TRUNCATE TABLE ua_study_consultant;
 INSERT INTO `ua_study_consultant` (`consultantId`, `studyId`) VALUES
@@ -143,8 +148,12 @@ INSERT INTO `ua_study_consultant` (`consultantId`, `studyId`) VALUES
 TRUNCATE TABLE ua_study_leader;
 INSERT INTO `ua_study_leader` (`memberId`, `studyId`) VALUES
   (3, 2),
+  (3, 3),
   (1, 2),
-  (4, 2);
+  (4, 2),
+  (6, 1),
+  (4, 1),
+  (2, 3);
 
 TRUNCATE TABLE ua_study_qualityManager;
 INSERT INTO `ua_study_qualityManager` (`memberId`, `studyId`) VALUES
