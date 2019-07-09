@@ -22,6 +22,12 @@ class AccessRightsService
      */
     protected $memberService;
 
+    public const HR_MANAGER_ID = 19;
+    public const GENERAL_SECRETARY_ID = 22;
+    public const BUSINESS_MANAGER_ID = 3; //charge d'affaires
+    public const UA_MANAGER_ID = 21;
+    public const QUALITY_MANAGER_ID = 18;
+
     /**
      * AccessRightsService constructor.
      * @param ContainerInterface $container
@@ -38,7 +44,7 @@ class AccessRightsService
      */
     public function checkRightsCreateMember(Request $request)
     {
-        $accessAllowed = array(19, 22); //resp RH et secrétaire général
+        $accessAllowed = array(self::HR_MANAGER_ID, self::GENERAL_SECRETARY_ID);
 
         $currentMember = $this->memberService->getOne($request->getAttribute("userId"));
         $memberPositions = $currentMember->getMemberPositions();
@@ -57,10 +63,10 @@ class AccessRightsService
         $memberPositions = $currentMember->getMemberPositions();
 
         foreach ($memberPositions as $memberPosition) {
-            if ($memberPosition->getPosition()->getId() == 3) { // si chargé d'affaire
+            if ($memberPosition->getPosition()->getId() == self::BUSINESS_MANAGER_ID) {
                 $leadersArray = $study->getLeadersArray();
                 foreach ($leadersArray as $leader) {
-                    if ($leader->getId() == $currentMember->getId()) { // si il est en charge de cette étude
+                    if ($leader->getId() == $currentMember->getId()) { //if the user is the business manager of this study
                         return;
                     }
                 }
@@ -79,7 +85,7 @@ class AccessRightsService
      */
     public function filterGetAllStudies(Request $request, array $studies): array
     {
-        $accessAllowed = array(21, 18); //resp UA et resp qualité
+        $accessAllowed = array(self::UA_MANAGER_ID, self::QUALITY_MANAGER_ID);
         $currentMember = $this->memberService->getOne($request->getAttribute("userId"));
         $memberPositions = $currentMember->getMemberPositionsArray();
 
@@ -111,7 +117,7 @@ class AccessRightsService
 
     public function checkRightsUpdateStudy(Request $request, Study $study)
     {
-        $accessAllowed = array(21); //resp UA
+        $accessAllowed = array(self::UA_MANAGER_ID);
         $currentMember = $this->memberService->getOne($request->getAttribute("userId"));
         $memberPositions = $currentMember->getMemberPositionsArray();
 
@@ -135,7 +141,7 @@ class AccessRightsService
 
     public function checkRightsAttributeQualityManager(Request $request)
     {
-        $accessAllowed = array(18, 21); //resp qualité et UA
+        $accessAllowed = array(self::QUALITY_MANAGER_ID, self::UA_MANAGER_ID);
         $currentMember = $this->memberService->getOne($request->getAttribute("userId"));
         $memberPositions = $currentMember->getMemberPositions();
 

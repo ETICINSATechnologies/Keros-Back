@@ -26,14 +26,11 @@ use Keros\Tools\Authorization\AuthenticationMiddleware;
 use Keros\Tools\ConfigLoader;
 use Keros\Tools\JwtCodec;
 use Keros\Tools\KerosEntityManager;
-use Keros\Error\KerosException;
-use Keros\Tools\LoggerBuilder;
 use Keros\Tools\PasswordEncryption;
 use Keros\Tools\ToolRegistrar;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Keros\Services\Core\MemberService;
 
 
 /**
@@ -43,12 +40,6 @@ use Keros\Services\Core\MemberService;
  */
 class KerosApp
 {
-
-    /**
-     * @var MemberService
-     */
-    private $memberService;
-
     /**
      * Stores an instance of the Slim application.
      * @var \Slim\App
@@ -74,8 +65,6 @@ class KerosApp
         $app = new \Slim\App(['settings' => ConfigLoader::getConfig()]);
 
         $this->prepareContainer($app->getContainer());
-
-        $this->memberService=($app->getContainer())->get(MemberService::class);
 
         $app->group("/api/v1", function () {
             $this->get("/health", function (Request $request, Response $response, array $args) {
