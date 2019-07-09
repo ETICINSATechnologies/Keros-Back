@@ -18,7 +18,7 @@ SetEnv TZ Europe/Paris
 
 # File upload sizes
 php_value upload_max_filesize 10M
-php_value post_max_size 0
+php_value post_max_size 50M
 
 # Protect .htaccess file
 <Files ~ "^.*\.([Hh][Tt][AaPp])">
