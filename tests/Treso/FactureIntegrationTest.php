@@ -178,7 +178,7 @@ class FactureIntegrationTest extends AppTestCase
         $this->assertSame(false, $body->validatedByPerf);
         $this->assertSame(null, $body->validatedByPerfDate);
         $this->assertSame(null, $body->validatedByPerfMember);
-        $this->assertSame(344.45 * ((20.3 / 100) + 1), $body->amountTTC);
+        $this->assertSame((float) number_format(344.45 * ((20.3 / 100) + 1), 2), $body->amountTTC);
         $this->assertSame(false, $body->documents[0]->isUploaded);
         $this->assertSame(false, $body->documents[1]->isUploaded);
         $this->assertSame(false, $body->documents[2]->isUploaded);

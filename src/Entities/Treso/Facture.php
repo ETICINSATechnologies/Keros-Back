@@ -184,7 +184,8 @@ class Facture implements \JsonSerializable
         ];
     }
 
-    public static function getSearchFields(): array {
+    public static function getSearchFields(): array
+    {
         return ['numero', 'clientName', 'contactName', 'study', 'type'];
     }
 
@@ -193,7 +194,9 @@ class Facture implements \JsonSerializable
      */
     public function getAmountTTC()
     {
-        return $this->amountHT * (($this->taxPercentage / 100) + 1);
+        if ($this->amountHT == null)
+            return null;
+        return (float)number_format($this->amountHT * (($this->taxPercentage / 100) + 1), 2);
     }
 
     /**
@@ -347,7 +350,9 @@ class Facture implements \JsonSerializable
      */
     public function getAmountHT()
     {
-        return $this->amountHT;
+        if($this->amountHT == null)
+            return null;
+        return (float)number_format($this->amountHT, 2);
     }
 
     /**
@@ -363,7 +368,9 @@ class Facture implements \JsonSerializable
      */
     public function getTaxPercentage()
     {
-        return $this->taxPercentage;
+        if ($this->taxPercentage == null)
+            return null;
+        return (float)number_format($this->taxPercentage, 2);
     }
 
     /**
