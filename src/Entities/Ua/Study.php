@@ -492,9 +492,9 @@ class Study implements JsonSerializable
     }
 
     /**
-     * @return array
+     * @return Member[]
      */
-    public function getLeadersArray()
+    public function getLeadersArray() : array
     {
         $leadersArray = [];
         $leadersIDArray =[];

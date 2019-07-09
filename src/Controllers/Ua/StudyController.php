@@ -15,6 +15,7 @@ use Keros\Services\Ua\ProvenanceService;
 use Keros\Services\Ua\StatusService;
 use Keros\Services\Ua\StudyDocumentTypeService;
 use Keros\Services\Ua\StudyService;
+use Keros\Services\Auth\AccessRightsService;
 use Keros\Tools\ConfigLoader;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
@@ -66,6 +67,10 @@ class StudyController
      * @var
      */
     private $kerosConfig;
+    /**
+     * @var AccessRightsService
+     */
+    private $accessRightsService;
 
     /**
      * @var ConsultantService
@@ -83,14 +88,26 @@ class StudyController
         $this->memberService = $container->get(MemberService::class);
         $this->studyDocumentTypeService = $container->get(StudyDocumentTypeService::class);
         $this->consultantService = $container->get(ConsultantService::class);
+        $this->accessRightsService = $container->get(AccessRightsService::class);
         $this->kerosConfig = ConfigLoader::getConfig();
     }
 
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return mixed
+     * @throws KerosException
+     */
     public function getStudy(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Getting study by ID from " . $request->getServerParams()["REMOTE_ADDR"]);
 
         $study = $this->studyService->getOne($args["id"]);
+
+        if ($study->getConfidential()==true){
+            $this->accessRightsService->checkRightsConfidentialStudies($request, $study);
+        }
 
         return $response->withJson($study, 200);
     }
@@ -109,10 +126,12 @@ class StudyController
         $queryParams = $request->getQueryParams();
         $params = new RequestParameters($queryParams, Study::getSearchFields());
 
-        $study = $this->studyService->getPage($params);
+        $studies = $this->studyService->getPage($params);
+        $studies = $this->accessRightsService->filterGetAllStudies($request, $studies);
+
         $totalCount = $this->studyService->getCount($params);
 
-        $page = new Page($study, $params, $totalCount);
+        $page = new Page($studies, $params, $totalCount);
 
         return $response->withJson($page, 200);
     }
@@ -168,13 +187,33 @@ class StudyController
         return $response->withStatus(204);
     }
 
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return mixed
+     * @throws KerosException
+     */
     public function updateStudy(Request $request, Response $response, array $args)
     {
+        $study = $this->studyService->getOne($args['id']);
+        $this->accessRightsService->checkRightsUpdateStudy($request, $study);
+
         $this->logger->debug("Updating study from " . $request->getServerParams()["REMOTE_ADDR"]);
         $body = $request->getParsedBody();
 
         $this->entityManager->beginTransaction();
+        $beforeQualityManagers = $study->getQualityManagersArray();
+        sort($beforeQualityManagers);
+
         $study = $this->studyService->update($args['id'], $body);
+        $afterQualityManagers = $study->getQualityManagersArray();
+
+        sort($afterQualityManagers);
+        if($afterQualityManagers != $beforeQualityManagers){
+            $this->accessRightsService->checkRightsAttributeQualityManager($request);
+        }
+
         $this->entityManager->commit();
 
         return $response->withJson($study, 200);
@@ -239,7 +278,7 @@ class StudyController
      * @param Response $response
      * @param array $args
      * @return mixed
-     * @throws \Keros\Error\KerosException
+     * @throws KerosException
      */
     public function getAllDocuments(Request $request, Response $response, array $args)
     {

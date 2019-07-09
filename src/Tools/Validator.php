@@ -5,6 +5,7 @@ namespace Keros\Tools;
 use DateTime;
 use Keros\Entities\Ua\Contact;
 use Keros\Entities\Ua\Study;
+use Keros\Entities\Core\Member;
 use Keros\Error\KerosException;
 
 class Validator
@@ -299,4 +300,5 @@ class Validator
 
         return $study;
     }
+
 }
