@@ -163,6 +163,13 @@ class MemberController
             $this->logger->error($msg);
             throw new KerosException($msg, 500);
         }
+
+        $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
+        if (!($extension=='jpg' || $extension=='jpeg' || $extension=='png')) {
+            $msg = 'File format not supported, only jpg and png formats supported';
+            $this->logger->error($msg);
+            throw new KerosException($msg, 400);
+        }
         $body = $args;
         $body['file'] = $uploadedFile->getClientFileName();
         
@@ -183,7 +190,15 @@ class MemberController
 
         $filepath = $this->memberService->getPhoto($args["id"]);
 
-        $response   = $response->withHeader('Content-Type', 'application/image');
+        $extension = pathinfo($filepath, PATHINFO_EXTENSION);
+        $mimeType = 'image/*';
+        if ($extension=='jpg' || $extension=='jpeg') {
+            $mimeType = 'image/jpeg';
+        } else if ($extension=='png') {
+            $mimeType = 'image/png';
+        }
+
+        $response   = $response->withHeader('Content-Type', $mimeType);
         $response   = $response->withHeader('Content-Disposition', 'attachment; filename="' .basename("$filepath") . '"');
         $response   = $response->withHeader('Content-Length', filesize($filepath));
 

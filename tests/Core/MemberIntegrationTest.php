@@ -464,6 +464,28 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(204, $response->getStatusCode());
     }
 
+    public function testPostMemberPhotoShouldReturn400()
+    {
+        $temp_fileName = "tempFile.csv";
+        $handle = fopen($temp_fileName, 'w') or die('Cannot open file:  '.$temp_fileName);
+        $file = new UploadedFile($temp_fileName, $temp_fileName, 'text/csv', filesize($temp_fileName));
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => '/api/v1/core/member/1/photo',
+            'slim.files' => ['file' => $file],
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        fclose($handle);
+        if (file_exists($temp_fileName)) {
+            unlink($temp_fileName);
+        }
+        $this->assertSame(400, $response->getStatusCode());
+    }
+
     public function testGetMemberPhotoShouldReturn200()
     {
         $fileName = "tempPhoto.jpg";
