@@ -140,7 +140,7 @@ class DocumentGenerator
                 $return = $this->fillPdf($location, $documentTypeLocation, $replacementArray);
                 break;
             default :
-                //log
+                $this->logger->error(pathinfo($documentTypeLocation, PATHINFO_EXTENSION) . " extension is not supported");
                 $return = false;
         }
 
@@ -155,18 +155,17 @@ class DocumentGenerator
 
     /**
      * from https://www.sitepoint.com/filling-pdf-forms-pdftk-php/
-     * et https://github.com/mikehaertl/php-pdftk
+     * and https://github.com/mikehaertl/php-pdftk
      * @param string $location
      * @param string $documentTypeLocation
      * @param array $replacementArray
      * @return bool
      * @throws KerosException
      */
-    public function fillPdf(string $location, string $documentTypeLocation, array $replacementArray)
+    public function fillPdf(string $location, string $documentTypeLocation, array $replacementArray) : bool
     {
         // Fill form with data array
         $pdf = new Pdf($documentTypeLocation);
-        $this->logger->info(mb_detect_encoding($replacementArray["firstName"]));
         $pdf->fillForm(array_map(function($val){return utf8_decode($val);},$replacementArray))
             ->needAppearances();
 

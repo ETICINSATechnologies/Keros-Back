@@ -13,6 +13,7 @@ use Keros\Tools\Validator;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use \Exception;
+use \DateTime;
 
 class MemberInscriptionDocumentTypeService
 {
@@ -96,9 +97,12 @@ class MemberInscriptionDocumentTypeService
     /**
      * @param MemberInscription $memberInscription
      * @return array
+     * @throws Exception
      */
     public function getMemberInscriptionReplacementArray(MemberInscription $memberInscription): array
     {
+        $date = new DateTime();
+        $year = intval($date->format('Y'));
         switch ($memberInscription->getWantedPole()->getId()) {
             case (1) :
                 $wantedPole = "comm";
@@ -124,15 +128,13 @@ class MemberInscriptionDocumentTypeService
             default:
                 $wantedPole = "Off";
         }
-
         return array(
             'lastName' => $memberInscription->getLastName(),
             'firstName' => $memberInscription->getFirstName(),
             'email' => $memberInscription->getEmail(),
             'address.line1' => $memberInscription->getAddress()->getLine1() . ' ' . $memberInscription->getAddress()->getLine2(),
             'address.line2' => $memberInscription->getAddress()->getCity() . ' ' . $memberInscription->getAddress()->getPostalCode() . ' ' . $memberInscription->getAddress()->getCountry()->getLabel(),
-            //TODO Ajouter l'année
-            'annee_departement' => $memberInscription->getDepartment()->getLabel(),
+            'annee_departement' => (5 - ($memberInscription->getOutYear() - $year)) . $memberInscription->getDepartment()->getLabel(),
             'nationalite' => $memberInscription->getNationality()->getLabel(),
             'phoneNumber' => $memberInscription->getPhoneNumber(),
             'outYear' => $memberInscription->getOutYear(),
