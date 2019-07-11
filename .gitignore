@@ -13,4 +13,7 @@ logs
 
 # Ignore environment specific configuration
 .deploy/settings.docker.ini
-documents
+/documents/*
+
+#Do not ignore some template for testing
+!documents/templates/Fiche_inscription_membre_actif.pdf
