@@ -94,9 +94,10 @@ class   MemberInscriptionService
         $gender = $this->genderService->getOne($genderId);
         $birthday = Validator::requiredDate($fields['birthday']);
         $hasPaid = Validator::optionalBool(isset($fields['hasPaid']) ? $fields['hasPaid'] : false);
+        $droitImage = Validator::requiredBool($fields['droitImage']);
 
         $address = $this->addressService->create($fields["address"]);
-        $memberInscription = new MemberInscription($firstName, $lastName, $gender, $birthday, $department, $email, $phoneNumber, $outYear, $nationality, $address, $wantedPole, $hasPaid);
+        $memberInscription = new MemberInscription($firstName, $lastName, $gender, $birthday, $department, $email, $phoneNumber, $outYear, $nationality, $address, $wantedPole, $hasPaid, $droitImage);
 
         $this->memberInscriptionDataService->persist($memberInscription);
 
@@ -184,6 +185,7 @@ class   MemberInscriptionService
         $gender = $this->genderService->getOne($genderId);
         $birthday = Validator::requiredDate($fields['birthday']);
         $hasPaid = Validator::optionalBool(isset($fields['hasPaid']) ? $fields['hasPaid'] : false);
+        $droitImage = Validator::requiredBool($fields['droitImage']);
 
         $memberInscription->setFirstName($firstName);
         $memberInscription->setLastName($lastName);
@@ -196,6 +198,7 @@ class   MemberInscriptionService
         $memberInscription->setGender($gender);
         $memberInscription->setBirthday($birthday);
         $memberInscription->setHasPaid($hasPaid);
+        $memberInscription->setDroitImage($droitImage);
         $this->addressService->update($memberInscription->getAddress()->getId(), $fields["address"]);
 
         $this->memberInscriptionDataService->persist($memberInscription);
@@ -216,10 +219,6 @@ class   MemberInscriptionService
         $month = intval($date->format('m'));
         $year = intval($date->format('Y'));
 
-        $schoolYear = $memberInscription->getOutYear() - $year;
-        if($month > 1 && $month < 8) //between January and August
-            $schoolYear += 1;
-
         $memberArray = array(
             "username" => $memberInscription->getFirstName() . '.' . $memberInscription->getLastName(),
             "password" => $memberInscription->getFirstName() . '.' . $memberInscription->getBirthday()->format('d/m/Y'),
@@ -228,7 +227,6 @@ class   MemberInscriptionService
             "email" => $memberInscription->getEmail(),
             "telephone" => $memberInscription->getPhoneNumber(),
             "birthday" => $memberInscription->getBirthday()->format('Y-m-d'),
-            "schoolYear" => $schoolYear,
             "genderId" => $memberInscription->getGender()->getId(),
             "departmentId" => $memberInscription->getDepartment()->getId(),
             "company" => null,
@@ -242,7 +240,15 @@ class   MemberInscriptionService
                 "countryId" => $memberInscription->getAddress()->getCountry()->getId()
             ),
             "positions" => array(),
+            "droitImage" => $memberInscription->isDroitImage()
         );
+
+        if ($memberInscription->getOutYear()) {
+            $schoolYear = 5 - ($memberInscription->getOutYear() - $year);
+            if($month > 8 && $month <= 12) //between September and December
+                $schoolYear += 1;
+            $memberArray["schoolYear"] = $schoolYear;
+        }
 
         $this->memberService->create($memberArray);
         $this->delete($memberInscription->getId());

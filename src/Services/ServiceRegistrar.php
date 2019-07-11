@@ -12,12 +12,14 @@ use Keros\Services\Treso\FactureService;
 use Keros\Services\Treso\FactureTypeService;
 use Keros\Services\Ua\ProvenanceService;
 use Keros\Services\Auth\LoginService;
+use Keros\Services\Auth\AccessRightsService;
 use Keros\Services\Core\AddressService;
 use Keros\Services\Core\CountryService;
 use Keros\Services\Core\DepartmentService;
 use Keros\Services\Core\GenderService;
 use Keros\Services\Core\MemberPositionService;
 use Keros\Services\Core\MemberService;
+use Keros\Services\Core\ConsultantService;
 use Keros\Services\Core\PoleService;
 use Keros\Services\Core\PositionService;
 use Keros\Services\Core\TicketService;
@@ -38,6 +40,9 @@ class ServiceRegistrar
         // Auth
         $container[LoginService::class] = function ($container) {
             return new LoginService($container);
+        };
+        $container[AccessRightsService::class] = function ($container) {
+            return new AccessRightsService($container);
         };
 
         // Core
@@ -70,6 +75,9 @@ class ServiceRegistrar
         };
         $container[MemberPositionService::class] = function ($container) {
             return new MemberPositionService($container);
+        };
+        $container[ConsultantService::class] = function ($container) {
+            return new ConsultantService($container);
         };
 
         //UA

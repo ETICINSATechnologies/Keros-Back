@@ -39,9 +39,10 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->assertSame('0033123456789', $body->content[0]->phoneNumber);
         $this->assertSame(2021, $body->content[0]->outYear);
         $this->assertSame(42, $body->content[0]->nationality->id);
-        $this->assertSame(2, $body->content[0]->wantedPole->id);
+        $this->assertSame(8, $body->content[0]->wantedPole->id);
         $this->assertSame(1, $body->content[0]->address->id);
         $this->assertSame(false, $body->content[0]->hasPaid);
+        $this->assertSame(false, $body->content[0]->droitImage);
         $this->assertSame(2, $body->meta->totalItems);
         $this->assertSame(1, $body->meta->totalPages);
         $this->assertSame(0, $body->meta->page);
@@ -73,6 +74,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
                 'countryId' => 133,
             ),
             'hasPaid' => true,
+            'droitImage' => true,
         );
 
         $env = Environment::mock([
@@ -99,6 +101,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->assertSame('je sais pas quoi mettre', $body->address->line1);
         $this->assertSame('Lorem ipsum', $body->address->city);
         $this->assertSame(true, $body->hasPaid);
+        $this->assertSame(true, $body->droitImage);
     }
 
     /**
@@ -125,6 +128,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
                 'countryId' => 133,
             ),
             'hasPaid' => true,
+            'droitImage' => true,
         );
 
         $env = Environment::mock([
@@ -151,6 +155,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->assertSame('je sais pas quoi mettre', $body->address->line1);
         $this->assertSame('Lorem ipsum', $body->address->city);
         $this->assertSame(true, $body->hasPaid);
+        $this->assertSame(true, $body->droitImage);
     }
 
     /**
@@ -179,9 +184,10 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->assertSame('0033123456789', $body->phoneNumber);
         $this->assertSame(2021, $body->outYear);
         $this->assertSame(42, $body->nationality->id);
-        $this->assertSame(2, $body->wantedPole->id);
+        $this->assertSame(8, $body->wantedPole->id);
         $this->assertSame(1, $body->address->id);
         $this->assertSame(false, $body->hasPaid);
+        $this->assertSame(false, $body->droitImage);
     }
 
     /**
@@ -254,7 +260,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         //On vérifie maintenant que le membre a bien été ajouté.
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/api/v1/core/member/27', //On get le dernier membre (max de kerosData.sql + 1)
+            'REQUEST_URI' => '/api/v1/core/member/29', //On get le dernier membre (max de kerosData.sql + 1)
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
@@ -350,6 +356,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
                 'countryId' => 133,
             ),
             'hasPaid' => true,
+            'droitImage' => true,
         );
 
         $env = Environment::mock([
@@ -376,6 +383,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->assertSame('je sais pas quoi mettre', $body->address->line1);
         $this->assertSame('Lorem ipsum', $body->address->city);
         $this->assertSame(true, $body->hasPaid);
+        $this->assertSame(true, $body->droitImage);
     }
 
     /**
@@ -404,6 +412,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
                 'countryId' => 133,
             ),
             'hasPaid' => true,
+            'droitImage' => true,
         );
 
         $env = Environment::mock([

@@ -176,4 +176,5 @@ class MemberDataService
             throw new KerosException($msg, 500);
         }
     }
+
 }

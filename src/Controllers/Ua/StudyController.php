@@ -3,8 +3,10 @@
 namespace Keros\Controllers\Ua;
 
 use Doctrine\ORM\EntityManager;
+use Exception;
 use Keros\Entities\Core\Page;
 use Keros\Error\KerosException;
+use Keros\Services\Core\ConsultantService;
 use Keros\Services\Core\MemberService;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Ua\Study;
@@ -13,6 +15,7 @@ use Keros\Services\Ua\ProvenanceService;
 use Keros\Services\Ua\StatusService;
 use Keros\Services\Ua\StudyDocumentTypeService;
 use Keros\Services\Ua\StudyService;
+use Keros\Services\Auth\AccessRightsService;
 use Keros\Tools\ConfigLoader;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
@@ -64,6 +67,15 @@ class StudyController
      * @var
      */
     private $kerosConfig;
+    /**
+     * @var AccessRightsService
+     */
+    private $accessRightsService;
+
+    /**
+     * @var ConsultantService
+     */
+    private $consultantService;
 
     public function __construct(ContainerInterface $container)
     {
@@ -75,14 +87,27 @@ class StudyController
         $this->statusService = $container->get(StatusService::class);
         $this->memberService = $container->get(MemberService::class);
         $this->studyDocumentTypeService = $container->get(StudyDocumentTypeService::class);
+        $this->consultantService = $container->get(ConsultantService::class);
+        $this->accessRightsService = $container->get(AccessRightsService::class);
         $this->kerosConfig = ConfigLoader::getConfig();
     }
 
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return mixed
+     * @throws KerosException
+     */
     public function getStudy(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Getting study by ID from " . $request->getServerParams()["REMOTE_ADDR"]);
 
         $study = $this->studyService->getOne($args["id"]);
+
+        if ($study->getConfidential()==true){
+            $this->accessRightsService->checkRightsConfidentialStudies($request, $study);
+        }
 
         return $response->withJson($study, 200);
     }
@@ -90,7 +115,6 @@ class StudyController
     public function getAllStudies(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Get studies " . $request->getServerParams()["REMOTE_ADDR"]);
-
         $studies = $this->studyService->getAll();
 
         return $response->withJson($studies, 200);
@@ -102,10 +126,12 @@ class StudyController
         $queryParams = $request->getQueryParams();
         $params = new RequestParameters($queryParams, Study::getSearchFields());
 
-        $study = $this->studyService->getPage($params);
+        $studies = $this->studyService->getPage($params);
+        $studies = $this->accessRightsService->filterGetAllStudies($request, $studies);
+
         $totalCount = $this->studyService->getCount($params);
 
-        $page = new Page($study, $params, $totalCount);
+        $page = new Page($studies, $params, $totalCount);
 
         return $response->withJson($page, 200);
     }
@@ -113,16 +139,27 @@ class StudyController
     public function getCurrentUserStudies(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Searching for studies related to current user from " . $request->getServerParams()["REMOTE_ADDR"]);
-        $member = $this->memberService->getOne($request->getAttribute("userId"));
+
         $studies = [];
-        if (!empty($member->getStudiesAsConsultant())) {
-            $studies = array_unique(array_merge($studies, $member->getStudiesAsConsultant()), SORT_REGULAR);
-        }
-        if (!empty($member->getStudiesAsLeader())) {
-            $studies = array_unique(array_merge($studies, $member->getStudiesAsLeader()), SORT_REGULAR);
-        }
-        if (!empty($member->getStudiesAsQualityManager())) {
-            $studies = array_unique(array_merge($studies, $member->getStudiesAsQualityManager()), SORT_REGULAR);
+        $userId = $request->getAttribute("userId");
+
+        //if the current user is a member
+        try{
+            $member = $this->memberService->getOne($userId);
+            if (!empty($member->getStudiesAsLeader())) {
+                $studies = array_unique(array_merge($studies, $member->getStudiesAsLeader()), SORT_REGULAR);
+            }
+            if (!empty($member->getStudiesAsQualityManager())) {
+                $studies = array_unique(array_merge($studies, $member->getStudiesAsQualityManager()), SORT_REGULAR);
+            }
+        }catch(KerosException $e){
+            //if the current user is a consultant
+            $consultant = $this->consultantService->getOne($userId);
+            if ($consultant->getId() == $userId) {
+                if (!empty($consultant->getStudiesAsConsultant())) {
+                    $studies = array_unique(array_merge($studies, $consultant->getStudiesAsConsultant()), SORT_REGULAR);
+                }
+            }
         }
 
         return $response->withJson($studies, 200);
@@ -150,13 +187,33 @@ class StudyController
         return $response->withStatus(204);
     }
 
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return mixed
+     * @throws KerosException
+     */
     public function updateStudy(Request $request, Response $response, array $args)
     {
+        $study = $this->studyService->getOne($args['id']);
+        $this->accessRightsService->checkRightsUpdateStudy($request, $study);
+
         $this->logger->debug("Updating study from " . $request->getServerParams()["REMOTE_ADDR"]);
         $body = $request->getParsedBody();
 
         $this->entityManager->beginTransaction();
+        $beforeQualityManagers = $study->getQualityManagersArray();
+        sort($beforeQualityManagers);
+
         $study = $this->studyService->update($args['id'], $body);
+        $afterQualityManagers = $study->getQualityManagersArray();
+
+        sort($afterQualityManagers);
+        if($afterQualityManagers != $beforeQualityManagers){
+            $this->accessRightsService->checkRightsAttributeQualityManager($request);
+        }
+
         $this->entityManager->commit();
 
         return $response->withJson($study, 200);
@@ -221,13 +278,13 @@ class StudyController
      * @param Response $response
      * @param array $args
      * @return mixed
-     * @throws \Keros\Error\KerosException
+     * @throws KerosException
      */
     public function getAllDocuments(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Get all documents for study " . $args["id"] . " " . $request->getServerParams()["REMOTE_ADDR"]);
 
-        if (!$this->studyService->consultantAreValid($args["id"]))
+        if (!$this->studyService->consultantsAreValid($args["id"]))
             throw new KerosException("Invalid consultant in study", 400);
 
         $documentTypes = array();

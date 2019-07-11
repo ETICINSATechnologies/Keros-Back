@@ -161,7 +161,8 @@ class StudyDocumentTypeService
             $this->logger->error($msg);
             throw new KerosException($msg, 400);
         }
-        if (!$this->studyService->consultantAreValid($study->getId())) {
+
+        if (!$this->studyService->consultantsAreValid($study->getId())) {
             $msg = "Invalid consultant in study " . $study->getId();
             $this->logger->error($msg);
             throw new KerosException($msg, 400);
@@ -259,7 +260,7 @@ class StudyDocumentTypeService
         $president = null;
         $board = $this->memberService->getLatestBoard();
         foreach ($board as $member) {
-            foreach ($member->getPositionsArray() as $position) {
+            foreach ($member->getMemberPositionsArray() as $position) {
                 if ($position->getIsBoard()) {
                     if ($position->getPosition()->getId() == 23)
                         $tresorier = $position->getMember();

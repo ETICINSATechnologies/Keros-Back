@@ -6,6 +6,7 @@ use Keros\Controllers\Auth\LoginController;
 use Keros\Controllers\Sg\MemberInscriptionController;
 use Keros\Controllers\Sg\MemberInscriptionDocumentController;
 use Keros\Controllers\Treso\FactureDocumentController;
+use Keros\Controllers\Core\ConsultantController;
 use Keros\Controllers\Ua\StudyDocumentController;
 use Keros\Controllers\Core\TicketController;
 use Keros\Controllers\Core\CountryController;
@@ -14,7 +15,6 @@ use Keros\Controllers\Core\GenderController;
 use Keros\Controllers\Core\MemberController;
 use Keros\Controllers\Core\PoleController;
 use Keros\Controllers\Core\PositionController;
-use Keros\Controllers\Core\DocumentTypeController;
 use Keros\Controllers\Treso\FactureController;
 use Keros\Controllers\Treso\FactureTypeController;
 use Keros\Controllers\Ua\ContactController;
@@ -164,6 +164,16 @@ class KerosApp
                     $this->get("/board/latest", MemberController::class . ':getLatestBoard');
                 });
 
+                $this->group('/consultant', function () {
+                    $this->get("", ConsultantController::class . ':getPageConsultants');
+                    $this->get("/me", ConsultantController::class . ':getConnectedConsultant');
+                    $this->put("/me", ConsultantController::class . ':updateConnectedConsultant');
+                    $this->get('/{id:[0-9]+}', ConsultantController::class . ':getConsultant');
+                    $this->post("", ConsultantController::class . ':createConsultant');
+                    $this->put("/{id:[0-9]+}", ConsultantController::class . ':updateConsultant');
+                    $this->delete("/{id:[0-9]+}", ConsultantController::class . ':deleteConsultant');
+                });
+
                 $this->group('/ticket', function () {
                     $this->get("", TicketController::class . ':getPageTickets');
                     $this->get('/{id:[0-9]+}', TicketController::class . ':getTicket');
@@ -216,4 +226,7 @@ class KerosApp
     {
         return $this->app;
     }
+
+
+
 }

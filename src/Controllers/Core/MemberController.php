@@ -4,16 +4,17 @@ namespace Keros\Controllers\Core;
 
 use Doctrine\ORM\EntityManager;
 use Keros\Entities\core\Member;
-use Keros\Entities\Core\MemberPosition;
-use Keros\Entities\Core\Page;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Services\Core\MemberService;
 use Keros\Services\Core\MemberPositionService;
+use Keros\Services\Auth\AccessRightsService;
 use Keros\Tools\Authorization\JwtCodec;
+use Keros\Tools\Validator;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Keros\Error\KerosException;
 
 
 class MemberController
@@ -39,6 +40,15 @@ class MemberController
      * @var MemberPositionService
      */
     private $memberPositionService;
+    /**
+     * @var AccessRightsService
+     */
+    private $accessRightsService;
+
+    /**
+     * MemberController constructor.
+     * @param ContainerInterface $container
+     */
 
     public function __construct(ContainerInterface $container)
     {
@@ -46,6 +56,8 @@ class MemberController
         $this->entityManager = $container->get(EntityManager::class);
         $this->memberService = $container->get(MemberService::class);
         $this->memberPositionService = $container->get(MemberPositionService::class);
+        $this->accessRightsService = $container->get(AccessRightsService::class);
+
     }
 
     public function getMember(Request $request, Response $response, array $args)
@@ -91,10 +103,21 @@ class MemberController
         return $response->withJson($page, 200);
     }
 
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return mixed
+     * @throws KerosException
+     */
     public function createMember(Request $request, Response $response, array $args)
     {
+        //check access rights
+        $this->accessRightsService->checkRightsCreateMember($request);
+
         $this->logger->debug("Creating member from " . $request->getServerParams()["REMOTE_ADDR"]);
         $body = $request->getParsedBody();
+        $body = Validator::requiredArray($body);
 
         $this->entityManager->beginTransaction();
         $member = $this->memberService->create($body);
