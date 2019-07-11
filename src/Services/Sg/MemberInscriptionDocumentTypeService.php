@@ -142,8 +142,7 @@ class MemberInscriptionDocumentTypeService
             'RI' => "Yes",
             'RSE' => "Yes",
             'donnees' => "Yes",
-            //TODO utiliser le nouvel attribut -> PAS MERGE
-            'photo' => "Off",
+            'photo' => ($memberInscription->isDroitImage() ? "Yes" : "Off"),
         );
     }
 
