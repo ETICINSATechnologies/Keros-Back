@@ -12,6 +12,24 @@ use \Slim\Exception\NotFoundException;
 class MemberInscriptionIntegrationTest extends AppTestCase
 {
 
+    public function testGetGeneratedDocumentShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/sg/membre-inscription/2/document/1/generate',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $body = json_decode($response->getBody());
+
+        $this->assertSame(200, $response->getStatusCode());
+
+        $location = str_replace("http://localhost:8000/generated/", "documents/tmp/", $body->location);
+        $this->assertEquals(sha1_file("tests/Documents/memberInscription2.pdf"), sha1_file($location));
+
+    }
+
     /**
      * @throws MethodNotAllowedException
      * @throws NotFoundException
