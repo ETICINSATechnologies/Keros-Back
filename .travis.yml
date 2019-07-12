@@ -22,7 +22,7 @@ script:
 - mysql keros_test < src/Tools/Database/keros.sql
 - ./vendor/bin/phpunit -c tests/phpunit.xml
 before_deploy:
-- sudo apt-get install -y sshpass
+- sudo apt-get install -y sshpass pdftk
 - echo "vps35827.ovh.net,46.105.16.161 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBMe3IgrZgB/aH0F9Rjh+Riy5TLa+Sn/vShQNwC879dobP/nS9AxvMFmad0kjnOiqFjFwP8MpYPmVMfBUHMDVMmI="
   > ~/.ssh/known_hosts
 deploy:
