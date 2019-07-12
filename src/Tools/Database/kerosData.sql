@@ -217,6 +217,4 @@ TRUNCATE TABLE sg_member_inscription_document_type;
 INSERT INTO sg_member_inscription_document_type(id, location, `name`, isTemplatable) VALUES
     (1, 'Fiche_inscription_membre_actif.pdf', 'Fiche inscription membre', true);
 
-
-
 COMMIT;

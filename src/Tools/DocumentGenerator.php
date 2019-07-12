@@ -162,11 +162,13 @@ class DocumentGenerator
      * @return bool
      * @throws KerosException
      */
-    public function fillPdf(string $location, string $documentTypeLocation, array $replacementArray) : bool
+    public function fillPdf(string $location, string $documentTypeLocation, array $replacementArray): bool
     {
         // Fill form with data array
         $pdf = new Pdf($documentTypeLocation);
-        $pdf->fillForm(array_map(function($val){return utf8_decode($val);},$replacementArray))
+        $pdf->fillForm(array_map(function ($val) {
+            return utf8_decode($val);
+        }, $replacementArray))
             ->needAppearances();
 
         // Check for errors
