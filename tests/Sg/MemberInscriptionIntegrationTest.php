@@ -25,7 +25,9 @@ class MemberInscriptionIntegrationTest extends AppTestCase
 
         $this->assertSame(200, $response->getStatusCode());
 
-        $location = str_replace("http://localhost:8000/generated/", "documents/tmp/", $body->location);
+
+        $location = strstr($body->location, "/generated/");
+        $location = str_replace("/generated/", "documents/tmp/", $location);
         $this->assertEquals(sha1_file("tests/DocumentsTests/memberInscription2.pdf"), sha1_file($location));
 
     }
