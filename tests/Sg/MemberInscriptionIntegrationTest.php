@@ -29,7 +29,6 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $location = strstr($body->location, "/generated/");
         $location = str_replace("/generated/", "documents/tmp/", $location);
         $this->assertEquals(sha1_file("tests/DocumentsTests/memberInscription2.pdf"), sha1_file($location));
-
     }
 
     /**

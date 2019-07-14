@@ -126,7 +126,7 @@ class   MemberInscriptionService
 
         $memberInscription = $this->memberInscriptionDataService->getOne($id);
         if (!$memberInscription) {
-            throw new KerosException("The memberInscription could not be found", 404);
+            throw new KerosException("The memberInscription " . $id . " could not be found", 404);
         }
         return $memberInscription;
     }
@@ -214,7 +214,6 @@ class   MemberInscriptionService
     {
         $id = Validator::requiredId($id);
         $memberInscription = $this->getOne($id);
-        $this->logger->debug('coucou');
         $date = new DateTime();
         $month = intval($date->format('m'));
         $year = intval($date->format('Y'));
@@ -256,6 +255,7 @@ class   MemberInscriptionService
 
     /**
      * @param int $id
+     * @return MemberInscription
      * @throws KerosException
      */
     public function confirmPaymentMemberInscription(int $id): MemberInscription
