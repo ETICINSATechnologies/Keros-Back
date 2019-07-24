@@ -4,6 +4,7 @@
 namespace KerosTest\Sg;
 
 use KerosTest\AppTestCase;
+use mikehaertl\pdftk\Pdf;
 use Slim\Http\Environment;
 use Slim\Http\Request;
 use \Slim\Exception\MethodNotAllowedException;
@@ -28,7 +29,9 @@ class MemberInscriptionIntegrationTest extends AppTestCase
 
         $location = strstr($body->location, "/generated/");
         $location = str_replace("/generated/", "documents/tmp/", $location);
-        $this->assertEquals(sha1_file("tests/DocumentsTests/memberInscription2.pdf"), sha1_file($location));
+        $pdf1 = new Pdf("tests/DocumentsTests/memberInscription2.pdf");
+        $pdf2 = new Pdf($location);
+        $this->assertEquals($pdf1->getDataFields(), $pdf2->getDataFields());
     }
 
     /**
