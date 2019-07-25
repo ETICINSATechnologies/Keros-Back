@@ -17,6 +17,7 @@ env:
 install:
 - composer install
 script:
+- sudo apt-get install -y pdftk
 - cp .deploy/settings.travis.ini src/settings.ini
 - mysql -e 'CREATE DATABASE keros_test;'
 - mysql keros_test < src/Tools/Database/keros.sql
