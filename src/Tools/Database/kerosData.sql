@@ -17,7 +17,8 @@ INSERT INTO core_address (id, line1, line2, postalCode, city, countryId) VALUES
   (3, '11 ETIC street', 'bat. b', '91002', 'paris', 1), # member 3
   (4, '11 Backbeat street', 'bat. a', '91004', 'djibouti', 3), # firm 1
   (5, '17 Watcha ave', 'porte 5', '674A4', 'Leicester', 40), # firm 2
-  (6, '17 Beat', 'Meat', '674A4', 'Paris', 40); # member 4
+  (6, '17 Beat', 'Meat', '674A4', 'Paris', 40), # member 4
+  (7, '14 PaymentSlip 1', 'Quoi ?', '32456', 'Lyon', 22); #Payment Slip 1
 
 TRUNCATE TABLE core_ticket;
 INSERT INTO core_ticket (id, userId, title, message, type, status) VALUES
@@ -84,7 +85,6 @@ INSERT INTO `core_template` (`id`, `name`, `location`, `typeId`, `oneConsultant`
 
 TRUNCATE TABLE treso_payment_slip;
 INSERT INTO treso_payment_slip (id, missionRecapNumber, consultantName, consultantSocialSecurityNumber, addressId, email, studyId, clientName, projectLead, consultantId, isTotalJeh, isStudyPaid, amountDescription, createdDate, creatorId, validatedByUa, validatedByUaDate, uaValidatorId, validatedByPerf, validatedByPerfDate, perfValidatorId) VALUES
-  (1, '102383203', 'Shrek', '12320183', 1, 'shrek@fortfortlointain.fr', 1, 'L''âne', 'Le chat Potté', 1, false, false, 'Facture payée', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), 1, false, STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), 2, false, STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), 3)
-  ;
+  (1, '102383203', 'Shrek', '12320183', 7, 'shrek@fortfortlointain.fr', 1, 'L''âne', 'Le chat Potté', 1, false, false, 'Facture payée', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), 1, false, STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), 2, false, STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), 3);
 
 COMMIT;

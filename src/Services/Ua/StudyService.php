@@ -13,6 +13,7 @@ use Keros\Services\Core\GenderService;
 use Keros\Services\Core\MemberService;
 use Keros\Services\Core\PositionService;
 use Keros\Services\Core\UserService;
+use Keros\Services\Treso\PaymentSlipService;
 use Keros\Tools\Validator;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
@@ -64,9 +65,9 @@ class StudyService
      */
     private $studyDataService;
     /**
-     * @var PaymentSlipDataService
+     * @var PaymentSlipService
      */
-    private $paymentSlipDataService;
+    private $paymentSlipService;
 
     /**
      * @var Logger
@@ -87,7 +88,7 @@ class StudyService
         $this->statusService = $container->get(StatusService::class);
         $this->provenanceService = $container->get(ProvenanceService::class);
         $this->studyDataService = $container->get(StudyDataService::class);
-        $this->paymentSlipDataService = $container->get(PaymentSlipDataService::class);
+        $this->paymentSlipService = $container->get(PaymentSlipService::class);
     }
 
     /**
@@ -164,7 +165,10 @@ class StudyService
         $id = Validator::requiredId($id);
         $study = $this->getOne($id);
 
-        $this->paymentSlipDataService->deletePaymentSlipsRelatedToStudy($id);
+        foreach ($study->getPaymentSlips() as $paymentSlip) {
+            $this->logger->info("id paymentSlip " . $paymentSlip->getId());
+            $this->paymentSlipService->delete($paymentSlip->getId());
+        }
 
         $this->studyDataService->delete($study);
     }

@@ -189,6 +189,7 @@ class KerosApp
                     $this->post("", PaymentSlipController::class . ':createPaymentSlip');
                     $this->get("", PaymentSlipController::class . ':getPagePaymentSlip');
                     $this->get("/{id:[0-9]+}", PaymentSlipController::class . ':getPaymentSlip');
+                    $this->delete("/{id:[0-9]+}", PaymentSlipController::class . ':deletePaymentSlip');
                     $this->put("/{id:[0-9]+}/validate-ua", PaymentSlipController::class . ':validateUA');
                     $this->put("/{id:[0-9]+}/validate-perf", PaymentSlipController::class . ':validatePerf');
                     });

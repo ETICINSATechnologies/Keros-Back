@@ -4,6 +4,8 @@ namespace Keros\Entities\Ua;
 
 use JsonSerializable;
 use Keros\Entities\Core\Member;
+use Keros\Entities\Treso\PaymentSlip;
+use Monolog\Logger;
 
 /**
  * @Entity
@@ -112,6 +114,11 @@ class Study implements JsonSerializable
     protected $confidential;
 
     /**
+     * @OneToMany(targetEntity="Keros\Entities\Treso\PaymentSlip", mappedBy="study")
+     */
+    protected $paymentSlips;
+
+    /**
      * Study constructor.
      * @param $name
      * @param $description
@@ -123,9 +130,9 @@ class Study implements JsonSerializable
      * @param $qualityManagers
      * @param $consultants
      * @param $confidential
+     * @param $paymentSlips
      */
-
-    public function __construct($name, $description, $field, $status, $firm, $contacts, $leaders, $qualityManagers, $consultants, $confidential)
+    public function __construct($name, $description, $field, $status, $firm, $contacts, $leaders, $qualityManagers, $consultants, $confidential, $paymentSlips)
     {
         $this->name = $name;
         $this->description = $description;
@@ -137,6 +144,7 @@ class Study implements JsonSerializable
         $this->qualityManagers = $qualityManagers;
         $this->consultants = $consultants;
         $this->confidential = $confidential;
+        $this->paymentSlips = $paymentSlips;
     }
 
     public function jsonSerialize()
@@ -165,11 +173,13 @@ class Study implements JsonSerializable
         ];
     }
 
-    public static function getSearchFields(): array {
+    public static function getSearchFields(): array
+    {
         return ['number', 'name'];
     }
 
     // Getters and setters
+
     /**
      * @return mixed
      */
@@ -281,7 +291,7 @@ class Study implements JsonSerializable
     {
         if ($this->getSignDate() == null)
             return null;
-        
+
         return $this->getsignDate()->format('Y-m-d');
     }
 
@@ -430,7 +440,7 @@ class Study implements JsonSerializable
     /**
      * @return mixed
      */
-    public function getFirm() : Firm
+    public function getFirm(): Firm
     {
         return $this->firm;
     }
@@ -457,8 +467,7 @@ class Study implements JsonSerializable
     public function getContactsArray()
     {
         $contacts = [];
-        foreach ($this->getContacts() as $contact)
-        {
+        foreach ($this->getContacts() as $contact) {
             $contacts[] = $contact;
         }
 
@@ -487,8 +496,7 @@ class Study implements JsonSerializable
     public function getLeadersArray()
     {
         $leaders = [];
-        foreach ($this->getLeaders() as $leader)
-        {
+        foreach ($this->getLeaders() as $leader) {
             $leaders[] = $leader;
         }
 
@@ -517,8 +525,7 @@ class Study implements JsonSerializable
     public function getQualityManagersArray()
     {
         $qualityManagers = [];
-        foreach ($this->getQualityManagers() as $qualityManager)
-        {
+        foreach ($this->getQualityManagers() as $qualityManager) {
             $qualityManagers[] = $qualityManager;
         }
 
@@ -547,8 +554,7 @@ class Study implements JsonSerializable
     public function getConsultantsArray()
     {
         $consultants = [];
-        foreach ($this->getConsultants() as $consultant)
-        {
+        foreach ($this->getConsultants() as $consultant) {
             $consultants[] = $consultant;
         }
 
@@ -577,5 +583,24 @@ class Study implements JsonSerializable
     public function setConfidential($confidential)
     {
         $this->confidential = $confidential;
+    }
+
+    public function getPaymentSlips()
+    {
+        return $this->paymentSlips;
+    }
+
+    public function setPaymentSlips( $paymentSlips): void
+    {
+        $this->paymentSlips = $paymentSlips;
+    }
+
+    public function getPaymentSlipsArray()
+    {
+        $paymentsSlips = [];
+        foreach ($this->getPaymentSlips() as $paymentsSlip) {
+            $paymentsSlips[] = $paymentsSlip;
+        }
+        return $paymentsSlips;
     }
 }

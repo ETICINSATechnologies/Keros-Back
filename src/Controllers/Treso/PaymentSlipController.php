@@ -79,6 +79,15 @@ class PaymentSlipController
         $this->kerosConfig = ConfigLoader::getConfig();
     }
 
+    public function deletePaymentSlip(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Deleting study from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->entityManager->beginTransaction();
+        $this->paymentSlipService->delete($args['id']);
+        $this->entityManager->commit();
+        return $response->withStatus(204);
+    }
+
     public function getPaymentSlip(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Getting paymentSlip by ID from " . $request->getServerParams()["REMOTE_ADDR"]);

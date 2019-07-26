@@ -42,7 +42,7 @@ class PaymentSlipIntegrationTest extends AppTestCase
         $this->assertEquals("102383203", $body->missionRecapNumber);
         $this->assertEquals("Shrek", $body->consultantName);
         $this->assertEquals("12320183", $body->consultantSocialSecurityNumber);
-        $this->assertEquals(1, $body->address->id);
+        $this->assertEquals(7, $body->address->id);
         $this->assertEquals("shrek@fortfortlointain.fr", $body->email);
         $this->assertEquals(1, $body->study->id);
         $this->assertEquals("L'âne", $body->clientName);
@@ -72,5 +72,48 @@ class PaymentSlipIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
 
         $this->assertSame(404, $response->getStatusCode());
+    }
+
+    public function testDeleteStudyShouldReturn204 ()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'DELETE',
+            'REQUEST_URI' => '/api/v1/treso/payment-slip/2',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(204, $response->getStatusCode());
+    }
+
+    public function testDeleteStudyShouldReturn404 ()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'DELETE',
+            'REQUEST_URI' => '/api/v1/treso/payment-slip/200000',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(404, $response->getStatusCode());
+    }
+
+    public function testPostStudyOnlyRequiredFieldsShouldReturn201(){
+
+        $post_body = array(
+        );
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => '/api/v1/treso/payment-slip',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withParsedBody($post_body);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(201, $response->getStatusCode());
+        $body = json_decode($response->getBody());
+        $this->assertSame(3, $body->id);
     }
 }

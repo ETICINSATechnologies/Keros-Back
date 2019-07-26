@@ -39,7 +39,7 @@ class PaymentSlip implements \JsonSerializable
     protected $email;
 
     /**
-     * @ManyToOne(targetEntity="Keros\Entities\Ua\Study")
+     * @ManyToOne(targetEntity="Keros\Entities\Ua\Study", inversedBy = "paymentSlips")
      * @JoinColumn(name="studyId", referencedColumnName="id")
      **/
     protected $study;

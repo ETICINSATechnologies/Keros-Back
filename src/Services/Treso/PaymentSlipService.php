@@ -94,6 +94,19 @@ class PaymentSlipService
     }
 
     /**
+     * @param int $id
+     * @throws KerosException
+     */
+    public function delete(int $id): void
+    {
+        $id = Validator::requiredId($id);
+
+        $paymentSlip = $this->getOne($id);
+
+        $this->paymentSlipDataService->delete($paymentSlip);
+    }
+
+    /**
      * @param array $fields
      * @return PaymentSlip
      * @throws \Exception
@@ -135,7 +148,7 @@ class PaymentSlipService
 
         $paymentSlip = $this->paymentSlipDataService->getOne($id);
         if (!$paymentSlip) {
-            throw new KerosException("The paymentSlip could not be found", 404);
+            throw new KerosException("The paymentSlip $id could not be found", 404);
         }
         return $paymentSlip;
     }
