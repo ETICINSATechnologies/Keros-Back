@@ -267,7 +267,7 @@ INSERT INTO sg_member_inscription_document_type(id, location, `name`, isTemplata
     (1, 'Fiche_inscription_membre_actif.pdf', 'Fiche inscription membre', true);
 
 TRUNCATE TABLE treso_payment_slip;
-INSERT INTO treso_payment_slip (id, missionRecapNumber, consultantName, consultantSocialSecurityNumber, addressId, email, studyId, clientName, projectLead, consultantId, isTotalJeh, isStudyPaid, amountDescription, createdDate, creatorId, validatedByUa, validatedByUaDate, uaValidatorId, validatedByPerf, validatedByPerfDate, perfValidatorId) VALUES
-  (1, '102383203', 'Shrek', '12320183', 7, 'shrek@fortfortlointain.fr', 1, 'L''âne', 'Le chat Potté', 1, false, false, 'Facture payée', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), 1, false, null, null, false, null, null);
+INSERT INTO treso_payment_slip (id, missionRecapNumber, consultantName, consultantSocialSecurityNumber, addressId, email, studyId, clientName, projectLead, isTotalJeh, isStudyPaid, amountDescription, createdDate, creatorId, validatedByUa, validatedByUaDate, uaValidatorId, validatedByPerf, validatedByPerfDate, perfValidatorId) VALUES
+  (1, '102383203', 'Shrek', '12320183', 7, 'shrek@fortfortlointain.fr', 1, 'L''âne', 'Le chat Potté', false, false, 'Facture payée', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), 1, false, null, null, false, null, null);
 
 COMMIT;

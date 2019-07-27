@@ -203,6 +203,10 @@ class MemberService
         return $member;
     }
 
+    /**
+     * @param int $id
+     * @throws KerosException
+     */
     public function delete(int $id)
     {
         $id = Validator::requiredId($id);

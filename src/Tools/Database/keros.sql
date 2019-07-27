@@ -586,7 +586,6 @@ CREATE TABLE treso_payment_slip (
     studyId int(11) NOT NULL,
     clientName varchar(255),
     projectLead varchar(255),
-    consultantId int(11),
     isTotalJeh boolean,
     isStudyPaid boolean,
     amountDescription varchar(2048),
@@ -601,7 +600,6 @@ CREATE TABLE treso_payment_slip (
     PRIMARY KEY (id),
     CONSTRAINT fk_payment_slip_address FOREIGN KEY (addressId) REFERENCES  core_address(id),
     CONSTRAINT fk_payment_slip_study FOREIGN KEY (studyId) REFERENCES  ua_study(id),
-    CONSTRAINT fk_payment_slip_consultant FOREIGN KEY (consultantId) REFERENCES  core_member(id),
     CONSTRAINT fk_payment_slip_creator FOREIGN KEY (creatorId) REFERENCES  core_member(id),
     CONSTRAINT fk_payment_slip_ua_validator FOREIGN KEY (uaValidatorId) REFERENCES  core_member(id),
 CONSTRAINT fk_payment_slip_perf_validator FOREIGN KEY (perfValidatorId) REFERENCES  core_member(id)

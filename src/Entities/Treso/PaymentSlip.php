@@ -52,12 +52,6 @@ class PaymentSlip implements JsonSerializable
     /** @Column(type="string", length=255) */
     protected $projectLead;
 
-    /**
-     * @ManyToOne(targetEntity="Keros\Entities\Core\Member")
-     * @JoinColumn(name="consultantId", referencedColumnName="id")
-     **/
-    protected $consultant;
-
     /** @Column(type="boolean") */
     protected $isTotalJeh;
 
@@ -110,7 +104,6 @@ class PaymentSlip implements JsonSerializable
      * @param $study
      * @param $clientName
      * @param $projectLead
-     * @param $consultant
      * @param $isTotalJeh
      * @param $isStudyPaid
      * @param $amountDescription
@@ -123,7 +116,7 @@ class PaymentSlip implements JsonSerializable
      * @param $validatedByPerfDate
      * @param $validatedByPerfMember
      */
-    public function __construct($missionRecapNumber, $consultantName, $consultantSocialSecurityNumber, $address, $email, $study, $clientName, $projectLead, $consultant, $isTotalJeh, $isStudyPaid, $amountDescription, $createdDate, $createdBy, $validatedByUa, $validatedByUaDate, $validatedByUaMember, $validatedByPerf, $validatedByPerfDate, $validatedByPerfMember)
+    public function __construct($missionRecapNumber, $consultantName, $consultantSocialSecurityNumber, $address, $email, $study, $clientName, $projectLead, $isTotalJeh, $isStudyPaid, $amountDescription, $createdDate, $createdBy, $validatedByUa, $validatedByUaDate, $validatedByUaMember, $validatedByPerf, $validatedByPerfDate, $validatedByPerfMember)
     {
         $this->missionRecapNumber = $missionRecapNumber;
         $this->consultantName = $consultantName;
@@ -133,7 +126,6 @@ class PaymentSlip implements JsonSerializable
         $this->study = $study;
         $this->clientName = $clientName;
         $this->projectLead = $projectLead;
-        $this->consultant = $consultant;
         $this->isTotalJeh = $isTotalJeh;
         $this->isStudyPaid = $isStudyPaid;
         $this->amountDescription = $amountDescription;
@@ -149,15 +141,6 @@ class PaymentSlip implements JsonSerializable
 
     public function jsonSerialize()
     {
-        if($this->getConsultant() == null){
-            $jsonConsultant = null;
-        }else{
-            $jsonConsultant = array(
-                'consultantId' => $this->getConsultant()->getId(),
-                'firstName' => $this->getConsultant()->getFirstName(),
-                'lastName' => $this->getConsultant()->getLastName()
-            );
-        }
         return [
             'id' => $this->getId(),
             'missionRecapNumber' => $this->getMissionRecapNumber(),
@@ -168,17 +151,16 @@ class PaymentSlip implements JsonSerializable
             'study' => $this->getStudy(),
             'clientName' => $this->getClientName(),
             'projectLead' => $this->getProjectLead(),
-            'consultant' => $jsonConsultant,
             'isTotalJeh' => $this->getisTotalJeh(),
             'isStudyPaid' => $this->getisStudyPaid(),
             'amountDescription' => $this->getAmountDescription(),
-            'createdDate' => $this->getCreatedDateFomatted(),
+            'createdDate' => $this->getCreatedDateFormatted(),
             'createdBy' => $this->getCreatedBy(),
             'validatedByUa' => $this->getValidatedByUa(),
-            'validatedByUaDate' => $this->getValidatedByUaDateFomatted(),
+            'validatedByUaDate' => $this->getValidatedByUaDateFormatted(),
             'validatedByUaMember' => $this->getValidatedByUaMember(),
             'validatedByPerf' => $this->getValidatedByPerf(),
-            'validatedByPerfDate' => $this->getValidatedByPerfDateFomatted(),
+            'validatedByPerfDate' => $this->getValidatedByPerfDateFormatted(),
             'validatedByPerfMember' => $this->getValidatedByPerfMember(),
         ];
     }
@@ -324,22 +306,6 @@ class PaymentSlip implements JsonSerializable
     }
 
     /**
-     * @return Member
-     */
-    public function getConsultant()
-    {
-        return $this->consultant;
-    }
-
-    /**
-     * @param Member $consultant
-     */
-    public function setConsultant($consultant): void
-    {
-        $this->consultant = $consultant;
-    }
-
-    /**
      * @return boolean
      */
     public function getisTotalJeh()
@@ -398,7 +364,7 @@ class PaymentSlip implements JsonSerializable
     /**
      * @return string|null
      */
-    public function getCreatedDateFomatted(){
+    public function getCreatedDateFormatted(){
         if($this->getCreatedDate() == null)
             return null;
         return $this->getCreatedDate()->format('Y-m-d');
@@ -456,7 +422,7 @@ class PaymentSlip implements JsonSerializable
     /**
      * @return string|null
      */
-    public function getValidatedByUaDateFomatted(){
+    public function getValidatedByUaDateFormatted(){
         if($this->getValidatedByUaDate() == null)
             return null;
         return $this->getValidatedByUaDate()->format('Y-m-d');
@@ -513,7 +479,7 @@ class PaymentSlip implements JsonSerializable
     /**
      * @return string|null
      */
-    public function getValidatedByPerfDateFomatted(){
+    public function getValidatedByPerfDateFormatted(){
         if($this->getValidatedByPerfDate() == null)
             return null;
         return $this->getValidatedByPerfDate()->format('Y-m-d');

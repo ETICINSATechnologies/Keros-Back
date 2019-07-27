@@ -82,11 +82,6 @@ class PaymentSlipService
         $email = Validator::optionalEmail(isset($fields["email"]) ? $fields["email"] : null);
         $studyId = Validator::requiredId($fields["studyId"]);
         $study = $this->studyService->getOne($studyId);
-        $consultantId = Validator::optionalId(isset($fields["consultantId"]) ? $fields["consultantId"]  : null);
-        if($consultantId !=  null)
-            $consultant = $this->memberService->getOne($consultantId);
-        else
-            $consultant = null;
         $clientName = Validator::optionalString(isset($fields["clientName"]) ? $fields["clientName"] : null);
         $projectLead = Validator::optionalString(isset($fields["projectLead"]) ? $fields["projectLead"] : null);
         $isTotalJeh = Validator::optionalBool(isset($fields["isTotalJeh"]) ? $fields["isTotalJeh"] : null);
@@ -96,7 +91,7 @@ class PaymentSlipService
         $creator = $this->memberService->getOne($createdBy);
         $date = new DateTime();
 
-        $paymentSlip = new PaymentSlip($missionRecapNumber, $consultantName, $consultantSocialSecurityNumber, $address, $email, $study, $clientName, $projectLead, $consultant, $isTotalJeh, $isStudyPaid, $amountDescription, $date, $creator, false, null, null, false, null, null);
+        $paymentSlip = new PaymentSlip($missionRecapNumber, $consultantName, $consultantSocialSecurityNumber, $address, $email, $study, $clientName, $projectLead, $isTotalJeh, $isStudyPaid, $amountDescription, $date, $creator, false, null, null, false, null, null);
 
         $this->paymentSlipDataService->persist($paymentSlip);
 
@@ -219,7 +214,6 @@ class PaymentSlipService
     {
         $id = Validator::requiredId($id);
         $paymentSlip = $this->getOne($id);
-        $consultant = $paymentSlip->getConsultant();
 
         $missionRecapNumber = Validator::optionalString(isset($fields["missionRecapNumber"]) ? $fields["missionRecapNumber"] : $paymentSlip->getMissionRecapNumber());
         $consultantName = Validator::optionalString(isset($fields["consultantName"]) ? $fields["consultantName"] : $paymentSlip->getConsultantName());
@@ -227,9 +221,6 @@ class PaymentSlipService
         $email = Validator::optionalEmail(isset($fields["email"]) ? $fields["email"] : $paymentSlip->getEmail());
         $studyId = Validator::requiredId($fields["studyId"]);
         $study = $this->studyService->getOne($studyId);
-        $consultantId = Validator::optionalId(isset($fields["consultantId"]) ? $fields["consultantId"]  : ($consultant != null) ? $consultant->getId() : null);
-        if($consultantId !=  null)
-            $consultant = $this->memberService->getOne($consultantId);
         $clientName = Validator::optionalString(isset($fields["clientName"]) ? $fields["clientName"] : $paymentSlip->getClientName());
         $projectLead = Validator::optionalString(isset($fields["projectLead"]) ? $fields["projectLead"] : $paymentSlip->getProjectLead());
         $isTotalJeh = Validator::optionalBool(isset($fields["isTotalJeh"]) ? $fields["isTotalJeh"] : $paymentSlip->getisTotalJeh());
@@ -243,7 +234,6 @@ class PaymentSlipService
             $this->addressService->update($paymentSlip->getAddress()->getId(), $fields["address"]);
         $paymentSlip->setEmail($email);
         $paymentSlip->setStudy($study);
-        $paymentSlip->setConsultant($consultant);
         $paymentSlip->setClientName($clientName);
         $paymentSlip->setProjectLead($projectLead);
         $paymentSlip->setIsTotalJeh($isTotalJeh);

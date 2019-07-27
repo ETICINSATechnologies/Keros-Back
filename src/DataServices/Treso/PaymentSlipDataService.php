@@ -144,13 +144,6 @@ class PaymentSlipDataService
         $paymentSlips = $this->getAll();
 
         foreach ($paymentSlips as $paymentSlip) {
-            $consultant = $paymentSlip->getConsultant();
-            if ($consultant != null) {
-                $consultantId = $consultant->getId();
-                if ($consultantId == $idMember)
-                    $this->delete($paymentSlip);
-            }
-
             $creator = $paymentSlip->getCreatedBy();
             if ($creator != null) {
                 $creatorId = $creator->getId();

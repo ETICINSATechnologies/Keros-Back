@@ -151,7 +151,6 @@ class PaymentSlipController
     public function validateUA(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Validating paymentSlip by UA from " . $request->getServerParams()["REMOTE_ADDR"]);
-        $body = $request->getParsedBody();
 
         $this->entityManager->beginTransaction();
         $this->paymentSlipService->validateUA($args["id"], $request->getAttribute("userId"));
