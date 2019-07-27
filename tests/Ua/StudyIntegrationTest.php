@@ -36,14 +36,13 @@ class StudyIntegrationTest extends AppTestCase
         $this->assertEquals("Site Web", $body->provenance->label);
         $this->assertEquals("2018-11-10", $body->signDate);
         $this->assertEquals("2", $body->firm->id);
-
         $this->assertEquals("4", $body->leaders[0]->id);
         $this->assertEquals("3", $body->leaders[1]->id);
-
         $this->assertEquals("4", $body->qualityManagers[0]->id);
         $this->assertEquals("3", $body->qualityManagers[1]->id);
-
         $this->assertEquals("2", $body->consultants[0]->id);
+        $this->assertNotNull($body->documents);
+        $this->assertEquals(3, sizeof($body->documents));
 
     }
 
@@ -75,6 +74,7 @@ class StudyIntegrationTest extends AppTestCase
             $this->assertEquals("Site Web", $body->provenance->label);
             $this->assertEquals("2018-11-10", $body->signDate);
             $this->assertEquals("1", $body->firm->id);
+            $this->assertNotNull($body->documents);
         }
     }
 
@@ -105,41 +105,8 @@ class StudyIntegrationTest extends AppTestCase
             $this->assertEquals("Site Web", $body->provenance->label);
             $this->assertEquals("2018-11-10", $body->signDate);
             $this->assertEquals("2", $body->firm->id);
+            $this->assertNotNull($body->documents);
         }
-    }
-
-    public function testGetAllDocumentsShouldReturn200()
-    {
-        $env = Environment::mock([
-            'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/api/v1/ua/study/2/documents',
-        ]);
-        $req = Request::createFromEnvironment($env);
-        $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(false);
-        $kerosConfig = ConfigLoader::getConfig();
-
-        $this->assertSame(200, $response->getStatusCode());
-        $body = json_decode($response->getBody());
-        $this->assertEquals(3, count($body->documents));
-        $this->assertSame(1, $body->documents[0]->id);
-        $this->assertSame('document.docx', $body->documents[0]->name);
-        $this->assertSame($kerosConfig['BACK_URL'] . '/api/v1/ua/study/2/template/1', $body->documents[0]->generateLocation);
-        $this->assertSame($kerosConfig['BACK_URL'] . '/api/v1/ua/study/2/document/1', $body->documents[0]->uploadLocation);
-        $this->assertSame($kerosConfig['BACK_URL'] . '/api/v1/ua/study/2/document/1', $body->documents[0]->downloadLocation);
-    }
-
-    public function testGetAllDocumentsShouldReturn400()
-    {
-        $env = Environment::mock([
-            'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/api/v1/ua/study/3/documents',
-        ]);
-        $req = Request::createFromEnvironment($env);
-        $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(false);
-
-        $this->assertSame(400, $response->getStatusCode());
     }
 
     public function testDeleteStudyShouldReturn204()
@@ -200,6 +167,7 @@ class StudyIntegrationTest extends AppTestCase
         $body = json_decode($response->getBody());
 
         $this->assertEquals(3, count($body->content));
+        $this->assertNotNull($body->content[1]->documents);
     }
 
     public function testGetAllStudyWithRightShouldReturn200()
@@ -242,6 +210,7 @@ class StudyIntegrationTest extends AppTestCase
         $this->assertEquals("Site Web", $body->provenance->label);
         $this->assertEquals("2018-11-10", $body->signDate);
         $this->assertEquals("1", $body->firm->id);
+        $this->assertNotNull($body->documents);
     }
 
     public function testGetStudyShouldReturn404()
@@ -288,6 +257,7 @@ class StudyIntegrationTest extends AppTestCase
         $body = json_decode($response->getBody());
 
         $this->assertEquals(3, $body->id);
+        $this->assertNotNull($body->documents);
     }
 
     public function testGetConfidentialStudyWithLeaderMemberShouldReturn200()
@@ -306,6 +276,7 @@ class StudyIntegrationTest extends AppTestCase
         $body = json_decode($response->getBody());
 
         $this->assertEquals(3, $body->id);
+        $this->assertNotNull($body->documents);
     }
 
     public function testPostStudyOnlyWithOnlyRequiredParamsShouldReturn201()
@@ -328,6 +299,7 @@ class StudyIntegrationTest extends AppTestCase
         $body = json_decode($response->getBody());
         $this->assertSame(4, $body->id);
         $this->assertSame("Facebook", $body->name);
+        $this->assertNotNull($body->documents);
     }
 
     public function testPostStudyShouldReturn201()
@@ -360,6 +332,7 @@ class StudyIntegrationTest extends AppTestCase
         $this->assertSame(4, $body->id);
         $this->assertSame("Twitter", $body->name);
         $this->assertSame("C est le feu", $body->description);
+        $this->assertNotNull($body->documents);
 
     }
 
@@ -391,7 +364,7 @@ class StudyIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
         $this->assertSame(200, $response->getStatusCode());
         $body = json_decode($response->getBody());
-
+        $this->assertNotNull($body->documents);
         $this->assertSame("Twitter", $body->name);
     }
 
@@ -512,7 +485,7 @@ class StudyIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
         $this->assertSame(200, $response->getStatusCode());
         $body = json_decode($response->getBody());
-
+        $this->assertNotNull($body->documents);
         $this->assertSame("Twitter", $body->name);
     }
 }

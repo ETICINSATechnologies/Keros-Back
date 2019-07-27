@@ -309,6 +309,7 @@ CREATE TABLE ua_study_qualityManager (
 DROP TABLE IF EXISTS ua_study_document_type;
 CREATE TABLE ua_study_document_type (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  name varchar(255) NOT NULL,
   `location` varchar(255) NOT NULL UNIQUE,
   isTemplatable boolean NOT NULL,
   oneConsultant boolean NOT NULL DEFAULT 0,
