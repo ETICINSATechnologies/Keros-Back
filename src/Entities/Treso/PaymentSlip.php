@@ -5,12 +5,14 @@ namespace Keros\Entities\Treso;
 use Keros\Entities\Core\Address;
 use Keros\Entities\Core\Member;
 use Keros\Entities\Ua\Study;
+use JsonSerializable;
+use DateTime;
 
 /**
  * @Entity
  * @Table(name="treso_payment_slip")
  */
-class PaymentSlip implements \JsonSerializable
+class PaymentSlip implements JsonSerializable
 {
 
     /**
@@ -147,7 +149,17 @@ class PaymentSlip implements \JsonSerializable
 
     public function jsonSerialize()
     {
+        if($this->getConsultant() == null){
+            $jsonConsultant = null;
+        }else{
+            $jsonConsultant = array(
+                'consultantId' => $this->getConsultant()->getId(),
+                'firstName' => $this->getConsultant()->getFirstName(),
+                'lastName' => $this->getConsultant()->getLastName()
+            );
+        }
         return [
+            'id' => $this->getId(),
             'missionRecapNumber' => $this->getMissionRecapNumber(),
             'consultantName' => $this->getConsultantName(),
             'consultantSocialSecurityNumber' => $this->getConsultantSocialSecurityNumber(),
@@ -156,21 +168,17 @@ class PaymentSlip implements \JsonSerializable
             'study' => $this->getStudy(),
             'clientName' => $this->getClientName(),
             'projectLead' => $this->getProjectLead(),
-            'consultant' => array(
-                'consultantId' => $this->getConsultant()->getId(),
-                'firstName' => $this->getConsultant()->getFirstName(),
-                'lastName' => $this->getConsultant()->getLastName(),
-            ),
+            'consultant' => $jsonConsultant,
             'isTotalJeh' => $this->getisTotalJeh(),
             'isStudyPaid' => $this->getisStudyPaid(),
             'amountDescription' => $this->getAmountDescription(),
-            'createdDate' => $this->getCreatedDate(),
+            'createdDate' => $this->getCreatedDateFomatted(),
             'createdBy' => $this->getCreatedBy(),
             'validatedByUa' => $this->getValidatedByUa(),
-            'validatedByUaDate' => $this->getValidatedByUaDate(),
+            'validatedByUaDate' => $this->getValidatedByUaDateFomatted(),
             'validatedByUaMember' => $this->getValidatedByUaMember(),
             'validatedByPerf' => $this->getValidatedByPerf(),
-            'validatedByPerfDate' => $this->getValidatedByPerfDate(),
+            'validatedByPerfDate' => $this->getValidatedByPerfDateFomatted(),
             'validatedByPerfMember' => $this->getValidatedByPerfMember(),
         ];
     }
@@ -380,7 +388,7 @@ class PaymentSlip implements \JsonSerializable
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreatedDate()
     {
@@ -388,7 +396,17 @@ class PaymentSlip implements \JsonSerializable
     }
 
     /**
-     * @param \DateTime $createdDate
+     * @return string|null
+     */
+    public function getCreatedDateFomatted(){
+        if($this->getCreatedDate() == null)
+            return null;
+        return $this->getCreatedDate()->format('Y-m-d');
+    }
+
+
+    /**
+     * @param DateTime $createdDate
      */
     public function setCreatedDate($createdDate): void
     {
@@ -428,7 +446,7 @@ class PaymentSlip implements \JsonSerializable
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getValidatedByUaDate()
     {
@@ -436,7 +454,16 @@ class PaymentSlip implements \JsonSerializable
     }
 
     /**
-     * @param \DateTime $validatedByUaDate
+     * @return string|null
+     */
+    public function getValidatedByUaDateFomatted(){
+        if($this->getValidatedByUaDate() == null)
+            return null;
+        return $this->getValidatedByUaDate()->format('Y-m-d');
+    }
+
+    /**
+     * @param DateTime $validatedByUaDate
      */
     public function setValidatedByUaDate($validatedByUaDate): void
     {
@@ -476,7 +503,7 @@ class PaymentSlip implements \JsonSerializable
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getValidatedByPerfDate()
     {
@@ -484,7 +511,16 @@ class PaymentSlip implements \JsonSerializable
     }
 
     /**
-     * @param \DateTime $validatedByPerfDate
+     * @return string|null
+     */
+    public function getValidatedByPerfDateFomatted(){
+        if($this->getValidatedByPerfDate() == null)
+            return null;
+        return $this->getValidatedByPerfDate()->format('Y-m-d');
+    }
+
+    /**
+     * @param DateTime $validatedByPerfDate
      */
     public function setValidatedByPerfDate($validatedByPerfDate): void
     {

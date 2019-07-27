@@ -86,7 +86,8 @@ class MemberDataService
                 ->innerJoin(User::class, 'u', 'WITH', 'm.user = u')
                 ->leftJoin(MemberPosition::class, 'mp', 'WITH', 'u.id = mp.member')
                 ->leftJoin(Position::class, 'p', 'WITH', 'mp.position = p')
-                ->leftJoin(Pole::class, 'pole', 'WITH', 'p.pole = pole.id');
+                ->leftJoin(Pole::class, 'pole', 'WITH', 'p.pole = pole.id')
+                ->groupBy('u.id');
 
             $whereStatement = '';
             $whereParameters = array();
@@ -104,27 +105,32 @@ class MemberDataService
                                 $searchStatement .= ' AND ';
 
                             $searchStatement .=
-                                '(m.firstName = :search' . $i
-                                . ' OR m.lastName = :search' . $i
-                                . ' OR m.company = :search' . $i . ')';
-                            $whereParameters[':search' . $i] = $field;
+                                '(m.firstName like :search' . $i
+                                . ' OR m.lastName like :search' . $i
+                                . ' OR m.company like :search' . $i . ')';
+                            $whereParameters[':search' . $i] = '%' . $field . '%';
                         }
 
                         $whereStatement .= $searchStatement;
                     } else {
                         if ($key == 'positionId') {
                             $whereStatement .= 'p.id = :positionId';
+                            $whereParameters[':' . $key] = $value;
                         } elseif ($key == 'poleId') {
                             $whereStatement .= 'pole.id = :poleId';
+                            $whereParameters[':' . $key] = $value;
                         } elseif ($key == 'year') {
                             $whereStatement .= 'mp.year = :year';
-                        } elseif ($key == 'firstName' || $key == 'lastName' || $key == 'company') {
-                            // where with the form: 'm.key = :key'
+                            $whereParameters[':' . $key] = $value;
+                        } elseif ($key == 'company') {
                             $whereStatement .= 'm.' . $key . ' = :' . $key;
+                            $whereParameters[':' . $key] = $value;
+                        } elseif ($key == 'firstName' || $key == 'lastName') {
+                            // where with the form: 'm.key = :key'
+                            $whereStatement .= 'm.' . $key . ' LIKE :' . $key;
+                            $whereParameters[':' . $key] = '%' . $value . '%';
                         }
-                        $whereParameters[':' . $key] = $value;
                     }
-
                 }
             }
 
@@ -170,4 +176,5 @@ class MemberDataService
             throw new KerosException($msg, 500);
         }
     }
+
 }

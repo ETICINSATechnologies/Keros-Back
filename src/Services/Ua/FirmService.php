@@ -3,7 +3,6 @@
 
 namespace Keros\Services\Ua;
 
-use Keros\DataServices\Ua\ContactDataService;
 use Keros\DataServices\Ua\FirmDataService;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Ua\Firm;
@@ -39,10 +38,12 @@ class FirmService
         $name = Validator::requiredString($fields["name"]);
         $siret = Validator::optionalString(isset($fields["siret"]) ? $fields["siret"] : null);
         $typeId = Validator::requiredId($fields["typeId"]);
+        $mainContact = Validator::optionalInt(isset($fields["mainContact"]) ? $fields["mainContact"] : null);
 
         $address = $this->addressService->create($fields["address"]);
         $firmType = $this->firmTypeService->getOne($typeId);
-        $firm = new Firm($name, $siret, $address, $firmType);
+
+        $firm = new Firm($name, $siret, $address, $firmType, $mainContact);
 
         $this->firmDataService->persist($firm);
 
@@ -87,12 +88,14 @@ class FirmService
         $name = Validator::requiredString($fields["name"]);
         $siret = Validator::optionalString(isset($fields["siret"]) ? $fields["siret"] : null);
         $typeId = Validator::requiredId($fields["typeId"]);
+        $mainContact = Validator::optionalInt(isset($fields["mainContact"]) ? $fields["mainContact"] : null);
 
         $firmType = $this->firmTypeService->getOne($typeId);
 
         $firm->setName($name);
         $firm->setSiret($siret);
         $firm->setType($firmType);
+        $firm->setMainContact($mainContact);
 
         $this->addressService->update($firm->getAddress()->getId(), $fields["address"]);
 

@@ -25,7 +25,10 @@ class MemberTest extends TestCase
                 new Gender("Femme"),
                 new Department(1, "IF", "Informatique"),
                 "Google",
-                "http://photoprofile.jpg"));
+                "http://photoprofile.jpg",
+                true
+            )
+        );
     }
 
     public function testMemberShouldCreateWithParams()
@@ -39,7 +42,9 @@ class MemberTest extends TestCase
             new Gender("Femme"),
             new Department(1, "IF", "Informatique"),
             "Google",
-            "http://photoprofile.jpg");
+            "http://photoprofile.jpg",
+            true
+        );
 
 
         $this->assertInstanceOf(Member::class, $member);
@@ -51,5 +56,6 @@ class MemberTest extends TestCase
         $this->assertEquals("2018", $member->getSchoolYear());
         $this->assertEquals("Google", $member->getCompany());
         $this->assertEquals("http://photoprofile.jpg", $member->getProfilePicture());
+        $this->assertEquals(true, $member->isDroitImage());
     }
 }

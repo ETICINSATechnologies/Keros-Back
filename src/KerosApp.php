@@ -3,7 +3,11 @@
 namespace Keros;
 
 use Keros\Controllers\Auth\LoginController;
-use Keros\Controllers\Core\AddressController;
+use Keros\Controllers\Sg\MemberInscriptionController;
+use Keros\Controllers\Sg\MemberInscriptionDocumentController;
+use Keros\Controllers\Treso\FactureDocumentController;
+use Keros\Controllers\Core\ConsultantController;
+use Keros\Controllers\Ua\StudyDocumentController;
 use Keros\Controllers\Core\TicketController;
 use Keros\Controllers\Core\CountryController;
 use Keros\Controllers\Core\DepartmentController;
@@ -11,23 +15,19 @@ use Keros\Controllers\Core\GenderController;
 use Keros\Controllers\Core\MemberController;
 use Keros\Controllers\Core\PoleController;
 use Keros\Controllers\Core\PositionController;
-use Keros\Controllers\Core\TemplateController;
-use Keros\Controllers\Core\TemplateTypeController;
 use Keros\Controllers\Treso\PaymentSlipController;
+use Keros\Controllers\Treso\FactureController;
+use Keros\Controllers\Treso\FactureTypeController;
 use Keros\Controllers\Ua\ContactController;
 use Keros\Controllers\Ua\FirmController;
 use Keros\Controllers\Ua\FirmTypeController;
 use Keros\Controllers\Ua\StudyController;
 use Keros\DataServices\DataServiceRegistrar;
-use Keros\Entities\Ua\Study;
-use Keros\Error\ErrorHandler;
-use Keros\Error\PhpErrorHandler;
 use Keros\Services\ServiceRegistrar;
 use Keros\Tools\Authorization\AuthenticationMiddleware;
 use Keros\Tools\ConfigLoader;
 use Keros\Tools\JwtCodec;
 use Keros\Tools\KerosEntityManager;
-use Keros\Tools\LoggerBuilder;
 use Keros\Tools\PasswordEncryption;
 use Keros\Tools\ToolRegistrar;
 use Psr\Container\ContainerInterface;
@@ -107,8 +107,10 @@ class KerosApp
                     $this->post("", StudyController::class . ':createStudy');
                     $this->put("/{id:[0-9]+}", StudyController::class . ':updateStudy');
                     $this->delete("/{id:[0-9]+}", StudyController::class . ':deleteStudy');
-                    $this->get("/{idStudy:[0-9]+}/template/{idTemplate:[0-9]+}", TemplateController::class . ':generateDocument');
+                    $this->get("/{idStudy:[0-9]+}/document/{idDocumentType:[0-9]+}/generate", StudyDocumentController::class . ':generateStudyDocument');
                     $this->get("/{id:[0-9]+}/documents", StudyController::class . ':getAllDocuments');
+                    $this->post("/{studyId:[0-9]+}/document/{documentId:[0-9]+}", StudyDocumentController::class . ':createDocument');
+                    $this->get("/{studyId:[0-9]+}/document/{documentId:[0-9]+}", StudyDocumentController::class . ':getDocument');
                 });
                 $this->group('/provenance', function () {
                     $this->get("", StudyController::class . ':getAllProvenances');
@@ -163,6 +165,16 @@ class KerosApp
                     $this->get("/board/latest", MemberController::class . ':getLatestBoard');
                 });
 
+                $this->group('/consultant', function () {
+                    $this->get("", ConsultantController::class . ':getPageConsultants');
+                    $this->get("/me", ConsultantController::class . ':getConnectedConsultant');
+                    $this->put("/me", ConsultantController::class . ':updateConnectedConsultant');
+                    $this->get('/{id:[0-9]+}', ConsultantController::class . ':getConsultant');
+                    $this->post("", ConsultantController::class . ':createConsultant');
+                    $this->put("/{id:[0-9]+}", ConsultantController::class . ':updateConsultant');
+                    $this->delete("/{id:[0-9]+}", ConsultantController::class . ':deleteConsultant');
+                });
+
                 $this->group('/ticket', function () {
                     $this->get("", TicketController::class . ':getPageTickets');
                     $this->get('/{id:[0-9]+}', TicketController::class . ':getTicket');
@@ -170,29 +182,45 @@ class KerosApp
                     $this->delete("/{id:[0-9]+}", TicketController::class . ':deleteTicket');
                 });
 
-                $this->group('/template-type', function () {
-                    $this->get("", TemplateTypeController::class . ':getAllTemplateType');
-                    $this->get('/{id:[0-9]+}', TemplateTypeController::class . ':getTemplateType');
-                });
-
-                $this->group('/template', function () {
-                    $this->post("", TemplateController::class . ':createTemplate');
-                    $this->get("", TemplateController::class . ':getAllTemplate');
-                    $this->get('/{id:[0-9]+}', TemplateController::class . ':getTemplate');
-                    $this->delete("/{id:[0-9]+}", TemplateController::class . ':deleteTemplate');
-                });
-
             })->add($this->getContainer()->get(AuthenticationMiddleware::class));
 
             $this->group('/treso', function () {
+
+                $this->group('/facture-types', function () {
+                    $this->get("", FactureTypeController::class . ':getAllFactureTypes');
+                });
+                $this->group('/facture', function () {
+                    $this->get("", FactureController::class . ':getPageFacture');
+                    $this->post("", FactureController::class . ':createFacture');
+                    $this->get('/{id:[0-9]+}', FactureController::class . ':getFacture');
+                    $this->delete("/{id:[0-9]+}", FactureController::class . ':deleteFacture');
+                    $this->put("/{id:[0-9]+}", FactureController::class . ':updateFacture');
+                    $this->post("/{id:[0-9]+}/validate-ua", FactureController::class . ':validateFactureByUa');
+                    $this->post("/{id:[0-9]+}/validate-perf", FactureController::class . ':validateFactureByPerf');
+                    $this->get("/{idFacture:[0-9]+}/generateDocument", FactureDocumentController::class . ':generateFactureDocument');
+                });
                 $this->group('/payment-slip', function () {
                     $this->post("", PaymentSlipController::class . ':createPaymentSlip');
                     $this->get("", PaymentSlipController::class . ':getPagePaymentSlip');
                     $this->get("/{id:[0-9]+}", PaymentSlipController::class . ':getPaymentSlip');
                     $this->delete("/{id:[0-9]+}", PaymentSlipController::class . ':deletePaymentSlip');
-                    $this->put("/{id:[0-9]+}/validate-ua", PaymentSlipController::class . ':validateUA');
-                    $this->put("/{id:[0-9]+}/validate-perf", PaymentSlipController::class . ':validatePerf');
-                    });
+                    $this->put("/{id:[0-9]+}", PaymentSlipController::class . ':updatePaymentSlip');
+                    $this->post("/{id:[0-9]+}/validate-ua", PaymentSlipController::class . ':validateUA');
+                    $this->post("/{id:[0-9]+}/validate-perf", PaymentSlipController::class . ':validatePerf');
+                });
+            })->add($this->getContainer()->get(AuthenticationMiddleware::class));
+
+            $this->group('/sg', function () {
+                $this->group('/membre-inscription', function () {
+                    $this->get("", MemberInscriptionController::class . ':getPageMemberInscriptions');
+                    $this->post("", MemberInscriptionController::class . ':createMemberInscription');
+                    $this->get('/{id:[0-9]+}', MemberInscriptionController::class . ':getMemberInscription');
+                    $this->delete("/{id:[0-9]+}", MemberInscriptionController::class . ':deleteMemberInscription');
+                    $this->put("/{id:[0-9]+}", MemberInscriptionController::class . ':updateMemberInscription');
+                    $this->post("/{id:[0-9]+}/validate", MemberInscriptionController::class . ':validateMemberInscription');
+                    $this->post("/{id:[0-9]+}/confirm-payment", MemberInscriptionController::class . ':confirmPaymentMemberInscription');
+                    $this->get("/{id:[0-9]+}/document/{documentTypeId:[0-9]+}/generate", MemberInscriptionDocumentController::class . ':generateDocument');
+                });
             })->add($this->getContainer()->get(AuthenticationMiddleware::class));
         });
 
@@ -207,4 +235,7 @@ class KerosApp
     {
         return $this->app;
     }
+
+
+
 }

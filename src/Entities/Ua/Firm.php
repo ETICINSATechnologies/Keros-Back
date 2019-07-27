@@ -38,12 +38,16 @@ class Firm implements JsonSerializable, Searchable
      **/
     protected $type;
 
-    public function __construct($name, $siret, $address, $type)
+    /** @Column(type="integer")*/
+    protected $mainContact;
+
+    public function __construct($name, $siret, $address, $type, $mainContact)
     {
         $this->name = $name;
         $this->siret = $siret;
         $this->address = $address;
         $this->type = $type;
+        $this->mainContact = $mainContact;
     }
 
     public function jsonSerialize()
@@ -53,7 +57,7 @@ class Firm implements JsonSerializable, Searchable
             'siret' => $this->getSiret(),
             'name' => $this->getName(),
             'address' => $this->getAddress(),
-            'type' => $this->getType(),
+            'type' => $this->getType()
         ];
     }
 
@@ -136,4 +140,21 @@ class Firm implements JsonSerializable, Searchable
     {
         $this->type = $type;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getMainContact()
+    {
+        return $this->mainContact;
+    }
+
+    /**
+     * @param mixed $mainContact
+     */
+    public function setMainContact($mainContact): void
+    {
+        $this->mainContact = $mainContact;
+    }
+
 }

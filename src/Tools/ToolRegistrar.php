@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Keros\Tools;
 
 use Doctrine\ORM\EntityManager;
@@ -10,6 +9,7 @@ use Keros\Tools\Authorization\JwtCodec;
 use Keros\Tools\Database\EntityManagerBuilder;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
+
 
 class ToolRegistrar
 {
@@ -35,6 +35,12 @@ class ToolRegistrar
         };
         $container[GenderBuilder::class] = function (){
             return new GenderBuilder();
+        };
+        $container[DirectoryManager::class] = function ($container){
+            return new DirectoryManager($container);
+        };
+        $container[DocumentGenerator::class] = function ($container){
+            return new DocumentGenerator($container);
         };
     }
 }

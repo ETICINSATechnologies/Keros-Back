@@ -109,11 +109,37 @@ CREATE TABLE `core_member` (
   `departmentId` int(11)     DEFAULT NULL,
   `company` varchar(255)     DEFAULT NULL,
   `profilePicture` varchar(255)     DEFAULT NULL,
+  `droitImage` boolean DEFAULT TRUE,
   PRIMARY KEY (`id`),
-  CONSTRAINT `core_user_userId_fk` FOREIGN KEY (`id`) REFERENCES `core_user` (`id`),
-  CONSTRAINT `core_user_genderId_fk` FOREIGN KEY (`genderId`) REFERENCES `core_gender` (`id`),
-  CONSTRAINT `core_user_addressId_fk` FOREIGN KEY (`addressId`) REFERENCES `core_address` (`id`),
-  CONSTRAINT `core_user_departmentId_fk` FOREIGN KEY (`departmentId`) REFERENCES `core_department` (`id`)
+  CONSTRAINT `core_member_userId_fk` FOREIGN KEY (`id`) REFERENCES `core_user` (`id`),
+  CONSTRAINT `core_member_genderId_fk` FOREIGN KEY (`genderId`) REFERENCES `core_gender` (`id`),
+  CONSTRAINT `core_member_addressId_fk` FOREIGN KEY (`addressId`) REFERENCES `core_address` (`id`),
+  CONSTRAINT `core_member_departmentId_fk` FOREIGN KEY (`departmentId`) REFERENCES `core_department` (`id`)
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+
+-- L'ID de core_consultant est le même que celui de core_user qui lui est attaché
+DROP TABLE IF EXISTS core_consultant;
+CREATE TABLE `core_consultant` (
+  `id`           int(11)      NOT NULL,
+  `genderId`     int(1)       NOT NULL,
+  `firstName`    varchar(100) NOT NULL,
+  `lastName`     varchar(100) NOT NULL,
+  `birthday`     date        DEFAULT NULL,
+  `telephone`    varchar(20) DEFAULT NULL,
+  `email`        varchar(255) NOT NULL UNIQUE,
+  `addressId`    int(11)      NOT NULL UNIQUE,
+  `schoolYear`   int(11)     DEFAULT NULL,
+  `departmentId` int(11)     DEFAULT NULL,
+  `company` varchar(255)     DEFAULT NULL,
+  `profilePicture` varchar(255)     DEFAULT NULL,
+  `droitImage` boolean DEFAULT TRUE,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `core_consultant_userId_fk` FOREIGN KEY (`id`) REFERENCES `core_user` (`id`),
+  CONSTRAINT `core_consultant_genderId_fk` FOREIGN KEY (`genderId`) REFERENCES `core_gender` (`id`),
+  CONSTRAINT `core_consultant_addressId_fk` FOREIGN KEY (`addressId`) REFERENCES `core_address` (`id`),
+  CONSTRAINT `core_consultant_departmentId_fk` FOREIGN KEY (`departmentId`) REFERENCES `core_department` (`id`)
 )
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
@@ -148,6 +174,7 @@ CREATE TABLE `ua_firm` (
   `name`      varchar(64) NOT NULL UNIQUE,
   `addressId` int(11)     NOT NULL UNIQUE,
   `typeId`    int(11)     NOT NULL,
+  `mainContact`  int(11),
   PRIMARY KEY (`id`),
   CONSTRAINT `ua_firm_address_addressId_fk` FOREIGN KEY (`addressId`) REFERENCES `core_address` (`id`),
   CONSTRAINT `ua_firm_type_typeId_fk` FOREIGN KEY (`typeId`) REFERENCES `ua_firm_type` (`id`)
@@ -208,9 +235,9 @@ CREATE TABLE `ua_study` (
   `id`           int(11) AUTO_INCREMENT,
   `name`         varchar(100) NOT NULL,
   `description`   varchar(255),
-  `fieldId`      int(11)      NOT NULL,
+  `fieldId`      int(11),
   `provenanceId` int(11),
-  `statusId`     int(11)      NOT NULL,
+  `statusId`     int(11),
   `signDate`     date,
   `endDate`      date,
   `managementFee` decimal(12,2),
@@ -219,8 +246,12 @@ CREATE TABLE `ua_study` (
   `ecoparticipationFee` decimal(12,2),
   `outsourcingFee` decimal(12,2),
   `archivedDate` date,
-  `firmId`      int(11)      NOT NULL,
+  `firmId`      int(11),
   `confidential` boolean,
+  `mainLeader` int(11),
+  `mainQualityManager` int(11),
+  `mainConsultant` int(11),
+
   PRIMARY KEY (`id`),
   CONSTRAINT `ua_study_fieldId_fk` FOREIGN KEY (`fieldId`) REFERENCES `ua_field` (`id`),
   CONSTRAINT `ua_study_provenanceId_fk` FOREIGN KEY (`provenanceId`) REFERENCES `ua_provenance` (`id`),
@@ -248,18 +279,18 @@ CREATE TABLE ua_study_leader (
   `studyId`     int(11) NOT NULL,
   PRIMARY KEY (`memberId`, `studyId`),
   CONSTRAINT `ua_study_leader_studyId_fk` FOREIGN KEY (`studyId`) REFERENCES `ua_study` (`id`),
-    CONSTRAINT `ua_study_leader_memberId_fk` FOREIGN KEY (`memberId`) REFERENCES `core_member` (`id`)
+  CONSTRAINT `ua_study_leader_memberId_fk` FOREIGN KEY (`memberId`) REFERENCES `core_member` (`id`)
 )
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
 DROP TABLE IF EXISTS ua_study_consultant;
 CREATE TABLE ua_study_consultant (
-  `memberId`   int(11) NOT NULL,
+  `consultantId`   int(11) NOT NULL,
   `studyId`     int(11) NOT NULL,
-  PRIMARY KEY (`memberId`, `studyId`),
+  PRIMARY KEY (`consultantId`, `studyId`),
   CONSTRAINT `ua_study_consultant_studyId_fk` FOREIGN KEY (`studyId`) REFERENCES `ua_study` (`id`),
-    CONSTRAINT `ua_study_consultant_memberId_fk` FOREIGN KEY (`memberId`) REFERENCES `core_member` (`id`)
+  CONSTRAINT `ua_study_consultant_consultantId_fk` FOREIGN KEY (`consultantId`) REFERENCES `core_consultant` (`id`)
 )
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
@@ -270,60 +301,134 @@ CREATE TABLE ua_study_qualityManager (
   `studyId`     int(11) NOT NULL,
   PRIMARY KEY (`memberId`, `studyId`),
   CONSTRAINT `ua_study_qualityManager_studyId_fk` FOREIGN KEY (`studyId`) REFERENCES `ua_study` (`id`),
-    CONSTRAINT `ua_study_qualityManager_memberId_fk` FOREIGN KEY (`memberId`) REFERENCES `core_member` (`id`)
+  CONSTRAINT `ua_study_qualityManager_memberId_fk` FOREIGN KEY (`memberId`) REFERENCES `core_member` (`id`)
 )
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
-DROP TABLE IF EXISTS core_template_type;
-CREATE TABLE core_template_type (
+DROP TABLE IF EXISTS ua_study_document_type;
+CREATE TABLE ua_study_document_type (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `label` varchar(64) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-DROP TABLE IF EXISTS core_template;
-CREATE TABLE `core_template` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL UNIQUE,
   `location` varchar(255) NOT NULL UNIQUE,
-  `typeId` int(11) NOT NULL,
-  `oneConsultant` boolean NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`),
-  KEY `fk_template_template_type` (`typeId`),
-  CONSTRAINT `fk_template_template_type` FOREIGN KEY (`typeId`) REFERENCES `core_template_type` (`id`)
+  isTemplatable boolean NOT NULL,
+  oneConsultant boolean NOT NULL DEFAULT 0,
+  PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS treso_payment_slip;
-CREATE TABLE treso_payment_slip (
+DROP TABLE IF EXISTS core_document;
+CREATE TABLE core_document (
   id int(11) NOT NULL AUTO_INCREMENT,
-  missionRecapNumber varchar(32) NOT NULL,
-  consultantName varchar(255) NOT NULL,
-  consultantSocialSecurityNumber varchar(255) NOT NULL,
+  uploadDate datetime NOT NULL,
+  `location` varchar(255) NOT NULL UNIQUE,
+  discr varchar(255) NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS ua_study_document;
+CREATE TABLE `ua_study_document` (
+  `id` int(11) NOT NULL,
+  `studyId` int(11) NOT NULL,
+  studyDocumentTypeId int(11) NOT NULL,
+  PRIMARY KEY (id),
+  CONSTRAINT fk_study_document_core_document FOREIGN KEY (id) REFERENCES core_document(id),
+  CONSTRAINT `fk_ua_study_document_ua_study` FOREIGN KEY (`studyId`) REFERENCES ua_study(`id`),
+  CONSTRAINT fk_study_document_study_document_type FOREIGN KEY (studyDocumentTypeId) REFERENCES ua_study_document_type(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS treso_facture_type;
+CREATE TABLE `treso_facture_type` (
+  `id`    int(1) AUTO_INCREMENT,
+  `label` VARCHAR(255) NOT NULL UNIQUE,
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+
+DROP TABLE IF EXISTS treso_facture;
+CREATE TABLE treso_facture (
+  id int(1) AUTO_INCREMENT,
+  numero varchar(32),
   addressId int(11),
-  email varchar(255) NOT NULL,
-  studyId int(11),
-  clientName varchar(255) NOT NULL,
-  projectLead varchar(255) NOT NULL,
-  consultantId int(11),
-  isTotalJeh boolean,
-  isStudyPaid boolean,
-  amountDescription varchar(2048) NOT NULL,
+  clientName varchar(255),
+  contactName varchar(255),
+  contactEmail varchar(255),
+  studyId int(11) NOT NULL,
+  typeId int(11) NOT NULL,
+  amountDescription varchar(2048),
+  subject varchar(255),
+  agreementSignDate date,
+  amountHT float,
+  taxPercentage float,
+  dueDate date,
+  additionalInformation varchar(2048),
   createdDate date,
-  creatorId int(11),
+  createdById int(11),
   validatedByUa boolean,
   validatedByUaDate date,
-  uaValidatorId int(11),
+  validatedByUaMemberId int(11),
   validatedByPerf boolean,
   validatedByPerfDate date,
-  perfValidatorId int(11),
+  validatedByPerfMemberId int(11),
   PRIMARY KEY (id),
-  CONSTRAINT fk_payment_slip_address FOREIGN KEY (addressId) REFERENCES  core_address(id),
-  CONSTRAINT fk_payment_slip_study FOREIGN KEY (studyId) REFERENCES  ua_study(id),
-  CONSTRAINT fk_payment_slip_consultant FOREIGN KEY (consultantId) REFERENCES  core_member(id),
-  CONSTRAINT fk_payment_slip_creator FOREIGN KEY (creatorId) REFERENCES  core_member(id),
-  CONSTRAINT fk_payment_slip_ua_validator FOREIGN KEY (uaValidatorId) REFERENCES  core_member(id),
-  CONSTRAINT fk_payment_slip_perf_validator FOREIGN KEY (perfValidatorId) REFERENCES  core_member(id)
+  CONSTRAINT fk_facture_address FOREIGN KEY (addressId) REFERENCES core_address(id),
+  CONSTRAINT fk_facture_study FOREIGN KEY (studyId) REFERENCES ua_study(id),
+  CONSTRAINT fk_facture_facture_type FOREIGN KEY (typeId) REFERENCES treso_facture_type(id),
+  CONSTRAINT fk_facture_createdBy_member FOREIGN KEY (createdById) REFERENCES core_member(id),
+  CONSTRAINT fk_facture_validatedByUa_member FOREIGN KEY (validatedByUaMemberId) REFERENCES core_member(id),
+  CONSTRAINT fk_facture_validatedByPerf_member FOREIGN KEY (validatedByPerfMemberId) REFERENCES core_member(id)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+
+DROP TABLE IF EXISTS treso_facture_document_type;
+CREATE TABLE treso_facture_document_type (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  location varchar(255) NOT NULL UNIQUE,
+  name varchar(255) NOT NULL,
+  isTemplatable boolean NOT NULL,
+  factureTypeId int(11) UNIQUE,
+  PRIMARY KEY (id),
+  CONSTRAINT fk_facture_document_type_facture_type FOREIGN KEY (factureTypeId) REFERENCES treso_facture_type(id)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+
+DROP TABLE IF EXISTS treso_facture_document;
+CREATE TABLE treso_facture_document (
+  id int(11) AUTO_INCREMENT,
+  factureId int(11) NOT NULL,
+  factureDocumentTypeId int(11) NOT NULL,
+  PRIMARY KEY (id),
+  CONSTRAINT fk_treso_document_core_document FOREIGN KEY (id) REFERENCES core_document(id),
+  CONSTRAINT `fk_treso_facture_document_treso_facture` FOREIGN KEY (factureId) REFERENCES treso_facture(`id`),
+  CONSTRAINT fk_treso_document_treso_document_type FOREIGN KEY (factureDocumentTypeId) REFERENCES treso_facture_document_type(id)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;
+
+DROP TABLE IF EXISTS sg_member_inscription;
+CREATE TABLE sg_member_inscription (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  firstName varchar(255) NOT NULL,
+  lastName varchar(255) NOT NULL,
+  birthday date NOT NULL,
+  genderId int(11) NOT NULL,
+  departmentId int(11) NOT NULL,
+  email varchar(255) NOT NULL,
+  phoneNumber varchar(255),
+  outYear int,
+  nationalityId int(11) NOT NULL,
+  wantedPoleId int(11) NOT NULL,
+  addressId int(11) NOT NULL,
+  hasPaid boolean DEFAULT FALSE,
+  droitImage boolean DEFAULT FALSE,
+  PRIMARY KEY (id),
+  CONSTRAINT fk_sg_member_inscription_department FOREIGN KEY (departmentId) REFERENCES core_department(id),
+  CONSTRAINT fk_sg_member_inscription_nationality FOREIGN KEY (nationalityId) REFERENCES core_country(id),
+  CONSTRAINT fk_sg_member_inscription_pole FOREIGN KEY (wantedPoleId) REFERENCES core_pole(id),
+  CONSTRAINT fk_sg_member_inscription_gender FOREIGN KEY (genderId) REFERENCES core_gender(id),
+  CONSTRAINT fk_sg_member_inscription_address FOREIGN KEY (addressId) REFERENCES core_address(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS sg_member_inscription_document_type;
+CREATE TABLE sg_member_inscription_document_type (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `location` varchar(255) NOT NULL UNIQUE,
+  `name` varchar(255) NOT NULL,
+  isTemplatable boolean NOT NULL,
+  PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -464,8 +569,42 @@ INSERT INTO `ua_field` (`id`, `label`) VALUES
   (12, 'Productique'),
   (13, 'Traduction');
 
-INSERT INTO `core_template_type` (`id`, `label`) VALUES
-  (1, 'Study'),
-  (2, 'Membre');
+INSERT INTO treso_facture_type (id, label) VALUES
+  (1, 'proforma'),
+  (2, 'acompte'),
+  (3, 'intermediaire'),
+  (4, 'solde');
+
+DROP TABLE IF EXISTS treso_payment_slip;
+CREATE TABLE treso_payment_slip (
+    id int(11) NOT NULL AUTO_INCREMENT,
+    missionRecapNumber varchar(32),
+    consultantName varchar(255),
+    consultantSocialSecurityNumber varchar(255),
+    addressId int(11),
+    email varchar(255),
+    studyId int(11) NOT NULL,
+    clientName varchar(255),
+    projectLead varchar(255),
+    consultantId int(11),
+    isTotalJeh boolean,
+    isStudyPaid boolean,
+    amountDescription varchar(2048),
+    createdDate date,
+    creatorId int(11),
+    validatedByUa boolean,
+    validatedByUaDate date,
+    uaValidatorId int(11),
+    validatedByPerf boolean,
+    validatedByPerfDate date,
+    perfValidatorId int(11),
+    PRIMARY KEY (id),
+    CONSTRAINT fk_payment_slip_address FOREIGN KEY (addressId) REFERENCES  core_address(id),
+    CONSTRAINT fk_payment_slip_study FOREIGN KEY (studyId) REFERENCES  ua_study(id),
+    CONSTRAINT fk_payment_slip_consultant FOREIGN KEY (consultantId) REFERENCES  core_member(id),
+    CONSTRAINT fk_payment_slip_creator FOREIGN KEY (creatorId) REFERENCES  core_member(id),
+    CONSTRAINT fk_payment_slip_ua_validator FOREIGN KEY (uaValidatorId) REFERENCES  core_member(id),
+CONSTRAINT fk_payment_slip_perf_validator FOREIGN KEY (perfValidatorId) REFERENCES  core_member(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 COMMIT;

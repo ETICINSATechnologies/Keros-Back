@@ -2,17 +2,24 @@
 
 namespace Keros\Services;
 
-use Keros\Services\Core\TemplateService;
-use Keros\Services\Core\TemplateTypeService;
 use Keros\Services\Treso\PaymentSlipService;
+use Keros\Services\Sg\MemberInscriptionDocumentTypeService;
+use Keros\Services\Sg\MemberInscriptionService;
+use Keros\Services\Treso\FactureDocumentService;
+use Keros\Services\Treso\FactureDocumentTypeService;
+use Keros\Services\Ua\StudyDocumentService;
+use Keros\Services\Treso\FactureService;
+use Keros\Services\Treso\FactureTypeService;
 use Keros\Services\Ua\ProvenanceService;
 use Keros\Services\Auth\LoginService;
+use Keros\Services\Auth\AccessRightsService;
 use Keros\Services\Core\AddressService;
 use Keros\Services\Core\CountryService;
 use Keros\Services\Core\DepartmentService;
 use Keros\Services\Core\GenderService;
 use Keros\Services\Core\MemberPositionService;
 use Keros\Services\Core\MemberService;
+use Keros\Services\Core\ConsultantService;
 use Keros\Services\Core\PoleService;
 use Keros\Services\Core\PositionService;
 use Keros\Services\Core\TicketService;
@@ -23,6 +30,7 @@ use Keros\Services\Ua\FirmService;
 use Keros\Services\Ua\FirmTypeService;
 use Keros\Services\Ua\StatusService;
 use Keros\Services\Ua\StudyService;
+use Keros\Services\Ua\StudyDocumentTypeService;
 use Psr\Container\ContainerInterface;
 
 class ServiceRegistrar
@@ -32,6 +40,9 @@ class ServiceRegistrar
         // Auth
         $container[LoginService::class] = function ($container) {
             return new LoginService($container);
+        };
+        $container[AccessRightsService::class] = function ($container) {
+            return new AccessRightsService($container);
         };
 
         // Core
@@ -65,11 +76,8 @@ class ServiceRegistrar
         $container[MemberPositionService::class] = function ($container) {
             return new MemberPositionService($container);
         };
-        $container[TemplateService::class] = function ($container) {
-            return new TemplateService($container);
-        };
-        $container[TemplateTypeService::class] = function ($container) {
-            return new TemplateTypeService($container);
+        $container[ConsultantService::class] = function ($container) {
+            return new ConsultantService($container);
         };
 
         //UA
@@ -94,11 +102,36 @@ class ServiceRegistrar
         $container[StudyService::class] = function ($container) {
             return new StudyService($container);
         };
+        $container[StudyDocumentTypeService::class] = function ($container) {
+        return new StudyDocumentTypeService($container);
+    };
+        $container[StudyDocumentService::class] = function ($container) {
+            return new StudyDocumentService($container);
+        };
 
         //Treso
+        $container[FactureService::class] = function ($container) {
+            return new FactureService($container);
+        };
+        $container[FactureTypeService::class] = function ($container) {
+            return new FactureTypeService($container);
+        };
+        $container[FactureDocumentTypeService::class] = function ($container) {
+            return new FactureDocumentTypeService($container);
+        };
+        $container[FactureDocumentService::class] = function ($container) {
+            return new FactureDocumentService($container);
+        };
         $container[PaymentSlipService::class] = function ($container) {
             return new PaymentSlipService($container);
         };
 
+        //Sg
+        $container[MemberInscriptionService::class] = function ($container) {
+            return new MemberInscriptionService($container);
+        };
+        $container[MemberInscriptionDocumentTypeService::class] = function ($container) {
+            return new MemberInscriptionDocumentTypeService($container);
+        };
     }
 }

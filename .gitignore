@@ -6,8 +6,14 @@ vendor
 *.iml
 
 # Ignore logs but keep directory
-logs/*
-!logs/.gitkeep
+logs
 
-#macOS
+# macOS
 .DS_Store
+
+# Ignore environment specific configuration
+.deploy/settings.docker.ini
+/documents/*
+
+#Do not ignore some template for testing
+!documents/templates/Fiche_inscription_membre_actif.pdf

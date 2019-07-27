@@ -5,23 +5,16 @@ namespace Keros\Services\Treso;
 
 use DateTime;
 use Keros\DataServices\Treso\PaymentSlipDataService;
-use Keros\Entities\Core\Address;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Treso\PaymentSlip;
 use Keros\Error\KerosException;
 use Keros\Services\Core\AddressService;
-use Keros\Services\Core\GenderService;
 use Keros\Services\Core\MemberService;
-use Keros\Services\Core\PositionService;
-use Keros\Services\Core\UserService;
-use Keros\Services\Ua\ContactService;
-use Keros\Services\Ua\FieldService;
-use Keros\Services\Ua\FirmService;
-use Keros\Services\Ua\ProvenanceService;
-use Keros\Services\Ua\StatusService;
+use Keros\Services\Ua\StudyService;
 use Keros\Tools\Validator;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
+use Exception;
 
 class PaymentSlipService
 {
@@ -30,67 +23,33 @@ class PaymentSlipService
      */
     private $addressService;
     /**
-     * @var GenderService
-     */
-    private $genderService;
-    /**
-     * @var UserService
-     */
-    private $userService;
-    /**
-     * @var FirmService
-     */
-    private $firmService;
-    /**
-     * @var PositionService
-     */
-    private $positionService;
-    /**
-     * @var ContactService
-     */
-    private $contactService;
-    /**
      * @var MemberService
      */
     private $memberService;
     /**
-     * @var FieldService
+     * @var StudyService
      */
-    private $fieldService;
-    /**
-     * @var StatusService
-     */
-    private $statusService;
-    /**
-     * @var ProvenanceService
-     */
-    private $provenanceService;
-
-
+    private $studyService;
     /**
      * @var PaymentSlipDataService
      */
     private $paymentSlipDataService;
-
     /**
      * @var Logger
      */
     private $logger;
 
+    /**
+     * PaymentSlipService constructor.
+     * @param ContainerInterface $container
+     */
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get(Logger::class);
         $this->addressService = $container->get(AddressService::class);
-        $this->genderService = $container->get(GenderService::class);
-        $this->firmService = $container->get(FirmService::class);
-        $this->positionService = $container->get(PositionService::class);
-        $this->userService = $container->get(UserService::class);
-        $this->contactService = $container->get(ContactService::class);
         $this->memberService = $container->get(MemberService::class);
-        $this->fieldService = $container->get(FieldService::class);
-        $this->statusService = $container->get(StatusService::class);
-        $this->provenanceService = $container->get(ProvenanceService::class);
         $this->paymentSlipDataService = $container->get(PaymentSlipDataService::class);
+        $this->studyService = $container->get(StudyService::class);
     }
 
     /**
@@ -109,39 +68,46 @@ class PaymentSlipService
     /**
      * @param array $fields
      * @return PaymentSlip
-     * @throws \Exception
+     * @throws Exception
      */
     public function create(array $fields): PaymentSlip
     {
-        $missionRecapNumber = Validator::optionalString($fields["missionRecapNumber"]);
-        $consultantName = Validator::optionalString($fields["consultantName"]);
-        $consultantSocialSecurityNumber = Validator::optionalString($fields["consultantSocialSecurityNumber"]);
-        $line1 = Validator::requiredString($fields["line1"]);
-        $line2 = Validator::optionalString($fields["line2"]);
-        $city = Validator::requiredString($fields["city"]);
-        $postalCode = Validator::requiredString($fields["postalCode"]);
-        $countryId = Validator::requiredId($fields["countryId"]);
-        $address = new Address($line1, $line2, $postalCode, $city, $countryId);
-        $email = Validator::optionalString($fields["email"]);
+        $missionRecapNumber = Validator::optionalString(isset($fields["missionRecapNumber"]) ? $fields["missionRecapNumber"] : null);
+        $consultantName = Validator::optionalString(isset($fields["consultantName"]) ? $fields["consultantName"] : null);
+        $consultantSocialSecurityNumber = Validator::optionalString(isset($fields["consultantSocialSecurityNumber"]) ? $fields["consultantSocialSecurityNumber"] : null);
+        if (isset($fields["address"]))
+            $address = $this->addressService->create($fields["address"]);
+        else
+            $address = null;
+        $email = Validator::optionalEmail(isset($fields["email"]) ? $fields["email"] : null);
         $studyId = Validator::requiredId($fields["studyId"]);
-        $consultantId = Validator::requiredId($fields["consultantId"]);
-        $consultant = $this->memberService->getOne($consultantId);
-        $clientName = Validator::optionalString($fields["clientName"]);
-        $projectLead = Validator::optionalString($fields["projectLead"]);
-        $isTotalJeh = Validator::optionalBool($fields["isTotalJeh"]);
-        $isStudyPaid = Validator::optionalBool($fields["isStudyPaid"]);
-        $amountDescription = Validator::optionalString($fields["amountDescription"]);
+        $study = $this->studyService->getOne($studyId);
+        $consultantId = Validator::optionalId(isset($fields["consultantId"]) ? $fields["consultantId"]  : null);
+        if($consultantId !=  null)
+            $consultant = $this->memberService->getOne($consultantId);
+        else
+            $consultant = null;
+        $clientName = Validator::optionalString(isset($fields["clientName"]) ? $fields["clientName"] : null);
+        $projectLead = Validator::optionalString(isset($fields["projectLead"]) ? $fields["projectLead"] : null);
+        $isTotalJeh = Validator::optionalBool(isset($fields["isTotalJeh"]) ? $fields["isTotalJeh"] : null);
+        $isStudyPaid = Validator::optionalBool(isset($fields["isStudyPaid"]) ? $fields["isStudyPaid"] : null);
+        $amountDescription = Validator::optionalString(isset($fields["amountDescription"]) ? $fields["amountDescription"] : null);
         $createdBy = Validator::requiredId($fields["createdBy"]);
         $creator = $this->memberService->getOne($createdBy);
-        $date = new \DateTime();
+        $date = new DateTime();
 
-        $paymentSlip = new PaymentSlip($missionRecapNumber, $consultantName, $consultantSocialSecurityNumber, $address, $email, $studyId, $clientName, $projectLead, $consultant, $isTotalJeh, $isStudyPaid, $amountDescription, $date, $creator, false, null, null, false, null, null);
+        $paymentSlip = new PaymentSlip($missionRecapNumber, $consultantName, $consultantSocialSecurityNumber, $address, $email, $study, $clientName, $projectLead, $consultant, $isTotalJeh, $isStudyPaid, $amountDescription, $date, $creator, false, null, null, false, null, null);
 
         $this->paymentSlipDataService->persist($paymentSlip);
 
         return $paymentSlip;
     }
 
+    /**
+     * @param int $id
+     * @return PaymentSlip
+     * @throws KerosException
+     */
     public function getOne(int $id): PaymentSlip
     {
         $id = Validator::requiredId($id);
@@ -153,6 +119,11 @@ class PaymentSlipService
         return $paymentSlip;
     }
 
+    /**
+     * @param int $id
+     * @param int $idUA
+     * @throws KerosException
+     */
     public function validateUA(int $id, int $idUA)
     {
         $id = Validator::requiredId($id);
@@ -171,6 +142,11 @@ class PaymentSlipService
         return;
     }
 
+    /**
+     * @param int $id
+     * @param int $idPerf
+     * @throws KerosException
+     */
     public function validatePerf(int $id, int $idPerf)
     {
         $id = Validator::requiredId($id);
@@ -190,19 +166,92 @@ class PaymentSlipService
         return;
     }
 
+    /**
+     * @return array
+     * @throws KerosException
+     */
     public function getAll(): array
     {
         return $this->paymentSlipDataService->getAll();
     }
 
+    /**
+     * @param RequestParameters $requestParameters
+     * @return array
+     * @throws KerosException
+     */
     public function getPage(RequestParameters $requestParameters): array
     {
         return $this->paymentSlipDataService->getPage($requestParameters);
     }
 
+    /**
+     * @param RequestParameters $requestParameters
+     * @return int
+     */
     public function getCount(RequestParameters $requestParameters): int
     {
         return $this->paymentSlipDataService->getCount($requestParameters);
     }
 
+    /**
+     * @param int $idStudy
+     * @throws KerosException
+     */
+    public function deletePaymentSlipsRelatedToStudy(int $idStudy)
+    {
+        $idStudy = Validator::requiredId($idStudy);
+        $paymentSlips = $this->getAll();
+        foreach ($paymentSlips as $paymentSlip) {
+            if ($studyId = $paymentSlip->getStudy()->getId() == $idStudy) {
+                $this->delete($paymentSlip);
+            }
+        }
+    }
+
+    /**
+     * @param int $id
+     * @param array|null $fields
+     * @return PaymentSlip
+     * @throws KerosException
+     */
+    public function update(int $id, ?array $fields): PaymentSlip
+    {
+        $id = Validator::requiredId($id);
+        $paymentSlip = $this->getOne($id);
+        $consultant = $paymentSlip->getConsultant();
+
+        $missionRecapNumber = Validator::optionalString(isset($fields["missionRecapNumber"]) ? $fields["missionRecapNumber"] : $paymentSlip->getMissionRecapNumber());
+        $consultantName = Validator::optionalString(isset($fields["consultantName"]) ? $fields["consultantName"] : $paymentSlip->getConsultantName());
+        $consultantSocialSecurityNumber = Validator::optionalString(isset($fields["consultantSocialSecurityNumber"]) ? $fields["consultantSocialSecurityNumber"] : $paymentSlip->getConsultantSocialSecurityNumber());
+        $email = Validator::optionalEmail(isset($fields["email"]) ? $fields["email"] : $paymentSlip->getEmail());
+        $studyId = Validator::requiredId($fields["studyId"]);
+        $study = $this->studyService->getOne($studyId);
+        $consultantId = Validator::optionalId(isset($fields["consultantId"]) ? $fields["consultantId"]  : ($consultant != null) ? $consultant->getId() : null);
+        if($consultantId !=  null)
+            $consultant = $this->memberService->getOne($consultantId);
+        $clientName = Validator::optionalString(isset($fields["clientName"]) ? $fields["clientName"] : $paymentSlip->getClientName());
+        $projectLead = Validator::optionalString(isset($fields["projectLead"]) ? $fields["projectLead"] : $paymentSlip->getProjectLead());
+        $isTotalJeh = Validator::optionalBool(isset($fields["isTotalJeh"]) ? $fields["isTotalJeh"] : $paymentSlip->getisTotalJeh());
+        $isStudyPaid = Validator::optionalBool(isset($fields["isStudyPaid"]) ? $fields["isStudyPaid"] : $paymentSlip->getisStudyPaid());
+        $amountDescription = Validator::optionalString(isset($fields["amountDescription"]) ? $fields["amountDescription"] : $paymentSlip->getAmountDescription());
+
+        $paymentSlip->setMissionRecapNumber($missionRecapNumber);
+        $paymentSlip->setConsultantName($consultantName);
+        $paymentSlip->setConsultantSocialSecurityNumber($consultantSocialSecurityNumber);
+        if (isset($fields["address"]))
+            $this->addressService->update($paymentSlip->getAddress()->getId(), $fields["address"]);
+        $paymentSlip->setEmail($email);
+        $paymentSlip->setStudy($study);
+        $paymentSlip->setConsultant($consultant);
+        $paymentSlip->setClientName($clientName);
+        $paymentSlip->setProjectLead($projectLead);
+        $paymentSlip->setIsTotalJeh($isTotalJeh);
+        $paymentSlip->setIsStudyPaid($isStudyPaid);
+        $paymentSlip->setAmountDescription($amountDescription);
+
+        $this->paymentSlipDataService->persist($paymentSlip);
+
+        return $paymentSlip;
+    }
 }

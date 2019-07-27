@@ -105,7 +105,7 @@ class ContactDataService
             $whereParameters = array();
 
             foreach ($queryParams as $key => $value) {
-                if (in_array($key, ['search', 'firmId'])) {
+                if (in_array($key, ['search', 'firmId', 'firstName', 'lastName'])) {
                     if (!empty($whereStatement))
                         $whereStatement .= ' AND ';
 
@@ -117,17 +117,22 @@ class ContactDataService
                                 $searchStatement .= ' AND ';
 
                             $searchStatement .=
-                                '(c.firstName = :search' . $i
-                                . ' OR c.lastName = :search' . $i . ')';
-                            $whereParameters[':search' . $i] = $field;
+                                '(c.firstName like :search' . $i
+                                . ' OR c.lastName like :search' . $i . ')';
+                            $whereParameters[':search' . $i] = '%' . $field . '%';
                         }
 
                         $whereStatement .= $searchStatement;
                     } else {
                         if ($key == 'firmId') {
                             $whereStatement .= 'f.id = :firmId';
+                            $whereParameters[':' . $key] = $value;
+
+                        }elseif ($key == 'firstName' || $key == 'lastName') {
+                            $whereStatement .= 'c.' . $key . ' LIKE :' . $key;
+                            $whereParameters[':' . $key] = '%' . $value . '%';
                         }
-                        $whereParameters[':' . $key] = $value;
+
                     }
 
                 }
@@ -144,8 +149,12 @@ class ContactDataService
                     ->setParameters($whereParameters);
             }
 
+            //main contact as first result
+            $this->queryBuilder->addSelect('(CASE WHEN f.mainContact = c.id THEN 1 ELSE 0 END) AS HIDDEN mainSort');
+            $this->queryBuilder->orderBy('mainSort', 'DESC');
+
             if (isset($orderBy)) {
-                $this->queryBuilder->orderBy($orderBy, $order);
+                $this->queryBuilder->addOrderBy($orderBy, $order);
             }
 
             $this->queryBuilder

@@ -56,7 +56,7 @@ class PaymentSlipDataService
      * @param PaymentSlip $paymentSlip
      * @throws KerosException
      */
-    public function delete(PaymentSlip $paymentSlip) : void
+    public function delete(PaymentSlip $paymentSlip): void
     {
         try {
             $this->entityManager->remove($paymentSlip);
@@ -69,7 +69,7 @@ class PaymentSlipDataService
     }
 
     /**
-     * @return array
+     * @return PaymentSlip[]
      * @throws KerosException
      */
     public function getAll(): array
@@ -134,6 +134,10 @@ class PaymentSlipDataService
         return $count;
     }
 
+    /**
+     * @param int $idMember
+     * @throws KerosException
+     */
     public function deletePaymentSlipsRelatedToMember(int $idMember)
     {
         $idMember = Validator::requiredId($idMember);
@@ -141,25 +145,33 @@ class PaymentSlipDataService
 
         foreach ($paymentSlips as $paymentSlip) {
             $consultant = $paymentSlip->getConsultant();
-            $consultantId = $consultant->getId();
-            $consultantId = Validator::requiredId($consultantId);
+            if ($consultant != null) {
+                $consultantId = $consultant->getId();
+                if ($consultantId == $idMember)
+                    $this->delete($paymentSlip);
+            }
 
             $creator = $paymentSlip->getCreatedBy();
-            $creatorId = $creator->getId();
-            $creatorId = Validator::requiredId($creatorId);
+            if ($creator != null) {
+                $creatorId = $creator->getId();
+                if ($creatorId != null && $creatorId == $idMember)
+                    $this->delete($paymentSlip);
+            }
 
             $UAValidator = $paymentSlip->getValidatedByUaMember();
-            $UAValidatorId = $UAValidator->getId();
-            $UAValidatorId = Validator::requiredId($UAValidatorId);
+            $this->logger->info(json_encode($UAValidator));
+            if ($UAValidator != null) {
+                $UAValidatorId = $UAValidator->getId();
+                if ($UAValidatorId != null && $UAValidatorId == $idMember)
+                    $this->delete($paymentSlip);
+            }
 
             $PerfValidator = $paymentSlip->getValidatedByPerfMember();
-            $PerfValidatorId = $PerfValidator->getId();
-            $PerfValidatorId = Validator::requiredId($PerfValidatorId);
-
-            if ($consultantId == $idMember || $creatorId == $idMember || $UAValidatorId == $idMember || $PerfValidatorId == $idMember){
-                $this->delete($paymentSlip);
+            if ($PerfValidator != null) {
+                $PerfValidatorId = $PerfValidator->getId();
+                if ($PerfValidatorId != null && $PerfValidatorId == $idMember)
+                    $this->delete($paymentSlip);
             }
         }
     }
-
 }

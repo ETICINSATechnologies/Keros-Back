@@ -8,6 +8,66 @@ use Slim\Http\Request;
 
 class MemberIntegrationTest extends AppTestCase
 {
+    public function testGetAllMembersPage0ShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/core/member?pageNumber=0',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+        $body = json_decode($response->getBody());
+        $this->assertEquals(25, count($body->content));
+        $this->assertNotNull(strlen($body->content[0]->id));
+        $this->assertNotNull(strlen($body->content[0]->username));
+        $this->assertNotNull(strlen($body->content[0]->firstName));
+        $this->assertNotNull(strlen($body->content[0]->lastName));
+        $this->assertNotNull(strlen($body->content[0]->gender->id));
+        $this->assertNotNull(strlen($body->content[0]->email));
+        $this->assertNotNull(strlen($body->content[0]->birthday));
+        $this->assertNotNull(strlen($body->content[0]->address->id));
+        $this->assertSame(26, $body->meta->totalItems);
+    }
+
+    public function testGetAllMembersPage1ShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/core/member?pageNumber=1',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+        $body = json_decode($response->getBody());
+        $this->assertEquals(1, count($body->content));
+        $this->assertSame(26, $body->meta->totalItems);
+    }
+
+    public function testLikeSearchMemberShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/core/member?firstName=Lauren&positionId=1&year=2018',
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(200, $response->getStatusCode());
+
+        $body = json_decode($response->getBody());
+        $this->assertNotNull($body->content);
+        $this->assertSame(1, sizeof($body->content));
+        $this->assertSame(3, $body->content[0]->id);
+        $this->assertSame(1, $body->content[0]->positions[0]->id);
+        $this->assertSame(2, $body->content[0]->positions[1]->id);
+        $this->assertSame(3, $body->content[0]->positions[2]->id);
+    }
+
     public function testSearchMemberShouldReturn200()
     {
         $env = Environment::mock([
@@ -45,13 +105,31 @@ class MemberIntegrationTest extends AppTestCase
 
         $body = json_decode($response->getBody());
         $this->assertNotNull($body->content);
-        $this->assertSame(2, sizeof($body->content));
+        $this->assertSame(3, sizeof($body->content));
         $this->assertSame(1, $body->content[0]->id);
         $this->assertSame(3, $body->content[0]->positions[0]->id);
         $this->assertSame(3, $body->content[1]->id);
         $this->assertSame(1, $body->content[1]->positions[0]->id);
         $this->assertSame(2, $body->content[1]->positions[1]->id);
         $this->assertSame(3, $body->content[1]->positions[2]->id);
+    }
+
+    public function testGetConnectedMemberEmptyBodyShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/core/member/me',
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+
+        $body = json_decode($response->getBody());
+        $this->assertNotNull($body);
+        $this->assertSame(1, $body->id);
     }
 
     public function testPutConnectedMemberEmptyBodyShouldReturn400()
@@ -101,7 +179,8 @@ class MemberIntegrationTest extends AppTestCase
                 )
             ],
             "company" => "Amazon",
-            "profilePicture" => "http://image.png"
+            "profilePicture" => "http://image.png",
+            "droitImage" => true
         );
 
         $env = Environment::mock([
@@ -132,6 +211,7 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertNotNull($body->address->id);
         $this->assertSame(3, $body->positions[0]->id);
         $this->assertSame(4, $body->positions[1]->id);
+        $this->assertSame(true, $body->droitImage);
     }
 
     public function testDeleteMembersShouldReturn204()
@@ -147,10 +227,11 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(204, $response->getStatusCode());
     }
 
-    public function testDeleteInvalidMemberShouldReturn404(){
+    public function testDeleteInvalidMemberShouldReturn404()
+    {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'DELETE',
-            'REQUEST_URI' => '/api/v1/core/member/10',
+            'REQUEST_URI' => '/api/v1/core/member/100000',
         ]);
 
         $req = Request::createFromEnvironment($env);
@@ -174,7 +255,7 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(200, $response->getStatusCode());
 
         $body = json_decode($response->getBody());
-        $this->assertEquals(4, count($body->content));
+        $this->assertEquals(25, count($body->content));
         $this->assertNotNull(strlen($body->content[0]->id));
         $this->assertNotNull(strlen($body->content[0]->username));
         $this->assertNotNull(strlen($body->content[0]->firstName));
@@ -207,13 +288,14 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame("+332541254", $body->telephone);
         $this->assertSame("fake.mail@fake.com", $body->email);
         $this->assertSame(2, $body->address->id);
+        $this->assertSame(true, $body->droitImage);
     }
 
     public function testGetMemberShouldReturn404()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/api/v1/core/member/10',
+            'REQUEST_URI' => '/api/v1/core/member/10090909',
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
@@ -256,7 +338,8 @@ class MemberIntegrationTest extends AppTestCase
                 )
             ],
             "company" => "Amazon",
-            "profilePicture" => "http://image.png"
+            "profilePicture" => "http://image.png",
+            "droitImage" => false
         );
 
         $env = Environment::mock([
@@ -266,6 +349,7 @@ class MemberIntegrationTest extends AppTestCase
 
         $req = Request::createFromEnvironment($env);
         $req = $req->withParsedBody($post_body);
+        $req = $req->withAttribute("userId", 6);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 
@@ -285,7 +369,9 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame("http://image.png", $body->profilePicture);
         $this->assertSame(3, $body->positions[0]->id);
         $this->assertSame(4, $body->positions[1]->id);
+        $this->assertSame(false, $body->droitImage);
     }
+
     public function testPutMemberShouldReturn200()
     {
         $post_body = array(
@@ -351,6 +437,7 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertNotNull($body->address->id);
         $this->assertSame(3, $body->positions[0]->id);
         $this->assertSame(4, $body->positions[1]->id);
+        $this->assertSame(true, $body->droitImage);
     }
 
     public function testPutMemberEmptyBodyShouldReturn400()
@@ -365,4 +452,71 @@ class MemberIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
         $this->assertSame(400, $response->getStatusCode());
     }
+
+    public function testPostMemberWithoutRightShouldReturn401()
+    {
+        $post_body = array(
+            "username" => "newusername",
+            "password" => "password",
+            "firstName" => "firstname",
+            "lastName" => "lastname",
+            "genderId" => 1,
+            "email" => "fakeEmail@gmail.com",
+            "birthday" => "1975-12-01",
+            "telephone" => "0033675385495",
+            "departmentId" => 1,
+            "schoolYear" => 1,
+            "address" => [
+                "line1" => "20 avenue albert Eistein",
+                "line2" => "residence g",
+                "city" => "lyon",
+                "postalCode" => 69100,
+                "countryId" => 1
+            ],
+            "disabled" => null,
+            "positions" => [
+                array(
+                    "id" => 3,
+                    "year" => 2018,
+                    "isBoard" => true
+                ),
+                array(
+                    "id" => 4,
+                    "year" => 2019,
+                    "isBoard" => false
+                )
+            ],
+            "company" => "Amazon",
+            "profilePicture" => "http://image.png"
+        );
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => '/api/v1/core/member',
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withParsedBody($post_body);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(401, $response->getStatusCode());
+    }
+
+    public function testSearchMemberUsingSearchShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/core/member?search=Laur',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+        $body = json_decode($response->getBody());
+        $this->assertNotNull($body->content);
+        $this->assertSame(1, sizeof($body->content));
+        $this->assertSame(3, $body->content[0]->id);
+    }
+
 }

@@ -1,11 +1,9 @@
 <?php
-
 namespace Keros\Entities\Ua;
-
 use JsonSerializable;
+use Keros\Tools\Validator;
 use Keros\Entities\Core\Member;
-use Keros\Entities\Treso\PaymentSlip;
-use Monolog\Logger;
+use Keros\Error\KerosException;
 
 /**
  * @Entity
@@ -100,12 +98,11 @@ class Study implements JsonSerializable
      *      )
      */
     protected $qualityManagers;
-
     /**
-     * @ManyToMany(targetEntity="Keros\Entities\Core\Member", inversedBy="studiesAsConsultant")
+     * @ManyToMany(targetEntity="Keros\Entities\Core\Consultant", inversedBy="studiesAsConsultant")
      * @JoinTable(name="ua_study_consultant",
      *      joinColumns={@JoinColumn(name="studyId", referencedColumnName="id")},
-     *      inverseJoinColumns={@JoinColumn(name="memberId", referencedColumnName="id")}
+     *      inverseJoinColumns={@JoinColumn(name="consultantId", referencedColumnName="id")}
      *      )
      */
     protected $consultants;
@@ -113,10 +110,19 @@ class Study implements JsonSerializable
     /** @Column(type="boolean") */
     protected $confidential;
 
+    //The main leader's member ID
+    /** @Column(type="integer")*/
+    protected $mainLeader;
+
+    //The main quality manager's member ID
+    /** @Column(type="integer")*/
+    protected $mainQualityManager;
+
     /**
-     * @OneToMany(targetEntity="Keros\Entities\Treso\PaymentSlip", mappedBy="study")
+     * The main consultant's member ID
+     * @Column(type="integer")
      */
-    protected $paymentSlips;
+    protected $mainConsultant;
 
     /**
      * Study constructor.
@@ -130,9 +136,11 @@ class Study implements JsonSerializable
      * @param $qualityManagers
      * @param $consultants
      * @param $confidential
-     * @param $paymentSlips
+     * @param $mainLeader
+     * @param $mainQualityManager
+     * @param $mainConsultant
      */
-    public function __construct($name, $description, $field, $status, $firm, $contacts, $leaders, $qualityManagers, $consultants, $confidential, $paymentSlips)
+    public function __construct($name, $description, $field, $status, $firm, $contacts, $leaders, $qualityManagers, $consultants, $confidential, $mainLeader, $mainQualityManager, $mainConsultant)
     {
         $this->name = $name;
         $this->description = $description;
@@ -144,7 +152,9 @@ class Study implements JsonSerializable
         $this->qualityManagers = $qualityManagers;
         $this->consultants = $consultants;
         $this->confidential = $confidential;
-        $this->paymentSlips = $paymentSlips;
+        $this->mainLeader = $mainLeader;
+        $this->mainQualityManager = $mainQualityManager;
+        $this->mainConsultant = $mainConsultant;
     }
 
     public function jsonSerialize()
@@ -318,7 +328,6 @@ class Study implements JsonSerializable
     {
         if ($this->getEndDate() == null)
             return null;
-
         return $this->getEndDate()->format('Y-m-d');
     }
 
@@ -425,7 +434,6 @@ class Study implements JsonSerializable
     {
         if ($this->getarchivedDate() == null)
             return null;
-
         return $this->getarchivedDate()->format('Y-m-d');
     }
 
@@ -438,9 +446,9 @@ class Study implements JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return Firm|null
      */
-    public function getFirm(): Firm
+    public function getFirm() : ?Firm
     {
         return $this->firm;
     }
@@ -470,7 +478,6 @@ class Study implements JsonSerializable
         foreach ($this->getContacts() as $contact) {
             $contacts[] = $contact;
         }
-
         return $contacts;
     }
 
@@ -483,7 +490,7 @@ class Study implements JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return Member[]
      */
     public function getLeaders()
     {
@@ -491,20 +498,30 @@ class Study implements JsonSerializable
     }
 
     /**
-     * @return array
+     * @return Member[]
      */
-    public function getLeadersArray()
+    public function getLeadersArray() : array
     {
-        $leaders = [];
-        foreach ($this->getLeaders() as $leader) {
-            $leaders[] = $leader;
+        $leadersArray = [];
+        $leadersIDArray =[];
+        $leaders = $this->getLeaders();
+        foreach ($leaders as $leader)
+        {
+            $leadersArray[] = $leader;
+            $leadersIDArray[] = $leader->getId();
         }
-
-        return $leaders;
+        //Putting the main leader at the top of the array
+        if (isset($this->mainLeader) && sizeof($leadersIDArray) >1){
+            $tmpKey = array_search($this->mainLeader, $leadersIDArray);
+            $tmpValue = $leadersArray[0];
+            $leadersArray[0] = $leadersArray[$tmpKey];
+            $leadersArray[$tmpKey] = $tmpValue;
+        }
+        return $leadersArray;
     }
 
     /**
-     * @param mixed $leaders
+     * @param Member[] $leaders
      */
     public function setLeaders($leaders): void
     {
@@ -512,7 +529,7 @@ class Study implements JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return Member[]
      */
     public function getQualityManagers()
     {
@@ -520,16 +537,26 @@ class Study implements JsonSerializable
     }
 
     /**
-     * @return array
+     * @return Member[]
      */
     public function getQualityManagersArray()
     {
-        $qualityManagers = [];
-        foreach ($this->getQualityManagers() as $qualityManager) {
-            $qualityManagers[] = $qualityManager;
+        $qualityManagersArray = [];
+        $qualityManagersIDArray =[];
+        $qualityManagers = $this->getQualityManagers();
+        foreach ($qualityManagers as $qualityManager)
+        {
+            $qualityManagersArray[] = $qualityManager;
+            $qualityManagersIDArray[] = $qualityManager->getId();
         }
-
-        return $qualityManagers;
+        //Putting the main quality manager at the top of the array
+        if (isset($this->mainQualityManager) && sizeof($qualityManagersIDArray) >1){
+            $tmpKey = array_search($this->mainQualityManager, $qualityManagersIDArray);
+            $tmpValue = $qualityManagersArray[0];
+            $qualityManagersArray[0] = $qualityManagersArray[$tmpKey];
+            $qualityManagersArray[$tmpKey] = $tmpValue;
+        }
+        return $qualityManagersArray;
     }
 
     /**
@@ -553,12 +580,22 @@ class Study implements JsonSerializable
      */
     public function getConsultantsArray()
     {
-        $consultants = [];
-        foreach ($this->getConsultants() as $consultant) {
-            $consultants[] = $consultant;
+        $consultantsArray = [];
+        $consultantsIDArray =[];
+        $consultants = $this->getConsultants();
+        foreach ($consultants as $consultant)
+        {
+            $consultantsArray[] = $consultant;
+            $consultantsIDArray[] = $consultant->getId();
         }
-
-        return $consultants;
+        //Putting the main consultant at the top of the array
+        if (isset($this->mainConsultant) && sizeof($consultantsIDArray) >1){
+            $tmpKey = array_search($this->mainConsultant, $consultantsIDArray);
+            $tmpValue = $consultantsArray[0];
+            $consultantsArray[0] = $consultantsArray[$tmpKey];
+            $consultantsArray[$tmpKey] = $tmpValue;
+        }
+        return $consultantsArray;
     }
 
     /**
@@ -585,22 +622,56 @@ class Study implements JsonSerializable
         $this->confidential = $confidential;
     }
 
-    public function getPaymentSlips()
+    /**
+     * @return mixed
+     */
+    public function getMainLeader()
     {
-        return $this->paymentSlips;
+        return $this->mainLeader;
     }
 
-    public function setPaymentSlips( $paymentSlips): void
+    /**
+     * @param $mainLeader
+     * @throws KerosException
+     */
+    public function setMainLeader($mainLeader): void
     {
-        $this->paymentSlips = $paymentSlips;
+        Validator::optionalInt($mainLeader);
+        $this->mainLeader = $mainLeader;
     }
 
-    public function getPaymentSlipsArray()
+    /**
+     * @return mixed
+     */
+    public function getMainQualityManager()
     {
-        $paymentsSlips = [];
-        foreach ($this->getPaymentSlips() as $paymentsSlip) {
-            $paymentsSlips[] = $paymentsSlip;
-        }
-        return $paymentsSlips;
+        return $this->mainQualityManager;
     }
+
+    /**
+     * @param $mainQualityManager
+     * @throws KerosException
+     */
+    public function setMainQualityManager($mainQualityManager): void
+    {
+        Validator::optionalInt($mainQualityManager);
+        $this->mainQualityManager = $mainQualityManager;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMainConsultant()
+    {
+        return $this->mainConsultant;
+    }
+
+    /**
+     * @param mixed $mainConsultant
+     */
+    public function setMainConsultant($mainConsultant): void
+    {
+        $this->mainConsultant = $mainConsultant;
+    }
+
 }

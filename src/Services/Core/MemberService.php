@@ -2,7 +2,6 @@
 
 namespace Keros\Services\Core;
 
-
 use Keros\DataServices\Core\MemberDataService;
 use Keros\DataServices\Core\TicketDataService;
 use Keros\DataServices\Treso\PaymentSlipDataService;
@@ -52,6 +51,7 @@ class MemberService
      * @var MemberPositionService
      */
     private $memberPositionService;
+
     /**
      * @var Logger
      */
@@ -94,8 +94,9 @@ class MemberService
 
         $company = Validator::optionalString($fields["company"]);
         $profilePicture = Validator::optionalString($fields["profilePicture"]);
+        $droitImage = Validator::requiredBool($fields['droitImage']);
 
-        $member = new Member($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture);
+        $member = new Member($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage);
 
         $user = $this->userService->create($fields);
         $address = $this->addressService->create($fields["address"]);
@@ -212,7 +213,6 @@ class MemberService
             $this->memberPositionService->delete($memberPosition);
         $member->setStudiesAsQualityManager([]);
         $member->setStudiesAsLeader([]);
-        $member->setStudiesAsConsultant([]);
         $this->memberDataService->persist($member);
 
         $this->paymentSlipDataService->deletePaymentSlipsRelatedToMember($id);

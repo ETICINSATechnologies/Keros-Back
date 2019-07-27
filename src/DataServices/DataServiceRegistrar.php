@@ -12,9 +12,14 @@ use Keros\DataServices\Core\MemberDataService;
 use Keros\DataServices\Core\MemberPositionDataService;
 use Keros\DataServices\Core\PoleDataService;
 use Keros\DataServices\Core\PositionDataService;
-use Keros\DataServices\Core\TemplateDataService;
-use Keros\DataServices\Core\TemplateTypeDataService;
 use Keros\DataServices\Core\UserDataService;
+use Keros\DataServices\Sg\MemberInscriptionDataService;
+use Keros\DataServices\Sg\MemberInscriptionDocumentTypeDataService;
+use Keros\DataServices\Treso\FactureDocumentDataService;
+use Keros\DataServices\Treso\FactureDocumentTypeDataService;
+use Keros\DataServices\Treso\FactureTypeDataService;
+use Keros\DataServices\Treso\FactureDataService;
+use Keros\DataServices\Core\ConsultantDataService;
 use Keros\DataServices\Ua\ContactDataService;
 use Keros\DataServices\Ua\FirmTypeDataService;
 use Keros\DataServices\Ua\FirmDataService;
@@ -23,6 +28,8 @@ use Keros\DataServices\Ua\ProvenanceDataService;
 use Keros\DataServices\Ua\FieldDataService;
 use Keros\DataServices\Ua\StatusDataService;
 use Keros\DataServices\Ua\StudyDataService;
+use Keros\DataServices\Ua\StudyDocumentTypeDataService;
+use Keros\DataServices\Ua\StudyDocumentDataService;
 use Psr\Container\ContainerInterface;
 
 class DataServiceRegistrar
@@ -60,11 +67,11 @@ class DataServiceRegistrar
         $container[MemberPositionDataService::class] = function ($container) {
             return new MemberPositionDataService($container);
         };
-        $container[TemplateDataService::class] = function ($container) {
-            return new TemplateDataService($container);
+        $container[StudyDocumentDataService::class] = function ($container) {
+            return new StudyDocumentDataService($container);
         };
-        $container[TemplateTypeDataService::class] = function ($container) {
-            return new TemplateTypeDataService($container);
+        $container[ConsultantDataService::class] = function ($container) {
+            return new ConsultantDataService($container);
         };
 
         //UA
@@ -89,10 +96,36 @@ class DataServiceRegistrar
         $container[StudyDataService::class] = function ($container) {
             return new StudyDataService($container);
         };
+        $container[StudyDocumentTypeDataService::class] = function ($container) {
+            return new StudyDocumentTypeDataService($container);
+        };
+        $container[StudyDocumentDataService::class] = function ($container) {
+            return new StudyDocumentDataService($container);
+        };
 
         //Treso
         $container[PaymentSlipDataService::class] = function ($container) {
             return new PaymentSlipDataService($container);
+        };
+        $container[FactureTypeDataService::class] = function ($container) {
+            return new FactureTypeDataService($container);
+        };
+        $container[FactureDataService::class] = function ($container) {
+            return new FactureDataService($container);
+        };
+        $container[FactureDocumentTypeDataService::class] = function ($container) {
+            return new FactureDocumentTypeDataService($container);
+        };
+        $container[FactureDocumentDataService::class] = function ($container) {
+            return new FactureDocumentDataService($container);
+        };
+
+        //Sg
+        $container[MemberInscriptionDataService::class] = function ($container) {
+            return new MemberInscriptionDataService($container);
+        };
+        $container[MemberInscriptionDocumentTypeDataService::class] = function ($container) {
+            return new MemberInscriptionDocumentTypeDataService($container);
         };
     }
 }

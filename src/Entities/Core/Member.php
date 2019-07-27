@@ -65,21 +65,21 @@ class Member implements JsonSerializable
     protected $profilePicture;
 
     /**
+     * @Column(type="boolean")
+     */
+    protected $droitImage;
+
+    /**
      * @ManyToMany(targetEntity="Keros\Entities\Ua\Study", mappedBy="qualityManagers")
      */
     protected $studiesAsQualityManager;
-
-    /**
-     * @ManyToMany(targetEntity="Keros\Entities\Ua\Study", mappedBy="consultants")
-     */
-    protected $studiesAsConsultant;
 
     /**
      * @ManyToMany(targetEntity="Keros\Entities\Ua\Study", mappedBy="leaders")
      */
     protected $studiesAsLeader;
     
-    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture)
+    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -91,6 +91,7 @@ class Member implements JsonSerializable
         $this->department = $department;
         $this->company = $company;
         $this->profilePicture = $profilePicture;
+        $this->droitImage = $droitImage;
     }
 
     public function jsonSerialize()
@@ -107,9 +108,10 @@ class Member implements JsonSerializable
             'schoolYear' => $this->getSchoolYear(),
             'telephone' => $this->getTelephone(),
             'address' => $this->getAddress(),
-            'positions' => $this->getPositionsArray(),
+            'positions' => $this->getMemberPositionsArray(),
             'company' => $this->getCompany(),
             'profilePicture' => $this->getProfilePicture(),
+            'droitImage' => $this->isDroitImage(),
         ];
     }
 
@@ -337,15 +339,15 @@ class Member implements JsonSerializable
     /**
      * @return MemberPosition[]
      */
-    public function getPositionsArray()
+    public function getMemberPositionsArray()
     {
-        $positions = [];
+        $memberPositions = [];
         foreach ($this->getMemberPositions() as $position)
         {
-            $positions[] = $position;
+            $memberPositions[] = $position;
         }
 
-        return $positions;
+        return $memberPositions;
     }
 
 
@@ -374,28 +376,6 @@ class Member implements JsonSerializable
     /**
      * @return mixed
      */
-    public function getStudiesAsConsultant()
-    {
-        $studies = [];
-        foreach ($this->studiesAsConsultant as $study)
-        {
-            $studies[] = $study;
-        }
-
-        return $studies;
-    }
-
-    /**
-     * @param mixed $studiesAsConsultant
-     */
-    public function setStudiesAsConsultant($studiesAsConsultant): void
-    {
-        $this->studiesAsConsultant = $studiesAsConsultant;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getStudiesAsLeader()
     {
         $studies = [];
@@ -413,6 +393,22 @@ class Member implements JsonSerializable
     public function setStudiesAsLeader($studiesAsLeader): void
     {
         $this->studiesAsLeader = $studiesAsLeader;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDroitImage(): bool
+    {
+        return $this->droitImage;
+    }
+
+    /**
+     * @param bool $droitImage
+     */
+    public function setDroitImage(bool $droitImage): void
+    {
+        $this->droitImage = $droitImage;
     }
 
 }
