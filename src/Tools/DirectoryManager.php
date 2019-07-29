@@ -50,9 +50,12 @@ class DirectoryManager
      * @param string $link
      * @throws KerosException
      */
-    public function symlink(string $target, string $link){
+    public function symlink(string $target, string $link)
+    {
+        $link = $this->normalizePath($link);
+        $target = $this->normalizePath($target);
         $this->mkdir(pathinfo($link, PATHINFO_DIRNAME));
-        if(!symlink($target, $link)){
+        if (!symlink($target, $link)) {
             $msg = 'Error during symlink';
             $this->logger->err($msg);
             throw new KerosException($msg, 500);
@@ -68,5 +71,14 @@ class DirectoryManager
         if (!file_exists($path)) {
             mkdir($path, $mode, true);
         }
+    }
+
+    /**
+     * @param string $path
+     * @return string
+     */
+    public function normalizePath(string $path): string
+    {
+        return preg_replace('/(?<!\\\)\//', DIRECTORY_SEPARATOR, $path);
     }
 }
