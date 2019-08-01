@@ -100,7 +100,6 @@ class MemberService
         }
 
         $company = Validator::optionalString($fields["company"]);
-        //$profilePicture = Validator::optionalString($fields["profilePicture"]);
         $profilePicture = null;
         $droitImage = Validator::requiredBool($fields['droitImage']);
 
