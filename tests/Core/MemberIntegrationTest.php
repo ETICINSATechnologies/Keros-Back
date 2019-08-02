@@ -462,8 +462,8 @@ class MemberIntegrationTest extends AppTestCase
 
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(false);
         fclose($handle);
+        $response = $this->app->run(false);
         $this->assertSame(204, $response->getStatusCode());
     }
 
@@ -481,8 +481,8 @@ class MemberIntegrationTest extends AppTestCase
 
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(false);
         fclose($handle);
+        $response = $this->app->run(false);
         if (file_exists($temp_fileName)) {
             unlink($temp_fileName);
         }
@@ -511,9 +511,9 @@ class MemberIntegrationTest extends AppTestCase
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
+        fclose($handle);
         $response = $this->app->run(false);
         $this->assertSame(200, $response->getStatusCode());
-        fclose($handle);
     }
 
     public function testGetMemberPhotoShouldReturn404()
