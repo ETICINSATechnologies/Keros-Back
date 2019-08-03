@@ -14,7 +14,8 @@ use JsonSerializable;
  * @DiscriminatorMap({
  *     "core_document" = "Document",
  *     "ua_study_document" = "Keros\Entities\Ua\StudyDocument",
- *     "treso_facture_document" = "Keros\Entities\Treso\FactureDocument"
+ *     "treso_facture_document" = "Keros\Entities\Treso\FactureDocument",
+ *     "sg_member_inscription_document" = "Keros\Entities\Sg\MemberInscriptionDocument"
  * })
  */
 abstract class Document implements JsonSerializable
