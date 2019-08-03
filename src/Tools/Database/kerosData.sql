@@ -263,6 +263,6 @@ INSERT INTO sg_member_inscription (id, firstName, lastName, genderId, birthday, 
 
 TRUNCATE TABLE sg_member_inscription_document_type;
 INSERT INTO sg_member_inscription_document_type(id, location, `name`, isTemplatable) VALUES
-    (1, 'Fiche_inscription_membre_actif.pdf', 'Fiche inscription membre', true);
+    (1, 'Fiche inscription membre actif.pdf', 'Fiche inscription membre', true);
 
 COMMIT;
