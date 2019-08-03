@@ -45,7 +45,7 @@ INSERT INTO core_address (id, line1, line2, postalCode, city, countryId) VALUES
   (7, '60 Gold street', 'bat. j', '69100','Villeurbanne',1), #consultant 5
   (8, '20 avenue Albert Einstein', 'bat. g', '50100', 'Cherbourg',1), #consultant 2
   (9, '11 supeRU', 'bis', '27277', 'SuperVille', 40), # member 6 - superuser
-  (10, 'rue test 10', 'Meat', '674A4', 'Paris', 40), # member 7
+  (10, 'rue disabled 10', 'Disabled', '674A4', 'Paris', 40), # member 7
   (11, 'rue test 11', 'Meat', '674A4', 'Paris', 40), # member 8
   (12, 'rue test 12', 'Meat', '674A4', 'Paris', 40), # member 9
   (13, 'rue test 13', 'Meat', '674A4', 'Paris', 40), # member 10
