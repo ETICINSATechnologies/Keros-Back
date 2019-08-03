@@ -16,5 +16,5 @@ logs
 /documents/*
 
 #Do not ignore some files for testing
-!documents/templates/Fiche inscription membre actif.pdf
+!documents/templates/Fiche_inscription_membre_actif.pdf
 !documents/document/study/study_1/document_2/acompte.docx
