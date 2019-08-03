@@ -50,4 +50,24 @@ class LoginIntegrationTest extends AppTestCase
 
         $this->assertSame(401, $response->getStatusCode());
     }
+
+    public function testLoginDisabledShouldReturn401()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => '/api/v1/auth/login',
+        ]);
+
+        $postBody = array(
+            "username" => "disabled",
+            "password" => "password"
+        );
+
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withParsedBody($postBody);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(401, $response->getStatusCode());
+    }
 }

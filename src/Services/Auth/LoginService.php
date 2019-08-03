@@ -41,6 +41,10 @@ class LoginService
         }
 
         if (PasswordEncryption::verify($password, $user->getPassword())) {
+            if($user->getDisabled()){
+                throw new KerosException("Account disabled", 401);
+            }
+
             // the token will expire in exactly in one day
             $exp = time() + 24 * 3600;
 
