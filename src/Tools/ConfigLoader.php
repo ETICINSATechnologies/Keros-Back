@@ -37,7 +37,12 @@ class ConfigLoader
             'TEMPORARY_DIRECTORY' => $absoluteDirPath . $config['TEMPORARY_DIRECTORY'],
             'STUDY_DOCUMENT_DIRECTORY' => $absoluteDirPath . $config['STUDY_DOCUMENT_DIRECTORY'],
             'FACTURE_DOCUMENT_DIRECTORY' => $absoluteDirPath . $config['FACTURE_DOCUMENT_DIRECTORY'],
-            'MEMBER_PHOTO_DIRECTORY' => $absoluteDirPath . $config['MEMBER_PHOTO_DIRECTORY']
+            'MEMBER_PHOTO_DIRECTORY' => $absoluteDirPath . $config['MEMBER_PHOTO_DIRECTORY'],
+            'INSCRIPTION_IDENTITY_DOCUMENT_DIRECTORY' => $absoluteDirPath . $config['INSCRIPTION_IDENTITY_DOCUMENT_DIRECTORY'],
+            'INSCRIPTION_SCOLARY_CERTIFICATE_DIRECTORY' => $absoluteDirPath . $config['INSCRIPTION_SCOLARY_CERTIFICATE_DIRECTORY'],
+            'INSCRIPTION_RIB_DIRECTORY' => $absoluteDirPath . $config['INSCRIPTION_RIB_DIRECTORY'],
+            'INSCRIPTION_VITALE_CARD_DIRECTORY' => $absoluteDirPath . $config['INSCRIPTION_VITALE_CARD_DIRECTORY'],
+            'INSCRIPTION_RESIDENCE_PERMIT_DIRECTORY' => $absoluteDirPath . $config['INSCRIPTION_RESIDENCE_PERMIT_DIRECTORY'],
         );
 
         return $absoluteConfig;
