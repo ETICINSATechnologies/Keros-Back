@@ -301,4 +301,22 @@ class Validator
         return $study;
     }
 
+    public static function requiredFile($file, $filename): string
+    {
+        if (!$file) {
+            throw new KerosException("The file "+ $filename +" could not be found in the request" , 400);
+        }
+
+        return $file;
+    }
+
+    public static function optionalFile($file): ?string
+    {
+        if ($file == null) {
+            return null;
+        }
+        
+        return $int;
+    }
+
 }
