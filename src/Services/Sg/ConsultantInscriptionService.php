@@ -15,6 +15,8 @@ use Keros\Services\Core\ConsultantService;
 use Keros\Tools\Validator;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
+use Keros\Tools\ConfigLoader;
+use Keros\Tools\DirectoryManager;
 use DateTime;
 
 class   ConsultantInscriptionService
@@ -50,6 +52,16 @@ class   ConsultantInscriptionService
     private $departmentService;
 
     /**
+     * @var ConfigLoader
+     */
+    private $kerosConfig;
+
+    /**
+     * @var DirectoryManager
+     */
+    private $directoryManager;
+
+    /**
      * @var Logger
      */
     private $logger;
@@ -63,6 +75,8 @@ class   ConsultantInscriptionService
         $this->departmentService = $container->get(DepartmentService::class);
         $this->consultantService = $container->get(ConsultantService::class);
         $this->consultantInscriptionDataService = $container->get(ConsultantInscriptionDataService::class);
+        $this->directoryManager = $container->get(DirectoryManager::class);
+        $this->kerosConfig = ConfigLoader::getConfig();
     }
 
     /**
@@ -87,15 +101,24 @@ class   ConsultantInscriptionService
         $address = $this->addressService->create($fields["address"]);
         $droitImage = Validator::requiredBool($fields['droitImage']);
         $documentIdentity = Validator::requiredFile($fields['documentIdentity'],'documentIdentity');
-        $documentIdentityFilename = $this->directoryManager->uniqueFilename($documentIdentity, false, $this->kerosConfig['MEMBER_PHOTO_DIRECTORY']);
         $documentScolaryCertificate = Validator::requiredFile($fields['documentScolaryCertificate'],'documentScolaryCertificate');
         $documentRIB = Validator::requiredFile($fields['documentRIB'],'documentRIB');
         $documentVitaleCard = Validator::requiredFile($fields['documentVitaleCard'],'documentVitaleCard');
         $documentResidencePermit = Validator::optionalFile($fields['documentResidencePermit']) ? $fields['documentResidencePermit'] : null;
 
+        $documentIdentityFilename = $this->directoryManager->uniqueFilename($documentIdentity, false, $this->kerosConfig['INSCRIPTION_IDENTITY_DOCUMENT_DIRECTORY']);
+        $documentScolaryCertificateFilename = $this->directoryManager->uniqueFilename($documentScolaryCertificate, false, $this->kerosConfig['INSCRIPTION_SCOLARY_CERTIFICATE_DIRECTORY']);
+        $documentRIBFilename = $this->directoryManager->uniqueFilename($documentRIB, false, $this->kerosConfig['INSCRIPTION_RIB_DIRECTORY']);
+        $documentVitaleCardFilename = $this->directoryManager->uniqueFilename($documentVitaleCard, false, $this->kerosConfig['INSCRIPTION_VITALE_CARD_DIRECTORY']);
+        $documentResidencePermitFilename = $documentResidencePermit ? $this->directoryManager->uniqueFilename($documentResidencePermit, false, $this->kerosConfig['INSCRIPTION_RESIDENCE_PERMIT_DIRECTORY']) : null;
 
-
-        $consultantInscription = new ConsultantInscription();
+        $this->directoryManager->mkdir($this->kerosConfig['INSCRIPTION_IDENTITY_DOCUMENT_DIRECTORY'] . pathinfo($documentIdentityFilename, PATHINFO_DIRNAME));
+        $this->directoryManager->mkdir($this->kerosConfig['INSCRIPTION_SCOLARY_CERTIFICATE_DIRECTORY'] . pathinfo($documentScolaryCertificateFilename, PATHINFO_DIRNAME));
+        $this->directoryManager->mkdir($this->kerosConfig['INSCRIPTION_RIB_DIRECTORY'] . pathinfo($documentRIBFilename, PATHINFO_DIRNAME));
+        $this->directoryManager->mkdir($this->kerosConfig['INSCRIPTION_VITALE_CARD_DIRECTORY'] . pathinfo($documentVitaleCardFilename, PATHINFO_DIRNAME));
+        if ($documentResidencePermit) $this->directoryManager->mkdir($this->kerosConfig['INSCRIPTION_RESIDENCE_PERMIT_DIRECTORY'] . pathinfo($documentResidencePermitFilename, PATHINFO_DIRNAME));
+        
+        $consultantInscription = new ConsultantInscription($firstName, $lastName, $gender, $birthday, $department, $email, $phoneNumber, $outYear, $nationality, $address, $droitImage, $documentIdentityFilename, $documentScolaryCertificateFilename, $documentRIBFilename, $documentVitaleCardFilename, $documentResidencePermitFilename);
 
         $this->consultantInscriptionDataService->persist($consultantInscription);
 
@@ -109,24 +132,24 @@ class   ConsultantInscriptionService
     public function delete(int $id): void
     {
         $id = Validator::requiredId($id);
-        $memberInscription = $this->getOne($id);
-        $this->memberInscriptionDataService->delete($memberInscription);
+        $consultantInscription = $this->getOne($id);
+        $this->consultantInscriptionDataService->delete($consultantInscription);
     }
 
     /**
      * @param int $id
-     * @return MemberInscription
+     * @return ConsultantInscription
      * @throws KerosException
      */
-    public function getOne(int $id): MemberInscription
+    public function getOne(int $id): ConsultantInscription
     {
         $id = Validator::requiredId($id);
 
-        $memberInscription = $this->memberInscriptionDataService->getOne($id);
-        if (!$memberInscription) {
-            throw new KerosException("The memberInscription could not be found", 404);
+        $consultantInscription = $this->consultantInscriptionDataService->getOne($id);
+        if (!$consultantInscription) {
+            throw new KerosException("The consultantInscription could not be found", 404);
         }
-        return $memberInscription;
+        return $consultantInscription;
     }
 
     /**
@@ -135,7 +158,7 @@ class   ConsultantInscriptionService
      */
     public function getAll(): array
     {
-        return $this->memberInscriptionDataService->getAll();
+        return $this->consultantInscriptionDataService->getAll();
     }
 
     /**
@@ -145,7 +168,7 @@ class   ConsultantInscriptionService
      */
     public function getPage(RequestParameters $requestParameters): array
     {
-        return $this->memberInscriptionDataService->getPage($requestParameters);
+        return $this->consultantInscriptionDataService->getPage($requestParameters);
     }
 
     /**
@@ -154,117 +177,7 @@ class   ConsultantInscriptionService
      */
     public function getCount(RequestParameters $requestParameters): int
     {
-        return $this->memberInscriptionDataService->getCount($requestParameters);
+        return $this->consultantInscriptionDataService->getCount($requestParameters);
     }
 
-    /**
-     * @param int $id
-     * @param array|null $fields
-     * @return MemberInscription
-     * @throws KerosException
-     */
-    public function update(int $id, ?array $fields): MemberInscription
-    {
-        $id = Validator::requiredId($id);
-        $memberInscription = $this->getOne($id);
-
-        $firstName = Validator::requiredString($fields["firstName"]);
-        $lastName = Validator::requiredString($fields["lastName"]);
-        $departmentId = Validator::requiredId($fields["departmentId"]);
-        $department = $this->departmentService->getOne($departmentId);
-        $email = Validator::requiredEmail($fields["email"]);
-        $phoneNumber = Validator::optionalPhone(isset($fields["phoneNumber"]) ? $fields["phoneNumber"] : null);
-        $outYear = Validator::optionalInt(isset($fields["outYear"]) ? $fields["outYear"] : null);
-        $nationalityId = Validator::requiredId($fields["nationalityId"]);
-        $nationality = $this->countryService->getOne($nationalityId);
-        $wantedPoleId = Validator::requiredId($fields["wantedPoleId"]);
-        $wantedPole = $this->poleService->getOne($wantedPoleId);
-        $genderId = Validator::requiredId($fields['genderId']);
-        $gender = $this->genderService->getOne($genderId);
-        $birthday = Validator::requiredDate($fields['birthday']);
-        $hasPaid = Validator::optionalBool(isset($fields['hasPaid']) ? $fields['hasPaid'] : false);
-        $droitImage = Validator::requiredBool($fields['droitImage']);
-
-        $memberInscription->setFirstName($firstName);
-        $memberInscription->setLastName($lastName);
-        $memberInscription->setDepartment($department);
-        $memberInscription->setEmail($email);
-        $memberInscription->setPhoneNumber($phoneNumber);
-        $memberInscription->setOutYear($outYear);
-        $memberInscription->setNationality($nationality);
-        $memberInscription->setWantedPole($wantedPole);
-        $memberInscription->setGender($gender);
-        $memberInscription->setBirthday($birthday);
-        $memberInscription->setHasPaid($hasPaid);
-        $memberInscription->setDroitImage($droitImage);
-        $this->addressService->update($memberInscription->getAddress()->getId(), $fields["address"]);
-
-        $this->memberInscriptionDataService->persist($memberInscription);
-
-        return $memberInscription;
-    }
-
-    /**
-     * @param int $id
-     * @throws KerosException
-     */
-    public function validateMemberInscription(int $id)
-    {
-        $id = Validator::requiredId($id);
-        $memberInscription = $this->getOne($id);
-        $this->logger->debug('coucou');
-        $date = new DateTime();
-        $month = intval($date->format('m'));
-        $year = intval($date->format('Y'));
-
-        $memberArray = array(
-            "username" => $memberInscription->getFirstName() . '.' . $memberInscription->getLastName(),
-            "password" => $memberInscription->getFirstName() . '.' . $memberInscription->getBirthday()->format('d/m/Y'),
-            "firstName" => $memberInscription->getFirstName(),
-            "lastName" => $memberInscription->getLastName(),
-            "email" => $memberInscription->getEmail(),
-            "telephone" => $memberInscription->getPhoneNumber(),
-            "birthday" => $memberInscription->getBirthday()->format('Y-m-d'),
-            "genderId" => $memberInscription->getGender()->getId(),
-            "departmentId" => $memberInscription->getDepartment()->getId(),
-            "company" => null,
-            "profilePicture" => null,
-            "disabled" => false,
-            "address" => array(
-                "line1" => $memberInscription->getAddress()->getLine1(),
-                "line2" => $memberInscription->getAddress()->getLine2(),
-                "postalCode" => $memberInscription->getAddress()->getPostalCode(),
-                "city" => $memberInscription->getAddress()->getCity(),
-                "countryId" => $memberInscription->getAddress()->getCountry()->getId()
-            ),
-            "positions" => array(),
-            "droitImage" => $memberInscription->isDroitImage()
-        );
-
-        if ($memberInscription->getOutYear()) {
-            $schoolYear = 5 - ($memberInscription->getOutYear() - $year);
-            if($month > 8 && $month <= 12) //between September and December
-                $schoolYear += 1;
-            $memberArray["schoolYear"] = $schoolYear;
-        }
-
-        $this->memberService->create($memberArray);
-        $this->delete($memberInscription->getId());
-    }
-
-    /**
-     * @param int $id
-     * @throws KerosException
-     */
-    public function confirmPaymentMemberInscription(int $id): MemberInscription
-    {
-        $id = Validator::requiredId($id);
-        $memberInscription = $this->getOne($id);
-
-        $memberInscription->setHasPaid(true);
-
-        $this->memberInscriptionDataService->persist($memberInscription);
-
-        return $memberInscription;
-    }
 }
