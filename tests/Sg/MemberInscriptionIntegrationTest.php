@@ -4,6 +4,7 @@
 namespace KerosTest\Sg;
 
 use KerosTest\AppTestCase;
+use mikehaertl\pdftk\Pdf;
 use Slim\Http\Environment;
 use Slim\Http\Request;
 use \Slim\Exception\MethodNotAllowedException;
@@ -11,6 +12,27 @@ use \Slim\Exception\NotFoundException;
 
 class MemberInscriptionIntegrationTest extends AppTestCase
 {
+
+    public function testGetGeneratedDocumentShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/sg/membre-inscription/2/document/1/generate',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $body = json_decode($response->getBody());
+
+        $this->assertSame(200, $response->getStatusCode());
+
+
+        $location = strstr($body->location, "/generated/");
+        $location = str_replace("/generated/", "documents/tmp/", $location);
+        $pdf1 = new Pdf("tests/DocumentsTests/memberInscription2.pdf");
+        $pdf2 = new Pdf($location);
+        $this->assertEquals($pdf1->getDataFields(), $pdf2->getDataFields());
+    }
 
     /**
      * @throws MethodNotAllowedException
@@ -39,7 +61,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->assertSame('0033123456789', $body->content[0]->phoneNumber);
         $this->assertSame(2021, $body->content[0]->outYear);
         $this->assertSame(42, $body->content[0]->nationality->id);
-        $this->assertSame(2, $body->content[0]->wantedPole->id);
+        $this->assertSame(8, $body->content[0]->wantedPole->id);
         $this->assertSame(1, $body->content[0]->address->id);
         $this->assertSame(false, $body->content[0]->hasPaid);
         $this->assertSame(false, $body->content[0]->droitImage);
@@ -184,7 +206,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->assertSame('0033123456789', $body->phoneNumber);
         $this->assertSame(2021, $body->outYear);
         $this->assertSame(42, $body->nationality->id);
-        $this->assertSame(2, $body->wantedPole->id);
+        $this->assertSame(8, $body->wantedPole->id);
         $this->assertSame(1, $body->address->id);
         $this->assertSame(false, $body->hasPaid);
         $this->assertSame(false, $body->droitImage);

@@ -4,6 +4,7 @@ namespace Keros;
 
 use Keros\Controllers\Auth\LoginController;
 use Keros\Controllers\Sg\MemberInscriptionController;
+use Keros\Controllers\Sg\MemberInscriptionDocumentController;
 use Keros\Controllers\Treso\FactureDocumentController;
 use Keros\Controllers\Core\ConsultantController;
 use Keros\Controllers\Ua\StudyDocumentController;
@@ -161,6 +162,9 @@ class KerosApp
                     $this->put("/{id:[0-9]+}", MemberController::class . ':updateMember');
                     $this->delete("/{id:[0-9]+}", MemberController::class . ':deleteMember');
                     $this->get("/board/latest", MemberController::class . ':getLatestBoard');
+                    $this->post("/{id:[0-9]+}/photo", MemberController::class . ':createProfilePicture');
+                    $this->get("/{id:[0-9]+}/photo", MemberController::class . ':getProfilePicture');
+                    $this->delete("/{id:[0-9]+}/photo", MemberController::class . ':deleteProfilePicture');
                 });
 
                 $this->group('/consultant', function () {
@@ -208,6 +212,7 @@ class KerosApp
                     $this->put("/{id:[0-9]+}", MemberInscriptionController::class . ':updateMemberInscription');
                     $this->post("/{id:[0-9]+}/validate", MemberInscriptionController::class . ':validateMemberInscription');
                     $this->post("/{id:[0-9]+}/confirm-payment", MemberInscriptionController::class . ':confirmPaymentMemberInscription');
+                    $this->get("/{id:[0-9]+}/document/{documentTypeId:[0-9]+}/generate", MemberInscriptionDocumentController::class . ':generateDocument');
                 });
             })->add($this->getContainer()->get(AuthenticationMiddleware::class));
 

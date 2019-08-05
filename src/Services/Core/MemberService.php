@@ -12,6 +12,9 @@ use Keros\Error\KerosException;
 use Keros\Tools\Validator;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
+use Keros\Tools\ConfigLoader;
+use Keros\Tools\DirectoryManager;
+use phpDocumentor\Reflection\Types\String_;
 
 class MemberService
 {
@@ -47,7 +50,14 @@ class MemberService
      * @var MemberPositionService
      */
     private $memberPositionService;
-
+    /**
+     * @var ConfigLoader
+     */
+    private $kerosConfig;
+    /**
+     * @var DirectoryManager
+     */
+    private $directoryManager;
     /**
      * @var Logger
      */
@@ -63,6 +73,8 @@ class MemberService
         $this->userService = $container->get(UserService::class);
         $this->memberDataService = $container->get(MemberDataService::class);
         $this->ticketDataService = $container->get(TicketDataService::class);
+        $this->directoryManager = $container->get(DirectoryManager::class);
+        $this->kerosConfig = ConfigLoader::getConfig();
     }
 
     /**
@@ -88,7 +100,7 @@ class MemberService
         }
 
         $company = Validator::optionalString($fields["company"]);
-        $profilePicture = Validator::optionalString($fields["profilePicture"]);
+        $profilePicture = null;
         $droitImage = Validator::requiredBool($fields['droitImage']);
 
         $member = new Member($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage);
@@ -166,7 +178,6 @@ class MemberService
         }
 
         $company = Validator::optionalString($fields["company"]);
-        $profilePicture = Validator::optionalString($fields["profilePicture"]);
 
         $memberPositions = $member->getMemberPositions();
         foreach ($memberPositions as $memberPosition)
@@ -187,7 +198,6 @@ class MemberService
         $member->setGender($gender);
         $member->setDepartment($department);
         $member->setCompany($company);
-        $member->setProfilePicture($profilePicture);
         $member->setMemberPositions($memberPositions);
 
         $this->addressService->update($member->getAddress()->getId(), $fields["address"]);
@@ -209,13 +219,15 @@ class MemberService
         $member->setStudiesAsQualityManager([]);
         $member->setStudiesAsLeader([]);
         $this->memberDataService->persist($member);
-
         $this->ticketDataService->deleteTicketsRelatedToMember($id);
-
+        $profilepicture = $member->getProfilePicture();
         $this->memberDataService->delete($member);
         $this->userService->delete($id);
         $this->addressService->delete($address->getId());
-
+        $filepath =  $this->kerosConfig['MEMBER_PHOTO_DIRECTORY'] . $profilepicture;
+        if (file_exists($filepath)){
+            unlink($filepath);
+        }
     }
 
     /**
@@ -233,4 +245,105 @@ class MemberService
         return $boardMembers;
 
     }
+
+    /**
+     * @param array $fields
+     * @return Member
+     * @throws \Exception
+     */
+    public function createPhoto(int $id, ?array $fields): String
+    {
+        if ($fields['file'] == null) {
+            $msg = 'File is empty in given parameters';
+            $this->logger->error($msg);
+            throw new KerosException($msg, 400);
+        }
+        $file = $fields['file'];
+
+        $id = Validator::requiredId($id);
+        $member = $this->getOne($id);
+
+        if (!$member) {
+            throw new KerosException("The member could not be found", 404);
+        }
+
+        $filename = $member->getProfilePicture();
+
+        if ($filename) {
+            $filepath =  $this->kerosConfig['MEMBER_PHOTO_DIRECTORY'] . $filename;
+            if (file_exists($filepath)){
+                unlink($filepath);
+            }
+        }
+        
+        $filename = $this->directoryManager->uniqueFilename($file, false, $this->kerosConfig['MEMBER_PHOTO_DIRECTORY']);
+
+        $this->directoryManager->mkdir($this->kerosConfig['MEMBER_PHOTO_DIRECTORY'] . pathinfo($filename, PATHINFO_DIRNAME));
+        $member->setProfilePicture($filename);
+
+        $this->memberDataService->persist($member);
+
+        return $filename;
+    }
+
+    /**
+     * @param int $id
+     * @throws \Keros\Error\KerosException
+     */
+    public function deletePhoto(int $id): void
+    {
+        $id = Validator::requiredId($id);
+
+        $member = $this->getOne($id);
+
+        if (!$member) {
+            throw new KerosException("The member could not be found", 404);
+        }
+
+        $filename = $member->getProfilePicture();
+
+        if (!$filename) {
+            throw new KerosException("Profile picture could not be found", 404);
+        }
+
+        $filepath =  $this->kerosConfig['MEMBER_PHOTO_DIRECTORY'] . $filename;
+
+        if (file_exists($filepath)){
+            unlink($filepath);
+        }
+
+        $member->setProfilePicture(null);
+        $this->memberDataService->persist($member);
+    }
+
+    /**
+     * @param int $id
+     * @return String
+     * @throws \Keros\Error\KerosException
+     */
+    public function getPhoto(int $id): String
+    {
+        $id = Validator::requiredId($id);
+
+        $member = $this->getOne($id);
+
+        if (!$member) {
+            throw new KerosException("The member could not be found", 404);
+        }
+
+        $filename = $member->getProfilePicture();
+
+        if (!$filename) {
+            throw new KerosException("No profile picture for this member", 404);
+        }
+
+        $filepath =  $this->kerosConfig['MEMBER_PHOTO_DIRECTORY'] . $filename;
+
+        if (!file_exists($filepath)) {
+            throw new KerosException("Profile picture could not be found", 404);
+        }
+
+        return $filepath;
+    }
+
 }
