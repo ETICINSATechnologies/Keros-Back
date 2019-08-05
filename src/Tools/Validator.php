@@ -304,7 +304,7 @@ class Validator
     public static function requiredFile($file, $filename): string
     {
         if (!$file) {
-            throw new KerosException("The file "+ $filename +" could not be found in the request" , 400);
+            throw new KerosException("The file " . $filename . " could not be found in the request" , 400);
         }
 
         return $file;
