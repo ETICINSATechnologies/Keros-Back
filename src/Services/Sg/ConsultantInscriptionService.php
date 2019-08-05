@@ -35,9 +35,9 @@ class   ConsultantInscriptionService
     private $memberService;
 
     /**
-     * @var MemberInscriptionDataService
+     * @var ConsultantInscriptionDataService
      */
-    private $memberInscriptionDataService;
+    private $consultantInscriptionDataService;
 
     /**
      * @var CountryService
@@ -48,11 +48,6 @@ class   ConsultantInscriptionService
      * @var DepartmentService
      */
     private $departmentService;
-
-    /**
-     * @var PoleService
-     */
-    private $poleService;
 
     /**
      * @var Logger
@@ -66,20 +61,22 @@ class   ConsultantInscriptionService
         $this->genderService = $container->get(GenderService::class);
         $this->countryService = $container->get(CountryService::class);
         $this->departmentService = $container->get(DepartmentService::class);
-        $this->memberService = $container->get(MemberService::class);
-        $this->poleService = $container->get(PoleService::class);
-        $this->memberInscriptionDataService = $container->get(MemberInscriptionDataService::class);
+        $this->consultantService = $container->get(ConsultantService::class);
+        $this->consultantInscriptionDataService = $container->get(ConsultantInscriptionDataService::class);
     }
 
     /**
      * @param array $fields
-     * @return   MemberInscription
+     * @return ConsultantInscription
      * @throws KerosException
      */
-    public function create(array $fields): MemberInscription
+    public function create(array $fields): ConsultantInscription
     {
         $firstName = Validator::requiredString($fields["firstName"]);
         $lastName = Validator::requiredString($fields["lastName"]);
+        $genderId = Validator::requiredId($fields['genderId']);
+        $gender = $this->genderService->getOne($genderId);
+        $birthday = Validator::requiredDate($fields['birthday']);
         $departmentId = Validator::requiredId($fields["departmentId"]);
         $department = $this->departmentService->getOne($departmentId);
         $email = Validator::requiredEmail($fields["email"]);
@@ -87,20 +84,22 @@ class   ConsultantInscriptionService
         $outYear = Validator::optionalInt(isset($fields["outYear"]) ? $fields["outYear"] : null);
         $nationalityId = Validator::requiredId($fields["nationalityId"]);
         $nationality = $this->countryService->getOne($nationalityId);
-        $wantedPoleId = Validator::requiredId($fields["wantedPoleId"]);
-        $wantedPole = $this->poleService->getOne($wantedPoleId);
-        $genderId = Validator::requiredId($fields['genderId']);
-        $gender = $this->genderService->getOne($genderId);
-        $birthday = Validator::requiredDate($fields['birthday']);
-        $hasPaid = Validator::optionalBool(isset($fields['hasPaid']) ? $fields['hasPaid'] : false);
-        $droitImage = Validator::requiredBool($fields['droitImage']);
-
         $address = $this->addressService->create($fields["address"]);
-        $memberInscription = new MemberInscription($firstName, $lastName, $gender, $birthday, $department, $email, $phoneNumber, $outYear, $nationality, $address, $wantedPole, $hasPaid, $droitImage);
+        $droitImage = Validator::requiredBool($fields['droitImage']);
+        $documentIdentity = Validator::requiredFile($fields['documentIdentity'],'documentIdentity');
+        $documentIdentityFilename = $this->directoryManager->uniqueFilename($documentIdentity, false, $this->kerosConfig['MEMBER_PHOTO_DIRECTORY']);
+        $documentScolaryCertificate = Validator::requiredFile($fields['documentScolaryCertificate'],'documentScolaryCertificate');
+        $documentRIB = Validator::requiredFile($fields['documentRIB'],'documentRIB');
+        $documentVitaleCard = Validator::requiredFile($fields['documentVitaleCard'],'documentVitaleCard');
+        $documentResidencePermit = Validator::optionalFile($fields['documentResidencePermit']) ? $fields['documentResidencePermit'] : null;
 
-        $this->memberInscriptionDataService->persist($memberInscription);
 
-        return $memberInscription;
+
+        $consultantInscription = new ConsultantInscription();
+
+        $this->consultantInscriptionDataService->persist($consultantInscription);
+
+        return $consultantInscription;
     }
 
     /**
