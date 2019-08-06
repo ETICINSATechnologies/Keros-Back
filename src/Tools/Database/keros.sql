@@ -431,6 +431,31 @@ CREATE TABLE sg_member_inscription_document_type (
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS sg_consultant_inscription;
+CREATE TABLE sg_consultant_inscription (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  firstName varchar(255) NOT NULL,
+  lastName varchar(255) NOT NULL,
+  birthday date NOT NULL,
+  genderId int(11) NOT NULL,
+  departmentId int(11) NOT NULL,
+  email varchar(255) NOT NULL,
+  phoneNumber varchar(255) DEFAULT NULL,
+  outYear int DEFAULT NULL,
+  nationalityId int(11) NOT NULL,
+  addressId int(11) NOT NULL,
+  droitImage boolean DEFAULT FALSE,
+  documentIdentity varchar(255) NOT NULL,
+  documentScolaryCertificate varchar(255) NOT NULL,
+  documentRIB varchar(255) NOT NULL,
+  documentVitaleCard varchar(255) NOT NULL,
+  documentResidencePermit varchar(255) DEFAULT NULL,
+  PRIMARY KEY (id),
+  CONSTRAINT fk_sg_consultant_inscription_department FOREIGN KEY (departmentId) REFERENCES core_department(id),
+  CONSTRAINT fk_sg_consultant_inscription_nationality FOREIGN KEY (nationalityId) REFERENCES core_country(id),
+  CONSTRAINT fk_sg_consultant_inscription_gender FOREIGN KEY (genderId) REFERENCES core_gender(id),
+  CONSTRAINT fk_sg_consultant_inscription_address FOREIGN KEY (addressId) REFERENCES core_address(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 SET AUTOCOMMIT = 1;
 SET FOREIGN_KEY_CHECKS = 1;
