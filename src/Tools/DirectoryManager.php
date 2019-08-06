@@ -81,4 +81,14 @@ class DirectoryManager
     {
         return preg_replace('/(?<!\\\)\//', DIRECTORY_SEPARATOR, $path);
     }
+    
+    /**
+     * @param $path
+     */
+    public function deleteFile($path)
+    {
+        if (file_exists($path)){
+            unlink($path);
+        }
+    } 
 }
