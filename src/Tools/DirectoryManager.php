@@ -69,4 +69,14 @@ class DirectoryManager
             mkdir($path, $mode, true);
         }
     }
+
+    /**
+     * @param $path
+     */
+    public function deleteFile($path)
+    {
+        if (file_exists($path)){
+            unlink($path);
+        }
+    } 
 }
