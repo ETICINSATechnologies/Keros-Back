@@ -265,4 +265,9 @@ TRUNCATE TABLE sg_member_inscription_document_type;
 INSERT INTO sg_member_inscription_document_type(id, location, `name`, isTemplatable) VALUES
     (1, 'Fiche_inscription_membre_actif.pdf', 'Fiche inscription membre', true);
 
+TRUNCATE TABLE sg_consultant_inscription;
+INSERT INTO sg_consultant_inscription (id, firstName, lastName, genderId, birthday, departmentId, email, phoneNumber, outYear, nationalityId, addressId, droitImage, documentIdentity, documentScolaryCertificate, documentRIB, documentVitaleCard, documentResidencePermit) VALUES
+(1, 'Bruce', 'Wayne', 1, STR_TO_DATE('2000/2/14', '%Y/%m/%d'), 3, 'bruce.wayne@batman.com', '0033123456789', 2021, 42, 1, false, "defaultFilename", "defaultFilename", "defaultFilename", "defaultFilename", "defaultFilename"),
+(2, 'Clark', 'Kent', 1, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 2, 'clark.kent@dailyplanete.com', '0033123456789', 2023, 69, 1, true, "defaultFilename", "defaultFilename", "defaultFilename", "defaultFilename", "defaultFilename");
+
 COMMIT;
