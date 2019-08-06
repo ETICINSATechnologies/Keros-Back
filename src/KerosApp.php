@@ -5,6 +5,7 @@ namespace Keros;
 use Keros\Controllers\Auth\LoginController;
 use Keros\Controllers\Sg\MemberInscriptionController;
 use Keros\Controllers\Sg\MemberInscriptionDocumentController;
+use Keros\Controllers\Sg\ConsultantInscriptionController;
 use Keros\Controllers\Treso\FactureDocumentController;
 use Keros\Controllers\Core\ConsultantController;
 use Keros\Controllers\Ua\StudyDocumentController;
@@ -213,6 +214,14 @@ class KerosApp
                     $this->post("/{id:[0-9]+}/validate", MemberInscriptionController::class . ':validateMemberInscription');
                     $this->post("/{id:[0-9]+}/confirm-payment", MemberInscriptionController::class . ':confirmPaymentMemberInscription');
                     $this->get("/{id:[0-9]+}/document/{documentTypeId:[0-9]+}/generate", MemberInscriptionDocumentController::class . ':generateDocument');
+                });
+                $this->group('/consultant-inscription', function () {
+                    $this->get("", ConsultantInscriptionController::class . ':getPageConsultantInscriptions');
+                    $this->post("", ConsultantInscriptionController::class . ':createConsultantInscription');
+                    $this->get('/{id:[0-9]+}', ConsultantInscriptionController::class . ':getConsultantInscription');
+                    $this->delete("/{id:[0-9]+}", ConsultantInscriptionController::class . ':deleteConsultantInscription');
+                    $this->put("/{id:[0-9]+}", ConsultantInscriptionController::class . ':updateConsultantInscription');
+                    $this->post("/{id:[0-9]+}/validate", ConsultantInscriptionController::class . ':validateConsultantInscription');
                 });
             })->add($this->getContainer()->get(AuthenticationMiddleware::class));
 
