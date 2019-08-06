@@ -32,9 +32,9 @@ class   ConsultantInscriptionService
     private $genderService;
 
     /**
-     * @var MemberService
+     * @var ConsultantService
      */
-    private $memberService;
+    private $consultantService;
 
     /**
      * @var ConsultantInscriptionDataService
@@ -138,13 +138,13 @@ class   ConsultantInscriptionService
         $documentScolaryCertificateFilenameOld = $consultantInscription->getDocumentScolaryCertificate();
         $documentRIBFilenameOld = $consultantInscription->getDocumentRIB();
         $documentVitaleCardFilenameOld = $consultantInscription->getDocumentVitaleCard();
-        $documentResidencePermitFilenameld = $consultantInscription->getDocumentResidencePermit();
+        $documentResidencePermitFilenameOld = $consultantInscription->getDocumentResidencePermit();
 
         if ($documentIdentityFilenameOld) $this->directoryManager->deleteFile($this->kerosConfig['INSCRIPTION_IDENTITY_DOCUMENT_DIRECTORY'] . $documentIdentityFilenameOld);
         if ($documentScolaryCertificateFilenameOld) $this->directoryManager->deleteFile($this->kerosConfig['INSCRIPTION_IDENTITY_DOCUMENT_DIRECTORY'] . $documentScolaryCertificateFilenameOld);
         if ($documentRIBFilenameOld) $this->directoryManager->deleteFile($this->kerosConfig['INSCRIPTION_IDENTITY_DOCUMENT_DIRECTORY'] . $documentRIBFilenameOld);
         if ($documentVitaleCardFilenameOld) $this->directoryManager->deleteFile($this->kerosConfig['INSCRIPTION_IDENTITY_DOCUMENT_DIRECTORY'] . $documentVitaleCardFilenameOld);
-        if ($documentResidencePermitFilenameld) $this->directoryManager->deleteFile($this->kerosConfig['INSCRIPTION_IDENTITY_DOCUMENT_DIRECTORY'] . $documentResidencePermitFilenameld);
+        if ($documentResidencePermitFilenameOld) $this->directoryManager->deleteFile($this->kerosConfig['INSCRIPTION_IDENTITY_DOCUMENT_DIRECTORY'] . $documentResidencePermitFilenameOld);
 
         $this->consultantInscriptionDataService->delete($consultantInscription);
     }
@@ -228,7 +228,7 @@ class   ConsultantInscriptionService
         $documentScolaryCertificateFilenameOld = $consultantInscription->getDocumentScolaryCertificate();
         $documentRIBFilenameOld = $consultantInscription->getDocumentRIB();
         $documentVitaleCardFilenameOld = $consultantInscription->getDocumentVitaleCard();
-        $documentResidencePermitFilenameld = $consultantInscription->getDocumentResidencePermit();
+        $documentResidencePermitFilenameOld = $consultantInscription->getDocumentResidencePermit();
 
         $documentIdentityFilename = $this->directoryManager->uniqueFilename($documentIdentity, false, $this->kerosConfig['INSCRIPTION_IDENTITY_DOCUMENT_DIRECTORY']);
         $documentScolaryCertificateFilename = $this->directoryManager->uniqueFilename($documentScolaryCertificate, false, $this->kerosConfig['INSCRIPTION_SCOLARY_CERTIFICATE_DIRECTORY']);
@@ -265,7 +265,7 @@ class   ConsultantInscriptionService
         if ($documentScolaryCertificateFilenameOld) $this->directoryManager->deleteFile($this->kerosConfig['INSCRIPTION_IDENTITY_DOCUMENT_DIRECTORY'] . $documentScolaryCertificateFilenameOld);
         if ($documentRIBFilenameOld) $this->directoryManager->deleteFile($this->kerosConfig['INSCRIPTION_IDENTITY_DOCUMENT_DIRECTORY'] . $documentRIBFilenameOld);
         if ($documentVitaleCardFilenameOld) $this->directoryManager->deleteFile($this->kerosConfig['INSCRIPTION_IDENTITY_DOCUMENT_DIRECTORY'] . $documentVitaleCardFilenameOld);
-        if ($documentResidencePermitFilenameld) $this->directoryManager->deleteFile($this->kerosConfig['INSCRIPTION_IDENTITY_DOCUMENT_DIRECTORY'] . $documentResidencePermitFilenameld);
+        if ($documentResidencePermitFilenameOld) $this->directoryManager->deleteFile($this->kerosConfig['INSCRIPTION_IDENTITY_DOCUMENT_DIRECTORY'] . $documentResidencePermitFilenameOld);
 
         return $consultantInscription;
     }
