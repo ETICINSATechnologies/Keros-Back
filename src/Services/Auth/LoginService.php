@@ -2,7 +2,6 @@
 
 namespace Keros\Services\Auth;
 
-
 use Keros\DataServices\Core\UserDataService;
 use Keros\Entities\Auth\LoginResponse;
 use Keros\Error\KerosException;
@@ -10,7 +9,6 @@ use Keros\Tools\Authorization\JwtCodec;
 use Keros\Tools\Authorization\PasswordEncryption;
 use Keros\Tools\Validator;
 use Psr\Container\ContainerInterface;
-
 
 class LoginService
 {
