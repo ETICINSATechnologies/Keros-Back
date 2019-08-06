@@ -67,7 +67,9 @@ class LoginIntegrationTest extends AppTestCase
         $req = $req->withParsedBody($postBody);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
+        $body = json_decode($response->getBody());
 
         $this->assertSame(401, $response->getStatusCode());
+        $this->assertContains("Account disabled.", $body->message);
     }
 }
