@@ -34,8 +34,9 @@ class StudyDocumentIntegrationTest extends AppTestCase
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(false);
         fclose($handle);
+        $response = $this->app->run(false);
+
         $this->assertSame(200, $response->getStatusCode());
         //on test qu'il est maintenant bien retourné
         $env = Environment::mock([

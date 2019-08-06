@@ -71,7 +71,6 @@ class StudyDocumentController
     public function createDocument(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Uploading document " . $args['documentId'] . " for study " . $args['studyId'] . " from " . $request->getServerParams()["REMOTE_ADDR"]);
-
         if ($request->getUploadedFiles() == null) {
             $msg = 'No file given';
             $this->logger->error($msg);
@@ -94,7 +93,7 @@ class StudyDocumentController
 
         $this->entityManager->beginTransaction();
         $document = $this->studyDocumentService->create($body);
-        $uploadedFile->moveTo($this->kerosConfig['STUDY_DOCUMENT_DIRECTORY'] . $document->getLocation());
+        $uploadedFile->moveTo($this->directoryManager->normalizePath($this->kerosConfig['STUDY_DOCUMENT_DIRECTORY'] . $document->getLocation()));
         $this->entityManager->commit();
 
         return $response->withStatus(200);

@@ -25,7 +25,7 @@ class MemberTest extends TestCase
                 new Gender("Femme"),
                 new Department(1, "IF", "Informatique"),
                 "Google",
-                "http://photoprofile.jpg",
+                null,
                 true
             )
         );
@@ -42,7 +42,7 @@ class MemberTest extends TestCase
             new Gender("Femme"),
             new Department(1, "IF", "Informatique"),
             "Google",
-            "http://photoprofile.jpg",
+            "randomstring.jpg",
             true
         );
 
@@ -55,7 +55,7 @@ class MemberTest extends TestCase
         $this->assertEquals("basmah.maiga@gmail.com", $member->getEmail());
         $this->assertEquals("2018", $member->getSchoolYear());
         $this->assertEquals("Google", $member->getCompany());
-        $this->assertEquals("http://photoprofile.jpg", $member->getProfilePicture());
+        $this->assertEquals("randomstring.jpg", $member->getProfilePicture());
         $this->assertEquals(true, $member->isDroitImage());
     }
 }

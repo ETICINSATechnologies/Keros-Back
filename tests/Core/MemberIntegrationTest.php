@@ -5,6 +5,7 @@ namespace KerosTest\Member;
 use KerosTest\AppTestCase;
 use Slim\Http\Environment;
 use Slim\Http\Request;
+use Slim\Http\UploadedFile;
 
 class MemberIntegrationTest extends AppTestCase
 {
@@ -179,7 +180,6 @@ class MemberIntegrationTest extends AppTestCase
                 )
             ],
             "company" => "Amazon",
-            "profilePicture" => "http://image.png",
             "droitImage" => true
         );
 
@@ -207,7 +207,6 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(1, $body->schoolYear);
         $this->assertSame("0033675385495", $body->telephone);
         $this->assertSame("Amazon", $body->company);
-        $this->assertSame("http://image.png", $body->profilePicture);
         $this->assertNotNull($body->address->id);
         $this->assertSame(3, $body->positions[0]->id);
         $this->assertSame(4, $body->positions[1]->id);
@@ -338,7 +337,6 @@ class MemberIntegrationTest extends AppTestCase
                 )
             ],
             "company" => "Amazon",
-            "profilePicture" => "http://image.png",
             "droitImage" => false
         );
 
@@ -366,7 +364,6 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(1, $body->schoolYear);
         $this->assertSame("0033675385495", $body->telephone);
         $this->assertSame("Amazon", $body->company);
-        $this->assertSame("http://image.png", $body->profilePicture);
         $this->assertSame(3, $body->positions[0]->id);
         $this->assertSame(4, $body->positions[1]->id);
         $this->assertSame(false, $body->droitImage);
@@ -405,7 +402,6 @@ class MemberIntegrationTest extends AppTestCase
                 )
             ],
             "company" => "Amazon",
-            "profilePicture" => "http://image.png"
         );
 
         $env = Environment::mock([
@@ -433,7 +429,6 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(1, $body->schoolYear);
         $this->assertSame("0033675385495", $body->telephone);
         $this->assertSame("Amazon", $body->company);
-        $this->assertSame("http://image.png", $body->profilePicture);
         $this->assertNotNull($body->address->id);
         $this->assertSame(3, $body->positions[0]->id);
         $this->assertSame(4, $body->positions[1]->id);
@@ -453,6 +448,124 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(400, $response->getStatusCode());
     }
 
+    public function testPostMemberPhotoShouldReturn204()
+    {
+        $temp_fileName = "tempPhoto.jpg";
+        $handle = fopen($temp_fileName, 'w') or die('Cannot open file:  '.$temp_fileName);
+        $file = new UploadedFile($temp_fileName, $temp_fileName, 'image/jpeg', filesize($temp_fileName));
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => '/api/v1/core/member/1/photo',
+            'slim.files' => ['file' => $file],
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        fclose($handle);
+        $response = $this->app->run(false);
+        $this->assertSame(204, $response->getStatusCode());
+    }
+
+    public function testPostMemberPhotoShouldReturn400()
+    {
+        $temp_fileName = "tempFile.csv";
+        $handle = fopen($temp_fileName, 'w') or die('Cannot open file:  '.$temp_fileName);
+        $file = new UploadedFile($temp_fileName, $temp_fileName, 'text/csv', filesize($temp_fileName));
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => '/api/v1/core/member/1/photo',
+            'slim.files' => ['file' => $file],
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        fclose($handle);
+        $response = $this->app->run(false);
+        if (file_exists($temp_fileName)) {
+            unlink($temp_fileName);
+        }
+        $this->assertSame(400, $response->getStatusCode());
+    }
+
+    public function testGetMemberPhotoShouldReturn200()
+    {
+        $fileName = "tempPhoto.jpg";
+        $handle = fopen($fileName, "w");
+        $file = new UploadedFile($fileName, $fileName, 'image/jpeg', filesize($fileName));
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => '/api/v1/core/member/1/photo',
+            'slim.files' => ['file' => $file],
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/core/member/1/photo',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        fclose($handle);
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+    }
+
+    public function testGetMemberPhotoShouldReturn404()
+    {   
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/core/member/2/photo',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(404, $response->getStatusCode());
+    }
+
+    public function testDeleteMemberPhotoShouldReturn204()
+    {   $fileName = "tempPhoto.jpg";
+        $handle = fopen($fileName, "w");
+        fclose($handle);
+        $file = new UploadedFile($fileName, $fileName, 'image/jpeg', filesize($fileName));
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => '/api/v1/core/member/1/photo',
+            'slim.files' => ['file' => $file],
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'DELETE',
+            'REQUEST_URI' => '/api/v1/core/member/1/photo',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(204, $response->getStatusCode());
+    }
+
+    public function testDeleteMemberPhotoShouldReturn404()
+    {   
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'DELETE',
+            'REQUEST_URI' => '/api/v1/core/member/2/photo',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(404, $response->getStatusCode());
+    }
+    
     public function testPostMemberWithoutRightShouldReturn401()
     {
         $post_body = array(
