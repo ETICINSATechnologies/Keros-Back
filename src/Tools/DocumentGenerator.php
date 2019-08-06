@@ -122,7 +122,9 @@ class DocumentGenerator
     {
         $this->directoryManager->mkdir($this->kerosConfig["TEMPORARY_DIRECTORY"]);
         $documentTypeLocation = $this->documentTypeDirectory . $documentType->getLocation();
+        $documentTypeLocation = $this->directoryManager->normalizePath($documentTypeLocation);
         $location = $this->directoryManager->uniqueFilename($documentType->getLocation(), false, $this->temporaryDirectory);
+        $location = $this->directoryManager->normalizePath($location);
 
         if (!copy($documentTypeLocation, $location)) {
             $msg = "Error copying document type " . $documentType->getId();
