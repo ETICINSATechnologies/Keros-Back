@@ -3,6 +3,7 @@
 namespace Keros\Entities\Core;
 
 use JsonSerializable;
+use Keros\Entities\Sg\MemberInscriptionDocument;
 
 /**
  * @Entity
@@ -78,8 +79,33 @@ class Member implements JsonSerializable
      * @ManyToMany(targetEntity="Keros\Entities\Ua\Study", mappedBy="leaders")
      */
     protected $studiesAsLeader;
-    
-    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage)
+
+    /**
+     * @var MemberInscriptionDocument[]
+     * @ManyToMany(targetEntity="Keros\Entities\Sg\MemberInscriptionDocument")
+     * @JoinTable(name="core_member_to_sg_member_inscription_document",
+     *      joinColumns={@JoinColumn(name="core_member_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@JoinColumn(name="sg_member_inscription_document_id", referencedColumnName="id", unique=true)}
+     *      )
+     */
+    private $memberInscriptionDocument;
+
+    /**
+     * Member constructor.
+     * @param $firstName
+     * @param $lastName
+     * @param $birthday
+     * @param $telephone
+     * @param $email
+     * @param $schoolYear
+     * @param $gender
+     * @param $department
+     * @param $company
+     * @param $profilePicture
+     * @param $droitImage
+     * @param $memberInscriptionDocument
+     */
+    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage, $memberInscriptionDocument)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -92,6 +118,7 @@ class Member implements JsonSerializable
         $this->company = $company;
         $this->profilePicture = $profilePicture;
         $this->droitImage = $droitImage;
+        $this->memberInscriptionDocument = $memberInscriptionDocument;
     }
 
     public function jsonSerialize()
@@ -409,6 +436,22 @@ class Member implements JsonSerializable
     public function setDroitImage(bool $droitImage): void
     {
         $this->droitImage = $droitImage;
+    }
+
+    /**
+     * @return MemberInscriptionDocument[]
+     */
+    public function getMemberInscriptionDocument(): array
+    {
+        return $this->memberInscriptionDocument;
+    }
+
+    /**
+     * @param MemberInscriptionDocument[] $memberInscriptionDocument
+     */
+    public function setMemberInscriptionDocument(array $memberInscriptionDocument): void
+    {
+        $this->memberInscriptionDocument = $memberInscriptionDocument;
     }
 
 }

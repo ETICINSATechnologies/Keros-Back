@@ -447,7 +447,17 @@ CREATE TABLE sg_member_inscription_to_member_inscription_document (
     UNIQUE INDEX unique_sg_member_inscription_document (sg_member_inscription_document_id),
     PRIMARY KEY (sg_member_inscription_document_id, sg_member_inscription_id),
     CONSTRAINT fk_sg_member_inscription FOREIGN KEY (sg_member_inscription_id) REFERENCES sg_member_inscription(id),
-    CONSTRAINT fk_sg_member_inscription_document FOREIGN KEY (sg_member_inscription_document_id) REFERENCES sg_member_inscription_document(id)
+    CONSTRAINT fk_sg_member_inscription_member_inscription_document FOREIGN KEY (sg_member_inscription_document_id) REFERENCES sg_member_inscription_document(id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS core_member_to_sg_member_inscription_document;
+CREATE TABLE core_member_to_sg_member_inscription_document (
+    core_member_id int(11) NOT NULL,
+    sg_member_inscription_document_id int(11) NOT NULL,
+    UNIQUE INDEX unique_sg_member_inscription_document (sg_member_inscription_document_id),
+    PRIMARY KEY (sg_member_inscription_document_id, core_member_id),
+    CONSTRAINT fk_core_member_inscription FOREIGN KEY (core_member_id) REFERENCES core_member(id),
+    CONSTRAINT fk_core_member_sg_member_inscription_document FOREIGN KEY (sg_member_inscription_document_id) REFERENCES sg_member_inscription_document(id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 SET AUTOCOMMIT = 1;

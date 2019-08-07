@@ -239,8 +239,11 @@ class   MemberInscriptionService
                 "countryId" => $memberInscription->getAddress()->getCountry()->getId()
             ),
             "positions" => array(),
-            "droitImage" => $memberInscription->isDroitImage()
+            "droitImage" => $memberInscription->isDroitImage(),
+            "memberInscriptionDocument" => $memberInscription->getMemberInscriptionDocument(),
         );
+
+        $this->logger->info(json_encode($memberArray));
 
         if ($memberInscription->getOutYear()) {
             $schoolYear = 5 - ($memberInscription->getOutYear() - $year);

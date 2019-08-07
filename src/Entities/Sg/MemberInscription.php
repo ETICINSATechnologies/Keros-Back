@@ -398,7 +398,7 @@ class MemberInscription implements JsonSerializable
     /**
      * @return MemberInscriptionDocument[]
      */
-    public function getMemberInscriptionDocument(): array
+    public function getMemberInscriptionDocument()
     {
         return $this->memberInscriptionDocument;
     }
