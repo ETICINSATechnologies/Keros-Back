@@ -105,20 +105,8 @@ class   ConsultantInscriptionService
         $documentRIB = Validator::requiredFile($fields['documentRIB'],'documentRIB');
         $documentVitaleCard = Validator::requiredFile($fields['documentVitaleCard'],'documentVitaleCard');
         $documentResidencePermit = Validator::optionalFile($fields['documentResidencePermit']) ? $fields['documentResidencePermit'] : null;
-
-        $documentIdentityFilename = $this->directoryManager->uniqueFilename($documentIdentity, false, $this->kerosConfig['INSCRIPTION_IDENTITY_DOCUMENT_DIRECTORY']);
-        $documentScolaryCertificateFilename = $this->directoryManager->uniqueFilename($documentScolaryCertificate, false, $this->kerosConfig['INSCRIPTION_SCOLARY_CERTIFICATE_DIRECTORY']);
-        $documentRIBFilename = $this->directoryManager->uniqueFilename($documentRIB, false, $this->kerosConfig['INSCRIPTION_RIB_DIRECTORY']);
-        $documentVitaleCardFilename = $this->directoryManager->uniqueFilename($documentVitaleCard, false, $this->kerosConfig['INSCRIPTION_VITALE_CARD_DIRECTORY']);
-        $documentResidencePermitFilename = $documentResidencePermit ? $this->directoryManager->uniqueFilename($documentResidencePermit, false, $this->kerosConfig['INSCRIPTION_RESIDENCE_PERMIT_DIRECTORY']) : null;
-
-        $this->directoryManager->mkdir($this->kerosConfig['INSCRIPTION_IDENTITY_DOCUMENT_DIRECTORY'] . pathinfo($documentIdentityFilename, PATHINFO_DIRNAME));
-        $this->directoryManager->mkdir($this->kerosConfig['INSCRIPTION_SCOLARY_CERTIFICATE_DIRECTORY'] . pathinfo($documentScolaryCertificateFilename, PATHINFO_DIRNAME));
-        $this->directoryManager->mkdir($this->kerosConfig['INSCRIPTION_RIB_DIRECTORY'] . pathinfo($documentRIBFilename, PATHINFO_DIRNAME));
-        $this->directoryManager->mkdir($this->kerosConfig['INSCRIPTION_VITALE_CARD_DIRECTORY'] . pathinfo($documentVitaleCardFilename, PATHINFO_DIRNAME));
-        if ($documentResidencePermit) $this->directoryManager->mkdir($this->kerosConfig['INSCRIPTION_RESIDENCE_PERMIT_DIRECTORY'] . pathinfo($documentResidencePermitFilename, PATHINFO_DIRNAME));
         
-        $consultantInscription = new ConsultantInscription($firstName, $lastName, $gender, $birthday, $department, $email, $phoneNumber, $outYear, $nationality, $address, $droitImage, $documentIdentityFilename, $documentScolaryCertificateFilename, $documentRIBFilename, $documentVitaleCardFilename, $documentResidencePermitFilename);
+        $consultantInscription = new ConsultantInscription($firstName, $lastName, $gender, $birthday, $department, $email, $phoneNumber, $outYear, $nationality, $address, $droitImage, $documentIdentity, $documentScolaryCertificate, $documentRIB, $documentVitaleCard, $documentResidencePermit);
 
         $this->consultantInscriptionDataService->persist($consultantInscription);
 
@@ -230,18 +218,6 @@ class   ConsultantInscriptionService
         $documentVitaleCardFilenameOld = $consultantInscription->getDocumentVitaleCard();
         $documentResidencePermitFilenameOld = $consultantInscription->getDocumentResidencePermit();
 
-        $documentIdentityFilename = $this->directoryManager->uniqueFilename($documentIdentity, false, $this->kerosConfig['INSCRIPTION_IDENTITY_DOCUMENT_DIRECTORY']);
-        $documentScolaryCertificateFilename = $this->directoryManager->uniqueFilename($documentScolaryCertificate, false, $this->kerosConfig['INSCRIPTION_SCOLARY_CERTIFICATE_DIRECTORY']);
-        $documentRIBFilename = $this->directoryManager->uniqueFilename($documentRIB, false, $this->kerosConfig['INSCRIPTION_RIB_DIRECTORY']);
-        $documentVitaleCardFilename = $this->directoryManager->uniqueFilename($documentVitaleCard, false, $this->kerosConfig['INSCRIPTION_VITALE_CARD_DIRECTORY']);
-        $documentResidencePermitFilename = $documentResidencePermit ? $this->directoryManager->uniqueFilename($documentResidencePermit, false, $this->kerosConfig['INSCRIPTION_RESIDENCE_PERMIT_DIRECTORY']) : null;
-
-        $this->directoryManager->mkdir($this->kerosConfig['INSCRIPTION_IDENTITY_DOCUMENT_DIRECTORY'] . pathinfo($documentIdentityFilename, PATHINFO_DIRNAME));
-        $this->directoryManager->mkdir($this->kerosConfig['INSCRIPTION_SCOLARY_CERTIFICATE_DIRECTORY'] . pathinfo($documentScolaryCertificateFilename, PATHINFO_DIRNAME));
-        $this->directoryManager->mkdir($this->kerosConfig['INSCRIPTION_RIB_DIRECTORY'] . pathinfo($documentRIBFilename, PATHINFO_DIRNAME));
-        $this->directoryManager->mkdir($this->kerosConfig['INSCRIPTION_VITALE_CARD_DIRECTORY'] . pathinfo($documentVitaleCardFilename, PATHINFO_DIRNAME));
-        if ($documentResidencePermit) $this->directoryManager->mkdir($this->kerosConfig['INSCRIPTION_RESIDENCE_PERMIT_DIRECTORY'] . pathinfo($documentResidencePermitFilename, PATHINFO_DIRNAME));
-
         $consultantInscription->setFirstName($firstName);
         $consultantInscription->setLastName($lastName);
         $consultantInscription->setGender($gender);
@@ -253,11 +229,11 @@ class   ConsultantInscriptionService
         $consultantInscription->setNationality($nationality);
         $this->addressService->update($consultantInscription->getAddress()->getId(), $fields["address"]);
         $consultantInscription->setDroitImage($droitImage);
-        $consultantInscription->setDocumentIdentity($documentIdentityFilename);
-        $consultantInscription->setDocumentScolaryCertificate($documentScolaryCertificateFilename);
-        $consultantInscription->setDocumentRIB($documentRIBFilename);
-        $consultantInscription->setDocumentVitaleCard($documentVitaleCardFilename);
-        $consultantInscription->setDocumentResidencePermit($documentResidencePermitFilename);
+        $consultantInscription->setDocumentIdentity($documentIdentity);
+        $consultantInscription->setDocumentScolaryCertificate($documentScolaryCertificate);
+        $consultantInscription->setDocumentRIB($documentRIB);
+        $consultantInscription->setDocumentVitaleCard($documentVitaleCard);
+        $consultantInscription->setDocumentResidencePermit($documentResidencePermit);
         
         $this->consultantInscriptionDataService->persist($consultantInscription);
 

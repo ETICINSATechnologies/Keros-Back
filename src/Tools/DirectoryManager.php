@@ -46,6 +46,31 @@ class DirectoryManager
     }
 
     /**
+     * @param $file
+     * @param bool $usingDate
+     * @param string $location
+     * @return string
+     * @throws Exception
+     */
+    public function uniqueFilenameOnly($filename, $usingDate = false, $location = ''): string
+    {
+        $newfilename = $filename;
+        $filepath = $location . $filename;
+        do {
+            if (!$usingDate) {
+                $newfilename = md5(pathinfo($filename, PATHINFO_FILENAME) . microtime()) . '.' . pathinfo($file, PATHINFO_EXTENSION);
+                $filepath = $location . $newfilename;
+            }
+            else {
+                $date = new \DateTime();
+                $newfilename = $date->format('d-m-Y_H:i:s:u') . '.' . pathinfo($filename, PATHINFO_EXTENSION);
+                $filepath = $location . $newfilename;
+            }
+        } while (file_exists($filepath));
+        return $newfilename;
+    }
+
+    /**
      * @param string $target
      * @param string $link
      * @throws KerosException
