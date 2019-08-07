@@ -108,6 +108,16 @@ class MemberInscription implements JsonSerializable
     private $droitImage;
 
     /**
+     * @var MemberInscriptionDocument[]
+     * @ManyToMany(targetEntity="MemberInscriptionDocument")
+     * @JoinTable(name="sg_member_inscription_to_member_inscription_document",
+     *     joinColumns={@JoinColumn(name="sg_member_inscription_id", referencedColumnName="id")},
+     *     inverseJoinColumns={@JoinColumn(name="sg_member_inscription_document_id", referencedColumnName="id", unique=true)}
+     *     )
+     */
+    private $memberInscriptionDocument;
+
+    /**
      * MemberInscription constructor.
      * @param string $firstName
      * @param string $lastName
@@ -383,6 +393,22 @@ class MemberInscription implements JsonSerializable
     public function setDroitImage(bool $droitImage): void
     {
         $this->droitImage = $droitImage;
+    }
+
+    /**
+     * @return MemberInscriptionDocument[]
+     */
+    public function getMemberInscriptionDocument(): array
+    {
+        return $this->memberInscriptionDocument;
+    }
+
+    /**
+     * @param MemberInscriptionDocument[] $memberInscriptionDocument
+     */
+    public function setMemberInscriptionDocument(array $memberInscriptionDocument): void
+    {
+        $this->memberInscriptionDocument = $memberInscriptionDocument;
     }
 
 }

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Keros\Entities\Sg;
 
 use JsonSerializable;
@@ -14,11 +13,6 @@ use Keros\Entities\Core\Document;
  */
 class MemberInscriptionDocument extends Document implements JsonSerializable
 {
-    /**
-     * @ManyToOne(targetEntity="Keros\Entities\Sg\MemberInscription")
-     * @JoinColumn(name="memberInscriptionId", referencedColumnName="id")
-     */
-    private $memberInscription;
 
     /**
      * @ManyToOne(targetEntity="Keros\Entities\Sg\MemberInscriptionDocumentType")
@@ -29,7 +23,6 @@ class MemberInscriptionDocument extends Document implements JsonSerializable
     public function __construct($date, $location, $memberInscription, $memberInscriptionDocumentType)
     {
         parent::__construct($date, $location);
-        $this->memberInscription = $memberInscription;
         $this->memberInscriptionDocumentType = $memberInscriptionDocumentType;
     }
 
@@ -37,27 +30,10 @@ class MemberInscriptionDocument extends Document implements JsonSerializable
     {
         return [
             'id' => $this->getId(),
-            'memberInscription' => $this->getMemberInscription(),
             'memberInscriptionDocumentType' => $this->getMemberInscriptionDocumentType(),
             'date' => $this->getUploadDate(),
             'location' => $this->getLocation(),
         ];
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMemberInscription()
-    {
-        return $this->memberInscription;
-    }
-
-    /**
-     * @param mixed $memberInscription
-     */
-    public function setMemberInscription($memberInscription): void
-    {
-        $this->memberInscription = $memberInscription;
     }
 
     /**
