@@ -101,7 +101,7 @@ class MemberInscriptionDocumentController
 
         $this->entityManager->beginTransaction();
         $document = $this->memberInscriptionDocumentService->create($body);
-        $uploadedFile->moveTo($this->kerosConfig['MEMBER_INSCRIPTION_DOCUMENT_DIRECTORY'] . $document->getLocation());
+        $uploadedFile->moveTo($this->directoryManager->normalizePath($this->kerosConfig['MEMBER_INSCRIPTION_DOCUMENT_DIRECTORY'] . $document->getLocation()));
         $this->entityManager->commit();
 
         return $response->withStatus(200);

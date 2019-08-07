@@ -31,6 +31,7 @@ class MemberInscriptionDocumentIntegrationTest extends AppTestCase
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
+        fclose($handle);
         $response = $this->app->run(false);
         $this->assertSame(200, $response->getStatusCode());
         $body = json_decode($response->getBody());
