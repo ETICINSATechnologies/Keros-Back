@@ -222,6 +222,8 @@ class KerosApp
                     $this->delete("/{id:[0-9]+}", ConsultantInscriptionController::class . ':deleteConsultantInscription');
                     $this->put("/{id:[0-9]+}", ConsultantInscriptionController::class . ':updateConsultantInscription');
                     $this->post("/{id:[0-9]+}/validate", ConsultantInscriptionController::class . ':validateConsultantInscription');
+                    $this->get("/{id:[0-9]+}/documentIdentity", ConsultantInscriptionController::class . ':getDocumentIdentity');
+                    $this->post("/{id:[0-9]+}/documentIdentity", ConsultantInscriptionController::class . ':createDocumentIdentity');
                 });
             })->add($this->getContainer()->get(AuthenticationMiddleware::class));
 
