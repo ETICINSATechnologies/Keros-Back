@@ -13,6 +13,7 @@ use Keros\Services\Core\DepartmentService;
 use Keros\Services\Core\GenderService;
 use Keros\Services\Core\ConsultantService;
 use Keros\Tools\Validator;
+use Keros\Tools\FileValidator;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Keros\Tools\ConfigLoader;
@@ -291,6 +292,161 @@ class   ConsultantInscriptionService
 
         $this->consultantService->create($consultantArray);
         $this->delete($consultantInscription->getId());
+    }
+
+    /**
+     * @param int $id
+     * @return String
+     * @throws KerosException
+     */
+    public function getDocumentIdentity(int $id): String
+    {
+        $id = Validator::requiredId($id);
+        $consultantInscription = $this->getOne($id);
+        $filename = FileValidator::verifyFilename($consultantInscription->getDocumentIdentity(),'documentIdentity');
+        $filepath =  FileValidator::verifyFilepath($this->kerosConfig['INSCRIPTION_IDENTITY_DOCUMENT_DIRECTORY'] . $filename,'documentIdentity');
+        return $filepath;
+    }
+
+    /**
+     * @param int $id
+     * @return String
+     * @throws KerosException
+     */
+    public function getDocumentScolaryCertificate(int $id): String
+    {
+        $id = Validator::requiredId($id);
+        $consultantInscription = $this->getOne($id);
+        $filename = FileValidator::verifyFilename($consultantInscription->getDocumentScolaryCertificate(),'documentScolaryCertificate');
+        $filepath =  FileValidator::verifyFilepath($this->kerosConfig['INSCRIPTION_SCOLARY_CERTIFICATE_DIRECTORY'] . $filename,'documentScolaryCertificate');
+        return $filepath;
+    }
+
+    /**
+     * @param int $id
+     * @return String
+     * @throws KerosException
+     */
+    public function getDocumentRIB(int $id): String
+    {
+        $id = Validator::requiredId($id);
+        $consultantInscription = $this->getOne($id);
+        $filename = FileValidator::verifyFilename($consultantInscription->getDocumentRIB(),'documentRIB');
+        $filepath =  FileValidator::verifyFilepath($this->kerosConfig['INSCRIPTION_RIB_DIRECTORY'] . $filename,'documentRIB');
+        return $filepath;
+    }
+
+    /**
+     * @param int $id
+     * @return String
+     * @throws KerosException
+     */
+    public function getDocumentVitaleCard(int $id): String
+    {
+        $id = Validator::requiredId($id);
+        $consultantInscription = $this->getOne($id);
+        $filename = FileValidator::verifyFilename($consultantInscription->getDocumentVitaleCard(),'documentVitaleCard');
+        $filepath =  FileValidator::verifyFilepath($this->kerosConfig['INSCRIPTION_VITALE_CARD_DIRECTORY'] . $filename,'documentVitaleCard');
+        return $filepath;
+    }
+
+    /**
+     * @param int $id
+     * @return String
+     * @throws KerosException
+     */
+    public function getDocumentResidencePermit(int $id): String
+    {
+        $id = Validator::requiredId($id);
+        $consultantInscription = $this->getOne($id);
+        $filename = FileValidator::verifyFilename($consultantInscription->getDocumentResidencePermit(),'documentResidencePermit');
+        $filepath =  FileValidator::verifyFilepath($this->kerosConfig['INSCRIPTION_RESIDENCE_PERMIT_DIRECTORY'] . $filename,'documentResidencePermit');
+        return $filepath;
+    }
+
+    /**
+     * @param int $id
+     * @return String
+     * @throws KerosException
+     */
+    public function createDocumentIdentity(int $id, array $fields): String
+    {
+        $id = Validator::requiredId($id);
+        $consultantInscription = $this->getOne($id);
+        $oldFilename = $consultantInscription->getDocumentIdentity();
+        $filename = Validator::requiredFile($fields['documentIdentity'],'documentIdentity');
+        $consultantInscription->setDocumentIdentity($filename);
+        $this->consultantInscriptionDataService->persist($consultantInscription);
+        if ($oldFilename) $this->directoryManager->deleteFile($this->kerosConfig['INSCRIPTION_IDENTITY_DOCUMENT_DIRECTORY'] . $oldFilename);
+        return $filename;
+    }
+
+    /**
+     * @param int $id
+     * @return String
+     * @throws KerosException
+     */
+    public function createDocumentScolaryCertificate(int $id, array $fields): String
+    {
+        $id = Validator::requiredId($id);
+        $consultantInscription = $this->getOne($id);
+        $oldFilename = $consultantInscription->getDocumentScolaryCertificate();
+        $filename = Validator::requiredFile($fields['documentScolaryCertificate'],'documentScolaryCertificate');
+        $consultantInscription->setDocumentScolaryCertificate($filename);
+        $this->consultantInscriptionDataService->persist($consultantInscription);
+        if ($oldFilename) $this->directoryManager->deleteFile($this->kerosConfig['INSCRIPTION_SCOLARY_CERTIFICATE_DIRECTORY'] . $oldFilename);
+        return $filename;
+    }
+
+    /**
+     * @param int $id
+     * @return String
+     * @throws KerosException
+     */
+    public function createDocumentRIB(int $id, array $fields): String
+    {
+        $id = Validator::requiredId($id);
+        $consultantInscription = $this->getOne($id);
+        $oldFilename = $consultantInscription->getDocumentRIB();
+        $filename = Validator::requiredFile($fields['documentRIB'],'documentRIB');
+        $consultantInscription->setDocumentRIB($filename);
+        $this->consultantInscriptionDataService->persist($consultantInscription);
+        if ($oldFilename) $this->directoryManager->deleteFile($this->kerosConfig['INSCRIPTION_RIB_DIRECTORY'] . $oldFilename);
+        return $filename;
+    }
+
+    /**
+     * @param int $id
+     * @return String
+     * @throws KerosException
+     */
+    public function createDocumentVitaleCard(int $id, array $fields): String
+    {
+        $id = Validator::requiredId($id);
+        $consultantInscription = $this->getOne($id);
+        $oldFilename = $consultantInscription->getDocumentVitaleCard();
+        $filename = Validator::requiredFile($fields['documentVitaleCard'],'documentVitaleCard');
+        $consultantInscription->setDocumentVitaleCard($filename);
+        $this->consultantInscriptionDataService->persist($consultantInscription);
+        if ($oldFilename) $this->directoryManager->deleteFile($this->kerosConfig['INSCRIPTION_VITALE_CARD_DIRECTORY'] . $oldFilename);
+        return $filename;
+    }
+
+    /**
+     * @param int $id
+     * @return String
+     * @throws KerosException
+     */
+    public function createDocumentResidencePermit(int $id, array $fields): String
+    {
+        $id = Validator::requiredId($id);
+        $consultantInscription = $this->getOne($id);
+        $oldFilename = $consultantInscription->getDocumentResidencePermit();
+        $filename = Validator::optionalFile($fields['documentResidencePermit']) ? $fields['documentResidencePermit'] : null;
+        $consultantInscription->setDocumentResidencePermit($filename);
+        $this->consultantInscriptionDataService->persist($consultantInscription);
+        if ($oldFilename) $this->directoryManager->deleteFile($this->kerosConfig['INSCRIPTION_RESIDENCE_PERMIT_DIRECTORY'] . $oldFilename);
+        return $filename;
     }
 
 }

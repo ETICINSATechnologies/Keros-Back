@@ -58,7 +58,7 @@ class DirectoryManager
         $filepath = $location . $filename;
         do {
             if (!$usingDate) {
-                $newfilename = md5(pathinfo($filename, PATHINFO_FILENAME) . microtime()) . '.' . pathinfo($file, PATHINFO_EXTENSION);
+                $newfilename = md5(pathinfo($filename, PATHINFO_FILENAME) . microtime()) . '.' . pathinfo($filename, PATHINFO_EXTENSION);
                 $filepath = $location . $newfilename;
             }
             else {
@@ -103,5 +103,6 @@ class DirectoryManager
         if (file_exists($path)){
             unlink($path);
         }
-    } 
+    }
+
 }
