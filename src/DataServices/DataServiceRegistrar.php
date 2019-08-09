@@ -124,5 +124,8 @@ class DataServiceRegistrar
         $container[MemberInscriptionDocumentTypeDataService::class] = function ($container) {
             return new MemberInscriptionDocumentTypeDataService($container);
         };
+        $container[ConsultantInscriptionDataService::class] = function ($container) {
+            return new ConsultantInscriptionDataService($container);
+        };
     }
 }
