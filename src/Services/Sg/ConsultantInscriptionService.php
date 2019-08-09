@@ -207,17 +207,6 @@ class   ConsultantInscriptionService
         $nationality = $this->countryService->getOne($nationalityId);
         $address = $this->addressService->create($fields["address"]);
         $droitImage = Validator::requiredBool($fields['droitImage']);
-        $documentIdentity = Validator::requiredFile($fields['documentIdentity'],'documentIdentity');
-        $documentScolaryCertificate = Validator::requiredFile($fields['documentScolaryCertificate'],'documentScolaryCertificate');
-        $documentRIB = Validator::requiredFile($fields['documentRIB'],'documentRIB');
-        $documentVitaleCard = Validator::requiredFile($fields['documentVitaleCard'],'documentVitaleCard');
-        $documentResidencePermit = Validator::optionalFile($fields['documentResidencePermit']) ? $fields['documentResidencePermit'] : null;
-
-        $documentIdentityFilenameOld = $consultantInscription->getDocumentIdentity();
-        $documentScolaryCertificateFilenameOld = $consultantInscription->getDocumentScolaryCertificate();
-        $documentRIBFilenameOld = $consultantInscription->getDocumentRIB();
-        $documentVitaleCardFilenameOld = $consultantInscription->getDocumentVitaleCard();
-        $documentResidencePermitFilenameOld = $consultantInscription->getDocumentResidencePermit();
 
         $consultantInscription->setFirstName($firstName);
         $consultantInscription->setLastName($lastName);
@@ -230,19 +219,8 @@ class   ConsultantInscriptionService
         $consultantInscription->setNationality($nationality);
         $this->addressService->update($consultantInscription->getAddress()->getId(), $fields["address"]);
         $consultantInscription->setDroitImage($droitImage);
-        $consultantInscription->setDocumentIdentity($documentIdentity);
-        $consultantInscription->setDocumentScolaryCertificate($documentScolaryCertificate);
-        $consultantInscription->setDocumentRIB($documentRIB);
-        $consultantInscription->setDocumentVitaleCard($documentVitaleCard);
-        $consultantInscription->setDocumentResidencePermit($documentResidencePermit);
         
         $this->consultantInscriptionDataService->persist($consultantInscription);
-
-        if ($documentIdentityFilenameOld) $this->directoryManager->deleteFile($this->kerosConfig['INSCRIPTION_IDENTITY_DOCUMENT_DIRECTORY'] . $documentIdentityFilenameOld);
-        if ($documentScolaryCertificateFilenameOld) $this->directoryManager->deleteFile($this->kerosConfig['INSCRIPTION_IDENTITY_DOCUMENT_DIRECTORY'] . $documentScolaryCertificateFilenameOld);
-        if ($documentRIBFilenameOld) $this->directoryManager->deleteFile($this->kerosConfig['INSCRIPTION_IDENTITY_DOCUMENT_DIRECTORY'] . $documentRIBFilenameOld);
-        if ($documentVitaleCardFilenameOld) $this->directoryManager->deleteFile($this->kerosConfig['INSCRIPTION_IDENTITY_DOCUMENT_DIRECTORY'] . $documentVitaleCardFilenameOld);
-        if ($documentResidencePermitFilenameOld) $this->directoryManager->deleteFile($this->kerosConfig['INSCRIPTION_IDENTITY_DOCUMENT_DIRECTORY'] . $documentResidencePermitFilenameOld);
 
         return $consultantInscription;
     }
