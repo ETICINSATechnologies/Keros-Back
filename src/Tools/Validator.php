@@ -316,7 +316,7 @@ class Validator
             return null;
         }
         
-        return $int;
+        return $file;
     }
 
 }
