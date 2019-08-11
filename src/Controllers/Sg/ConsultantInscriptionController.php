@@ -12,7 +12,8 @@ use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Keros\Tools\FileValidator;
+use Keros\Tools\Helpers\FileHelper;
+use Keros\Tools\Helpers\ConsultantInscriptionHelper;
 use Keros\Tools\ConfigLoader;
 use Keros\Tools\DirectoryManager;
 
@@ -99,47 +100,48 @@ class ConsultantInscriptionController
     public function createConsultantInscription(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Creating consultantInscription from " . $request->getServerParams()["REMOTE_ADDR"]);
-
-        $uploadedFiles = FileValidator::requiredFiles($request->getUploadedFiles());
-
-        $documentIdentity = FileValidator::requiredFileMixed($uploadedFiles['documentIdentity']);
-        $documentScolaryCertificate = FileValidator::requiredFileMixed($uploadedFiles['documentScolaryCertificate']);
-        $documentRIB = FileValidator::requiredFileMixed($uploadedFiles['documentRIB']);
-        $documentVitaleCard = FileValidator::requiredFileMixed($uploadedFiles['documentVitaleCard']);
-        $documentResidencePermit = FileValidator::optionalFileMixed($uploadedFiles['documentResidencePermit']);
-
-        $documentIdentityFilename = $this->directoryManager->uniqueFilenameOnly($documentIdentity->getClientFileName(), false, $this->kerosConfig['INSCRIPTION_IDENTITY_DOCUMENT_DIRECTORY']);
-        $documentScolaryCertificateFilename = $this->directoryManager->uniqueFilenameOnly($documentScolaryCertificate->getClientFileName(), false, $this->kerosConfig['INSCRIPTION_SCOLARY_CERTIFICATE_DIRECTORY']);
-        $documentRIBFilename = $this->directoryManager->uniqueFilenameOnly($documentRIB->getClientFileName(), false, $this->kerosConfig['INSCRIPTION_RIB_DIRECTORY']);
-        $documentVitaleCardFilename = $this->directoryManager->uniqueFilenameOnly($documentVitaleCard->getClientFileName(), false, $this->kerosConfig['INSCRIPTION_VITALE_CARD_DIRECTORY']);
-        $documentResidencePermitFilename = $documentResidencePermit ? $this->directoryManager->uniqueFilenameOnly($documentResidencePermit->getClientFileName(), false, $this->kerosConfig['INSCRIPTION_RESIDENCE_PERMIT_DIRECTORY']) : null;
-
-        $documentIdentityFilepath = $this->kerosConfig['INSCRIPTION_IDENTITY_DOCUMENT_DIRECTORY'] . $documentIdentityFilename;
-        $documentScolaryCertificateFilepath = $this->kerosConfig['INSCRIPTION_SCOLARY_CERTIFICATE_DIRECTORY'] . $documentScolaryCertificateFilename;
-        $documentRIBFilepath = $this->kerosConfig['INSCRIPTION_RIB_DIRECTORY'] . $documentRIBFilename;
-        $documentVitaleCardFilepath = $this->kerosConfig['INSCRIPTION_VITALE_CARD_DIRECTORY'] . $documentVitaleCardFilename;
-        $documentResidencePermitFilepath = $documentResidencePermitFilename ? $this->kerosConfig['INSCRIPTION_RESIDENCE_PERMIT_DIRECTORY'] . $documentResidencePermitFilename : null;
-
-        $this->directoryManager->mkdir($this->kerosConfig['INSCRIPTION_IDENTITY_DOCUMENT_DIRECTORY'] . pathinfo($documentIdentityFilename, PATHINFO_DIRNAME));
-        $this->directoryManager->mkdir($this->kerosConfig['INSCRIPTION_SCOLARY_CERTIFICATE_DIRECTORY'] . pathinfo($documentScolaryCertificateFilename, PATHINFO_DIRNAME));
-        $this->directoryManager->mkdir($this->kerosConfig['INSCRIPTION_RIB_DIRECTORY'] . pathinfo($documentRIBFilename, PATHINFO_DIRNAME));
-        $this->directoryManager->mkdir($this->kerosConfig['INSCRIPTION_VITALE_CARD_DIRECTORY'] . pathinfo($documentVitaleCardFilename, PATHINFO_DIRNAME));
-        if ($documentResidencePermit) $this->directoryManager->mkdir($this->kerosConfig['INSCRIPTION_RESIDENCE_PERMIT_DIRECTORY'] . pathinfo($documentResidencePermitFilename, PATHINFO_DIRNAME));
+        $uploadedFiles = FileHelper::requiredFiles($request->getUploadedFiles());
+        $consultantInscriptionFiles = ConsultantInscriptionHelper::getConsultantInscriptionFiles();
 
         $body = $request->getParsedBody();
-        $body['documentIdentity'] = $documentIdentityFilename;
-        $body['documentScolaryCertificate'] = $documentScolaryCertificateFilename;
-        $body['documentRIB'] = $documentRIBFilename;
-        $body['documentVitaleCard'] = $documentVitaleCardFilename;
-        if ($documentResidencePermit) $body['documentResidencePermit'] = $documentResidencePermitFilename;
+
+        $file_array = array();
+
+        foreach ($consultantInscriptionFiles as $consultantInscriptionFile) {
+            //get validator function name
+            $validatorFunction = $consultantInscriptionFile['validator'];
+            //get file
+            if (array_key_exists($consultantInscriptionFile['name'], $uploadedFiles)) {
+                $document = FileHelper::$validatorFunction($uploadedFiles[$consultantInscriptionFile['name']]);
+            } else {
+                $document = null;
+            }
+            //get filename
+            $documentFilename = $document ? $this->directoryManager->uniqueFilenameOnly($document->getClientFileName(), false, $this->kerosConfig[$consultantInscriptionFile['directory_key']]) : null;
+            //get filepath
+            $documentFilepath = $document ? $this->kerosConfig[$consultantInscriptionFile['directory_key']] . $documentFilename : null;
+            //make directory and store filename/filepath
+            if ($document) {
+                $this->directoryManager->mkdir($this->kerosConfig[$consultantInscriptionFile['directory_key']]);
+                array_push(
+                    $file_array,
+                    array(
+                        'file' => $document,
+                        'filepath' => $documentFilepath,
+                    )
+                );
+            }
+            //add to body
+            $body[$consultantInscriptionFile['name']] = $documentFilename;
+        }
 
         $this->entityManager->beginTransaction();
         $consultantInscription = $this->consultantInscriptionService->create($body);
-        $documentIdentity->moveTo($documentIdentityFilepath);
-        $documentScolaryCertificate->moveTo($documentScolaryCertificateFilepath);
-        $documentRIB->moveTo($documentRIBFilepath);
-        $documentVitaleCard->moveTo($documentVitaleCardFilepath);
-        if ($documentResidencePermit) $documentResidencePermit->moveTo($documentResidencePermitFilepath);
+
+        foreach ($file_array as $file) {
+            $file['file']->moveTo($file['filepath']);
+        }
+
         $this->entityManager->commit();
 
         return $response->withJson($consultantInscription, 201);
@@ -157,7 +159,7 @@ class ConsultantInscriptionController
         $this->logger->debug("Updating consultantInscription from " . $request->getServerParams()["REMOTE_ADDR"]);
 
         $body = $request->getParsedBody();
-        
+
         $this->entityManager->beginTransaction();
         $consultantInscription = $this->consultantInscriptionService->update($args['id'], $body);
         $this->entityManager->commit();
@@ -190,11 +192,12 @@ class ConsultantInscriptionController
      * @return Response
      * @throws KerosException
      */
-    public function getDocumentIdentity(Request $request, Response $response, array $args)
+    public function getDocument(Request $request, Response $response, array $args)
     {
-        $this->logger->debug("Getting consultantInscription documentIdentity from " . $request->getServerParams()["REMOTE_ADDR"]);
-        $filepath = $this->consultantInscriptionService->getDocumentIdentity($args["id"]);
-        $response = FileValidator::getFileResponse($filepath,$response);
+        $document_name = ConsultantInscriptionHelper::doesExist($args['document_name']);
+        $this->logger->debug("Getting consultantInscription $document_name from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $filepath = $this->consultantInscriptionService->getDocument($args["id"], $document_name);
+        $response = FileHelper::getFileResponse($filepath, $response);
         readfile($filepath);
         return $response;
     }
@@ -206,192 +209,22 @@ class ConsultantInscriptionController
      * @return Response
      * @throws KerosException
      */
-    public function getDocumentScolaryCertificate(Request $request, Response $response, array $args)
+    public function createDocument(Request $request, Response $response, array $args)
     {
-        $this->logger->debug("Getting consultantInscription documentScolaryCertificate from " . $request->getServerParams()["REMOTE_ADDR"]);
-        $filepath = $this->consultantInscriptionService->getDocumentScolaryCertificate($args["id"]);
-        $response = FileValidator::getFileResponse($filepath);
-        readfile($filepath);
-        return $response;
-    }
+        $document_name = ConsultantInscriptionHelper::doesExist($args['document_name']);
+        $this->logger->debug("Creating consultantInscription $document_name from " . $request->getServerParams()["REMOTE_ADDR"]);
 
-    /**
-     * @param Request $request
-     * @param Response $response
-     * @param array $args
-     * @return Response
-     * @throws KerosException
-     */
-    public function getDocumentRIB(Request $request, Response $response, array $args)
-    {
-        $this->logger->debug("Getting consultantInscription documentRIB from " . $request->getServerParams()["REMOTE_ADDR"]);
-        $filepath = $this->consultantInscriptionService->getDocumentRIB($args["id"]);
-        $response = FileValidator::getFileResponse($filepath);
-        readfile($filepath);
-        return $response;
-    }
+        $consultantInscriptionFile = ConsultantInscriptionHelper::getConsultantInscriptionFiles()[$document_name];
 
-    /**
-     * @param Request $request
-     * @param Response $response
-     * @param array $args
-     * @return Response
-     * @throws KerosException
-     */
-    public function getDocumentVitaleCard(Request $request, Response $response, array $args)
-    {
-        $this->logger->debug("Getting consultantInscription documentVitaleCard from " . $request->getServerParams()["REMOTE_ADDR"]);
-        $filepath = $this->consultantInscriptionService->getDocumentVitaleCard($args["id"]);
-        $response = FileValidator::getFileResponse($filepath);
-        readfile($filepath);
-        return $response;
-    }
+        $uploadedFiles = FileHelper::requiredFiles($request->getUploadedFiles());
+        $uploadedFile = FileHelper::requiredFileMixed(reset($uploadedFiles));
+        $uploadedFileFilename = $this->directoryManager->uniqueFilenameOnly($uploadedFile->getClientFileName(), false, $this->kerosConfig[$consultantInscriptionFile['directory_key']]);
+        $uploadedFileFilepath = $this->kerosConfig[$consultantInscriptionFile['directory_key']] . $uploadedFileFilename;
 
-    /**
-     * @param Request $request
-     * @param Response $response
-     * @param array $args
-     * @return Response
-     * @throws KerosException
-     */
-    public function getDocumentResidencePermit(Request $request, Response $response, array $args)
-    {
-        $this->logger->debug("Getting consultantInscription documentResidencePermit from " . $request->getServerParams()["REMOTE_ADDR"]);
-        $filepath = $this->consultantInscriptionService->getDocumentResidencePermit($args["id"]);
-        $response = FileValidator::getFileResponse($filepath);
-        readfile($filepath);
-        return $response;
-    }
-
-    /**
-     * @param Request $request
-     * @param Response $response
-     * @param array $args
-     * @return Response
-     * @throws KerosException
-     */
-    public function createDocumentIdentity(Request $request, Response $response, array $args)
-    {
-        $this->logger->debug("Creating consultantInscription documentIdentity from " . $request->getServerParams()["REMOTE_ADDR"]);
-        $uploadedFiles = FileValidator::requiredFiles($request->getUploadedFiles());
-        $uploadedFile = FileValidator::requiredFileMixed($uploadedFiles['documentIdentity']);
-        $uploadedFileFilename = $this->directoryManager->uniqueFilenameOnly($uploadedFile->getClientFileName(), false, $this->kerosConfig['INSCRIPTION_IDENTITY_DOCUMENT_DIRECTORY']);
-        $uploadedFileFilepath = $this->kerosConfig['INSCRIPTION_IDENTITY_DOCUMENT_DIRECTORY'] . $uploadedFileFilename;
-        $this->directoryManager->mkdir($this->kerosConfig['INSCRIPTION_IDENTITY_DOCUMENT_DIRECTORY']);
-
-        $body = $request->getParsedBody();
-        $body['documentIdentity'] = $uploadedFileFilename;
+        $this->directoryManager->mkdir($this->kerosConfig[$consultantInscriptionFile['directory_key']]);
 
         $this->entityManager->beginTransaction();
-        $this->consultantInscriptionService->createDocumentIdentity($args['id'], $body);
-        $uploadedFile->moveTo($uploadedFileFilepath);
-        $this->entityManager->commit();
-
-        return $response->withJson($consultantInscription, 201);
-    }
-
-    /**
-     * @param Request $request
-     * @param Response $response
-     * @param array $args
-     * @return Response
-     * @throws KerosException
-     */
-    public function createDocumentScolaryCertificate(Request $request, Response $response, array $args)
-    {
-        $this->logger->debug("Creating consultantInscription documentScolaryCertificate from " . $request->getServerParams()["REMOTE_ADDR"]);
-        $uploadedFiles = FileValidator::requiredFiles($request->getUploadedFiles());
-        $uploadedFile = FileValidator::requiredFileMixed($uploadedFiles['documentScolaryCertificate']);
-        $uploadedFileFilename = $this->directoryManager->uniqueFilenameOnly($uploadedFile->getClientFileName(), false, $this->kerosConfig['INSCRIPTION_SCOLARY_CERTIFICATE_DIRECTORY']);
-        $uploadedFileFilepath = $this->kerosConfig['INSCRIPTION_SCOLARY_CERTIFICATE_DIRECTORY'] . $uploadedFileFilename;
-        $this->directoryManager->mkdir($this->kerosConfig['INSCRIPTION_SCOLARY_CERTIFICATE_DIRECTORY']);
-
-        $body = $request->getParsedBody();
-        $body['documentScolaryCertificate'] = $uploadedFileFilename;
-
-        $this->entityManager->beginTransaction();
-        $this->consultantInscriptionService->createDocumentScolaryCertificate($args['id'], $body);
-        $uploadedFile->moveTo($uploadedFileFilepath);
-        $this->entityManager->commit();
-
-        return $response->withJson($consultantInscription, 201);
-    }
-
-    /**
-     * @param Request $request
-     * @param Response $response
-     * @param array $args
-     * @return Response
-     * @throws KerosException
-     */
-    public function createDocumentRIB(Request $request, Response $response, array $args)
-    {
-        $this->logger->debug("Creating consultantInscription documentRIB from " . $request->getServerParams()["REMOTE_ADDR"]);
-        $uploadedFiles = FileValidator::requiredFiles($request->getUploadedFiles());
-        $uploadedFile = FileValidator::requiredFileMixed($uploadedFiles['documentRIB']);
-        $uploadedFileFilename = $this->directoryManager->uniqueFilenameOnly($uploadedFile->getClientFileName(), false, $this->kerosConfig['INSCRIPTION_RIB_DIRECTORY']);
-        $uploadedFileFilepath = $this->kerosConfig['INSCRIPTION_RIB_DIRECTORY'] . $uploadedFileFilename;
-        $this->directoryManager->mkdir($this->kerosConfig['INSCRIPTION_RIB_DIRECTORY']);
-
-        $body = $request->getParsedBody();
-        $body['documentRIB'] = $uploadedFileFilename;
-
-        $this->entityManager->beginTransaction();
-        $this->consultantInscriptionService->createDocumentRIB($args['id'], $body);
-        $uploadedFile->moveTo($uploadedFileFilepath);
-        $this->entityManager->commit();
-
-        return $response->withJson($consultantInscription, 201);
-    }
-
-    /**
-     * @param Request $request
-     * @param Response $response
-     * @param array $args
-     * @return Response
-     * @throws KerosException
-     */
-    public function createDocumentVitaleCard(Request $request, Response $response, array $args)
-    {
-        $this->logger->debug("Creating consultantInscription documentVitaleCard from " . $request->getServerParams()["REMOTE_ADDR"]);
-        $uploadedFiles = FileValidator::requiredFiles($request->getUploadedFiles());
-        $uploadedFile = FileValidator::requiredFileMixed($uploadedFiles['documentVitaleCard']);
-        $uploadedFileFilename = $this->directoryManager->uniqueFilenameOnly($uploadedFile->getClientFileName(), false, $this->kerosConfig['INSCRIPTION_VITALE_CARD_DIRECTORY']);
-        $uploadedFileFilepath = $this->kerosConfig['INSCRIPTION_VITALE_CARD_DIRECTORY'] . $uploadedFileFilename;
-        $this->directoryManager->mkdir($this->kerosConfig['INSCRIPTION_VITALE_CARD_DIRECTORY']);
-
-        $body = $request->getParsedBody();
-        $body['documentVitaleCard'] = $uploadedFileFilename;
-
-        $this->entityManager->beginTransaction();
-        $this->consultantInscriptionService->createDocumentVitaleCard($args['id'], $body);
-        $uploadedFile->moveTo($uploadedFileFilepath);
-        $this->entityManager->commit();
-
-        return $response->withJson($consultantInscription, 201);
-    }
-
-    /**
-     * @param Request $request
-     * @param Response $response
-     * @param array $args
-     * @return Response
-     * @throws KerosException
-     */
-    public function createDocumentResidencePermit(Request $request, Response $response, array $args)
-    {
-        $this->logger->debug("Creating consultantInscription documentResidencePermit from " . $request->getServerParams()["REMOTE_ADDR"]);
-        $uploadedFiles = FileValidator::requiredFiles($request->getUploadedFiles());
-        $uploadedFile = FileValidator::requiredFileMixed($uploadedFiles['documentResidencePermit']);
-        $uploadedFileFilename = $this->directoryManager->uniqueFilenameOnly($uploadedFile->getClientFileName(), false, $this->kerosConfig['INSCRIPTION_RESIDENCE_PERMIT_DIRECTORY']);
-        $uploadedFileFilepath = $this->kerosConfig['INSCRIPTION_RESIDENCE_PERMIT_DIRECTORY'] . $uploadedFileFilename;
-        $this->directoryManager->mkdir($this->kerosConfig['INSCRIPTION_RESIDENCE_PERMIT_DIRECTORY']);
-
-        $body = $request->getParsedBody();
-        $body['documentResidencePermit'] = $uploadedFileFilename;
-
-        $this->entityManager->beginTransaction();
-        $this->consultantInscriptionService->createDocumentResidencePermit($args['id'], $body);
+        $consultantInscription = $this->consultantInscriptionService->createDocument($args['id'], $document_name, $uploadedFileFilename);
         $uploadedFile->moveTo($uploadedFileFilepath);
         $this->entityManager->commit();
 

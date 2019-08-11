@@ -222,16 +222,8 @@ class KerosApp
                     $this->delete("/{id:[0-9]+}", ConsultantInscriptionController::class . ':deleteConsultantInscription');
                     $this->put("/{id:[0-9]+}", ConsultantInscriptionController::class . ':updateConsultantInscription');
                     $this->post("/{id:[0-9]+}/validate", ConsultantInscriptionController::class . ':validateConsultantInscription');
-                    $this->get("/{id:[0-9]+}/documentIdentity", ConsultantInscriptionController::class . ':getDocumentIdentity');
-                    $this->get("/{id:[0-9]+}/documentScolaryCertificate", ConsultantInscriptionController::class . ':getDocumentScolaryCertificate');
-                    $this->get("/{id:[0-9]+}/documentRIB", ConsultantInscriptionController::class . ':getDocumentRIB');
-                    $this->get("/{id:[0-9]+}/documentVitaleCard", ConsultantInscriptionController::class . ':getDocumentVitaleCard');
-                    $this->get("/{id:[0-9]+}/documentResidencePermit", ConsultantInscriptionController::class . ':getDocumentResidencePermit');
-                    $this->post("/{id:[0-9]+}/documentIdentity", ConsultantInscriptionController::class . ':createDocumentIdentity');
-                    $this->post("/{id:[0-9]+}/documentScolaryCertificate", ConsultantInscriptionController::class . ':createDocumentScolaryCertificate');
-                    $this->post("/{id:[0-9]+}/documentRIB", ConsultantInscriptionController::class . ':createDocumentRIB');
-                    $this->post("/{id:[0-9]+}/documentVitaleCard", ConsultantInscriptionController::class . ':createDocumentVitaleCard');
-                    $this->post("/{id:[0-9]+}/documentResidencePermit", ConsultantInscriptionController::class . ':createDocumentResidencePermit');
+                    $this->get("/{id:[0-9]+}/document/{document_name:[a-zA-Z]+}", ConsultantInscriptionController::class . ':getDocument');
+                    $this->post("/{id:[0-9]+}/document/{document_name:[a-zA-Z]+}", ConsultantInscriptionController::class . ':createDocument');
                 });
             })->add($this->getContainer()->get(AuthenticationMiddleware::class));
 

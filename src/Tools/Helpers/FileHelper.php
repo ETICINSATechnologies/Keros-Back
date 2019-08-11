@@ -1,15 +1,13 @@
 <?php
 
-namespace Keros\Tools;
+namespace Keros\Tools\Helpers;
 
-use DateTime;
 use Keros\Error\KerosException;
 use Slim\Http\UploadedFile;
 use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\ResponseInterface as Response;
-use phpDocumentor\Reflection\Types\Resource_;
 
-class FileValidator
+class FileHelper
 {
 
     public static function requiredFiles($array): array
@@ -171,6 +169,13 @@ class FileValidator
     public static function closeFile($fileName)
     {
         fclose($fileName);
+    }
+
+    public static function deleteFile($filePath)
+    {
+        if (file_exists($filePath)) {
+            unlink($filePath);
+        }
     }
 
     public static function getUploadedFile($temp_fileName): UploadedFile
