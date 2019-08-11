@@ -14,6 +14,7 @@ class MemberInscriptionDocumentIntegrationTest extends AppTestCase
     {
         $handle = fopen("test.txt", "w");
         $file = new UploadedFile('test.txt', 'test.txt', 'text/plain', filesize('test.txt'));
+        fclose($handle);
         $env = Environment::mock([
             'REQUEST_METHOD' => 'POST',
             'REQUEST_URI' => '/api/v1/sg/membre-inscription/1/document/1',
@@ -22,7 +23,7 @@ class MemberInscriptionDocumentIntegrationTest extends AppTestCase
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
-        fclose($handle);
+        //fclose($handle);
         $this->assertSame(200, $response->getStatusCode());
         //on test qu'il est maintenant bien retourné
         $env = Environment::mock([
@@ -31,7 +32,6 @@ class MemberInscriptionDocumentIntegrationTest extends AppTestCase
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
-        fclose($handle);
         $response = $this->app->run(false);
         $this->assertSame(200, $response->getStatusCode());
         $body = json_decode($response->getBody());

@@ -82,13 +82,9 @@ class Member implements JsonSerializable
 
     /**
      * @var MemberInscriptionDocument[]
-     * @ManyToMany(targetEntity="Keros\Entities\Sg\MemberInscriptionDocument")
-     * @JoinTable(name="core_member_to_sg_member_inscription_document",
-     *      joinColumns={@JoinColumn(name="core_member_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@JoinColumn(name="sg_member_inscription_document_id", referencedColumnName="id", unique=true)}
-     *      )
+     * @OneToMany(targetEntity="Keros\Entities\Sg\MemberInscriptionDocument", mappedBy="member")
      */
-    private $memberInscriptionDocument;
+    private $memberInscriptionDocuments;
 
     /**
      * Member constructor.
@@ -103,9 +99,9 @@ class Member implements JsonSerializable
      * @param $company
      * @param $profilePicture
      * @param $droitImage
-     * @param $memberInscriptionDocument
+     * @param $memberInscriptionDocuments
      */
-    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage, $memberInscriptionDocument)
+    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage, $memberInscriptionDocuments)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -118,7 +114,7 @@ class Member implements JsonSerializable
         $this->company = $company;
         $this->profilePicture = $profilePicture;
         $this->droitImage = $droitImage;
-        $this->memberInscriptionDocument = $memberInscriptionDocument;
+        $this->memberInscriptionDocuments = $memberInscriptionDocuments;
     }
 
     public function jsonSerialize()
@@ -441,17 +437,17 @@ class Member implements JsonSerializable
     /**
      * @return MemberInscriptionDocument[]
      */
-    public function getMemberInscriptionDocument(): array
+    public function getMemberInscriptionDocuments(): array
     {
-        return $this->memberInscriptionDocument;
+        return $this->memberInscriptionDocuments;
     }
 
     /**
      * @param MemberInscriptionDocument[] $memberInscriptionDocument
      */
-    public function setMemberInscriptionDocument(array $memberInscriptionDocument): void
+    public function setMemberInscriptionDocuments(array $memberInscriptionDocument): void
     {
-        $this->memberInscriptionDocument = $memberInscriptionDocument;
+        $this->memberInscriptionDocuments = $memberInscriptionDocument;
     }
 
 }

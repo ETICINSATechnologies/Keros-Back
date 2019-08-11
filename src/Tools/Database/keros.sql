@@ -433,32 +433,16 @@ CREATE TABLE sg_member_inscription_document_type (
 
 DROP TABLE IF EXISTS sg_member_inscription_document;
 CREATE TABLE sg_member_inscription_document (
-  id int(11) NOT NULL,
-  memberInscriptionDocumentTypeId int(11) NOT NULL,
-  PRIMARY KEY (id),
-  CONSTRAINT fk_sg_member_insc_document_core_document FOREIGN KEY (id) REFERENCES core_document(id),
-  CONSTRAINT fk_sg_member_insc_document_member_insc_document_type FOREIGN KEY (memberInscriptionDocumentTypeId) REFERENCES sg_member_inscription_document_type(id)
+    id int(11) NOT NULL,
+    memberInscriptionId int(11),
+    memberInscriptionDocumentTypeId int(11) NOT NULL,
+    memberId int(11),
+    PRIMARY KEY (id),
+    CONSTRAINT fk_sg_member_insc_document_core_document FOREIGN KEY (id) REFERENCES core_document(id),
+    CONSTRAINT fk_sg_member_insc_document_sg_member_inscription FOREIGN KEY (memberInscriptionId) REFERENCES sg_member_inscription(id),
+    CONSTRAINT fk_sg_member_insc_document_member_insc_document_type FOREIGN KEY (memberInscriptionDocumentTypeId) REFERENCES sg_member_inscription_document_type(id),
+    CONSTRAINT fk_sg_member_insc_document_core_member FOREIGN KEY (memberId) REFERENCES core_member(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-DROP TABLE IF EXISTS sg_member_inscription_to_member_inscription_document;
-CREATE TABLE sg_member_inscription_to_member_inscription_document (
-    sg_member_inscription_id int(11) NOT NULL,
-    sg_member_inscription_document_id int(11) NOT NULL,
-    UNIQUE INDEX unique_sg_member_inscription_document (sg_member_inscription_document_id),
-    PRIMARY KEY (sg_member_inscription_document_id, sg_member_inscription_id),
-    CONSTRAINT fk_sg_member_inscription FOREIGN KEY (sg_member_inscription_id) REFERENCES sg_member_inscription(id),
-    CONSTRAINT fk_sg_member_inscription_member_inscription_document FOREIGN KEY (sg_member_inscription_document_id) REFERENCES sg_member_inscription_document(id)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-DROP TABLE IF EXISTS core_member_to_sg_member_inscription_document;
-CREATE TABLE core_member_to_sg_member_inscription_document (
-    core_member_id int(11) NOT NULL,
-    sg_member_inscription_document_id int(11) NOT NULL,
-    UNIQUE INDEX unique_sg_member_inscription_document (sg_member_inscription_document_id),
-    PRIMARY KEY (sg_member_inscription_document_id, core_member_id),
-    CONSTRAINT fk_core_member_inscription FOREIGN KEY (core_member_id) REFERENCES core_member(id),
-    CONSTRAINT fk_core_member_sg_member_inscription_document FOREIGN KEY (sg_member_inscription_document_id) REFERENCES sg_member_inscription_document(id)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 SET AUTOCOMMIT = 1;
 SET FOREIGN_KEY_CHECKS = 1;

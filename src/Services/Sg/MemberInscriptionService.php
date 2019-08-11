@@ -4,6 +4,7 @@
 namespace Keros\Services\Sg;
 
 use Keros\DataServices\Sg\MemberInscriptionDataService;
+use Keros\DataServices\Sg\MemberInscriptionDocumentDataService;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Sg\MemberInscription;
 use Keros\Error\KerosException;
@@ -20,45 +21,32 @@ use DateTime;
 
 class   MemberInscriptionService
 {
-    /**
-     * @var AddressService
-     */
+    /** @var AddressService*/
     private $addressService;
 
-    /**
-     * @var GenderService
-     */
+    /** @var GenderService */
     private $genderService;
 
-    /**
-     * @var MemberService
-     */
+    /** @var MemberService */
     private $memberService;
 
-    /**
-     * @var MemberInscriptionDataService
-     */
+    /** @var MemberInscriptionDataService */
     private $memberInscriptionDataService;
 
-    /**
-     * @var CountryService
-     */
+    /** @var CountryService */
     private $countryService;
 
-    /**
-     * @var DepartmentService
-     */
+    /** @var DepartmentService */
     private $departmentService;
 
-    /**
-     * @var PoleService
-     */
+    /** @var PoleService */
     private $poleService;
 
-    /**
-     * @var Logger
-     */
+    /** @var Logger */
     private $logger;
+
+    /** @var MemberInscriptionDocumentDataService */
+    private $memberInscriptionDocumentDataService;
 
     public function __construct(ContainerInterface $container)
     {
@@ -70,6 +58,7 @@ class   MemberInscriptionService
         $this->memberService = $container->get(MemberService::class);
         $this->poleService = $container->get(PoleService::class);
         $this->memberInscriptionDataService = $container->get(MemberInscriptionDataService::class);
+        $this->memberInscriptionDocumentDataService = $container->get(MemberInscriptionDocumentDataService::class);
     }
 
     /**
@@ -97,7 +86,7 @@ class   MemberInscriptionService
         $droitImage = Validator::requiredBool($fields['droitImage']);
 
         $address = $this->addressService->create($fields["address"]);
-        $memberInscription = new MemberInscription($firstName, $lastName, $gender, $birthday, $department, $email, $phoneNumber, $outYear, $nationality, $address, $wantedPole, $hasPaid, $droitImage);
+        $memberInscription = new MemberInscription($firstName, $lastName, $gender, $birthday, $department, $email, $phoneNumber, $outYear, $nationality, $address, $wantedPole, $hasPaid, $droitImage, array());
 
         $this->memberInscriptionDataService->persist($memberInscription);
 
@@ -112,6 +101,11 @@ class   MemberInscriptionService
     {
         $id = Validator::requiredId($id);
         $memberInscription = $this->getOne($id);
+        $memberInscriptionDocuments = $memberInscription->getMemberInscriptionDocuments();
+        foreach ($memberInscriptionDocuments as $memberInscriptionDocument){
+            $memberInscriptionDocument->setMemberInscription(null);
+            $this->memberInscriptionDocumentDataService->persist($memberInscriptionDocument);
+        }
         $this->memberInscriptionDataService->delete($memberInscription);
     }
 
@@ -218,6 +212,8 @@ class   MemberInscriptionService
         $month = intval($date->format('m'));
         $year = intval($date->format('Y'));
 
+        $this->logger->debug(json_encode($memberInscription));
+
         $memberArray = array(
             "username" => $memberInscription->getFirstName() . '.' . $memberInscription->getLastName(),
             "password" => $memberInscription->getFirstName() . '.' . $memberInscription->getBirthday()->format('d/m/Y'),
@@ -240,7 +236,7 @@ class   MemberInscriptionService
             ),
             "positions" => array(),
             "droitImage" => $memberInscription->isDroitImage(),
-            "memberInscriptionDocument" => $memberInscription->getMemberInscriptionDocument(),
+            "memberInscriptionDocuments" => $memberInscription->getMemberInscriptionDocuments(),
         );
 
         $this->logger->info(json_encode($memberArray));

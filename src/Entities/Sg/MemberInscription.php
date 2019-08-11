@@ -109,13 +109,9 @@ class MemberInscription implements JsonSerializable
 
     /**
      * @var MemberInscriptionDocument[]
-     * @ManyToMany(targetEntity="MemberInscriptionDocument")
-     * @JoinTable(name="sg_member_inscription_to_member_inscription_document",
-     *     joinColumns={@JoinColumn(name="sg_member_inscription_id", referencedColumnName="id")},
-     *     inverseJoinColumns={@JoinColumn(name="sg_member_inscription_document_id", referencedColumnName="id", unique=true)}
-     *     )
+     * @OneToMany(targetEntity="MemberInscriptionDocument", mappedBy="memberInscription")
      */
-    private $memberInscriptionDocument;
+    private $memberInscriptionDocuments;
 
     /**
      * MemberInscription constructor.
@@ -132,8 +128,9 @@ class MemberInscription implements JsonSerializable
      * @param Pole $wantedPole
      * @param bool $hasPaid
      * @param bool $droitImage
+     * @param array $memberInscriptionDocument
      */
-    public function __construct(string $firstName, string $lastName, Gender $gender, DateTime $birthday, Department $department, string $email, ?string $phoneNumber, ?int $outYear, Country $nationality, Address $address, Pole $wantedPole, bool $hasPaid, bool $droitImage)
+    public function __construct(string $firstName, string $lastName, Gender $gender, DateTime $birthday, Department $department, string $email, ?string $phoneNumber, ?int $outYear, Country $nationality, Address $address, Pole $wantedPole, bool $hasPaid, bool $droitImage, array $memberInscriptionDocument)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -148,6 +145,7 @@ class MemberInscription implements JsonSerializable
         $this->wantedPole = $wantedPole;
         $this->hasPaid = $hasPaid;
         $this->droitImage = $droitImage;
+        $this->memberInscriptionDocuments = $memberInscriptionDocument;
     }
 
 
@@ -170,7 +168,8 @@ class MemberInscription implements JsonSerializable
             'nationality' => $this->getNationality(),
             'address' => $this->getAddress(),
             'hasPaid' => $this->isHasPaid(),
-            'droitImage' => $this->isDroitImage()
+            'droitImage' => $this->isDroitImage(),
+            'documents' => $this->getMemberInscriptionDocuments()
         ];
     }
 
@@ -398,17 +397,17 @@ class MemberInscription implements JsonSerializable
     /**
      * @return MemberInscriptionDocument[]
      */
-    public function getMemberInscriptionDocument()
+    public function getMemberInscriptionDocuments(): array
     {
-        return $this->memberInscriptionDocument;
+        return $this->memberInscriptionDocuments;
     }
 
     /**
-     * @param MemberInscriptionDocument[] $memberInscriptionDocument
+     * @param MemberInscriptionDocument[] $memberInscriptionDocuments
      */
-    public function setMemberInscriptionDocument(array $memberInscriptionDocument): void
+    public function setMemberInscriptionDocuments(array $memberInscriptionDocuments): void
     {
-        $this->memberInscriptionDocument = $memberInscriptionDocument;
+        $this->memberInscriptionDocuments = $memberInscriptionDocuments;
     }
 
 }

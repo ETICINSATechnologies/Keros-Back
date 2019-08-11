@@ -63,14 +63,14 @@ class MemberInscriptionDocumentService
         $file = $fields['file'];
 
         $memberInscription = $this->memberInscriptionService->getOne($memberInscriptionId);
-    $memberInscriptionDocumentType = $this->memberInscriptionDocumentTypeService->getOne($documentTypeId);
+        $memberInscriptionDocumentType = $this->memberInscriptionDocumentTypeService->getOne($documentTypeId);
 
         $date = new DateTime();
         $location = 'memberInscription_' . $memberInscriptionId . DIRECTORY_SEPARATOR . 'document_' . $documentTypeId . DIRECTORY_SEPARATOR;
         $location = $this->directoryManager->uniqueFilename($file, false, $location);
 
         $this->directoryManager->mkdir($this->kerosConfig['MEMBER_INSCRIPTION_DOCUMENT_DIRECTORY'] . pathinfo($location, PATHINFO_DIRNAME));
-        $document = new MemberInscriptionDocument($date, $location, $memberInscription, $memberInscriptionDocumentType);
+        $document = new MemberInscriptionDocument($date, $location, $memberInscription, $memberInscriptionDocumentType, null);
 
         $this->memberInscriptionDocumentDataService->persist($document);
 

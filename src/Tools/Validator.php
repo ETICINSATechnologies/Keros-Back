@@ -283,7 +283,7 @@ class Validator
         return $array;
     }
 
-    public static function optionalArray($array): array
+    public static function optionalArray($array): ?array
     {
         if ($array == null) {
             return null;

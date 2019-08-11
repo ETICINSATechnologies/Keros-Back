@@ -102,7 +102,7 @@ class MemberService
         $company = Validator::optionalString($fields["company"]);
         $profilePicture = null;
         $droitImage = Validator::requiredBool($fields['droitImage']);
-        $memberInscriptionDocument = Validator::optionalArray(isset($fields['memberInscriptionDocument']) ? $fields['memberInscriptionDocument'] : null);
+        $memberInscriptionDocument = Validator::optionalArray(isset($fields['memberInscriptionDocuments']) ? $fields['memberInscriptionDocuments'] : null);
 
         $member = new Member($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage, $memberInscriptionDocument);
 

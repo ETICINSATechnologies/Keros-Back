@@ -306,6 +306,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->assertNotNull($body->address->id);
         $this->assertSame('13 Rue du renard', $body->address->line1);
         $this->assertSame(0, count($body->positions));
+        //$this->
     }
 
     /**

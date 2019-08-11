@@ -268,11 +268,7 @@ INSERT INTO sg_member_inscription_document_type(id, location, `name`, isTemplata
     (1, 'Fiche_inscription_membre_actif.pdf', 'Fiche inscription membre', true);
 
 TRUNCATE TABLE sg_member_inscription_document;
-INSERT INTO sg_member_inscription_document(id, memberInscriptionDocumentTypeId) VALUES
-(5, 1);
-
-TRUNCATE TABLE sg_member_inscription_to_member_inscription_document;
-INSERT INTO sg_member_inscription_to_member_inscription_document(sg_member_inscription_id, sg_member_inscription_document_id) VALUES
-    (1, 5);
+INSERT INTO sg_member_inscription_document(id, memberInscriptionId, memberInscriptionDocumentTypeId) VALUES
+(5, 1, 1);
 
 COMMIT;
