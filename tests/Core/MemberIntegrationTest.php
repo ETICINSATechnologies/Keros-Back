@@ -632,4 +632,30 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(3, $body->content[0]->id);
     }
 
+
+    public function testDeleteAllExistingMemberShouldReturn204 (){
+        do {
+            $env = Environment::mock([
+                'REQUEST_METHOD' => 'GET',
+                'REQUEST_URI' => '/api/v1/core/member',
+            ]);
+            $req = Request::createFromEnvironment($env);
+            $this->app->getContainer()['request'] = $req;
+            $response = $this->app->run(false);
+            $body = json_decode($response->getBody());
+
+            foreach ($body->content as $member){
+                $env = Environment::mock([
+                    'REQUEST_METHOD' => 'DELETE',
+                    'REQUEST_URI' => '/api/v1/core/member/' . $member->id,
+                ]);
+                $req = Request::createFromEnvironment($env);
+                $this->app->getContainer()['request'] = $req;
+                $response = $this->app->run(false);
+
+                $this->assertSame(204, $response->getStatusCode());
+            }
+
+        }while(sizeof($body->content) > 0);
+    }
 }
