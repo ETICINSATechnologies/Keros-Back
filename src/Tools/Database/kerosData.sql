@@ -5,92 +5,147 @@ SET UNIQUE_CHECKS = 0;
 /* Passwords are on the right */
 TRUNCATE TABLE core_user;
 INSERT INTO core_user (id, username, password, expiresAt) VALUES
-  (1, 'username', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (2, 'mcool', '$2y$10$fWnWMRQKKWInygzk.FNIP.BsnTp8e8XvDwj5YdGgVuIFXsz/XvVgm' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #hunter11
-  (3, 'lswollo', '$2y$10$9R4lfhp18.iVzsP8amDL5e7eumi48DmPPkoa5YLAm/thAZWIHaOtW' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #hunter12
-  (4, 'qualqual', '$2y$10$9R4lfhp18.iVzsP8amDL5e7eumi48DmPPkoa5YLAm/thAZWIHaOtW' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #hunter13
-  (5, 'lung', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (6, 'superuser', '$2y$10$fVPB3SLO54Ng5DjqUEr8/OSwOtOMy0gH4DiEqjvxXqRVdcM8hc7Du' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #superuser
-  (7, 'user7', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (8, 'user8', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (9, 'user9', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (10, 'user10', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (11, 'user11', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (12, 'user12', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (13, 'user13', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (14, 'user14', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (15, 'user15', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (16, 'user16', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (17, 'user17', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (18, 'user18', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (19, 'user19', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (20, 'user20', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (21, 'user21', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (22, 'user22', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (23, 'user23', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (24, 'user24', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (25, 'user25', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (26, 'user26', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (27, 'user27', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (28, 'user28', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')); #password
+    (1, 'username', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (2, 'mcool', '$2y$10$fWnWMRQKKWInygzk.FNIP.BsnTp8e8XvDwj5YdGgVuIFXsz/XvVgm' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #hunter11
+    (3, 'lswollo', '$2y$10$9R4lfhp18.iVzsP8amDL5e7eumi48DmPPkoa5YLAm/thAZWIHaOtW' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #hunter12
+    (4, 'qualqual', '$2y$10$9R4lfhp18.iVzsP8amDL5e7eumi48DmPPkoa5YLAm/thAZWIHaOtW' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #hunter13
+    (5, 'lung', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (6, 'superuser', '$2y$10$fVPB3SLO54Ng5DjqUEr8/OSwOtOMy0gH4DiEqjvxXqRVdcM8hc7Du' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #superuser
+    (7, 'user7', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (8, 'user8', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (9, 'user9', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (10, 'user10', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (11, 'user11', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (12, 'user12', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (13, 'user13', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (14, 'user14', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (15, 'user15', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (16, 'user16', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (17, 'user17', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (18, 'user18', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (19, 'user19', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (20, 'user20', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (21, 'user21', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (22, 'user22', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (23, 'user23', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (24, 'user24', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (25, 'user25', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (26, 'user26', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (27, 'user27', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (28, 'user28', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (29, 'consultant 29', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (30, 'consultant 30', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (31, 'consultant 31', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (32, 'consultant 32', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (33, 'consultant 33', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (34, 'consultant 34', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (35, 'consultant 35', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (36, 'consultant 36', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (37, 'consultant 37', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (38, 'consultant 38', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (39, 'consultant 39', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (40, 'consultant 40', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (41, 'consultant 41', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (42, 'consultant 42', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (43, 'consultant 43', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (44, 'consultant 44', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (45, 'consultant 45', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (46, 'consultant 46', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (47, 'consultant 47', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (48, 'consultant 48', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (49, 'consultant 49', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (50, 'consultant 50', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (51, 'consultant 51', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (52, 'consultant 52', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (53, 'consultant 53', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (54, 'consultant 54', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
+    (55, 'consultant 55', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')); #password
 
 TRUNCATE TABLE core_address;
 INSERT INTO core_address (id, line1, line2, postalCode, city, countryId) VALUES
-  (1, '13 Rue du renard', null, '69100', 'lyon', 1), # member inscription
-  (2, '11 Baker street', 'appt 501', '6930A', 'dublin', 2), # member 1
-  (3, '11 ETIC street', 'bat. b', '91002', 'paris', 1), # member 3
-  (4, '11 Backbeat street', 'bat. a', '91004', 'djibouti', 3), # firm 1
-  (5, '17 Watcha ave', 'porte 5', '674A4', 'Leicester', 40), # firm 2
-  (6, '17 Beat', 'Meat', '674A4', 'Paris', 40), # member 4
-  (7, '60 Gold street', 'bat. j', '69100','Villeurbanne',1), #consultant 5
-  (8, '20 avenue Albert Einstein', 'bat. g', '50100', 'Cherbourg',1), #consultant 2
-  (9, '11 supeRU', 'bis', '27277', 'SuperVille', 40), # member 6 - superuser
-  (10, 'rue test 10', 'Meat', '674A4', 'Paris', 40), # member 7
-  (11, 'rue test 11', 'Meat', '674A4', 'Paris', 40), # member 8
-  (12, 'rue test 12', 'Meat', '674A4', 'Paris', 40), # member 9
-  (13, 'rue test 13', 'Meat', '674A4', 'Paris', 40), # member 10
-  (14, 'rue test 14', 'Meat', '674A4', 'Paris', 40), # member 11
-  (15, 'rue test 15', 'Meat', '674A4', 'Paris', 40), # member 12
-  (16, 'rue test 16', 'Meat', '674A4', 'Paris', 40), # member 13
-  (17, 'rue test 17', 'Meat', '674A4', 'Paris', 40), # member 14
-  (18, 'rue test 18', 'Meat', '674A4', 'Paris', 40), # member 15
-  (19, 'rue test 19', 'Meat', '674A4', 'Paris', 40), # member 16
-  (20, 'rue test 20', 'Meat', '674A4', 'Paris', 40), # member 17
-  (21, 'rue test 21', 'Meat', '674A4', 'Paris', 40), # member 18
-  (22, 'rue test 22', 'Meat', '674A4', 'Paris', 40), # member 19
-  (23, 'rue test 23', 'Meat', '674A4', 'Paris', 40), # member 20
-  (24, 'rue test 24', 'Meat', '674A4', 'Paris', 40), # member 21
-  (25, 'rue test 25', 'Meat', '674A4', 'Paris', 40), # member 22
-  (26, 'rue test 26', 'Meat', '674A4', 'Paris', 40), # member 23
-  (27, 'rue test 27', 'Meat', '674A4', 'Paris', 40), # member 24
-  (28, 'rue test 28', 'Meat', '674A4', 'Paris', 40), # member 25
-  (29, 'rue test 29', 'Meat', '674A4', 'Paris', 40), # member 26
-  (30, 'rue test 30', 'Meat', '674A4', 'Paris', 40), # member 27
-  (31, 'rue test 31', 'Meat', '674A4', 'Paris', 40), # member 28
-  (32, 'rue firm 3', 'Meat', '674A4', 'Paris', 40), # firm 3
-  (33, 'rue firm 4', 'Meat', '674A4', 'Paris', 40), # firm 4
-  (34, 'rue firm 5', 'Meat', '674A4', 'Paris', 40), # firm 5
-  (35, 'rue firm 6', 'Meat', '674A4', 'Paris', 40), # firm 6
-  (36, 'rue firm 7', 'Meat', '674A4', 'Paris', 40), # firm 7
-  (37, 'rue firm 8', 'Meat', '674A4', 'Paris', 40), # firm 8
-  (38, 'rue firm 9', 'Meat', '674A4', 'Paris', 40), # firm 9
-  (39, 'rue firm 10', 'Meat', '674A4', 'Paris', 40), # firm 10
-  (40, 'rue firm 11', 'Meat', '674A4', 'Paris', 40), # firm 11
-  (41, 'rue firm 12', 'Meat', '674A4', 'Paris', 40), # firm 12
-  (42, 'rue firm 13', 'Meat', '674A4', 'Paris', 40), # firm 13
-  (43, 'rue firm 14', 'Meat', '674A4', 'Paris', 40), # firm 14
-  (44, 'rue firm 15', 'Meat', '674A4', 'Paris', 40), # firm 15
-  (45, 'rue firm 16', 'Meat', '674A4', 'Paris', 40), # firm 16
-  (46, 'rue firm 17', 'Meat', '674A4', 'Paris', 40), # firm 17
-  (47, 'rue firm 18', 'Meat', '674A4', 'Paris', 40), # firm 18
-  (48, 'rue firm 19', 'Meat', '674A4', 'Paris', 40), # firm 19
-  (49, 'rue firm 20', 'Meat', '674A4', 'Paris', 40), # firm 20
-  (50, 'rue firm 21', 'Meat', '674A4', 'Paris', 40), # firm 21
-  (51, 'rue firm 22', 'Meat', '674A4', 'Paris', 40), # firm 22
-  (52, 'rue firm 23', 'Meat', '674A4', 'Paris', 40), # firm 23
-  (53, 'rue firm 24', 'Meat', '674A4', 'Paris', 40), # firm 24
-  (54, 'rue firm 25', 'Meat', '674A4', 'Paris', 40), # firm 25
-  (55, 'rue firm 26', 'Meat', '674A4', 'Paris', 40); # firm 26
+    (1, '13 Rue du renard', null, '69100', 'lyon', 1), # member inscription
+    (2, '11 Baker street', 'appt 501', '6930A', 'dublin', 2), # member 1
+    (3, '11 ETIC street', 'bat. b', '91002', 'paris', 1), # member 3
+    (4, '11 Backbeat street', 'bat. a', '91004', 'djibouti', 3), # firm 1
+    (5, '17 Watcha ave', 'porte 5', '674A4', 'Leicester', 40), # firm 2
+    (6, '17 Beat', 'Meat', '674A4', 'Paris', 40), # member 4
+    (7, '60 Gold street', 'bat. j', '69100','Villeurbanne',1), #consultant 5
+    (8, '20 avenue Albert Einstein', 'bat. g', '50100', 'Cherbourg',1), #consultant 2
+    (9, '11 supeRU', 'bis', '27277', 'SuperVille', 40), # member 6 - superuser
+    (10, 'rue test 10', 'Meat', '674A4', 'Paris', 40), # member 7
+    (11, 'rue test 11', 'Meat', '674A4', 'Paris', 40), # member 8
+    (12, 'rue test 12', 'Meat', '674A4', 'Paris', 40), # member 9
+    (13, 'rue test 13', 'Meat', '674A4', 'Paris', 40), # member 10
+    (14, 'rue test 14', 'Meat', '674A4', 'Paris', 40), # member 11
+    (15, 'rue test 15', 'Meat', '674A4', 'Paris', 40), # member 12
+    (16, 'rue test 16', 'Meat', '674A4', 'Paris', 40), # member 13
+    (17, 'rue test 17', 'Meat', '674A4', 'Paris', 40), # member 14
+    (18, 'rue test 18', 'Meat', '674A4', 'Paris', 40), # member 15
+    (19, 'rue test 19', 'Meat', '674A4', 'Paris', 40), # member 16
+    (20, 'rue test 20', 'Meat', '674A4', 'Paris', 40), # member 17
+    (21, 'rue test 21', 'Meat', '674A4', 'Paris', 40), # member 18
+    (22, 'rue test 22', 'Meat', '674A4', 'Paris', 40), # member 19
+    (23, 'rue test 23', 'Meat', '674A4', 'Paris', 40), # member 20
+    (24, 'rue test 24', 'Meat', '674A4', 'Paris', 40), # member 21
+    (25, 'rue test 25', 'Meat', '674A4', 'Paris', 40), # member 22
+    (26, 'rue test 26', 'Meat', '674A4', 'Paris', 40), # member 23
+    (27, 'rue test 27', 'Meat', '674A4', 'Paris', 40), # member 24
+    (28, 'rue test 28', 'Meat', '674A4', 'Paris', 40), # member 25
+    (29, 'rue test 29', 'Meat', '674A4', 'Paris', 40), # member 26
+    (30, 'rue test 30', 'Meat', '674A4', 'Paris', 40), # member 27
+    (31, 'rue test 31', 'Meat', '674A4', 'Paris', 40), # member 28
+    (32, 'rue firm 3', 'Meat', '674A4', 'Paris', 40), # firm 3
+    (33, 'rue firm 4', 'Meat', '674A4', 'Paris', 40), # firm 4
+    (34, 'rue firm 5', 'Meat', '674A4', 'Paris', 40), # firm 5
+    (35, 'rue firm 6', 'Meat', '674A4', 'Paris', 40), # firm 6
+    (36, 'rue firm 7', 'Meat', '674A4', 'Paris', 40), # firm 7
+    (37, 'rue firm 8', 'Meat', '674A4', 'Paris', 40), # firm 8
+    (38, 'rue firm 9', 'Meat', '674A4', 'Paris', 40), # firm 9
+    (39, 'rue firm 10', 'Meat', '674A4', 'Paris', 40), # firm 10
+    (40, 'rue firm 11', 'Meat', '674A4', 'Paris', 40), # firm 11
+    (41, 'rue firm 12', 'Meat', '674A4', 'Paris', 40), # firm 12
+    (42, 'rue firm 13', 'Meat', '674A4', 'Paris', 40), # firm 13
+    (43, 'rue firm 14', 'Meat', '674A4', 'Paris', 40), # firm 14
+    (44, 'rue firm 15', 'Meat', '674A4', 'Paris', 40), # firm 15
+    (45, 'rue firm 16', 'Meat', '674A4', 'Paris', 40), # firm 16
+    (46, 'rue firm 17', 'Meat', '674A4', 'Paris', 40), # firm 17
+    (47, 'rue firm 18', 'Meat', '674A4', 'Paris', 40), # firm 18
+    (48, 'rue firm 19', 'Meat', '674A4', 'Paris', 40), # firm 19
+    (49, 'rue firm 20', 'Meat', '674A4', 'Paris', 40), # firm 20
+    (50, 'rue firm 21', 'Meat', '674A4', 'Paris', 40), # firm 21
+    (51, 'rue firm 22', 'Meat', '674A4', 'Paris', 40), # firm 22
+    (52, 'rue firm 23', 'Meat', '674A4', 'Paris', 40), # firm 23
+    (53, 'rue firm 24', 'Meat', '674A4', 'Paris', 40), # firm 24
+    (54, 'rue firm 25', 'Meat', '674A4', 'Paris', 40), # firm 25
+    (55, 'rue firm 26', 'Meat', '674A4', 'Paris', 40), # firm 26
+    (56, 'Rue consultant 29', 'Ter', '79413', 'Lyon City', 35), #consultant 29
+    (57, 'Rue consultant 30', 'Ter', '79413', 'Lyon City', 33), #consultant 30
+    (58, 'Rue consultant 31', 'Ter', '79413', 'Lyon City', 52), #consultant 31
+    (59, 'Rue consultant 32', 'Ter', '79413', 'Lyon City', 90), #consultant 32
+    (60, 'Rue consultant 33', 'Ter', '79413', 'Lyon City', 67), #consultant 33
+    (61, 'Rue consultant 34', 'Ter', '79413', 'Lyon City', 38), #consultant 34
+    (62, 'Rue consultant 35', 'Ter', '79413', 'Lyon City', 77), #consultant 35
+    (63, 'Rue consultant 36', 'Ter', '79413', 'Lyon City', 56), #consultant 36
+    (64, 'Rue consultant 37', 'Ter', '79413', 'Lyon City', 32), #consultant 37
+    (65, 'Rue consultant 38', 'Ter', '79413', 'Lyon City', 57), #consultant 38
+    (66, 'Rue consultant 39', 'Ter', '79413', 'Lyon City', 59), #consultant 39
+    (67, 'Rue consultant 40', 'Ter', '79413', 'Lyon City', 44), #consultant 40
+    (68, 'Rue consultant 41', 'Ter', '79413', 'Lyon City', 40), #consultant 41
+    (69, 'Rue consultant 42', 'Ter', '79413', 'Lyon City', 53), #consultant 42
+    (70, 'Rue consultant 43', 'Ter', '79413', 'Lyon City', 23), #consultant 43
+    (71, 'Rue consultant 44', 'Ter', '79413', 'Lyon City', 12), #consultant 44
+    (72, 'Rue consultant 45', 'Ter', '79413', 'Lyon City', 84), #consultant 45
+    (73, 'Rue consultant 46', 'Ter', '79413', 'Lyon City', 86), #consultant 46
+    (74, 'Rue consultant 47', 'Ter', '79413', 'Lyon City', 99), #consultant 47
+    (75, 'Rue consultant 48', 'Ter', '79413', 'Lyon City', 22), #consultant 48
+    (76, 'Rue consultant 49', 'Ter', '79413', 'Lyon City', 85), #consultant 49
+    (77, 'Rue consultant 50', 'Ter', '79413', 'Lyon City', 58), #consultant 50
+    (78, 'Rue consultant 51', 'Ter', '79413', 'Lyon City', 92), #consultant 51
+    (79, 'Rue consultant 52', 'Ter', '79413', 'Lyon City', 61), #consultant 52
+    (80, 'Rue consultant 53', 'Ter', '79413', 'Lyon City', 85), #consultant 53
+    (81, 'Rue consultant 54', 'Ter', '79413', 'Lyon City', 71), #consultant 54
+    (82, 'Rue consultant 55', 'Ter', '79413', 'Lyon City', 97); #consultant 55
+
 
 TRUNCATE TABLE core_ticket;
 INSERT INTO core_ticket (id, userId, title, message, type, status) VALUES
@@ -129,7 +184,34 @@ INSERT INTO core_member (id, genderId, firstName, lastName, birthday, telephone,
 TRUNCATE TABLE core_consultant;
 INSERT INTO core_consultant (id, genderId, firstName, lastName, birthday, telephone, email, addressId, schoolYear, departmentId, company, profilePicture, droitImage) VALUES
   (2, 1, 'Marah', 'Cool', STR_TO_DATE('1976-10-27', '%Y-%m-%d'), '+332541541', 'fake.mail2@fake.com', 8, 3, 1, 'Amazon', NULL, true),
-  (5, 3, 'Louis', 'Ung', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.mail3@fake.com', 7, 3, 4, NULL, NULL, false);
+  (5, 3, 'Louis', 'Ung', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.mail3@fake.com', 7, 3, 4, NULL, NULL, false),
+  (29, 1, 'Consultant 29', 'Consultant Name29', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant29@fake.com', 56, 1, 1, 'Fake Enterprise Consultant 29', NULL, true),
+  (30, 4, 'Consultant 30', 'Consultant Name30', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant30@fake.com', 57, 3, 11, 'Fake Enterprise Consultant 30', NULL, false),
+  (31, 4, 'Consultant 31', 'Consultant Name31', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant31@fake.com', 58, 5, 2, 'Fake Enterprise Consultant 31', NULL, true),
+  (32, 3, 'Consultant 32', 'Consultant Name32', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant32@fake.com', 59, 4, 7, 'Fake Enterprise Consultant 32', NULL, true),
+  (33, 4, 'Consultant 33', 'Consultant Name33', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant33@fake.com', 60, 8, 4, 'Fake Enterprise Consultant 33', NULL, false),
+  (34, 1, 'Consultant 34', 'Consultant Name34', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant34@fake.com', 61, 5, 7, 'Fake Enterprise Consultant 34', NULL, true),
+  (35, 1, 'Consultant 35', 'Consultant Name35', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant35@fake.com', 62, 5, 7, 'Fake Enterprise Consultant 35', NULL, true),
+  (36, 4, 'Consultant 36', 'Consultant Name36', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant36@fake.com', 63, 2, 12, 'Fake Enterprise Consultant 36', NULL, false),
+  (37, 1, 'Consultant 37', 'Consultant Name37', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant37@fake.com', 64, 7, 2, 'Fake Enterprise Consultant 37', NULL, false),
+  (38, 2, 'Consultant 38', 'Consultant Name38', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant38@fake.com', 65, 2, 9, 'Fake Enterprise Consultant 38', NULL, true),
+  (39, 3, 'Consultant 39', 'Consultant Name39', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant39@fake.com', 66, 2, 11, 'Fake Enterprise Consultant 39', NULL, false),
+  (40, 3, 'Consultant 40', 'Consultant Name40', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant40@fake.com', 67, 1, 11, 'Fake Enterprise Consultant 40', NULL, false),
+  (41, 2, 'Consultant 41', 'Consultant Name41', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant41@fake.com', 68, 1, 3, 'Fake Enterprise Consultant 41', NULL, false),
+  (42, 3, 'Consultant 42', 'Consultant Name42', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant42@fake.com', 69, 7, 6, 'Fake Enterprise Consultant 42', NULL, false),
+  (43, 3, 'Consultant 43', 'Consultant Name43', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant43@fake.com', 70, 6, 11, 'Fake Enterprise Consultant 43', NULL, true),
+  (44, 3, 'Consultant 44', 'Consultant Name44', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant44@fake.com', 71, 7, 2, 'Fake Enterprise Consultant 44', NULL, true),
+  (45, 1, 'Consultant 45', 'Consultant Name45', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant45@fake.com', 72, 7, 11, 'Fake Enterprise Consultant 45', NULL, true),
+  (46, 1, 'Consultant 46', 'Consultant Name46', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant46@fake.com', 73, 6, 5, 'Fake Enterprise Consultant 46', NULL, true),
+  (47, 2, 'Consultant 47', 'Consultant Name47', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant47@fake.com', 74, 5, 4, 'Fake Enterprise Consultant 47', NULL, true),
+  (48, 1, 'Consultant 48', 'Consultant Name48', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant48@fake.com', 75, 2, 9, 'Fake Enterprise Consultant 48', NULL, true),
+  (49, 4, 'Consultant 49', 'Consultant Name49', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant49@fake.com', 76, 2, 8, 'Fake Enterprise Consultant 49', NULL, true),
+  (50, 1, 'Consultant 50', 'Consultant Name50', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant50@fake.com', 77, 7, 5, 'Fake Enterprise Consultant 50', NULL, true),
+  (51, 1, 'Consultant 51', 'Consultant Name51', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant51@fake.com', 78, 8, 10, 'Fake Enterprise Consultant 51', NULL, true),
+  (52, 3, 'Consultant 52', 'Consultant Name52', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant52@fake.com', 79, 5, 10, 'Fake Enterprise Consultant 52', NULL, false),
+  (53, 3, 'Consultant 53', 'Consultant Name53', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant53@fake.com', 80, 3, 2, 'Fake Enterprise Consultant 53', NULL, false),
+  (54, 4, 'Consultant 54', 'Consultant Name54', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant54@fake.com', 81, 4, 4, 'Fake Enterprise Consultant 54', NULL, true),
+  (55, 3, 'Consultant 55', 'Consultant Name55', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant55@fake.com', 82, 7, 3, 'Fake Enterprise Consultant 55', NULL, false);
 
 TRUNCATE TABLE core_member_position;
 INSERT INTO core_member_position (id, memberId, positionId, isBoard, year) VALUES
