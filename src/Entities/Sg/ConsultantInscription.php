@@ -123,6 +123,12 @@ class ConsultantInscription implements JsonSerializable
      */
     private $documentResidencePermit;
 
+    /** 
+     * @var string
+     * @Column(type="string", length=200)
+     */
+    private $documentCVEC;
+
     /**
      * ConsultantInscription constructor.
      * @param string $firstName
@@ -141,8 +147,9 @@ class ConsultantInscription implements JsonSerializable
      * @param string $documentRIB
      * @param string $documentVitaleCard
      * @param string $documentResidencePermit
+     * @param string $documentCVEC
      */
-    public function __construct(string $firstName, string $lastName, Gender $gender, DateTime $birthday, Department $department, string $email, ?string $phoneNumber, ?int $outYear, Country $nationality, Address $address, bool $droitImage, string $documentIdentity, string $documentScolaryCertificate, string $documentRIB, string $documentVitaleCard, ?string $documentResidencePermit)
+    public function __construct(string $firstName, string $lastName, Gender $gender, DateTime $birthday, Department $department, string $email, ?string $phoneNumber, ?int $outYear, Country $nationality, Address $address, bool $droitImage, string $documentIdentity, string $documentScolaryCertificate, string $documentRIB, string $documentVitaleCard, ?string $documentResidencePermit, string $documentCVEC)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -160,6 +167,7 @@ class ConsultantInscription implements JsonSerializable
         $this->documentRIB = $documentRIB;
         $this->documentVitaleCard = $documentVitaleCard;
         $this->documentResidencePermit = $documentResidencePermit;
+        $this->documentCVEC = $documentCVEC;
     }
 
 
@@ -453,4 +461,19 @@ class ConsultantInscription implements JsonSerializable
         $this->documentResidencePermit = $documentResidencePermit;
     }
 
+    /**
+     * @return string
+     */
+    public function getDocumentCVEC(): string
+    {
+        return $this->documentCVEC;
+    }
+
+    /**
+     * @param string $documentCVEC
+     */
+    public function setDocumentCVEC(string $documentCVEC): void
+    {
+        $this->documentCVEC = $documentCVEC;
+    }
 }

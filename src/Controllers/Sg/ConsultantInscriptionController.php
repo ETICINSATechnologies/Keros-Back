@@ -102,7 +102,6 @@ class ConsultantInscriptionController
         $this->logger->debug("Creating consultantInscription from " . $request->getServerParams()["REMOTE_ADDR"]);
         $uploadedFiles = FileHelper::requiredFiles($request->getUploadedFiles());
         $consultantInscriptionFiles = ConsultantInscriptionHelper::getConsultantInscriptionFiles();
-
         $body = $request->getParsedBody();
 
         $file_array = array();
@@ -243,9 +242,9 @@ class ConsultantInscriptionController
         $this->logger->debug("Validating consultantInscription from " . $request->getServerParams()["REMOTE_ADDR"]);
 
         $this->entityManager->beginTransaction();
-        $this->consultantInscriptionService->validateConsultantInscription($args['id']);
+        $consultant = $this->consultantInscriptionService->validateConsultantInscription($args['id']);
         $this->entityManager->commit();
 
-        return $response->withStatus(204);
+        return $response->withJson($consultant, 201);
     }
 }

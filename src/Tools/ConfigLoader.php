@@ -43,6 +43,13 @@ class ConfigLoader
             'INSCRIPTION_RIB_DIRECTORY' => $absoluteDirPath . $config['INSCRIPTION_RIB_DIRECTORY'],
             'INSCRIPTION_VITALE_CARD_DIRECTORY' => $absoluteDirPath . $config['INSCRIPTION_VITALE_CARD_DIRECTORY'],
             'INSCRIPTION_RESIDENCE_PERMIT_DIRECTORY' => $absoluteDirPath . $config['INSCRIPTION_RESIDENCE_PERMIT_DIRECTORY'],
+            'INSCRIPTION_CVEC_DIRECTORY' => $absoluteDirPath . $config['INSCRIPTION_CVEC_DIRECTORY'],
+            'CONSULTANT_IDENTITY_DOCUMENT_DIRECTORY' => $absoluteDirPath . $config['CONSULTANT_IDENTITY_DOCUMENT_DIRECTORY'],
+            'CONSULTANT_SCOLARY_CERTIFICATE_DIRECTORY' => $absoluteDirPath . $config['CONSULTANT_SCOLARY_CERTIFICATE_DIRECTORY'],
+            'CONSULTANT_RIB_DIRECTORY' => $absoluteDirPath . $config['CONSULTANT_RIB_DIRECTORY'],
+            'CONSULTANT_VITALE_CARD_DIRECTORY' => $absoluteDirPath . $config['CONSULTANT_VITALE_CARD_DIRECTORY'],
+            'CONSULTANT_RESIDENCE_PERMIT_DIRECTORY' => $absoluteDirPath . $config['CONSULTANT_RESIDENCE_PERMIT_DIRECTORY'],
+            'CONSULTANT_CVEC_DIRECTORY' => $absoluteDirPath . $config['CONSULTANT_CVEC_DIRECTORY'],
         );
 
         return $absoluteConfig;

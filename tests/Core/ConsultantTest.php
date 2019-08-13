@@ -26,7 +26,13 @@ class ConsultantTest extends TestCase
                 new Department(1, "IF", "Informatique"),
                 "Google",
                 "http://photoprofile.jpg",
-                true));
+                true,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null));
     }
 
     public function testConsultantShouldCreateWithParams()
@@ -41,7 +47,13 @@ class ConsultantTest extends TestCase
             new Department(1, "IF", "Informatique"),
             "Google",
             "http://photoprofile.jpg",
-            true);
+            true,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null);
 
 
         $this->assertInstanceOf(Consultant::class, $consultant);

@@ -127,9 +127,9 @@ INSERT INTO core_member (id, genderId, firstName, lastName, birthday, telephone,
 
 
 TRUNCATE TABLE core_consultant;
-INSERT INTO core_consultant (id, genderId, firstName, lastName, birthday, telephone, email, addressId, schoolYear, departmentId, company, profilePicture, droitImage) VALUES
-  (2, 1, 'Marah', 'Cool', STR_TO_DATE('1976-10-27', '%Y-%m-%d'), '+332541541', 'fake.mail2@fake.com', 8, 3, 1, 'Amazon', NULL, true),
-  (5, 3, 'Louis', 'Ung', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.mail3@fake.com', 7, 3, 4, NULL, NULL, false);
+INSERT INTO core_consultant (id, genderId, firstName, lastName, birthday, telephone, email, addressId, schoolYear, departmentId, company, profilePicture, droitImage, documentIdentity, documentScolaryCertificate, documentRIB, documentVitaleCard, documentResidencePermit, documentCVEC) VALUES
+  (2, 1, 'Marah', 'Cool', STR_TO_DATE('1976-10-27', '%Y-%m-%d'), '+332541541', 'fake.mail2@fake.com', 8, 3, 1, 'Amazon', NULL, true, "test.pdf", "test.pdf", "test.pdf", "test.pdf", "test.pdf", "test.pdf"),
+  (5, 3, 'Louis', 'Ung', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.mail3@fake.com', 7, 3, 4, NULL, NULL, false, NULL, NULL, NULL, NULL, NULL, NULL);
 
 TRUNCATE TABLE core_member_position;
 INSERT INTO core_member_position (id, memberId, positionId, isBoard, year) VALUES
@@ -266,8 +266,8 @@ INSERT INTO sg_member_inscription_document_type(id, location, `name`, isTemplata
     (1, 'Fiche_inscription_membre_actif.pdf', 'Fiche inscription membre', true);
 
 TRUNCATE TABLE sg_consultant_inscription;
-INSERT INTO sg_consultant_inscription (id, firstName, lastName, genderId, birthday, departmentId, email, phoneNumber, outYear, nationalityId, addressId, droitImage, documentIdentity, documentScolaryCertificate, documentRIB, documentVitaleCard, documentResidencePermit) VALUES
-(1, 'Bruce', 'Wayne', 1, STR_TO_DATE('2000/2/14', '%Y/%m/%d'), 3, 'bruce.wayne@batman.com', '0033123456789', 2021, 42, 1, false, "defaultFilename", "defaultFilename", "defaultFilename", "defaultFilename", "defaultFilename"),
-(2, 'Clark', 'Kent', 1, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 2, 'clark.kent@dailyplanete.com', '0033123456789', 2023, 69, 1, true, "defaultFilename", "defaultFilename", "defaultFilename", "defaultFilename", "defaultFilename");
+INSERT INTO sg_consultant_inscription (id, firstName, lastName, genderId, birthday, departmentId, email, phoneNumber, outYear, nationalityId, addressId, droitImage, documentIdentity, documentScolaryCertificate, documentRIB, documentVitaleCard, documentResidencePermit, documentCVEC) VALUES
+(1, 'Bruce', 'Wayne', 1, STR_TO_DATE('2000/2/14', '%Y/%m/%d'), 3, 'bruce.wayne@batman.com', '0033123456789', 2021, 42, 1, false, "test.pdf", "test.pdf", "test.pdf", "test.pdf", "test.pdf", "test.pdf"),
+(2, 'Clark', 'Kent', 1, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 2, 'clark.kent@dailyplanete.com', '0033123456789', 2023, 69, 1, true, "test.pdf", "test.pdf", "test.pdf", "test.pdf", NULL, "test.pdf");
 
 COMMIT;

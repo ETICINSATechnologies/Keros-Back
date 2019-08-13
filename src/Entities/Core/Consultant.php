@@ -69,7 +69,43 @@ class Consultant implements JsonSerializable
      */
     protected $studiesAsConsultant;
 
-    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage)
+    /** 
+     * @var string|null
+     * @Column(type="string", length=200)
+     */
+    private $documentIdentity;
+
+    /** 
+     * @var string|null
+     * @Column(type="string", length=200)
+     */
+    private $documentScolaryCertificate;
+
+    /** 
+     * @var string|null
+     * @Column(type="string", length=200)
+     */
+    private $documentRIB;
+
+    /** 
+     * @var string|null
+     * @Column(type="string", length=200)
+     */
+    private $documentVitaleCard;
+
+    /** 
+     * @var string|null
+     * @Column(type="string", length=200)
+     */
+    private $documentResidencePermit;
+
+    /** 
+     * @var string|null
+     * @Column(type="string", length=200)
+     */
+    private $documentCVEC;
+
+    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage, $documentIdentity, $documentScolaryCertificate, $documentRIB, $documentVitaleCard, $documentResidencePermit, $documentCVEC)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -82,6 +118,12 @@ class Consultant implements JsonSerializable
         $this->company = $company;
         $this->profilePicture = $profilePicture;
         $this->droitImage = $droitImage;
+        $this->documentIdentity = $documentIdentity;
+        $this->documentScolaryCertificate = $documentScolaryCertificate;
+        $this->documentRIB = $documentRIB;
+        $this->documentVitaleCard = $documentVitaleCard;
+        $this->documentResidencePermit = $documentResidencePermit;
+        $this->$documentCVEC = $documentCVEC;
     }
     public function jsonSerialize()
     {
@@ -316,4 +358,101 @@ class Consultant implements JsonSerializable
     {
         $this->droitImage = $droitImage;
     }
+
+    /**
+     * @return string
+     */
+    public function getDocumentIdentity(): ?string
+    {
+        return $this->documentIdentity;
+    }
+
+    /**
+     * @param string $documentIdentity
+     */
+    public function setDocumentIdentity(string $documentIdentity): void
+    {
+        $this->documentIdentity = $documentIdentity;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDocumentScolaryCertificate(): ?string
+    {
+        return $this->documentScolaryCertificate;
+    }
+
+    /**
+     * @param string $documentScolaryCertificate
+     */
+    public function setDocumentScolaryCertificate(string $documentScolaryCertificate): void
+    {
+        $this->documentScolaryCertificate = $documentScolaryCertificate;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDocumentRIB(): ?string
+    {
+        return $this->documentRIB;
+    }
+
+    /**
+     * @param string $documentRIB
+     */
+    public function setDocumentRIB(string $documentRIB): void
+    {
+        $this->documentRIB = $documentRIB;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDocumentVitaleCard(): ?string
+    {
+        return $this->documentVitaleCard;
+    }
+
+    /**
+     * @param string $documentVitaleCard
+     */
+    public function setDocumentVitaleCard(string $documentVitaleCard): void
+    {
+        $this->documentVitaleCard = $documentVitaleCard;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDocumentResidencePermit(): ?string
+    {
+        return $this->documentResidencePermit;
+    }
+
+    /**
+     * @param string|null $documentResidencePermit
+     */
+    public function setDocumentResidencePermit(?string $documentResidencePermit): void
+    {
+        $this->documentResidencePermit = $documentResidencePermit;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDocumentCVEC(): ?string
+    {
+        return $this->documentCVEC;
+    }
+
+    /**
+     * @param string|null $documentCVEC
+     */
+    public function setDocumentCVEC(?string $documentCVEC): void
+    {
+        $this->documentCVEC = $documentCVEC;
+    }
+
 }

@@ -15,6 +15,7 @@ use Keros\Services\Core\ConsultantService;
 use Keros\Tools\Validator;
 use Keros\Tools\Helpers\FileHelper;
 use Keros\Tools\Helpers\ConsultantInscriptionHelper;
+use Keros\Tools\Helpers\ConsultantHelper;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Keros\Tools\ConfigLoader;
@@ -107,8 +108,9 @@ class   ConsultantInscriptionService
         $documentRIB = Validator::requiredString($fields['documentRIB']);
         $documentVitaleCard = Validator::requiredString($fields['documentVitaleCard']);
         $documentResidencePermit = Validator::optionalString($fields['documentResidencePermit']) ? $fields['documentResidencePermit'] : null;
+        $documentCVEC = Validator::requiredString($fields['documentCVEC']);
 
-        $consultantInscription = new ConsultantInscription($firstName, $lastName, $gender, $birthday, $department, $email, $phoneNumber, $outYear, $nationality, $address, $droitImage, $documentIdentity, $documentScolaryCertificate, $documentRIB, $documentVitaleCard, $documentResidencePermit);
+        $consultantInscription = new ConsultantInscription($firstName, $lastName, $gender, $birthday, $department, $email, $phoneNumber, $outYear, $nationality, $address, $droitImage, $documentIdentity, $documentScolaryCertificate, $documentRIB, $documentVitaleCard, $documentResidencePermit, $documentCVEC);
 
         $this->consultantInscriptionDataService->persist($consultantInscription);
 
@@ -254,9 +256,25 @@ class   ConsultantInscriptionService
                 "city" => $consultantInscription->getAddress()->getCity(),
                 "countryId" => $consultantInscription->getAddress()->getCountry()->getId()
             ),
-            "positions" => array(),
-            "droitImage" => $consultantInscription->isDroitImage()
+            "droitImage" => $consultantInscription->isDroitImage(),
         );
+
+        //copy and add files to consultant
+        $consultantInscriptionFiles = ConsultantInscriptionHelper::getConsultantInscriptionFiles();
+        $consultantFiles = ConsultantHelper::getConsultantFiles();
+        foreach ($consultantInscriptionFiles as $consultantInscriptionFile) {
+            $getFunction = $consultantInscriptionFile['get'];
+            $filename = $consultantInscription->$getFunction();
+            if ($filename){
+                $filepath = $this->kerosConfig[$consultantInscriptionFile['directory_key']] . $filename;
+                $consultantFile = $consultantFiles[$consultantInscriptionFile['name']] ?? null;
+                if ($consultantFile && file_exists($filepath)) {
+                    $newDirectory = $this->kerosConfig[$consultantFile['directory_key']];
+                    $newFilename = FileHelper::safeCopyFileToDirectory($filepath,$newDirectory);
+                    $consultantArray[$consultantFile['name']] = $newFilename;
+                }
+            }  
+        }
 
         if ($consultantInscription->getOutYear()) {
             $schoolYear = 5 - ($consultantInscription->getOutYear() - $year);
@@ -265,8 +283,9 @@ class   ConsultantInscriptionService
             $consultantArray["schoolYear"] = $schoolYear;
         }
 
-        $this->consultantService->create($consultantArray);
+        $consultant = $this->consultantService->create($consultantArray);
         $this->delete($consultantInscription->getId());
+        return $consultant;
     }
 
     /**

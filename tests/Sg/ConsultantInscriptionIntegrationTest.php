@@ -12,6 +12,7 @@ use Keros\Tools\Helpers\FileHelper;
 
 class ConsultantInscriptionIntegrationTest extends AppTestCase
 {
+
     /**
      * @throws MethodNotAllowedException
      * @throws NotFoundException
@@ -53,7 +54,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
     public function testPostConsultantInscriptionShouldReturn201()
     {
 
-        $filename_set = array('documentIdentity', 'documentScolaryCertificate', 'documentRIB', 'documentVitaleCard', 'documentResidencePermit');
+        $filename_set = array('documentIdentity', 'documentScolaryCertificate', 'documentRIB', 'documentVitaleCard', 'documentResidencePermit', 'documentCVEC');
         $uploaded_files = array();
         $temp_files = array();
         $file_paths = array();
@@ -190,7 +191,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
     public function testPostConsultantInscriptionOnlyRequiredFieldsShouldReturn201()
     {
 
-        $filename_set = array('documentIdentity', 'documentScolaryCertificate', 'documentRIB', 'documentVitaleCard');
+        $filename_set = array('documentIdentity', 'documentScolaryCertificate', 'documentRIB', 'documentVitaleCard', 'documentCVEC');
         $uploaded_files = array();
         $temp_files = array();
         $file_paths = array();
@@ -397,7 +398,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
      * @throws MethodNotAllowedException
      * @throws NotFoundException
      */
-    public function testDeleteMemberInscriptionShouldReturn404()
+    public function testDeleteConsultantInscriptionShouldReturn404()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'DELETE',
@@ -414,7 +415,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
      * @throws MethodNotAllowedException
      * @throws NotFoundException
      */
-    public function testDeleteMemberInscriptionShouldReturn204()
+    public function testDeleteConsultantInscriptionShouldReturn204()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'DELETE',
@@ -463,6 +464,38 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
      * @throws MethodNotAllowedException
      * @throws NotFoundException
      */
+    public function testPostConsultantInscriptionDocumentUnacceptedFormatShouldReturn400()
+    {
+
+        $filename = 'documentIdentity';
+        $uploaded_files = array();
+
+        $filename_ext = $filename . '.exe';
+        $temp_file = FileHelper::makeNewFile($filename_ext);
+        $uploaded_files[$filename] = FileHelper::getUploadedFile($filename_ext);
+
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => "/api/v1/sg/consultant-inscription/2/document/$filename",
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withUploadedFiles($uploaded_files);
+
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        FileHelper::closeFile($temp_file);
+        FileHelper::deleteFile($filename_ext);
+
+        $this->assertSame(400, $response->getStatusCode());
+    }
+
+    /**
+     * @throws MethodNotAllowedException
+     * @throws NotFoundException
+     */
     public function testPostConsultantInscriptionDocumentShouldReturn404()
     {
 
@@ -500,8 +533,6 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
 
         $filename = 'documentIdentity';
         $uploaded_files = array();
-        $temp_files = array();
-
 
         $env = Environment::mock([
             'REQUEST_METHOD' => 'POST',
@@ -517,19 +548,24 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         $this->assertSame(400, $response->getStatusCode());
     }
 
-    // public function testGetConsultantInscriptionDocumentShouldReturn200()
-    // {
-    //     $fileName = "documentIdentity.pdf";
-        
-    //     $env = Environment::mock([
-    //         'REQUEST_METHOD' => 'GET',
-    //         'REQUEST_URI' => "/api/v1/sg/consultant-inscription/2/document/$fileName",
-    //     ]);
-    //     $req = Request::createFromEnvironment($env);
-    //     $this->app->getContainer()['request'] = $req;
-    //     $response = $this->app->run(false);
-    //     $this->assertSame(200, $response->getStatusCode());
-    // }
+    public function testGetConsultantInscriptionDocumentShouldReturn200()
+    {
+        $filename = 'documentIdentity';
+        $file_path = "documents/inscription/identity/test.pdf";
+        $temp_file = FileHelper::makeNewFile(FileHelper::normalizePath($file_path));
+        FileHelper::closeFile($temp_file);
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => "/api/v1/sg/consultant-inscription/1/document/$filename",
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+        FileHelper::deleteFile(FileHelper::normalizePath($file_path));
+    }
 
     public function testGetConsultantInscriptionDocumentShouldReturn404()
     {
@@ -542,6 +578,67 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
+        $this->assertSame(404, $response->getStatusCode());
+    }
+
+    /**
+     * @throws MethodNotAllowedException
+     * @throws NotFoundException
+     */
+    public function testValidateConsultantInscriptionShouldReturn201()
+    {
+        $filetypes = array('identity', 'residence_permit', 'rib', 'scolary_document', 'vitale_card', 'cvec');
+        $filepaths = array();
+        foreach ($filetypes as $fileType) {
+            $file_path = "documents/inscription/$fileType/test.pdf";
+            array_push($filepaths, $file_path);
+            $temp_file = FileHelper::makeNewFile(FileHelper::normalizePath($file_path));
+            FileHelper::closeFile($temp_file);
+        }
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => '/api/v1/sg/consultant-inscription/1/validate',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $body = json_decode($response->getBody());
+
+        $this->assertSame(201, $response->getStatusCode());
+        $this->assertNotNull($body->id);
+        $this->assertSame('Bruce.Wayne', $body->username);
+        $this->assertSame("Bruce", $body->firstName);
+        $this->assertSame("Wayne", $body->lastName);
+        $this->assertSame(1, $body->gender->id);
+        $this->assertSame("bruce.wayne@batman.com", $body->email);
+        $this->assertSame("2000-02-14", $body->birthday);
+        $this->assertSame(3, $body->department->id);
+        $this->assertSame("0033123456789", $body->telephone);
+        $this->assertSame(null, $body->profilePicture);
+        $this->assertNotNull($body->address->id);
+        $this->assertSame('13 Rue du renard', $body->address->line1);
+
+        foreach ($filepaths as $file_path) {
+            FileHelper::deleteFile(FileHelper::normalizePath($file_path));
+        }
+    }
+
+    /**
+     * @throws MethodNotAllowedException
+     * @throws NotFoundException
+     */
+    public function testValidateConsultantInscriptionShouldReturn404()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => '/api/v1/sg/consultant-inscription/1000/validate',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
         $this->assertSame(404, $response->getStatusCode());
     }
 }

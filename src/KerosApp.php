@@ -176,6 +176,8 @@ class KerosApp
                     $this->post("", ConsultantController::class . ':createConsultant');
                     $this->put("/{id:[0-9]+}", ConsultantController::class . ':updateConsultant');
                     $this->delete("/{id:[0-9]+}", ConsultantController::class . ':deleteConsultant');
+                    $this->get("/{id:[0-9]+}/document/{document_name:[a-zA-Z]+}", ConsultantController::class . ':getDocument');
+                    $this->post("/{id:[0-9]+}/document/{document_name:[a-zA-Z]+}", ConsultantController::class . ':createDocument');
                 });
 
                 $this->group('/ticket', function () {

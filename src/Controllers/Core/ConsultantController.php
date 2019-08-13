@@ -12,6 +12,10 @@ use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Keros\Tools\Helpers\FileHelper;
+use Keros\Tools\Helpers\ConsultantHelper;
+use Keros\Tools\ConfigLoader;
+use Keros\Tools\DirectoryManager;
 
 
 class ConsultantController
@@ -33,12 +37,22 @@ class ConsultantController
      * @var JwtCodec
      */
     private $jwtCodec;
+    /**
+     * @var ConfigLoader
+     */
+    private $kerosConfig;
+    /**
+     * @var DirectoryManager
+     */
+    private $directoryManager;
 
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get(Logger::class);
         $this->entityManager = $container->get(EntityManager::class);
         $this->consultantService = $container->get(ConsultantService::class);
+        $this->directoryManager = $container->get(DirectoryManager::class);
+        $this->kerosConfig = ConfigLoader::getConfig();
     }
 
     public function getConsultant(Request $request, Response $response, array $args)
@@ -87,10 +101,47 @@ class ConsultantController
     public function createConsultant(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Creating consultant from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $uploadedFiles = FileHelper::optionalFiles($request->getUploadedFiles());
+        $consultantFiles = ConsultantHelper::getConsultantFiles();
         $body = $request->getParsedBody();
+
+        $file_array = array();
+
+        foreach ($consultantFiles as $consultantFile) {
+            //get validator function name
+            $validatorFunction = $consultantFile['validator'];
+            //get file
+            if (array_key_exists($consultantFile['name'], $uploadedFiles)) {
+                $document = FileHelper::$validatorFunction($uploadedFiles[$consultantFile['name']]);
+            } else {
+                $document = null;
+            }
+            //get filename
+            $documentFilename = $document ? $this->directoryManager->uniqueFilenameOnly($document->getClientFileName(), false, $this->kerosConfig[$consultantFile['directory_key']]) : null;
+            //get filepath
+            $documentFilepath = $document ? $this->kerosConfig[$consultantFile['directory_key']] . $documentFilename : null;
+            //make directory and store filename/filepath
+            if ($document) {
+                $this->directoryManager->mkdir($this->kerosConfig[$consultantFile['directory_key']]);
+                array_push(
+                    $file_array,
+                    array(
+                        'file' => $document,
+                        'filepath' => $documentFilepath,
+                    )
+                );
+            }
+            //add to body
+            $body[$consultantFile['name']] = $documentFilename;
+        }
 
         $this->entityManager->beginTransaction();
         $consultant = $this->consultantService->create($body);
+
+        foreach ($file_array as $file) {
+            $file['file']->moveTo($file['filepath']);
+        }
+
         $this->entityManager->commit();
 
         return $response->withJson($consultant, 201);
@@ -117,6 +168,52 @@ class ConsultantController
         $this->entityManager->commit();
 
         return $response->withStatus(204);
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     * @throws KerosException
+     */
+    public function getDocument(Request $request, Response $response, array $args)
+    {
+        $document_name = ConsultantHelper::doesExist($args['document_name']);
+        $this->logger->debug("Getting consultant $document_name from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $filepath = $this->consultantService->getDocument($args["id"], $document_name);
+        $response = FileHelper::getFileResponse($filepath, $response);
+        readfile($filepath);
+        return $response;
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     * @throws KerosException
+     */
+    public function createDocument(Request $request, Response $response, array $args)
+    {
+        $document_name = ConsultantHelper::doesExist($args['document_name']);
+        $this->logger->debug("Creating consultant $document_name from " . $request->getServerParams()["REMOTE_ADDR"]);
+
+        $consultantFile = ConsultantHelper::getConsultantFiles()[$document_name];
+
+        $uploadedFiles = FileHelper::requiredFiles($request->getUploadedFiles());
+        $uploadedFile = FileHelper::requiredFileMixed(reset($uploadedFiles));
+        $uploadedFileFilename = $this->directoryManager->uniqueFilenameOnly($uploadedFile->getClientFileName(), false, $this->kerosConfig[$consultantFile['directory_key']]);
+        $uploadedFileFilepath = $this->kerosConfig[$consultantFile['directory_key']] . $uploadedFileFilename;
+
+        $this->directoryManager->mkdir($this->kerosConfig[$consultantFile['directory_key']]);
+
+        $this->entityManager->beginTransaction();
+        $consultant = $this->consultantService->createDocument($args['id'], $document_name, $uploadedFileFilename);
+        $uploadedFile->moveTo($uploadedFileFilepath);
+        $this->entityManager->commit();
+
+        return $response->withJson($consultant, 201);
     }
 
 }

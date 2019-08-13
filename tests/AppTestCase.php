@@ -56,6 +56,14 @@ class AppTestCase extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * Closes the keros app instance
+     */
+    protected function tearDown()
+    {
+        $this->app = null;
+    }
+
+    /**
      * Test to ensure the class loads correctly
      */
     public function testShouldInit()
