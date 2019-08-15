@@ -58,11 +58,13 @@ class MemberInscriptionDocument extends Document implements JsonSerializable
             'memberInscriptionDocumentType' => $this->getMemberInscriptionDocumentType(),
             'date' => $this->getUploadDate(),
             'location' => $this->getLocation(),
+            'memberInscriptionId' => ($this->getMemberInscription() != null) ? $this->getMemberInscription()->getId() : null,
+            'memberId' => ($this->getMember() != null) ? $this->getMember()->getId() : null,
         ];
     }
 
     /**
-     * @return mixed
+     * @return MemberInscriptionDocumentType
      */
     public function getMemberInscriptionDocumentType()
     {

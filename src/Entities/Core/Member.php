@@ -435,11 +435,23 @@ class Member implements JsonSerializable
     }
 
     /**
-     * @return MemberInscriptionDocument[]
+     * @return mixed
      */
-    public function getMemberInscriptionDocuments(): array
+    public function getMemberInscriptionDocuments()
     {
         return $this->memberInscriptionDocuments;
+    }
+
+    /**
+     * @return MemberInscriptionDocument[]
+     */
+    public function getMemberInscriptionDocumentsArray() : array
+    {
+        $memberInscriptionDocuments = array();
+        foreach ($this->getMemberInscriptionDocuments() as $memberInscriptionDocument){
+            $memberInscriptionDocuments[] = $memberInscriptionDocument;
+        }
+        return $memberInscriptionDocuments;
     }
 
     /**

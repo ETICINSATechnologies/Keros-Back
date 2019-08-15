@@ -88,4 +88,21 @@ class MemberInscriptionDocumentDataService
         }
     }
 
+    /**
+     * @param MemberInscriptionDocument $memberInscriptionDocument
+     * @throws KerosException
+     */
+    public function delete(MemberInscriptionDocument $memberInscriptionDocument): void
+    {
+        try {
+            $this->entityManager->remove($memberInscriptionDocument);
+            $this->entityManager->flush();
+        } catch
+        (Exception $e) {
+            $msg = "Failed to delete   MemberInscription : " . $e->getMessage();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
+    }
+
 }

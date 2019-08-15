@@ -1,10 +1,8 @@
 <?php
 
-
 namespace KerosTest\Sg;
 
 use KerosTest\AppTestCase;
-use mikehaertl\pdftk\Pdf;
 use Slim\Http\Environment;
 use Slim\Http\Request;
 use \Slim\Exception\MethodNotAllowedException;
@@ -12,33 +10,15 @@ use \Slim\Exception\NotFoundException;
 
 class MemberInscriptionIntegrationTest extends AppTestCase
 {
-
-    public function testGetGeneratedDocumentShouldReturn200()
-    {
-        $env = Environment::mock([
-            'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/api/v1/sg/membre-inscription/2/document/1/generate',
-        ]);
-        $req = Request::createFromEnvironment($env);
-        $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(false);
-        $body = json_decode($response->getBody());
-
-        $this->assertSame(200, $response->getStatusCode());
-
-
-        $location = strstr($body->location, "/generated/");
-        $location = str_replace("/generated/", "documents/tmp/", $location);
-        $pdf1 = new Pdf("tests/DocumentsTests/memberInscription2.pdf");
-        $pdf2 = new Pdf($location);
-        $this->assertEquals($pdf1->getDataFields(), $pdf2->getDataFields());
-    }
+    /** @var string */
+    private static $filepathMemberInscription1Document1 = ".." . DIRECTORY_SEPARATOR . "documents" . DIRECTORY_SEPARATOR . "document" . DIRECTORY_SEPARATOR . "member_inscription"
+. DIRECTORY_SEPARATOR . "member_inscription_1" . DIRECTORY_SEPARATOR . "document_1" . DIRECTORY_SEPARATOR . "Fiche inscription membre actif.pdf";
 
     /**
      * @throws MethodNotAllowedException
      * @throws NotFoundException
      */
-    public function testGetPageMemberInscriptionShouldReturn200()
+    public function testGetPage0MemberInscriptionShouldReturn200()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
@@ -50,7 +30,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $body = json_decode($response->getBody());
 
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame(2, count($body->content));
+        $this->assertSame(25, count($body->content));
         $this->assertSame(1, $body->content[0]->id);
         $this->assertSame('Bruce', $body->content[0]->firstName);
         $this->assertSame('Wayne', $body->content[0]->lastName);
@@ -65,9 +45,38 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->assertSame(1, $body->content[0]->address->id);
         $this->assertSame(false, $body->content[0]->hasPaid);
         $this->assertSame(false, $body->content[0]->droitImage);
-        $this->assertSame(2, $body->meta->totalItems);
-        $this->assertSame(1, $body->meta->totalPages);
+        $this->assertIsArray($body->content[0]->documents);
+        $this->assertSame(1, $body->content[0]->documents[0]->id);
+        $this->assertSame("Fiche inscription membre", $body->content[0]->documents[0]->name);
+        $this->assertSame(true, $body->content[0]->documents[0]->isTemplatable);
+        $this->assertSame(false, $body->content[0]->documents[0]->isUploaded);
         $this->assertSame(0, $body->meta->page);
+        $this->assertSame(2, $body->meta->totalPages);
+        $this->assertSame(30, $body->meta->totalItems);
+        $this->assertSame(25, $body->meta->itemsPerPage);
+    }
+
+    /**
+     * @throws MethodNotAllowedException
+     * @throws NotFoundException
+     */
+    public function testGetPage1MemberInscriptionShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/sg/membre-inscription?pageNumber=1',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $body = json_decode($response->getBody());
+
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame(5, count($body->content));
+        $this->assertSame(1, $body->meta->page);
+        $this->assertSame(2, $body->meta->totalPages);
+        $this->assertSame(30, $body->meta->totalItems);
+        $this->assertSame(25, $body->meta->itemsPerPage);
     }
 
     /**
@@ -76,7 +85,6 @@ class MemberInscriptionIntegrationTest extends AppTestCase
      */
     public function testPostMemberInscriptionShouldReturn201()
     {
-
         $post_body = array(
             'firstName' => 'Thanos',
             'lastName' => 'Tueur de monde',
@@ -124,6 +132,11 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->assertSame('Lorem ipsum', $body->address->city);
         $this->assertSame(true, $body->hasPaid);
         $this->assertSame(true, $body->droitImage);
+        $this->assertIsArray($body->documents);
+        $this->assertSame(1, $body->documents[0]->id);
+        $this->assertSame("Fiche inscription membre", $body->documents[0]->name);
+        $this->assertSame(true, $body->documents[0]->isTemplatable);
+        $this->assertSame(false, $body->documents[0]->isUploaded);
     }
 
     /**
@@ -178,6 +191,11 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->assertSame('Lorem ipsum', $body->address->city);
         $this->assertSame(true, $body->hasPaid);
         $this->assertSame(true, $body->droitImage);
+        $this->assertIsArray($body->documents);
+        $this->assertSame(1, $body->documents[0]->id);
+        $this->assertSame("Fiche inscription membre", $body->documents[0]->name);
+        $this->assertSame(true, $body->documents[0]->isTemplatable);
+        $this->assertSame(false, $body->documents[0]->isUploaded);
     }
 
     /**
@@ -210,6 +228,11 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->assertSame(1, $body->address->id);
         $this->assertSame(false, $body->hasPaid);
         $this->assertSame(false, $body->droitImage);
+        $this->assertIsArray($body->documents);
+        $this->assertSame(1, $body->documents[0]->id);
+        $this->assertSame("Fiche inscription membre", $body->documents[0]->name);
+        $this->assertSame(true, $body->documents[0]->isTemplatable);
+        $this->assertSame(false, $body->documents[0]->isUploaded);
     }
 
     /**
@@ -261,6 +284,10 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
 
         $this->assertSame(204, $response->getStatusCode());
+        $this->assertFileNotExists(self::$filepathMemberInscription1Document1);
+        //on recrée le fichier qui vient d'être supprimé pour le prochain run du test
+        $handle = fopen(self::$filepathMemberInscription1Document1, "w");
+        fclose($handle);
     }
 
     /**
@@ -278,6 +305,8 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
 
         $this->assertSame(204, $response->getStatusCode());
+
+        $this->assertFileExists(self::$filepathMemberInscription1Document1);
 
         //On vérifie maintenant que le membre a bien été ajouté.
         $env = Environment::mock([
@@ -306,7 +335,6 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->assertNotNull($body->address->id);
         $this->assertSame('13 Rue du renard', $body->address->line1);
         $this->assertSame(0, count($body->positions));
-        //$this->
     }
 
     /**
@@ -466,6 +494,18 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
 
         $this->assertSame(204, $response->getStatusCode());
+
+        //On vérifie que c'est bien pris en compte
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/sg/membre-inscription/1',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $body = json_decode($response->getBody());
+
+        $this->assertSame(true, $body->hasPaid);
     }
 
     /**

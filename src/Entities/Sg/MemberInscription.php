@@ -169,7 +169,6 @@ class MemberInscription implements JsonSerializable
             'address' => $this->getAddress(),
             'hasPaid' => $this->isHasPaid(),
             'droitImage' => $this->isDroitImage(),
-            'documents' => $this->getMemberInscriptionDocuments()
         ];
     }
 
@@ -395,11 +394,23 @@ class MemberInscription implements JsonSerializable
     }
 
     /**
-     * @return MemberInscriptionDocument[]
+     * @return mixed
      */
-    public function getMemberInscriptionDocuments(): array
+    public function getMemberInscriptionDocuments()
     {
         return $this->memberInscriptionDocuments;
+    }
+
+    /**
+     * @return MemberInscriptionDocument[]
+     */
+    public function getMemberInscriptionDocumentsArray() : array
+    {
+        $memberInscriptionDocuments = array();
+        foreach ($this->getMemberInscriptionDocuments() as $memberInscriptionDocument){
+            $memberInscriptionDocuments[] = $memberInscriptionDocument;
+        }
+        return $memberInscriptionDocuments;
     }
 
     /**
@@ -409,5 +420,4 @@ class MemberInscription implements JsonSerializable
     {
         $this->memberInscriptionDocuments = $memberInscriptionDocuments;
     }
-
 }

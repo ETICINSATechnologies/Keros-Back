@@ -5,9 +5,11 @@ namespace Keros\Controllers\Sg;
 
 
 use Doctrine\ORM\EntityManager;
+use Keros\Entities\Sg\MemberInscription;
 use Keros\Error\KerosException;
 use Keros\Services\Sg\MemberInscriptionDocumentService;
 use Keros\Services\Sg\MemberInscriptionDocumentTypeService;
+use Keros\Services\Sg\MemberInscriptionService;
 use Keros\Tools\ConfigLoader;
 use Keros\Tools\DirectoryManager;
 use Monolog\Logger;
@@ -37,6 +39,9 @@ class MemberInscriptionDocumentController
     /** @var DirectoryManager */
     private $directoryManager;
 
+    /** @var MemberInscriptionService */
+    private $memberInscriptionService;
+
     /**
      * MemberInscriptionDocumentController constructor.
      * @param ContainerInterface $container
@@ -49,6 +54,7 @@ class MemberInscriptionDocumentController
         $this->memberInscriptionDocumentTypeService = $container->get(MemberInscriptionDocumentTypeService::class);
         $this->memberInscriptionDocumentService = $container->get(MemberInscriptionDocumentService::class);
         $this->directoryManager = $container->get(DirectoryManager::class);
+        $this->memberInscriptionService = $container->get(MemberInscriptionService::class);
     }
 
     /**
@@ -60,9 +66,11 @@ class MemberInscriptionDocumentController
      */
     public function generateDocument(Request $request, Response $response, array $args)
     {
-        $this->logger->debug("Generating document for memberInscription " . $args["id"] . " from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->logger->debug("Generating document for member_inscription " . $args["id"] . " from " . $request->getServerParams()["REMOTE_ADDR"]);
 
-        $location = $this->memberInscriptionDocumentTypeService->generateMemberInscriptionDocument($args["id"], $args["documentTypeId"]);
+        $memberInscription = $this->memberInscriptionService->getOne($args["id"]);
+
+        $location = $this->memberInscriptionDocumentTypeService->generateMemberInscriptionDocument($memberInscription, $args["documentTypeId"]);
         $filename = pathinfo($location, PATHINFO_BASENAME);
 
         return $response->withJson(array('location' => $this->kerosConfig['BACK_URL'] . "/generated/" . $filename), 200);
@@ -100,7 +108,9 @@ class MemberInscriptionDocumentController
         $body['file'] = $uploadedFile->getClientFileName();
 
         $this->entityManager->beginTransaction();
-        $document = $this->memberInscriptionDocumentService->create($body);
+        $memberInscription = $this->memberInscriptionService->getOne($args["id"]);
+
+        $document = $this->memberInscriptionDocumentService->create($memberInscription, $body);
         $uploadedFile->moveTo($this->directoryManager->normalizePath($this->kerosConfig['MEMBER_INSCRIPTION_DOCUMENT_DIRECTORY'] . $document->getLocation()));
         $this->entityManager->commit();
 

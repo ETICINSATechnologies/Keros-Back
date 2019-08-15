@@ -4,6 +4,8 @@ namespace Keros\Services\Sg;
 
 use DateTime;
 use Keros\DataServices\Sg\MemberInscriptionDocumentDataService;
+use Keros\Entities\Core\Member;
+use Keros\Entities\Sg\MemberInscription;
 use Keros\Entities\Sg\MemberInscriptionDocument;
 use Keros\Error\KerosException;
 use Keros\Tools\ConfigLoader;
@@ -26,9 +28,6 @@ class MemberInscriptionDocumentService
     /**  @var DirectoryManager */
     private $directoryManager;
 
-    /** @var MemberInscriptionService */
-    private $memberInscriptionService;
-
     /** @var MemberInscriptionDocumentTypeService */
     private $memberInscriptionDocumentTypeService;
 
@@ -41,17 +40,17 @@ class MemberInscriptionDocumentService
         $this->logger = $container->get(Logger::class);
         $this->memberInscriptionDocumentDataService = $container->get(MemberInscriptionDocumentDataService::class);
         $this->memberInscriptionDocumentTypeService = $container->get(MemberInscriptionDocumentTypeService::class);
-        $this->memberInscriptionService = $container->get(MemberInscriptionService::class);
         $this->kerosConfig = ConfigLoader::getConfig();
         $this->directoryManager = $container->get(DirectoryManager::class);
     }
 
     /**
+     * @param MemberInscription $memberInscription
      * @param array $fields
      * @return MemberInscriptionDocument
      * @throws KerosException
      */
-    public function create(array $fields): MemberInscriptionDocument
+    public function create(MemberInscription $memberInscription, array $fields): MemberInscriptionDocument
     {
         $memberInscriptionId = Validator::requiredInt(intval($fields['id']));
         $documentTypeId = Validator::requiredInt(intval($fields['documentId']));
@@ -62,15 +61,34 @@ class MemberInscriptionDocumentService
         }
         $file = $fields['file'];
 
-        $memberInscription = $this->memberInscriptionService->getOne($memberInscriptionId);
         $memberInscriptionDocumentType = $this->memberInscriptionDocumentTypeService->getOne($documentTypeId);
 
         $date = new DateTime();
-        $location = 'memberInscription_' . $memberInscriptionId . DIRECTORY_SEPARATOR . 'document_' . $documentTypeId . DIRECTORY_SEPARATOR;
+        $location = 'member_inscription_' . $memberInscriptionId . DIRECTORY_SEPARATOR . 'document_' . $documentTypeId . DIRECTORY_SEPARATOR;
         $location = $this->directoryManager->uniqueFilename($file, false, $location);
 
         $this->directoryManager->mkdir($this->kerosConfig['MEMBER_INSCRIPTION_DOCUMENT_DIRECTORY'] . pathinfo($location, PATHINFO_DIRNAME));
         $document = new MemberInscriptionDocument($date, $location, $memberInscription, $memberInscriptionDocumentType, null);
+
+        $this->memberInscriptionDocumentDataService->persist($document);
+
+        return $document;
+    }
+
+    /**
+     * @param int $id
+     * @param MemberInscription|null $memberInscription
+     * @param Member|null $member
+     * @return MemberInscriptionDocument
+     * @throws KerosException
+     */
+    public function update(int $id, ?MemberInscription $memberInscription, ?Member $member): MemberInscriptionDocument
+    {
+        $memberInscriptionDocumentId = Validator::requiredInt($id);
+
+        $document = $this->memberInscriptionDocumentDataService->getOne($memberInscriptionDocumentId);
+        $document->setMemberInscription($memberInscription);
+        $document->setMember($member);
 
         $this->memberInscriptionDocumentDataService->persist($document);
 
@@ -100,5 +118,41 @@ class MemberInscriptionDocumentService
         }
 
         return $latestDocument;
+    }
+
+    /**
+     * @param int $id
+     * @throws KerosException
+     */
+    public function delete(int $id){
+        $id = Validator::requiredId($id);
+        $memberInscriptionDocument = $this->memberInscriptionDocumentDataService->getOne($id);
+        unlink($this->directoryManager->normalizePath($this->kerosConfig["MEMBER_INSCRIPTION_DOCUMENT_DIRECTORY"] . $memberInscriptionDocument->getLocation()));
+        $this->memberInscriptionDocumentDataService->delete($memberInscriptionDocument);
+    }
+
+    /**
+     * @return MemberInscriptionDocument[]
+     * @throws KerosException
+     */
+    public function getAll(): array
+    {
+        return $this->memberInscriptionDocumentDataService->getAll();
+    }
+
+    /**
+     * @param int $documentTypeid
+     * @param int $memberId
+     * @return bool
+     * @throws KerosException
+     */
+    public function documentTypeIsUploadedForMemberInscription(int $documentTypeid, int $memberId): bool
+    {
+        $memberInscriptionDocumentTypes = $this->getAll();
+        foreach ($memberInscriptionDocumentTypes as $memberInscriptionDocumentType) {
+            if ($memberInscriptionDocumentType->getId() == $documentTypeid && $memberInscriptionDocumentType->getMemberInscription()->getId() == $memberId)
+                return true;
+        }
+        return false;
     }
 }
