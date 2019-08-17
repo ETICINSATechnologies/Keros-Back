@@ -254,7 +254,7 @@ INSERT INTO core_document(id, uploadDate, location, discr) VALUES
   (2, STR_TO_DATE('2018/12/16 10:40:10', '%Y/%m/%d %h:%i:%s'), 'study_1/document_3/FE.docx', 'ua_study_document'),
   (3, STR_TO_DATE('2018/12/16 10:40:10', '%Y/%m/%d %h:%i:%s'), 'facture_1/document_3/proformat.docx', 'treso_facture_document'),
   (4, STR_TO_DATE('2019/04/19 10:40:10', '%Y/%m/%d %h:%i:%s'), 'facture_1/document_4/solde.docx', 'treso_facture_document'),
-  (5, STR_TO_DATE('2019/04/19 10:40:10', '%Y/%m/%d %h:%i:%s'), 'member_inscription_1/document_1/Fiche inscription membre actif.pdf', 'sg_member_inscription_document');
+  (5, STR_TO_DATE('2019/04/19 10:40:10', '%Y/%m/%d %h:%i:%s'), 'member_inscription_1/document_1/Fiche_membre_1.pdf', 'sg_member_inscription_document');
 
 TRUNCATE TABLE ua_study_document;
 INSERT INTO `ua_study_document`(id, studyId, studyDocumentTypeId) VALUES

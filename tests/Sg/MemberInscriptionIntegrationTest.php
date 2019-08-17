@@ -11,8 +11,8 @@ use \Slim\Exception\NotFoundException;
 class MemberInscriptionIntegrationTest extends AppTestCase
 {
     /** @var string */
-    private static $filepathMemberInscription1Document1 = ".." . DIRECTORY_SEPARATOR . "documents" . DIRECTORY_SEPARATOR . "document" . DIRECTORY_SEPARATOR . "member_inscription"
-. DIRECTORY_SEPARATOR . "member_inscription_1" . DIRECTORY_SEPARATOR . "document_1" . DIRECTORY_SEPARATOR . "Fiche inscription membre actif.pdf";
+    private static $filepathMemberInscription1Document1 = "documents" . DIRECTORY_SEPARATOR . "document" . DIRECTORY_SEPARATOR . "member_inscription"
+. DIRECTORY_SEPARATOR . "member_inscription_1" . DIRECTORY_SEPARATOR . "document_1" . DIRECTORY_SEPARATOR . "Fiche_membre_1.pdf";
 
     /**
      * @throws MethodNotAllowedException
