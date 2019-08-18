@@ -90,7 +90,11 @@ INSERT INTO core_address (id, line1, line2, postalCode, city, countryId) VALUES
   (52, 'rue firm 23', 'Meat', '674A4', 'Paris', 40), # firm 23
   (53, 'rue firm 24', 'Meat', '674A4', 'Paris', 40), # firm 24
   (54, 'rue firm 25', 'Meat', '674A4', 'Paris', 40), # firm 25
-  (55, 'rue firm 26', 'Meat', '674A4', 'Paris', 40); # firm 26
+  (55, 'rue firm 26', 'Meat', '674A4', 'Paris', 40), # firm 26
+  (56, 'rue firm 26', 'Meat', '674A4', 'Paris', 40), # facture 1
+  (57, 'rue firm 26', 'Meat', '674A4', 'Paris', 40), # facture 2
+  (58, 'rue firm 26', 'Meat', '674A4', 'Paris', 40), # facture 3
+  (59, 'rue firm 26', 'Meat', '674A4', 'Paris', 40); # facture 4
 
 TRUNCATE TABLE core_ticket;
 INSERT INTO core_ticket (id, userId, title, message, type, status) VALUES
@@ -235,13 +239,13 @@ TRUNCATE TABLE treso_facture;
 INSERT INTO treso_facture (id, numero, addressId, clientName , contactName, contactEmail, studyId, typeId, amountDescription,
                             subject, agreementSignDate, amountHT, taxPercentage, dueDate , additionalInformation, createdDate, createdById,
                             validatedByUa, validatedByUaDate, validatedByUaMemberId, validatedByPerf, validatedByPerfDate, validatedByPerfMemberId) VALUES
-(1,'23023234', 6, 'Google', 'James Bond', 'mail@exemple.fr', 1, 1, 'Trois Euros', 'Sujet du projet', '2018-11-10', 234.34, 345.45, '2018-1-10',
+(1,'23023234', 56, 'Google', 'James Bond', 'mail@exemple.fr', 1, 1, 'Trois Euros', 'Sujet du projet', '2018-11-10', 234.34, 345.45, '2018-1-10',
   'info supp', '2018-11-4', 3, true, '2017-11-10', 3, true, '2019-11-10', 3),
-(2,'23023235', 6, 'Milka', 'Alexandre Lang', 'fauxmail@exemple.fr', 1, 2, 'deux cents trente quatre euros et trente quatre centimes', 'Sujet du projet', '2018-11-10', 234.34, 20.0, '2018-1-10',
+(2,'23023235', 57, 'Milka', 'Alexandre Lang', 'fauxmail@exemple.fr', 1, 2, 'deux cents trente quatre euros et trente quatre centimes', 'Sujet du projet', '2018-11-10', 234.34, 20.0, '2018-1-10',
   'info supp', '2018-11-23', 3, false, null, null, false, null, null),
-(3,'23023235', 6, 'Milka', 'Alexandre Lang', 'fauxmail@exemple.fr', 1, 3, 'deux cents trente quatre euros et trente quatre centimes', 'Sujet du projet', '2018-11-10', 234.34, 20.0, '2018-1-10',
+(3,'23023235', 58, 'Milka', 'Alexandre Lang', 'fauxmail@exemple.fr', 1, 3, 'deux cents trente quatre euros et trente quatre centimes', 'Sujet du projet', '2018-11-10', 234.34, 20.0, '2018-1-10',
  'info supp', '2018-11-3', 3, false, null, null, false, null, null),
-(4,'23023235', 6, 'Milka', 'Alexandre Lang', 'fauxmail@exemple.fr', 1, 4, 'deux cents trente quatre euros et trente quatre centimes', 'Sujet du projet', '2018-11-10', 234.34, 20.0, '2018-1-10',
+(4,'23023235', 59, 'Milka', 'Alexandre Lang', 'fauxmail@exemple.fr', 1, 4, 'deux cents trente quatre euros et trente quatre centimes', 'Sujet du projet', '2018-11-10', 234.34, 20.0, '2018-1-10',
  'info supp', '2018-11-1', 3, false, null, null, false, null, null);
 
 TRUNCATE TABLE treso_facture_document_type;
