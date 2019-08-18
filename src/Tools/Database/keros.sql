@@ -108,7 +108,7 @@ CREATE TABLE `core_member` (
   `schoolYear`   int(11)     NOT NULL,
   `departmentId` int(11)     NOT NULL,
   `company` varchar(255)     DEFAULT NULL,
-  `profilePicture` varchar(255)     NOT NULL,
+  `profilePicture` varchar(255)     DEFAULT NULL,
   `droitImage` boolean DEFAULT TRUE,
   PRIMARY KEY (`id`),
   CONSTRAINT `core_member_userId_fk` FOREIGN KEY (`id`) REFERENCES `core_user` (`id`),
