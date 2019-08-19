@@ -231,6 +231,7 @@ INSERT INTO `ua_study_document`(id, studyId, studyDocumentTypeId) VALUES
   (1, 1, 2),
   (2, 1, 3);
 
+#Penser à mettre à jour le nombre de facture dans FactureIntegrationTest::testDeleteAllExistingFacturesShouldReturn204
 TRUNCATE TABLE treso_facture;
 INSERT INTO treso_facture (id, numero, addressId, clientName , contactName, contactEmail, studyId, typeId, amountDescription,
                             subject, agreementSignDate, amountHT, taxPercentage, dueDate , additionalInformation, createdDate, createdById,

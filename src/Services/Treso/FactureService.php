@@ -98,17 +98,21 @@ class FactureService
         return $facture;
     }
 
+    /**
+     * @param int $id
+     * @throws KerosException
+     */
     public function delete(int $id): void
     {
         $id = Validator::requiredId($id);
         $facture = $this->getOne($id);
+        $facture->setRelatedDocuments(array());
         $this->factureDataService->delete($facture);
     }
 
     public function getOne(int $id): Facture
     {
         $id = Validator::requiredId($id);
-
         $facture = $this->factureDataService->getOne($id);
         if (!$facture) {
             throw new KerosException("The facture could not be found", 404);

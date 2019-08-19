@@ -390,11 +390,11 @@ CREATE TABLE treso_facture_document_type (
 DROP TABLE IF EXISTS treso_facture_document;
 CREATE TABLE treso_facture_document (
   id int(11) AUTO_INCREMENT,
-  factureId int(11) NOT NULL,
+  factureId int(11),
   factureDocumentTypeId int(11) NOT NULL,
   PRIMARY KEY (id),
   CONSTRAINT fk_treso_document_core_document FOREIGN KEY (id) REFERENCES core_document(id),
-  CONSTRAINT `fk_treso_facture_document_treso_facture` FOREIGN KEY (factureId) REFERENCES treso_facture(`id`),
+  CONSTRAINT `fk_treso_facture_document_treso_facture` FOREIGN KEY (factureId) REFERENCES treso_facture(`id`) ON DELETE SET NULL,
   CONSTRAINT fk_treso_document_treso_document_type FOREIGN KEY (factureDocumentTypeId) REFERENCES treso_facture_document_type(id)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
