@@ -1,11 +1,34 @@
 <?php
 namespace KerosTest\Ua;
+
 use KerosTest\AppTestCase;
 use Slim\Http\Environment;
 use Slim\Http\Request;
+
 class FirmIntegrationTest extends AppTestCase
 {
 
+    public function testDeleteAllExistingFirmShouldReturn204()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/ua/firm?pageSize=100',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $body = json_decode($response->getBody());
+        foreach ($body->content as $firm) {
+            $env = Environment::mock([
+                'REQUEST_METHOD' => 'DELETE',
+                'REQUEST_URI' => '/api/v1/ua/firm/' . $firm->id,
+            ]);
+            $req = Request::createFromEnvironment($env);
+            $this->app->getContainer()['request'] = $req;
+            $response = $this->app->run(false);
+            $this->assertSame(204, $response->getStatusCode());
+        }
+    }
     public function testGetAllFirmsPage0ShouldReturn200()
     {
         $env = Environment::mock([
