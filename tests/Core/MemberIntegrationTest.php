@@ -638,7 +638,7 @@ class MemberIntegrationTest extends AppTestCase
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/api/v1/core/member',
+            'REQUEST_URI' => '/api/v1/core/member?pageSize=100',
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
