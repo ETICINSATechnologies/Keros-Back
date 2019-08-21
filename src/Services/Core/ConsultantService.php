@@ -15,6 +15,7 @@ use Keros\Tools\Helpers\FileHelper;
 use Keros\Tools\Helpers\ConsultantHelper;
 use Keros\Tools\ConfigLoader;
 use Keros\Tools\DirectoryManager;
+use Slim\Http\UploadedFile;
 
 class ConsultantService
 {
@@ -89,6 +90,7 @@ class ConsultantService
         $company = Validator::optionalString($fields["company"]);
         $profilePicture = Validator::optionalString($fields["profilePicture"]);
         $droitImage = Validator::requiredBool($fields['droitImage']);
+        $isApprentice = Validator::requiredBool($fields['isApprentice']);
         $documentIdentity = Validator::optionalString($fields['documentIdentity'] ?? null);
         $documentScolaryCertificate = Validator::optionalString($fields['documentScolaryCertificate'] ?? null);
         $documentRIB = Validator::optionalString($fields['documentRIB'] ?? null);
@@ -96,7 +98,7 @@ class ConsultantService
         $documentResidencePermit = Validator::optionalString($fields['documentResidencePermit'] ?? null);
         $documentCVEC = Validator::optionalString($fields['documentCVEC'] ?? null);
 
-        $consultant = new Consultant($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage, $documentIdentity, $documentScolaryCertificate, $documentRIB, $documentVitaleCard, $documentResidencePermit, $documentCVEC);
+        $consultant = new Consultant($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage, $isApprentice, $documentIdentity, $documentScolaryCertificate, $documentRIB, $documentVitaleCard, $documentResidencePermit, $documentCVEC);
         $user = $this->userService->create($fields);
         $address = $this->addressService->create($fields["address"]);
         $consultant->setUser($user);
@@ -160,6 +162,7 @@ class ConsultantService
         $department = $this->departmentService->getOne($departmentId);
         $company = Validator::optionalString($fields["company"]);
         $profilePicture = Validator::optionalString($fields["profilePicture"]);
+        $isApprentice = Validator::requiredBool($fields['isApprentice']);
 
         $consultant->setFirstName($firstName);
         $consultant->setLastName($lastName);
@@ -171,6 +174,7 @@ class ConsultantService
         $consultant->setDepartment($department);
         $consultant->setCompany($company);
         $consultant->setProfilePicture($profilePicture);
+        $consultant->setIsApprentice($isApprentice);
 
         $this->addressService->update($consultant->getAddress()->getId(), $fields["address"]);
         $this->userService->update($consultant->getId(), $fields);
@@ -201,7 +205,7 @@ class ConsultantService
         $this->addressService->delete($address->getId());
     }
 
-        /**
+    /**
      * @param int $id
      * @return String
      * @throws KerosException
@@ -240,4 +244,36 @@ class ConsultantService
         return $consultant;
     }
 
+    /**
+     * @param int $id
+     * @param string $document_name
+     * @param string $file
+     * @return array
+     * @throws KerosException
+     */
+    public function getFileDetailsFromUploadedFiles(array $uploadedFiles, array $consultantFile): ?array
+    {
+        $documenArray = null;
+        //get validator function name
+        $validatorFunction = $consultantFile['validator'];
+        //get file
+        if (array_key_exists($consultantFile['name'], $uploadedFiles)) {
+            $document = FileHelper::$validatorFunction($uploadedFiles[$consultantFile['name']]);
+            if ($document) {
+                //get filename
+                $documentFilename = $document ? $this->directoryManager->uniqueFilenameOnly($document->getClientFileName(), false, $this->kerosConfig[$consultantFile['directory_key']]) : null;
+                //get filepath
+                $documentFilepath = $document ? $this->kerosConfig[$consultantFile['directory_key']] . $documentFilename : null;
+                //make directory and store filepath
+                $this->directoryManager->mkdir($this->kerosConfig[$consultantFile['directory_key']]);
+                $documenArray = array(
+                    'file' => $document,
+                    'filepath' => $documentFilepath,
+                    'filename' => $documentFilename,
+                );
+            }
+        }
+
+        return $documenArray;
+    }
 }

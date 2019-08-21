@@ -108,31 +108,11 @@ class ConsultantController
         $file_array = array();
 
         foreach ($consultantFiles as $consultantFile) {
-            //get validator function name
-            $validatorFunction = $consultantFile['validator'];
-            //get file
-            if (array_key_exists($consultantFile['name'], $uploadedFiles)) {
-                $document = FileHelper::$validatorFunction($uploadedFiles[$consultantFile['name']]);
-            } else {
-                $document = null;
+            $file_details = $this->consultantService->getFileDetailsFromUploadedFiles($uploadedFiles,$consultantFile);
+            if($file_details) {
+                $body[$consultantFile['name']] = $file_details['filename'];
+                array_push($file_array,$file_details);
             }
-            //get filename
-            $documentFilename = $document ? $this->directoryManager->uniqueFilenameOnly($document->getClientFileName(), false, $this->kerosConfig[$consultantFile['directory_key']]) : null;
-            //get filepath
-            $documentFilepath = $document ? $this->kerosConfig[$consultantFile['directory_key']] . $documentFilename : null;
-            //make directory and store filename/filepath
-            if ($document) {
-                $this->directoryManager->mkdir($this->kerosConfig[$consultantFile['directory_key']]);
-                array_push(
-                    $file_array,
-                    array(
-                        'file' => $document,
-                        'filepath' => $documentFilepath,
-                    )
-                );
-            }
-            //add to body
-            $body[$consultantFile['name']] = $documentFilename;
         }
 
         $this->entityManager->beginTransaction();
@@ -179,11 +159,13 @@ class ConsultantController
      */
     public function getDocument(Request $request, Response $response, array $args)
     {
+        $this->logger->debug("Getting consultant document from " . $request->getServerParams()["REMOTE_ADDR"]);
+        
         $document_name = ConsultantHelper::doesExist($args['document_name']);
-        $this->logger->debug("Getting consultant $document_name from " . $request->getServerParams()["REMOTE_ADDR"]);
         $filepath = $this->consultantService->getDocument($args["id"], $document_name);
         $response = FileHelper::getFileResponse($filepath, $response);
         readfile($filepath);
+        
         return $response;
     }
 
@@ -196,9 +178,9 @@ class ConsultantController
      */
     public function createDocument(Request $request, Response $response, array $args)
     {
-        $document_name = ConsultantHelper::doesExist($args['document_name']);
-        $this->logger->debug("Creating consultant $document_name from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->logger->debug("Creating consultant document from " . $request->getServerParams()["REMOTE_ADDR"]);
 
+        $document_name = ConsultantHelper::doesExist($args['document_name']);
         $consultantFile = ConsultantHelper::getConsultantFiles()[$document_name];
 
         $uploadedFiles = FileHelper::requiredFiles($request->getUploadedFiles());

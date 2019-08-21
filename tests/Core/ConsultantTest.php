@@ -27,6 +27,7 @@ class ConsultantTest extends TestCase
                 "Google",
                 "http://photoprofile.jpg",
                 true,
+                true,
                 null,
                 null,
                 null,
@@ -48,6 +49,7 @@ class ConsultantTest extends TestCase
             "Google",
             "http://photoprofile.jpg",
             true,
+            true,
             null,
             null,
             null,
@@ -65,6 +67,7 @@ class ConsultantTest extends TestCase
         $this->assertEquals("2018", $consultant->getSchoolYear());
         $this->assertEquals("Google", $consultant->getCompany());
         $this->assertEquals("http://photoprofile.jpg", $consultant->getProfilePicture());
+        $this->assertEquals(true, $consultant->getIsApprentice());
         $this->assertEquals(true, $consultant->isDroitImage());
     }
 }

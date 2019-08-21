@@ -89,7 +89,8 @@ class ConsultantIntegrationTest extends AppTestCase
             "departmentId" => 1,
             "company" => "Amazon",
             "profilePicture" => "http://image.png",
-            "droitImage" => true
+            "droitImage" => true,
+            "isApprentice" => true
         );
 
         $env = Environment::mock([
@@ -120,6 +121,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame("http://image.png", $body->profilePicture);
         $this->assertNotNull($body->address->id);
         $this->assertSame(true,$body->droitImage);
+        $this->assertSame(true,$body->isApprentice);
     }
 
     public function testDeleteConsultantShouldReturn204()
@@ -233,7 +235,8 @@ class ConsultantIntegrationTest extends AppTestCase
             "disabled" => null,
             "company" => "Amazon",
             "profilePicture" => "http://image.png",
-            "droitImage" => true
+            "droitImage" => true,
+            "isApprentice" => true,
         );
 
         $env = Environment::mock([
@@ -261,6 +264,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame("Amazon", $body->company);
         $this->assertSame("http://image.png", $body->profilePicture);
         $this->assertSame(true,$body->droitImage);
+        $this->assertSame(true,$body->isApprentice);
     }
     
     public function testPutConsultantShouldReturn200()
@@ -297,7 +301,8 @@ class ConsultantIntegrationTest extends AppTestCase
             ],
             "company" => "Amazon",
             "profilePicture" => "http://image.png",
-            "droitImage" => true
+            "droitImage" => true,
+            "isApprentice" => true,
         );
 
         $env = Environment::mock([
@@ -328,6 +333,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame("http://image.png", $body->profilePicture);
         $this->assertNotNull($body->address->id);
         $this->assertSame(true,$body->droitImage);
+        $this->assertSame(true,$body->isApprentice);
     }
 
     public function testPutConsultantEmptyBodyShouldReturn400()
@@ -532,7 +538,8 @@ class ConsultantIntegrationTest extends AppTestCase
             "disabled" => null,
             "company" => "Amazon",
             "profilePicture" => "http://image.png",
-            "droitImage" => true
+            "droitImage" => true,
+            "isApprentice" => true,
         );
 
         $env = Environment::mock([
@@ -569,5 +576,6 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame("Amazon", $body->company);
         $this->assertSame("http://image.png", $body->profilePicture);
         $this->assertSame(true,$body->droitImage);
+        $this->assertSame(true,$body->isApprentice);
     }
 }

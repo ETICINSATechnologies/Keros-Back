@@ -103,6 +103,7 @@ class   ConsultantInscriptionService
         $nationality = $this->countryService->getOne($nationalityId);
         $address = $this->addressService->create($fields["address"]);
         $droitImage = Validator::requiredBool($fields['droitImage']);
+        $isApprentice = Validator::requiredBool($fields['isApprentice']);
         $documentIdentity = Validator::requiredString($fields['documentIdentity']);
         $documentScolaryCertificate = Validator::requiredString($fields['documentScolaryCertificate']);
         $documentRIB = Validator::requiredString($fields['documentRIB']);
@@ -110,7 +111,7 @@ class   ConsultantInscriptionService
         $documentResidencePermit = Validator::optionalString($fields['documentResidencePermit']) ? $fields['documentResidencePermit'] : null;
         $documentCVEC = Validator::requiredString($fields['documentCVEC']);
 
-        $consultantInscription = new ConsultantInscription($firstName, $lastName, $gender, $birthday, $department, $email, $phoneNumber, $outYear, $nationality, $address, $droitImage, $documentIdentity, $documentScolaryCertificate, $documentRIB, $documentVitaleCard, $documentResidencePermit, $documentCVEC);
+        $consultantInscription = new ConsultantInscription($firstName, $lastName, $gender, $birthday, $department, $email, $phoneNumber, $outYear, $nationality, $address, $droitImage, $isApprentice, $documentIdentity, $documentScolaryCertificate, $documentRIB, $documentVitaleCard, $documentResidencePermit, $documentCVEC);
 
         $this->consultantInscriptionDataService->persist($consultantInscription);
 
@@ -206,6 +207,7 @@ class   ConsultantInscriptionService
         $nationality = $this->countryService->getOne($nationalityId);
         $address = $this->addressService->create($fields["address"]);
         $droitImage = Validator::requiredBool($fields['droitImage']);
+        $isApprentice = Validator::requiredBool($fields['isApprentice']);
 
         $consultantInscription->setFirstName($firstName);
         $consultantInscription->setLastName($lastName);
@@ -218,6 +220,7 @@ class   ConsultantInscriptionService
         $consultantInscription->setNationality($nationality);
         $this->addressService->update($consultantInscription->getAddress()->getId(), $fields["address"]);
         $consultantInscription->setDroitImage($droitImage);
+        $consultantInscription->setIsApprentice($isApprentice);
 
         $this->consultantInscriptionDataService->persist($consultantInscription);
 
@@ -257,6 +260,7 @@ class   ConsultantInscriptionService
                 "countryId" => $consultantInscription->getAddress()->getCountry()->getId()
             ),
             "droitImage" => $consultantInscription->isDroitImage(),
+            "isApprentice" => $consultantInscription->getIsApprentice(),
         );
 
         //copy and add files to consultant

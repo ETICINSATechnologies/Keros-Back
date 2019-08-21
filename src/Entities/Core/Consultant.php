@@ -65,6 +65,11 @@ class Consultant implements JsonSerializable
     protected $droitImage;
 
     /**
+     * @Column(type="boolean")
+     */
+    protected $isApprentice;
+
+    /**
      * @ManyToMany(targetEntity="Keros\Entities\Ua\Study", mappedBy="consultants")
      */
     protected $studiesAsConsultant;
@@ -105,7 +110,7 @@ class Consultant implements JsonSerializable
      */
     private $documentCVEC;
 
-    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage, $documentIdentity, $documentScolaryCertificate, $documentRIB, $documentVitaleCard, $documentResidencePermit, $documentCVEC)
+    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage, $isApprentice, $documentIdentity, $documentScolaryCertificate, $documentRIB, $documentVitaleCard, $documentResidencePermit, $documentCVEC)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -118,6 +123,7 @@ class Consultant implements JsonSerializable
         $this->company = $company;
         $this->profilePicture = $profilePicture;
         $this->droitImage = $droitImage;
+        $this->isApprentice = $isApprentice;
         $this->documentIdentity = $documentIdentity;
         $this->documentScolaryCertificate = $documentScolaryCertificate;
         $this->documentRIB = $documentRIB;
@@ -142,6 +148,7 @@ class Consultant implements JsonSerializable
             'company' => $this->getCompany(),
             'profilePicture' => $this->getProfilePicture(),
             'droitImage' => $this->isDroitImage(),
+            'isApprentice' => $this->getIsApprentice(),
         ];
     }
     public static function getSearchFields(): array {
@@ -357,6 +364,22 @@ class Consultant implements JsonSerializable
     public function setDroitImage(bool $droitImage): void
     {
         $this->droitImage = $droitImage;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsApprentice(): bool
+    {
+        return $this->isApprentice;
+    }
+
+    /**
+     * @param bool $isApprentice
+     */
+    public function setIsApprentice(bool $isApprentice): void
+    {
+        $this->isApprentice = $isApprentice;
     }
 
     /**

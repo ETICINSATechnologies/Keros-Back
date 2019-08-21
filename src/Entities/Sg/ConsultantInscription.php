@@ -93,6 +93,12 @@ class ConsultantInscription implements JsonSerializable
      */
     private $droitImage;
 
+    /**
+     * @var boolean
+     * @Column(type="boolean")
+     */
+    private $isApprentice;
+
     /** 
      * @var string
      * @Column(type="string", length=200)
@@ -142,6 +148,7 @@ class ConsultantInscription implements JsonSerializable
      * @param Country $nationality
      * @param Address $address
      * @param bool $droitImage
+     * @param bool $isApprentice
      * @param string $documentIdentity
      * @param string $documentScolaryCertificate
      * @param string $documentRIB
@@ -149,7 +156,7 @@ class ConsultantInscription implements JsonSerializable
      * @param string $documentResidencePermit
      * @param string $documentCVEC
      */
-    public function __construct(string $firstName, string $lastName, Gender $gender, DateTime $birthday, Department $department, string $email, ?string $phoneNumber, ?int $outYear, Country $nationality, Address $address, bool $droitImage, string $documentIdentity, string $documentScolaryCertificate, string $documentRIB, string $documentVitaleCard, ?string $documentResidencePermit, string $documentCVEC)
+    public function __construct(string $firstName, string $lastName, Gender $gender, DateTime $birthday, Department $department, string $email, ?string $phoneNumber, ?int $outYear, Country $nationality, Address $address, bool $droitImage, bool $isApprentice, string $documentIdentity, string $documentScolaryCertificate, string $documentRIB, string $documentVitaleCard, ?string $documentResidencePermit, string $documentCVEC)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -162,6 +169,7 @@ class ConsultantInscription implements JsonSerializable
         $this->nationality = $nationality;
         $this->address = $address;
         $this->droitImage = $droitImage;
+        $this->isApprentice = $isApprentice;
         $this->documentIdentity = $documentIdentity;
         $this->documentScolaryCertificate = $documentScolaryCertificate;
         $this->documentRIB = $documentRIB;
@@ -188,7 +196,8 @@ class ConsultantInscription implements JsonSerializable
             'outYear' => $this->getOutYear(),
             'nationality' => $this->getNationality(),
             'address' => $this->getAddress(),
-            'droitImage' => $this->isDroitImage()
+            'droitImage' => $this->isDroitImage(),
+            'isApprentice' => $this->getIsApprentice(),
         ];
     }
 
@@ -379,6 +388,22 @@ class ConsultantInscription implements JsonSerializable
     public function setDroitImage(bool $droitImage): void
     {
         $this->droitImage = $droitImage;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsApprentice(): bool
+    {
+        return $this->isApprentice;
+    }
+
+    /**
+     * @param bool $isApprentice
+     */
+    public function setIsApprentice(bool $isApprentice): void
+    {
+        $this->isApprentice = $isApprentice;
     }
 
     /**

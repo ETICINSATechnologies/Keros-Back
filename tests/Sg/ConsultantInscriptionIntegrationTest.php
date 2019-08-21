@@ -84,6 +84,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
                 'countryId' => 133,
             ),
             'droitImage' => true,
+            'isApprentice' => true,
         );
 
         $env = Environment::mock([
@@ -121,6 +122,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         $this->assertSame('je sais pas quoi mettre', $body->address->line1);
         $this->assertSame('Lorem ipsum', $body->address->city);
         $this->assertSame(true, $body->droitImage);
+        $this->assertSame(true,$body->isApprentice);
     }
 
     /**
@@ -160,6 +162,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
                 'countryId' => 133,
             ),
             'droitImage' => true,
+            'isApprentice' => true,
         );
 
         $env = Environment::mock([
@@ -219,6 +222,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
                 'countryId' => 133,
             ),
             'droitImage' => true,
+            'isApprentice' => true,
         );
 
         $env = Environment::mock([
@@ -254,6 +258,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         $this->assertSame('je sais pas quoi mettre', $body->address->line1);
         $this->assertSame('Lorem ipsum', $body->address->city);
         $this->assertSame(true, $body->droitImage);
+        $this->assertSame(true,$body->isApprentice);
     }
 
     /**
@@ -284,6 +289,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         $this->assertSame(42, $body->nationality->id);
         $this->assertSame(1, $body->address->id);
         $this->assertSame(false, $body->droitImage);
+        $this->assertSame(true,$body->isApprentice);
     }
 
     /**
@@ -328,6 +334,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
                 'countryId' => 133,
             ),
             'droitImage' => true,
+            'isApprentice' => true,
         );
 
         $env = Environment::mock([
@@ -353,6 +360,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         $this->assertSame('je sais pas quoi mettre', $body->address->line1);
         $this->assertSame('Lorem ipsum', $body->address->city);
         $this->assertSame(true, $body->droitImage);
+        $this->assertSame(true,$body->isApprentice);
     }
 
     /**
@@ -380,6 +388,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
                 'countryId' => 133,
             ),
             'droitImage' => true,
+            'isApprentice' => true,
         );
 
         $env = Environment::mock([
