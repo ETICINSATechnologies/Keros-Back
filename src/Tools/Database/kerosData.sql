@@ -215,10 +215,10 @@ INSERT INTO `ua_study_contact` (`contactId`, `studyId`) VALUES
   (2, 1);
 
 TRUNCATE TABLE ua_study_document_type;
-INSERT INTO ua_study_document_type(id, `location`, istemplatable, oneConsultant) VALUES
-  (1, 'document.docx', 1, 0),
-  (2, 'acompte.docx', 1, 1),
-  (3, 'undoc.docx', 0, 0);
+INSERT INTO ua_study_document_type(id, name, `location`, isTemplatable, oneConsultant) VALUES
+  (1, 'un document random', 'document.docx', 1, 0),
+  (2, 'acompte', 'acompte.docx', 1, 1),
+  (3, 'un doc', 'undoc.docx', 0, 0);
 
 TRUNCATE TABLE core_document;
 INSERT INTO core_document(id, uploadDate, location, discr) VALUES

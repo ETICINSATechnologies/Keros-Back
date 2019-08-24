@@ -22,7 +22,7 @@ class StudyDocumentService
     /**
      * @var StudyDocumentDataService
      */
-    private $documentDataService;
+    private $studyDocumentDataService;
 
     /**
      * @var StudyService
@@ -51,7 +51,7 @@ class StudyDocumentService
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get(Logger::class);
-        $this->documentDataService = $container->get(StudyDocumentDataService::class);
+        $this->studyDocumentDataService = $container->get(StudyDocumentDataService::class);
         $this->studyDocumentTypeService = $container->get(StudyDocumentTypeService::class);
         $this->studyService = $container->get(StudyService::class);
         $this->kerosConfig = ConfigLoader::getConfig();
@@ -84,7 +84,7 @@ class StudyDocumentService
         $this->directoryManager->mkdir($this->kerosConfig['STUDY_DOCUMENT_DIRECTORY'] . pathinfo($location, PATHINFO_DIRNAME));
         $document = new StudyDocument($date, $location, $study, $studyDocumentType);
 
-        $this->documentDataService->persist($document);
+        $this->studyDocumentDataService->persist($document);
 
         return $document;
     }
@@ -98,7 +98,7 @@ class StudyDocumentService
     {
         $id = Validator::requiredId($id);
 
-        $document = $this->documentDataService->getOne($id);
+        $document = $this->studyDocumentDataService->getOne($id);
         if (!$document) {
             throw new KerosException("The document could not be found", 404);
         }
@@ -113,7 +113,7 @@ class StudyDocumentService
     {
         $id = Validator::requiredId($id);
         $document = $this->getOne($id);
-        $this->documentDataService->delete($document);
+        $this->studyDocumentDataService->delete($document);
     }
 
     /**
@@ -124,7 +124,7 @@ class StudyDocumentService
      */
     public function getLatestDocumentFromStudyDocumentType(int $studyId, int $documentType): StudyDocument
     {
-        $documents = $this->documentDataService->getAll();
+        $documents = $this->studyDocumentDataService->getAll();
 
         $latestDocument = null;
         foreach ($documents as $document) {
@@ -139,5 +139,30 @@ class StudyDocumentService
         }
 
         return $latestDocument;
+    }
+
+    /**
+     * @return StudyDocument[]
+     * @throws KerosException
+     */
+    public function getAll(): array
+    {
+        return $this->studyDocumentDataService->getAll();
+    }
+
+    /**
+     * @param int $documentTypeId
+     * @param int $studyId
+     * @return bool
+     * @throws KerosException
+     */
+    public function documentTypeIsUploadedForStudy(int $documentTypeId, int $studyId): bool
+    {
+        $studyDocumentTypes = $this->getAll();
+        foreach ($studyDocumentTypes as $studyDocumentType) {
+            if ($studyDocumentType->getId() == $documentTypeId && $studyDocumentType->getStudy()->getId() == $studyId)
+                return true;
+        }
+        return false;
     }
 }
