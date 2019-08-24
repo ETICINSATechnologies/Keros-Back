@@ -48,6 +48,11 @@ class AuthenticationMiddleware
 
         $payload = $this->jwtCodec->decode($token);
 
+        //check if token has expired
+        if ($payload->exp < time()) {
+            throw new KerosException("Authentication token has expired, please login again", 401);
+        }
+
         $response = $next($request->withAttribute("userId", $payload->id), $response);
 
         return $response;
