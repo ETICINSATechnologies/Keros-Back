@@ -256,7 +256,7 @@ class Facture implements \JsonSerializable
     }
 
     /**
-     * @return Study
+     * @return Study|null
      */
     public function getStudy()
     {
@@ -264,7 +264,7 @@ class Facture implements \JsonSerializable
     }
 
     /**
-     * @param Study $study
+     * @param Study|null $study
      */
     public function setStudy($study): void
     {
