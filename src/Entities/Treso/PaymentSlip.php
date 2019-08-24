@@ -61,7 +61,7 @@ class PaymentSlip implements JsonSerializable
     /** @Column(type="string", length=2048) */
     protected $amountDescription;
 
-    /** @Column(type="datetime") */
+    /** @Column(type="date") */
     protected $createdDate;
 
     /**
@@ -73,7 +73,7 @@ class PaymentSlip implements JsonSerializable
     /** @Column(type="boolean") */
     protected $validatedByUa;
 
-    /** @Column(type="datetime") */
+    /** @Column(type="date") */
     protected $validatedByUaDate;
 
     /**
@@ -85,7 +85,7 @@ class PaymentSlip implements JsonSerializable
     /** @Column(type="boolean") */
     protected $validatedByPerf;
 
-    /** @Column(type="datetime") */
+    /** @Column(type="date") */
     protected $validatedByPerfDate;
 
     /**

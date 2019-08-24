@@ -23,7 +23,7 @@ class PaymentSlipIntegrationTest extends AppTestCase
         $this->assertSame(200, $response->getStatusCode());
         $body = json_decode($response->getBody());
 
-        $this->assertEquals(1, count($body->content));
+        $this->assertEquals(2, count($body->content));
     }
 
     public function testGetPaymentSlipShouldReturn200()
@@ -115,7 +115,7 @@ class PaymentSlipIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
         $this->assertSame(201, $response->getStatusCode());
         $body = json_decode($response->getBody());
-        $this->assertSame(2, $body->id);
+        $this->assertSame(3, $body->id);
         $this->assertSame(null, $body->missionRecapNumber);
         $this->assertSame(null, $body->consultantName);
         $this->assertSame(null, $body->consultantSocialSecurityNumber);
@@ -167,7 +167,7 @@ class PaymentSlipIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
         $this->assertSame(201, $response->getStatusCode());
         $body = json_decode($response->getBody());
-        $this->assertSame(2, $body->id);
+        $this->assertSame(3, $body->id);
         $this->assertSame("string", $body->missionRecapNumber);
         $this->assertSame("LOREM Ipsum-Nawa", $body->consultantName);
         $this->assertSame("string", $body->consultantSocialSecurityNumber);

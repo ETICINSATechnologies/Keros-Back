@@ -59,7 +59,7 @@ class PaymentSlipController
      */
     public function deletePaymentSlip(Request $request, Response $response, array $args)
     {
-        $this->logger->debug("Deleting study from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->logger->debug("Deleting paymentSlip " . $args["id"] . " from " . $request->getServerParams()["REMOTE_ADDR"]);
         $this->entityManager->beginTransaction();
         $this->paymentSlipService->delete($args['id']);
         $this->entityManager->commit();
@@ -75,7 +75,7 @@ class PaymentSlipController
      */
     public function getPaymentSlip(Request $request, Response $response, array $args)
     {
-        $this->logger->debug("Getting paymentSlip by ID from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->logger->debug("Getting paymentSlip " . $args["id"] . " from " . $request->getServerParams()["REMOTE_ADDR"]);
 
         $paymentSlip = $this->paymentSlipService->getOne($args["id"]);
 
@@ -91,7 +91,7 @@ class PaymentSlipController
      */
     public function getPagePaymentSlip(Request $request, Response $response, array $args)
     {
-        $this->logger->debug("Get page studies from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->logger->debug("Get page paymentSlips from " . $request->getServerParams()["REMOTE_ADDR"]);
         $queryParams = $request->getQueryParams();
         $params = new RequestParameters($queryParams, PaymentSlip::getSearchFields());
 
@@ -150,7 +150,7 @@ class PaymentSlipController
      */
     public function validateUA(Request $request, Response $response, array $args)
     {
-        $this->logger->debug("Validating paymentSlip by UA from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->logger->debug("Validating paymentSlip " . $args["id"] . " by UA " . $request->getAttribute("userId") . " from " . $request->getServerParams()["REMOTE_ADDR"]);
 
         $this->entityManager->beginTransaction();
         $this->paymentSlipService->validateUA($args["id"], $request->getAttribute("userId"));
@@ -168,7 +168,7 @@ class PaymentSlipController
      */
     public function validatePerf(Request $request, Response $response, array $args)
     {
-        $this->logger->debug("Validating paymentSlip by Perf from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->logger->debug("Validating paymentSlip " . $args["id"] . " by Perf " . $request->getAttribute("userId") . " from " . $request->getServerParams()["REMOTE_ADDR"]);
         $body = $request->getParsedBody();
 
         $this->entityManager->beginTransaction();

@@ -148,13 +148,13 @@ class PaymentSlipService
         $idPerf = Validator::requiredId($idPerf);
 
         $paymentSlip = $this->paymentSlipDataService->getOne($id);
-        $PerfMember = $this->memberService->getOne($idPerf);
+        $perfMember = $this->memberService->getOne($idPerf);
         $dateString = date("d/m/Y");
         $date = DateTime::createFromFormat('d/m/Y', $dateString);
 
         $paymentSlip->setvalidatedByPerf(true);
         $paymentSlip->setValidatedByPerfDate($date);
-        $paymentSlip->setValidatedByPerfMember($PerfMember);
+        $paymentSlip->setValidatedByPerfMember($perfMember);
 
         $this->paymentSlipDataService->persist($paymentSlip);
 
@@ -172,7 +172,7 @@ class PaymentSlipService
 
     /**
      * @param RequestParameters $requestParameters
-     * @return array
+     * @return PaymentSlip[]
      * @throws KerosException
      */
     public function getPage(RequestParameters $requestParameters): array
@@ -187,21 +187,6 @@ class PaymentSlipService
     public function getCount(RequestParameters $requestParameters): int
     {
         return $this->paymentSlipDataService->getCount($requestParameters);
-    }
-
-    /**
-     * @param int $idStudy
-     * @throws KerosException
-     */
-    public function deletePaymentSlipsRelatedToStudy(int $idStudy)
-    {
-        $idStudy = Validator::requiredId($idStudy);
-        $paymentSlips = $this->getAll();
-        foreach ($paymentSlips as $paymentSlip) {
-            if ($studyId = $paymentSlip->getStudy()->getId() == $idStudy) {
-                $this->delete($paymentSlip);
-            }
-        }
     }
 
     /**

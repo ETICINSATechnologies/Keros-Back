@@ -228,7 +228,6 @@ class MemberService
         $member->setStudiesAsQualityManager([]);
         $member->setStudiesAsLeader([]);
         $this->memberDataService->persist($member);
-        $this->paymentSlipDataService->deletePaymentSlipsRelatedToMember($id);
         $this->ticketDataService->deleteTicketsRelatedToMember($id);
         $profilepicture = $member->getProfilePicture();
         $this->memberDataService->delete($member);

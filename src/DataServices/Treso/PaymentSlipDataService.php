@@ -75,10 +75,10 @@ class PaymentSlipDataService
     public function getAll(): array
     {
         try {
-            $studies = $this->repository->findAll();
-            return $studies;
+            $paymentSlips = $this->repository->findAll();
+            return $paymentSlips;
         } catch (Exception $e) {
-            $msg = "Error finding page of studies : " . $e->getMessage();
+            $msg = "Error finding page of paymentSlips : " . $e->getMessage();
             $this->logger->error($msg);
             throw new KerosException($msg, 500);
         }
@@ -110,8 +110,8 @@ class PaymentSlipDataService
     {
         try {
             $criteria = $requestParameters->getCriteria();
-            $studies = $this->repository->matching($criteria)->getValues();
-            return $studies;
+            $paymentSlips = $this->repository->matching($criteria)->getValues();
+            return $paymentSlips;
         } catch (Exception $e) {
             $msg = "Error finding page of paymentSlips : " . $e->getMessage();
             $this->logger->error($msg);

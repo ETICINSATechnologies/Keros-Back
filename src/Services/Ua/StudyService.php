@@ -194,7 +194,6 @@ class StudyService
     {
         $id = Validator::requiredId($id);
         $study = $this->getOne($id);
-        //$this->paymentSlipService->deletePaymentSlipsRelatedToStudy($id);
 
         $this->studyDataService->delete($study);
     }
