@@ -11,6 +11,21 @@ use Slim\Http\Request;
 class StudyIntegrationTest extends AppTestCase
 {
 
+    public function testDeleteAllStudyShouldReturn204()
+    {
+        for($id = 1;  $id <= 3; $id++) {
+            $env = Environment::mock([
+                'REQUEST_METHOD' => 'DELETE',
+                'REQUEST_URI' => "/api/v1/ua/study/$id",
+            ]);
+            $req = Request::createFromEnvironment($env);
+            $this->app->getContainer()['request'] = $req;
+            $response = $this->app->run(false);
+            $this->assertSame(204, $response->getStatusCode());
+        }
+    }
+
+
     public function testGetStudyWithMainLeaderManagerConsultant()
     {
         $env = Environment::mock([
