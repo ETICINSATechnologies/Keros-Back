@@ -215,7 +215,7 @@ INSERT INTO `ua_study_contact` (`contactId`, `studyId`) VALUES
   (2, 1);
 
 TRUNCATE TABLE ua_study_document_type;
-INSERT INTO ua_study_document_type(id, name, `location`, istemplatable, oneConsultant) VALUES
+INSERT INTO ua_study_document_type(id, name, `location`, isTemplatable, oneConsultant) VALUES
   (1, 'un document random', 'document.docx', 1, 0),
   (2, 'acompte', 'acompte.docx', 1, 1),
   (3, 'un doc', 'undoc.docx', 0, 0);

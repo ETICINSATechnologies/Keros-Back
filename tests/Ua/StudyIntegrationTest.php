@@ -167,7 +167,8 @@ class StudyIntegrationTest extends AppTestCase
         $body = json_decode($response->getBody());
 
         $this->assertEquals(3, count($body->content));
-        $this->assertNotNull($body->content[1]->documents);
+        foreach($body->content as $study)
+            $this->assertNotNull($study->documents);
     }
 
     public function testGetAllStudyWithRightShouldReturn200()

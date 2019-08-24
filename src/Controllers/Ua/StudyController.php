@@ -261,14 +261,14 @@ class StudyController
         $body = $request->getParsedBody();
 
         $this->entityManager->beginTransaction();
-        $beforeQualityManagers = $study->getQualityManagersArray();
-        sort($beforeQualityManagers);
+        $oldQualityManagers = $study->getQualityManagersArray();
+        sort($oldQualityManagers);
 
         $study = $this->studyService->update($args['id'], $body);
-        $afterQualityManagers = $study->getQualityManagersArray();
+        $newQualityManagers = $study->getQualityManagersArray();
 
-        sort($afterQualityManagers);
-        if ($afterQualityManagers != $beforeQualityManagers) {
+        sort($newQualityManagers);
+        if ($newQualityManagers != $oldQualityManagers) {
             $this->accessRightsService->checkRightsAttributeQualityManager($request);
         }
 
