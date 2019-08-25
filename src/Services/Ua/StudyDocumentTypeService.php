@@ -90,10 +90,11 @@ class StudyDocumentTypeService
         $oneConsultant = Validator::requiredBool(boolval($fields["oneConsultant"]));
         $isTemplatable = Validator::requiredBool(boolval($fields["isTemplatable"]));
         $extension = Validator::requiredString($fields["extension"]);
+        $name = Validator::requiredString($fields["name"]);
 
         $date = new \DateTime();
         $location = $date->format('d-m-Y_H:i:s:u') . '.' . $extension;
-        $documentType = new StudyDocumentType($location, $isTemplatable, $oneConsultant);
+        $documentType = new StudyDocumentType($location, $isTemplatable, $oneConsultant, $name);
 
         $this->studyDocumentTypeDataService->persist($documentType);
 

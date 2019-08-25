@@ -118,7 +118,9 @@ INSERT INTO core_address (id, line1, line2, postalCode, city, countryId) VALUES
     (80, 'rue member inscription 27', 'Meat', '14785', 'Villeurbanne City', 88), # memberInscription 27
     (81, 'rue member inscription 28', 'Meat', '14785', 'Villeurbanne City', 77), # memberInscription 28
     (82, 'rue member inscription 29', 'Meat', '14785', 'Villeurbanne City', 146), # memberInscription 29
-    (83, 'rue member inscription 30', 'Meat', '14785', 'Villeurbanne City', 130); # memberInscription 30
+    (83, 'rue member inscription 30', 'Meat', '14785', 'Villeurbanne City', 130), # memberInscription 30
+    (84, '14 PaymentSlip 1', 'Quoi ?', '32456', 'Lyon', 22), #Payment Slip 1
+    (85, '14 PaymentSlip 2', 'Ter', '32456', 'Lyon', 22); #Payment Slip 2
 
 TRUNCATE TABLE core_ticket;
 INSERT INTO core_ticket (id, userId, title, message, type, status) VALUES
@@ -243,10 +245,10 @@ INSERT INTO `ua_study_contact` (`contactId`, `studyId`) VALUES
   (2, 1);
 
 TRUNCATE TABLE ua_study_document_type;
-INSERT INTO ua_study_document_type(id, `location`, istemplatable, oneConsultant) VALUES
-  (1, 'document.docx', 1, 0),
-  (2, 'acompte.docx', 1, 1),
-  (3, 'undoc.docx', 0, 0);
+INSERT INTO ua_study_document_type(id, name, `location`, isTemplatable, oneConsultant) VALUES
+  (1, 'un document random', 'document.docx', 1, 0),
+  (2, 'acompte', 'acompte.docx', 1, 1),
+  (3, 'un doc', 'undoc.docx', 0, 0);
 
 TRUNCATE TABLE core_document;
 INSERT INTO core_document(id, uploadDate, location, discr) VALUES
@@ -326,5 +328,10 @@ INSERT INTO sg_member_inscription_document_type(id, location, `name`, isTemplata
 TRUNCATE TABLE sg_member_inscription_document;
 INSERT INTO sg_member_inscription_document(id, memberInscriptionId, memberInscriptionDocumentTypeId) VALUES
 (5, 1, 1);
+
+TRUNCATE TABLE treso_payment_slip;
+INSERT INTO treso_payment_slip (id, missionRecapNumber, consultantName, consultantSocialSecurityNumber, addressId, email, studyId, clientName, projectLead, isTotalJeh, isStudyPaid, amountDescription, createdDate, creatorId, validatedByUa, validatedByUaDate, uaValidatorId, validatedByPerf, validatedByPerfDate, perfValidatorId) VALUES
+  (1, '102383203', 'Shrek', '12320183', 84, 'shrek@fortfortlointain.fr', 1, 'L''âne', 'Le chat Potté', false, false, 'Facture payée', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), 1, false, null, null, false, null, null),
+  (2, '102383204', 'Shrek', '12320183', 85, 'shrek@fortfortlointain.fr', 1, 'L''âne', 'Le chat Potté', false, false, 'Facture payée', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), 1, true, STR_TO_DATE('5/16/2022', '%c/%e/%Y'), 4, true, STR_TO_DATE('5/17/2022', '%c/%e/%Y'), 8);
 
 COMMIT;

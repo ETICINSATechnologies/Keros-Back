@@ -3,6 +3,8 @@ namespace Keros\Entities\Ua;
 use JsonSerializable;
 use Keros\Tools\Validator;
 use Keros\Entities\Core\Member;
+use Keros\Error\KerosException;
+
 /**
  * @Entity
  * @Table(name="ua_study")
@@ -134,6 +136,9 @@ class Study implements JsonSerializable
      * @param $qualityManagers
      * @param $consultants
      * @param $confidential
+     * @param $mainLeader
+     * @param $mainQualityManager
+     * @param $mainConsultant
      */
     public function __construct($name, $description, $field, $status, $firm, $contacts, $leaders, $qualityManagers, $consultants, $confidential, $mainLeader, $mainQualityManager, $mainConsultant)
     {
@@ -178,11 +183,13 @@ class Study implements JsonSerializable
         ];
     }
 
-    public static function getSearchFields(): array {
+    public static function getSearchFields(): array
+    {
         return ['number', 'name'];
     }
 
     // Getters and setters
+
     /**
      * @return mixed
      */
@@ -439,7 +446,7 @@ class Study implements JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return Firm|null
      */
     public function getFirm() : ?Firm
     {
@@ -468,8 +475,7 @@ class Study implements JsonSerializable
     public function getContactsArray()
     {
         $contacts = [];
-        foreach ($this->getContacts() as $contact)
-        {
+        foreach ($this->getContacts() as $contact) {
             $contacts[] = $contact;
         }
         return $contacts;
@@ -484,7 +490,7 @@ class Study implements JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return Member[]
      */
     public function getLeaders()
     {
@@ -515,7 +521,7 @@ class Study implements JsonSerializable
     }
 
     /**
-     * @param mixed $leaders
+     * @param Member[] $leaders
      */
     public function setLeaders($leaders): void
     {
@@ -523,7 +529,7 @@ class Study implements JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return Member[]
      */
     public function getQualityManagers()
     {
@@ -531,7 +537,7 @@ class Study implements JsonSerializable
     }
 
     /**
-     * @return array
+     * @return Member[]
      */
     public function getQualityManagersArray()
     {
@@ -626,7 +632,7 @@ class Study implements JsonSerializable
 
     /**
      * @param $mainLeader
-     * @throws \Keros\Error\KerosException
+     * @throws KerosException
      */
     public function setMainLeader($mainLeader): void
     {
@@ -661,12 +667,11 @@ class Study implements JsonSerializable
     }
 
     /**
-     * @param $mainConsultant
-     * @throws KerosException
+     * @param mixed $mainConsultant
      */
     public function setMainConsultant($mainConsultant): void
     {
-        Validator::optionalInt($mainConsultant);
         $this->mainConsultant = $mainConsultant;
     }
+
 }
