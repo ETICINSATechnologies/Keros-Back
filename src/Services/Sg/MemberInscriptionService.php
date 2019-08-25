@@ -214,8 +214,6 @@ class   MemberInscriptionService
         $month = intval($date->format('m'));
         $year = intval($date->format('Y'));
 
-        $this->logger->debug(json_encode($memberInscription));
-
         $memberArray = array(
             "username" => $memberInscription->getFirstName() . '.' . $memberInscription->getLastName(),
             "password" => $memberInscription->getFirstName() . '.' . $memberInscription->getBirthday()->format('d/m/Y'),

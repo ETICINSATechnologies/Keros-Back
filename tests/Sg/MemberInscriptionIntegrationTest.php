@@ -495,7 +495,6 @@ class MemberInscriptionIntegrationTest extends AppTestCase
 
         $this->assertSame(204, $response->getStatusCode());
 
-        //On vérifie que c'est bien pris en compte
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
             'REQUEST_URI' => '/api/v1/sg/membre-inscription/1',
