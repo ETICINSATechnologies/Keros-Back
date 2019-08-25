@@ -101,10 +101,15 @@ class FactureService
         return $facture;
     }
 
+    /**
+     * @param int $id
+     * @throws KerosException
+     */
     public function delete(int $id): void
     {
         $id = Validator::requiredId($id);
         $facture = $this->getOne($id);
+        $facture->setRelatedDocuments(array());
         $this->factureDataService->delete($facture);
     }
 
