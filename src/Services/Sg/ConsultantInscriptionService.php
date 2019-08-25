@@ -272,6 +272,7 @@ class   ConsultantInscriptionService
         //copy and add files to consultant
         $consultantInscriptionFiles = ConsultantInscriptionFileHelper::getConsultantInscriptionFiles();
         $consultantFiles = ConsultantFileHelper::getConsultantFiles();
+        
         foreach ($consultantInscriptionFiles as $consultantInscriptionFile) {
             $getFunction = $consultantInscriptionFile['get'];
             $filename = $consultantInscription->$getFunction();

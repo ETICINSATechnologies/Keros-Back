@@ -26,7 +26,7 @@ class UserService
 
     public function create(array $fields): User
     {
-        $username = Validator::requiredString($fields["username"]);
+        $username = $this->getFreshUsername(strtolower(Validator::requiredString($fields["username"])));
         $password = Validator::requiredPassword($fields["password"]);
         $disabled = Validator::optionalBool($fields["disabled"]);
         $encryptedPassword = PasswordEncryption::encrypt($password);
@@ -87,5 +87,20 @@ class UserService
         $this->userDataService->delete($user);
     }
 
+    /**
+     * @param string $username
+     * @return string
+     * @throws KerosException
+     */
+    public function getFreshUsername(string $username): string
+    {
+        $newUsername = $username;
+        $count = 1;
+        while ($this->userDataService->doesUsernameExist($newUsername)) {
+            $newUsername = $username . $count;
+            ++$count;
+        }
+        return $newUsername;
+    }
 
 }

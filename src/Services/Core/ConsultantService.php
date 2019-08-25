@@ -79,7 +79,7 @@ class ConsultantService
         $firstName = Validator::requiredString($fields["firstName"]);
         $lastName = Validator::requiredString($fields["lastName"]);
         $email = Validator::requiredEmail($fields["email"]);
-        $telephone = Validator::requiredPhone(isset($fields["telephone"]) ? $fields["telephone"] : null);
+        $telephone = Validator::optionalPhone(isset($fields["telephone"]) ? $fields["telephone"] : null);
         $birthday = Validator::requiredDate($fields["birthday"]);
         $schoolYear = Validator::requiredSchoolYear(isset($fields["schoolYear"]) ? $fields["schoolYear"] : null);
         $genderId = Validator::requiredId($fields["genderId"]);
@@ -172,7 +172,7 @@ class ConsultantService
         $firstName = Validator::requiredString($fields["firstName"]);
         $lastName = Validator::requiredString($fields["lastName"]);
         $email = Validator::requiredEmail($fields["email"]);
-        $telephone = Validator::requiredPhone(isset($fields["telephone"]) ? $fields["telephone"] : null);
+        $telephone = Validator::optionalPhone(isset($fields["telephone"]) ? $fields["telephone"] : null);
         $birthday = Validator::requiredDate($fields["birthday"]);
         $schoolYear = Validator::requiredSchoolYear(isset($fields["schoolYear"]) ? $fields["schoolYear"] : null);
         $genderId = Validator::requiredId($fields["genderId"]);

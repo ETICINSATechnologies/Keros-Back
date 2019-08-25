@@ -26,4 +26,18 @@ class UserTest extends TestCase
         $this->assertEquals($date, $user->getExpiresAt());
         $this->assertNull($user->getId());
     }
+
+    public function testUserWithSameUsernameShouldIncrement()
+    {
+        $date = new \DateTime();
+        $user =  new User("mcool", "marah1234", $date, $date, false, $date);
+        $this->assertInstanceOf(User::class, $user);
+        $this->assertEquals("mcool1", $user->getUsername());
+        $this->assertEquals("JamesBond007", $user->getPassword());
+        $this->assertEquals($date, $user->getLastConnectedAt());
+        $this->assertEquals($date, $user->getCreatedAt());
+        $this->assertEquals(false, $user->getDisabled());
+        $this->assertEquals($date, $user->getExpiresAt());
+        $this->assertNull($user->getId());
+    }
 }

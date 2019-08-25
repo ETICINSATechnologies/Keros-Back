@@ -32,7 +32,10 @@ class Consultant implements JsonSerializable
     /** @Column(type="datetime") */
     protected $birthday;
 
-    /** @Column(type="string", length=20) */
+    /** 
+     * @var string|null
+     * @Column(type="string", length=20)
+    */
     protected $telephone;
 
     /** @Column(type="string", length=255) */

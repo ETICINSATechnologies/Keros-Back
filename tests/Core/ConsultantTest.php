@@ -43,7 +43,7 @@ class ConsultantTest extends TestCase
         $consultant = new Consultant("Basmah",
             "Maiga",
             new DateTime("11/26/1998"),
-            "0675385495",
+            null,
             "basmah.maiga@gmail.com",
             "2018",
             new Gender("Femme"),
@@ -66,7 +66,7 @@ class ConsultantTest extends TestCase
         $this->assertEquals("Basmah", $consultant->getFirstName());
         $this->assertEquals("Maiga", $consultant->getLastName());
         $this->assertEquals(new DateTime("11/26/1998"), $consultant->getBirthday());
-        $this->assertEquals("0675385495", $consultant->getTelephone());
+        $this->assertEquals(null, $consultant->getTelephone());
         $this->assertEquals("basmah.maiga@gmail.com", $consultant->getEmail());
         $this->assertEquals("2018", $consultant->getSchoolYear());
         $this->assertEquals("Google", $consultant->getCompany());

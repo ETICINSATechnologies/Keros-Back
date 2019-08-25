@@ -77,7 +77,6 @@ class ConsultantIntegrationTest extends AppTestCase
             "genderId" => 1,
             "email" => "fakeEmail@gmail.com",
             "birthday" => "1975-12-01",
-            "telephone" => "0033675385495",
             "address" => [
                 "line1" => "20 avenue albert Einstein",
                 "line2" => "residence g",
@@ -117,7 +116,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame("1975-12-01", $body->birthday);
         $this->assertSame(1, $body->department->id);
         $this->assertSame(1, $body->schoolYear);
-        $this->assertSame("0033675385495", $body->telephone);
+        $this->assertSame(null, $body->telephone);
         $this->assertSame("Amazon", $body->company);
         $this->assertSame("http://image.png", $body->profilePicture);
         $this->assertNotNull($body->address->id);

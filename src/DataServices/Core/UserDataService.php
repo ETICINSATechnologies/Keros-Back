@@ -13,6 +13,7 @@ use Keros\Error\KerosException;
 use Keros\Tools\PasswordEncryption;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
+use Doctrine\ORM\QueryBuilder;
 
 class UserDataService
 {
@@ -28,12 +29,18 @@ class UserDataService
      * @var EntityRepository
      */
     private $repository;
+    /**
+     * @var QueryBuilder
+     */
+    private $queryBuilder;
+
 
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get(Logger::class);
         $this->entityManager = $container->get(EntityManager::class);
         $this->repository = $this->entityManager->getRepository(User::class);
+        $this->queryBuilder = $this->entityManager->createQueryBuilder();
     }
 
     public function persist(User $user)
@@ -110,6 +117,29 @@ class UserDataService
             $this->entityManager->flush();
         } catch (Exception $e) {
             $msg = "Failed to delete user : " . $e->getMessage();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
+    }
+
+    public function doesUsernameExist(string $username): bool
+    {
+        try {
+
+            $criteria = [
+                "username" => $username
+            ];
+            $users = $this->repository->findBy($criteria);
+
+            // check how many instances were found
+            if (sizeof($users) > 0) {
+                return true;
+            } else {
+                return false;
+            }
+
+        } catch (Exception $e) {
+            $msg = "Failed to check username existence : " . $e->getMessage();
             $this->logger->error($msg);
             throw new KerosException($msg, 500);
         }
