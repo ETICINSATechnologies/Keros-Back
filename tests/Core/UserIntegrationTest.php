@@ -5,9 +5,8 @@ namespace KerosTest\User;
 use KerosTest\AppTestCase;
 use Slim\Http\Environment;
 use Slim\Http\Request;
-use Slim\Http\UploadedFile;
 
-class MemberIntegrationTest extends AppTestCase
+class UserIntegrationTest extends AppTestCase
 {
     public function testPostMemberWithExistingUsernameShouldReturn200()
     {
