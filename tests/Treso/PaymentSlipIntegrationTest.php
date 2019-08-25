@@ -42,7 +42,7 @@ class PaymentSlipIntegrationTest extends AppTestCase
         $this->assertEquals("102383203", $body->missionRecapNumber);
         $this->assertEquals("Shrek", $body->consultantName);
         $this->assertEquals("12320183", $body->consultantSocialSecurityNumber);
-        $this->assertEquals(7, $body->address->id);
+        $this->assertEquals(84, $body->address->id);
         $this->assertEquals("shrek@fortfortlointain.fr", $body->email);
         $this->assertEquals(1, $body->study->id);
         $this->assertEquals("L'âne", $body->clientName);
@@ -271,7 +271,7 @@ class PaymentSlipIntegrationTest extends AppTestCase
         $this->assertEquals("102383203", $body->missionRecapNumber);
         $this->assertEquals("Shrek", $body->consultantName);
         $this->assertEquals("12320183", $body->consultantSocialSecurityNumber);
-        $this->assertEquals(7, $body->address->id);
+        $this->assertEquals(84, $body->address->id);
         $this->assertEquals("shrek@fortfortlointain.fr", $body->email);
         $this->assertEquals(2, $body->study->id);
         $this->assertEquals("L'âne", $body->clientName);
@@ -315,7 +315,7 @@ class PaymentSlipIntegrationTest extends AppTestCase
         $this->assertEquals("102383203", $body->missionRecapNumber);
         $this->assertEquals("Shrek", $body->consultantName);
         $this->assertEquals("12320183", $body->consultantSocialSecurityNumber);
-        $this->assertEquals(7, $body->address->id);
+        $this->assertEquals(84, $body->address->id);
         $this->assertEquals("shrek@fortfortlointain.fr", $body->email);
         $this->assertEquals(1, $body->study->id);
         $this->assertEquals("L'âne", $body->clientName);
@@ -359,7 +359,7 @@ class PaymentSlipIntegrationTest extends AppTestCase
         $this->assertEquals("102383203", $body->missionRecapNumber);
         $this->assertEquals("Shrek", $body->consultantName);
         $this->assertEquals("12320183", $body->consultantSocialSecurityNumber);
-        $this->assertEquals(7, $body->address->id);
+        $this->assertEquals(84, $body->address->id);
         $this->assertEquals("shrek@fortfortlointain.fr", $body->email);
         $this->assertEquals(1, $body->study->id);
         $this->assertEquals("L'âne", $body->clientName);

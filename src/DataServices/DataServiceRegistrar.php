@@ -14,6 +14,7 @@ use Keros\DataServices\Core\PoleDataService;
 use Keros\DataServices\Core\PositionDataService;
 use Keros\DataServices\Core\UserDataService;
 use Keros\DataServices\Sg\MemberInscriptionDataService;
+use Keros\DataServices\Sg\MemberInscriptionDocumentDataService;
 use Keros\DataServices\Sg\MemberInscriptionDocumentTypeDataService;
 use Keros\DataServices\Treso\FactureDocumentDataService;
 use Keros\DataServices\Treso\FactureDocumentTypeDataService;
@@ -126,6 +127,9 @@ class DataServiceRegistrar
         };
         $container[MemberInscriptionDocumentTypeDataService::class] = function ($container) {
             return new MemberInscriptionDocumentTypeDataService($container);
+        };
+        $container[MemberInscriptionDocumentDataService::class] = function ($container) {
+            return new MemberInscriptionDocumentDataService($container);
         };
     }
 }

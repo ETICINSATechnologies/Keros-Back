@@ -222,6 +222,8 @@ class KerosApp
                     $this->post("/{id:[0-9]+}/validate", MemberInscriptionController::class . ':validateMemberInscription');
                     $this->post("/{id:[0-9]+}/confirm-payment", MemberInscriptionController::class . ':confirmPaymentMemberInscription');
                     $this->get("/{id:[0-9]+}/document/{documentTypeId:[0-9]+}/generate", MemberInscriptionDocumentController::class . ':generateDocument');
+                    $this->post("/{id:[0-9]+}/document/{documentId:[0-9]+}", MemberInscriptionDocumentController::class . ':createDocument');
+                    $this->get("/{id:[0-9]+}/document/{documentId:[0-9]+}", MemberInscriptionDocumentController::class . ':getDocument');
                 });
             })->add($this->getContainer()->get(AuthenticationMiddleware::class));
         });
