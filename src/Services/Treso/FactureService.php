@@ -2,6 +2,8 @@
 
 namespace Keros\Services\Treso;
 
+use DateTime;
+use Exception;
 use Keros\DataServices\Treso\FactureDataService;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Treso\Facture;
@@ -65,7 +67,7 @@ class FactureService
     /**
      * @param array $fields
      * @return Facture
-     * @throws \Exception
+     * @throws Exception
      */
     public function create(array $fields): Facture
     {
@@ -78,7 +80,7 @@ class FactureService
         $contactName = Validator::optionalString(isset($fields["contactName"]) ? $fields["contactName"] : null);
         $contactEmail = Validator::optionalString(isset($fields["contactEmail"]) ? $fields["contactEmail"] : null);
         $studyId = Validator::optionalId(isset($fields["studyId"]) ? $fields["studyId"] : null);
-        if($studyId != null)
+        if ($studyId != null)
             $study = $this->studyService->getOne($studyId);
         else
             $study = null;
@@ -92,10 +94,10 @@ class FactureService
         $taxPercentage = Validator::optionalFloat(isset($fields["taxPercentage"]) ? $fields["taxPercentage"] : null);
         $dueDate = Validator::optionalDate(isset($fields["dueDate"]) ? $fields["dueDate"] : null);
         $additionalInformation = Validator::optionalString(isset($fields["additionalInformation"]) ? $fields["additionalInformation"] : null);
-        $createdById = Validator::requiredId($fields["createdBy"]);
+        $createdById = Validator::optionalId(isset($fields["createdBy"]) ? $fields["createdBy"] : null);
         $createdBy = $this->memberService->getOne($createdById);
 
-        $facture = new Facture($numero, $address, $clientName, $contactName, $contactEmail, $study, $type, $amountDescription, $subject, $agreementSignDate, $amountHT, $taxPercentage, $dueDate, $additionalInformation, new \DateTime(), $createdBy, false, null, null, false, null, null);
+        $facture = new Facture($numero, $address, $clientName, $contactName, $contactEmail, $study, $type, $amountDescription, $subject, $agreementSignDate, $amountHT, $taxPercentage, $dueDate, $additionalInformation, new DateTime(), $createdBy, false, null, null, false, null, null);
         $this->factureDataService->persist($facture);
 
         return $facture;
@@ -160,7 +162,7 @@ class FactureService
         $contactName = Validator::optionalString(isset($fields["contactName"]) ? $fields["contactName"] : null);
         $contactEmail = Validator::optionalString(isset($fields["contactEmail"]) ? $fields["contactEmail"] : null);
         $studyId = Validator::optionalId(isset($fields["studyId"]) ? $fields["studyId"] : null);
-        if($studyId != null)
+        if ($studyId != null)
             $study = $this->studyService->getOne($studyId);
         else
             $study = null;
@@ -199,7 +201,7 @@ class FactureService
      * @param int $factureId
      * @param int $validateUaMemberId
      * @return Facture
-     * @throws \Exception
+     * @throws Exception
      */
     public function validateByUa(int $factureId, int $validateUaMemberId): Facture
     {
@@ -208,7 +210,7 @@ class FactureService
 
         $facture->setValidatedByUa(true);
         $facture->setValidatedByUaMember($member);
-        $facture->setValidatedByUaDate(new \DateTime());
+        $facture->setValidatedByUaDate(new DateTime());
 
         $this->factureDataService->persist($facture);
 
@@ -219,7 +221,7 @@ class FactureService
      * @param int $factureId
      * @param int $validateUaMemberId
      * @return Facture
-     * @throws \Exception
+     * @throws Exception
      */
     public function validateByPerf(int $factureId, int $validateUaMemberId): Facture
     {
@@ -228,7 +230,7 @@ class FactureService
 
         $facture->setValidatedByPerf(true);
         $facture->setValidatedByPerfMember($member);
-        $facture->setValidatedByPerfDate(new \DateTime());
+        $facture->setValidatedByPerfDate(new DateTime());
 
         $this->factureDataService->persist($facture);
 

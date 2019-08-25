@@ -82,17 +82,15 @@ class MemberService
         $firstName = Validator::requiredString($fields["firstName"]);
         $lastName = Validator::requiredString($fields["lastName"]);
         $email = Validator::requiredEmail($fields["email"]);
-        $telephone = Validator::optionalPhone(isset($fields["telephone"]) ? $fields["telephone"] : null);
+        $telephone = Validator::requiredPhone(isset($fields["telephone"]) ? $fields["telephone"] : null);
         $birthday = Validator::requiredDate($fields["birthday"]);
-        $schoolYear = Validator::optionalSchoolYear(isset($fields["schoolYear"]) ? $fields["schoolYear"] : null);
+        $schoolYear = Validator::requiredSchoolYear(isset($fields["schoolYear"]) ? $fields["schoolYear"] : null);
 
         $genderId = Validator::requiredId($fields["genderId"]);
         $gender = $this->genderService->getOne($genderId);
         $department = null;
-        $departmentId = Validator::optionalId(isset($fields["departmentId"]) ? $fields["departmentId"] : null);
-        if (isset($departmentId)) {
-            $department = $this->departmentService->getOne($departmentId);
-        }
+        $departmentId = Validator::requiredId(isset($fields["departmentId"]) ? $fields["departmentId"] : null);
+        $department = $this->departmentService->getOne($departmentId);
 
         $company = Validator::optionalString($fields["company"]);
         $profilePicture = null;
@@ -182,17 +180,15 @@ class MemberService
         $firstName = Validator::requiredString($fields["firstName"]);
         $lastName = Validator::requiredString($fields["lastName"]);
         $email = Validator::requiredEmail($fields["email"]);
-        $telephone = Validator::optionalPhone(isset($fields["telephone"]) ? $fields["telephone"] : null);
+        $telephone = Validator::requiredPhone(isset($fields["telephone"]) ? $fields["telephone"] : null);
         $birthday = Validator::requiredDate($fields["birthday"]);
-        $schoolYear = Validator::optionalSchoolYear(isset($fields["schoolYear"]) ? $fields["schoolYear"] : null);
+        $schoolYear = Validator::requiredSchoolYear(isset($fields["schoolYear"]) ? $fields["schoolYear"] : null);
 
         $genderId = Validator::requiredId($fields["genderId"]);
         $gender = $this->genderService->getOne($genderId);
         $department = null;
-        $departmentId = Validator::optionalId(isset($fields["departmentId"]) ? $fields["departmentId"] : null);
-        if (isset($departmentId)) {
-            $department = $this->departmentService->getOne($departmentId);
-        }
+        $departmentId = Validator::requiredId(isset($fields["departmentId"]) ? $fields["departmentId"] : null);
+        $department = $this->departmentService->getOne($departmentId);
 
         $company = Validator::optionalString($fields["company"]);
 
@@ -245,9 +241,11 @@ class MemberService
         $this->memberDataService->delete($member);
         $this->userService->delete($id);
         $this->addressService->delete($address->getId());
-        $filepath = $this->kerosConfig['MEMBER_PHOTO_DIRECTORY'] . $profilepicture;
-        if (file_exists($filepath)) {
-            unlink($filepath);
+        if($profilepicture != null) {
+            $filepath = $this->directoryManager->normalizePath($this->kerosConfig['MEMBER_PHOTO_DIRECTORY'] . $profilepicture);
+            if (file_exists($filepath)) {
+                unlink($filepath);
+            }
         }
     }
 

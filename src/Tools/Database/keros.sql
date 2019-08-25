@@ -101,12 +101,12 @@ CREATE TABLE `core_member` (
   `genderId`     int(1)       NOT NULL,
   `firstName`    varchar(100) NOT NULL,
   `lastName`     varchar(100) NOT NULL,
-  `birthday`     date        DEFAULT NULL,
-  `telephone`    varchar(20) DEFAULT NULL,
+  `birthday`     date        NOT NULL,
+  `telephone`    varchar(20) NOT NULL,
   `email`        varchar(255) NOT NULL UNIQUE,
   `addressId`    int(11)      NOT NULL UNIQUE,
-  `schoolYear`   int(11)     DEFAULT NULL,
-  `departmentId` int(11)     DEFAULT NULL,
+  `schoolYear`   int(11)     NOT NULL,
+  `departmentId` int(11)     NOT NULL,
   `company` varchar(255)     DEFAULT NULL,
   `profilePicture` varchar(255)     DEFAULT NULL,
   `droitImage` boolean DEFAULT TRUE,
@@ -345,7 +345,7 @@ CREATE TABLE `treso_facture_type` (
 
 DROP TABLE IF EXISTS treso_facture;
 CREATE TABLE treso_facture (
-  id int(1) AUTO_INCREMENT,
+  id int(1) AUTO_INCREMENT NOT NULL,
   numero varchar(32),
   addressId int(11),
   clientName varchar(255),
@@ -362,19 +362,19 @@ CREATE TABLE treso_facture (
   additionalInformation varchar(2048),
   createdDate date,
   createdById int(11),
-  validatedByUa boolean,
+  validatedByUa boolean NOT NULL,
   validatedByUaDate date,
   validatedByUaMemberId int(11),
-  validatedByPerf boolean,
+  validatedByPerf boolean NOT NULL,
   validatedByPerfDate date,
   validatedByPerfMemberId int(11),
   PRIMARY KEY (id),
   CONSTRAINT fk_facture_address FOREIGN KEY (addressId) REFERENCES core_address(id),
   CONSTRAINT fk_facture_study FOREIGN KEY (studyId) REFERENCES ua_study(id) ON DELETE SET NULL,
   CONSTRAINT fk_facture_facture_type FOREIGN KEY (typeId) REFERENCES treso_facture_type(id),
-  CONSTRAINT fk_facture_createdBy_member FOREIGN KEY (createdById) REFERENCES core_member(id),
-  CONSTRAINT fk_facture_validatedByUa_member FOREIGN KEY (validatedByUaMemberId) REFERENCES core_member(id),
-  CONSTRAINT fk_facture_validatedByPerf_member FOREIGN KEY (validatedByPerfMemberId) REFERENCES core_member(id)
+  CONSTRAINT fk_facture_createdBy_member FOREIGN KEY (createdById) REFERENCES core_member(id) ON DELETE SET NULL,
+  CONSTRAINT fk_facture_validatedByUa_member FOREIGN KEY (validatedByUaMemberId) REFERENCES core_member(id) ON DELETE SET NULL,
+  CONSTRAINT fk_facture_validatedByPerf_member FOREIGN KEY (validatedByPerfMemberId) REFERENCES core_member(id) ON DELETE SET NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
 DROP TABLE IF EXISTS treso_facture_document_type;
@@ -453,7 +453,7 @@ CREATE TABLE treso_payment_slip (
     consultantSocialSecurityNumber varchar(255),
     addressId int(11),
     email varchar(255),
-    studyId int(11) NOT NULL,
+    studyId int(11),
     clientName varchar(255),
     projectLead varchar(255),
     isTotalJeh boolean,
@@ -469,7 +469,7 @@ CREATE TABLE treso_payment_slip (
     perfValidatorId int(11),
     PRIMARY KEY (id),
     CONSTRAINT fk_payment_slip_address FOREIGN KEY (addressId) REFERENCES  core_address(id),
-    CONSTRAINT fk_payment_slip_study FOREIGN KEY (studyId) REFERENCES  ua_study(id),
+    CONSTRAINT fk_payment_slip_study FOREIGN KEY (studyId) REFERENCES  ua_study(id) ON DELETE SET NULL,
     CONSTRAINT fk_payment_slip_creator FOREIGN KEY (creatorId) REFERENCES  core_member(id) ON DELETE SET NULL,
     CONSTRAINT fk_payment_slip_ua_validator FOREIGN KEY (uaValidatorId) REFERENCES  core_member(id) ON DELETE SET NULL,
     CONSTRAINT fk_payment_slip_perf_validator FOREIGN KEY (perfValidatorId) REFERENCES  core_member(id) ON DELETE SET NULL
