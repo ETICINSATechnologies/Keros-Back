@@ -153,7 +153,6 @@ class MemberDataService
             $this->queryBuilder
                 ->setFirstResult($firstResult)
                 ->setMaxResults($pageSize);
-            //$this->logger->debug($this->queryBuilder);
             $query = $this->queryBuilder->getQuery();
             $paginator = new Paginator($query, $fetchJoinCollection = true);
             return new Page($query->execute(), $requestParameters, count($paginator));
