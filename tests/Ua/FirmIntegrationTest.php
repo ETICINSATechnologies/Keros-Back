@@ -10,18 +10,10 @@ class FirmIntegrationTest extends AppTestCase
 
     public function testDeleteAllExistingFirmShouldReturn204()
     {
-        $env = Environment::mock([
-            'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/api/v1/ua/firm?pageSize=100',
-        ]);
-        $req = Request::createFromEnvironment($env);
-        $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(false);
-        $body = json_decode($response->getBody());
-        foreach ($body->content as $firm) {
+        for($id = 1; $id <= 26; $id++) {
             $env = Environment::mock([
                 'REQUEST_METHOD' => 'DELETE',
-                'REQUEST_URI' => '/api/v1/ua/firm/' . $firm->id,
+                'REQUEST_URI' => '/api/v1/ua/firm/' . $id,
             ]);
             $req = Request::createFromEnvironment($env);
             $this->app->getContainer()['request'] = $req;
