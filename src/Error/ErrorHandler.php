@@ -50,7 +50,7 @@ class ErrorHandler
         $callStack = '';
         if(ConfigLoader::getConfig()["isTesting"] === true) {
             $traces = $exception->getTrace();
-            $traces = array_slice($traces, 0, 5);
+            $traces = array_slice($traces, 0, 15);
             foreach ($traces as $trace) {
                 $callStack .= "\r\n\tat " . (isset($trace['file']) ? $trace['file'] : '') . ' ' . $trace['function'] . ':' . (isset($trace['line']) ? $trace['line'] : '');
             }

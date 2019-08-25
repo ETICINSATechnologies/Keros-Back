@@ -108,7 +108,6 @@ class FactureService
     public function getOne(int $id): Facture
     {
         $id = Validator::requiredId($id);
-
         $facture = $this->factureDataService->getOne($id);
         if (!$facture) {
             throw new KerosException("The facture could not be found", 404);

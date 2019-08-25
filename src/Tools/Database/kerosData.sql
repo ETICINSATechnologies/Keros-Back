@@ -90,7 +90,8 @@ INSERT INTO core_address (id, line1, line2, postalCode, city, countryId) VALUES
   (52, 'rue firm 23', 'Meat', '674A4', 'Paris', 40), # firm 23
   (53, 'rue firm 24', 'Meat', '674A4', 'Paris', 40), # firm 24
   (54, 'rue firm 25', 'Meat', '674A4', 'Paris', 40), # firm 25
-  (55, 'rue firm 26', 'Meat', '674A4', 'Paris', 40); # firm 26
+  (55, 'rue firm 26', 'Meat', '674A4', 'Paris', 40), # firm 26
+  (56, '14 PaymentSlip 1', 'Quoi ?', '32456', 'Lyon', 22); #Payment Slip 1
 
 TRUNCATE TABLE core_ticket;
 INSERT INTO core_ticket (id, userId, title, message, type, status) VALUES
@@ -264,5 +265,10 @@ INSERT INTO sg_member_inscription (id, firstName, lastName, genderId, birthday, 
 TRUNCATE TABLE sg_member_inscription_document_type;
 INSERT INTO sg_member_inscription_document_type(id, location, `name`, isTemplatable) VALUES
     (1, 'Fiche_inscription_membre_actif.pdf', 'Fiche inscription membre', true);
+
+TRUNCATE TABLE treso_payment_slip;
+INSERT INTO treso_payment_slip (id, missionRecapNumber, consultantName, consultantSocialSecurityNumber, addressId, email, studyId, clientName, projectLead, isTotalJeh, isStudyPaid, amountDescription, createdDate, creatorId, validatedByUa, validatedByUaDate, uaValidatorId, validatedByPerf, validatedByPerfDate, perfValidatorId) VALUES
+  (1, '102383203', 'Shrek', '12320183', 7, 'shrek@fortfortlointain.fr', 1, 'L''âne', 'Le chat Potté', false, false, 'Facture payée', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), 1, false, null, null, false, null, null),
+  (2, '102383204', 'Shrek', '12320183', 7, 'shrek@fortfortlointain.fr', 1, 'L''âne', 'Le chat Potté', false, false, 'Facture payée', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), 1, true, STR_TO_DATE('5/16/2022', '%c/%e/%Y'), 4, true, STR_TO_DATE('5/17/2022', '%c/%e/%Y'), 8);
 
 COMMIT;

@@ -15,6 +15,7 @@ use Keros\Controllers\Core\GenderController;
 use Keros\Controllers\Core\MemberController;
 use Keros\Controllers\Core\PoleController;
 use Keros\Controllers\Core\PositionController;
+use Keros\Controllers\Treso\PaymentSlipController;
 use Keros\Controllers\Treso\FactureController;
 use Keros\Controllers\Treso\FactureTypeController;
 use Keros\Controllers\Ua\ContactController;
@@ -200,6 +201,15 @@ class KerosApp
                     $this->post("/{id:[0-9]+}/validate-perf", FactureController::class . ':validateFactureByPerf');
                     $this->get("/{idFacture:[0-9]+}/generateDocument", FactureDocumentController::class . ':generateFactureDocument');
                 });
+                $this->group('/payment-slip', function () {
+                    $this->post("", PaymentSlipController::class . ':createPaymentSlip');
+                    $this->get("", PaymentSlipController::class . ':getPagePaymentSlip');
+                    $this->get("/{id:[0-9]+}", PaymentSlipController::class . ':getPaymentSlip');
+                    $this->delete("/{id:[0-9]+}", PaymentSlipController::class . ':deletePaymentSlip');
+                    $this->put("/{id:[0-9]+}", PaymentSlipController::class . ':updatePaymentSlip');
+                    $this->post("/{id:[0-9]+}/validate-ua", PaymentSlipController::class . ':validateUA');
+                    $this->post("/{id:[0-9]+}/validate-perf", PaymentSlipController::class . ':validatePerf');
+                });
             })->add($this->getContainer()->get(AuthenticationMiddleware::class));
 
             $this->group('/sg', function () {
@@ -214,7 +224,6 @@ class KerosApp
                     $this->get("/{id:[0-9]+}/document/{documentTypeId:[0-9]+}/generate", MemberInscriptionDocumentController::class . ':generateDocument');
                 });
             })->add($this->getContainer()->get(AuthenticationMiddleware::class));
-
         });
 
         $this->app = $app;
