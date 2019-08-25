@@ -77,8 +77,11 @@ class FactureService
         $clientName = Validator::optionalString(isset($fields["clientName"]) ? $fields["clientName"] : null);
         $contactName = Validator::optionalString(isset($fields["contactName"]) ? $fields["contactName"] : null);
         $contactEmail = Validator::optionalString(isset($fields["contactEmail"]) ? $fields["contactEmail"] : null);
-        $studyId = Validator::requiredId($fields["studyId"]);
-        $study = $this->studyService->getOne($studyId);
+        $studyId = Validator::optionalId(isset($fields["studyId"]) ? $fields["studyId"] : null);
+        if($studyId != null)
+            $study = $this->studyService->getOne($studyId);
+        else
+            $study = null;
 
         $typeId = Validator::requiredString($fields["type"]);
         $type = $this->factureTypeService->getFromLabel($typeId);
@@ -151,8 +154,11 @@ class FactureService
         $clientName = Validator::optionalString(isset($fields["clientName"]) ? $fields["clientName"] : null);
         $contactName = Validator::optionalString(isset($fields["contactName"]) ? $fields["contactName"] : null);
         $contactEmail = Validator::optionalString(isset($fields["contactEmail"]) ? $fields["contactEmail"] : null);
-        $studyId = Validator::requiredId($fields["studyId"]);
-        $study = $this->studyService->getOne($studyId);
+        $studyId = Validator::optionalId(isset($fields["studyId"]) ? $fields["studyId"] : null);
+        if($studyId != null)
+            $study = $this->studyService->getOne($studyId);
+        else
+            $study = null;
 
         $typeId = Validator::requiredString($fields["type"]);
         $type = $this->factureTypeService->getFromLabel($typeId);

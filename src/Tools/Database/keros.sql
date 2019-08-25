@@ -328,11 +328,11 @@ CREATE TABLE core_document (
 DROP TABLE IF EXISTS ua_study_document;
 CREATE TABLE `ua_study_document` (
   `id` int(11) NOT NULL,
-  `studyId` int(11) NOT NULL,
+  `studyId` int(11),
   studyDocumentTypeId int(11) NOT NULL,
   PRIMARY KEY (id),
   CONSTRAINT fk_study_document_core_document FOREIGN KEY (id) REFERENCES core_document(id),
-  CONSTRAINT `fk_ua_study_document_ua_study` FOREIGN KEY (`studyId`) REFERENCES ua_study(`id`),
+  CONSTRAINT `fk_ua_study_document_ua_study` FOREIGN KEY (`studyId`) REFERENCES ua_study(`id`) ON DELETE SET NULL,
   CONSTRAINT fk_study_document_study_document_type FOREIGN KEY (studyDocumentTypeId) REFERENCES ua_study_document_type(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -351,7 +351,7 @@ CREATE TABLE treso_facture (
   clientName varchar(255),
   contactName varchar(255),
   contactEmail varchar(255),
-  studyId int(11) NOT NULL,
+  studyId int(11),
   typeId int(11) NOT NULL,
   amountDescription varchar(2048),
   subject varchar(255),
@@ -370,7 +370,7 @@ CREATE TABLE treso_facture (
   validatedByPerfMemberId int(11),
   PRIMARY KEY (id),
   CONSTRAINT fk_facture_address FOREIGN KEY (addressId) REFERENCES core_address(id),
-  CONSTRAINT fk_facture_study FOREIGN KEY (studyId) REFERENCES ua_study(id),
+  CONSTRAINT fk_facture_study FOREIGN KEY (studyId) REFERENCES ua_study(id) ON DELETE SET NULL,
   CONSTRAINT fk_facture_facture_type FOREIGN KEY (typeId) REFERENCES treso_facture_type(id),
   CONSTRAINT fk_facture_createdBy_member FOREIGN KEY (createdById) REFERENCES core_member(id),
   CONSTRAINT fk_facture_validatedByUa_member FOREIGN KEY (validatedByUaMemberId) REFERENCES core_member(id),
