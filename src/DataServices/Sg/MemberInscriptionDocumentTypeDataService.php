@@ -16,44 +16,28 @@ use Psr\Container\ContainerInterface;
 class MemberInscriptionDocumentTypeDataService
 {
 
-    /**
-     * @var EntityManager
-     */
+    /**@var EntityManager */
     protected $entityManager;
 
-    /**
-     * @var Logger
-     */
+    /** @var Logger */
     protected $logger;
 
-    /**
-     * @var EntityRepository
-     */
+    /** @var EntityRepository */
     protected $repository;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $temporaryDirectory;
 
-    /**
-     * @var
-     */
+    /** @var */
     protected $kerosConfig;
 
-    /**
-     * @var DocumentGenerator
-     */
+    /** @var DocumentGenerator */
     protected $documentGenerator;
 
-    /**
-     * @var DirectoryManager
-     */
+    /** @var DirectoryManager */
     protected $directoryManager;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $documentTypeDirectory;
 
     /**
@@ -83,10 +67,25 @@ class MemberInscriptionDocumentTypeDataService
             $documentType = $this->repository->find($id);
             return $documentType;
         } catch (Exception $e) {
-            $msg = "Error finding document type with ID $id : " . $e->getMessage();
+            $msg = "Error finding member inscription document type with ID $id : " . $e->getMessage();
             $this->logger->error($msg);
             throw new KerosException($msg, 500);
         }
     }
 
+    /**
+     * @return MemberInscriptionDocumentType[]
+     * @throws KerosException
+     */
+    public function getAll(): array
+    {
+        try {
+            $documentType = $this->repository->findAll();
+            return $documentType;
+        } catch (Exception $e) {
+            $msg = "Error finding member inscription document types : " . $e->getMessage();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
+    }
 }

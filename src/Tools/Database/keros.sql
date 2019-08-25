@@ -101,12 +101,12 @@ CREATE TABLE `core_member` (
   `genderId`     int(1)       NOT NULL,
   `firstName`    varchar(100) NOT NULL,
   `lastName`     varchar(100) NOT NULL,
-  `birthday`     date        DEFAULT NULL,
-  `telephone`    varchar(20) DEFAULT NULL,
+  `birthday`     date        NOT NULL,
+  `telephone`    varchar(20) NOT NULL,
   `email`        varchar(255) NOT NULL UNIQUE,
   `addressId`    int(11)      NOT NULL UNIQUE,
-  `schoolYear`   int(11)     DEFAULT NULL,
-  `departmentId` int(11)     DEFAULT NULL,
+  `schoolYear`   int(11)     NOT NULL,
+  `departmentId` int(11)     NOT NULL,
   `company` varchar(255)     DEFAULT NULL,
   `profilePicture` varchar(255)     DEFAULT NULL,
   `droitImage` boolean DEFAULT TRUE,
@@ -318,6 +318,7 @@ CREATE TABLE ua_study_qualityManager (
 DROP TABLE IF EXISTS ua_study_document_type;
 CREATE TABLE ua_study_document_type (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  name varchar(255) NOT NULL,
   `location` varchar(255) NOT NULL UNIQUE,
   isTemplatable boolean NOT NULL,
   oneConsultant boolean NOT NULL DEFAULT 0,
@@ -336,11 +337,11 @@ CREATE TABLE core_document (
 DROP TABLE IF EXISTS ua_study_document;
 CREATE TABLE `ua_study_document` (
   `id` int(11) NOT NULL,
-  `studyId` int(11) NOT NULL,
+  `studyId` int(11),
   studyDocumentTypeId int(11) NOT NULL,
   PRIMARY KEY (id),
   CONSTRAINT fk_study_document_core_document FOREIGN KEY (id) REFERENCES core_document(id),
-  CONSTRAINT `fk_ua_study_document_ua_study` FOREIGN KEY (`studyId`) REFERENCES ua_study(`id`),
+  CONSTRAINT `fk_ua_study_document_ua_study` FOREIGN KEY (`studyId`) REFERENCES ua_study(`id`) ON DELETE SET NULL,
   CONSTRAINT fk_study_document_study_document_type FOREIGN KEY (studyDocumentTypeId) REFERENCES ua_study_document_type(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -353,13 +354,13 @@ CREATE TABLE `treso_facture_type` (
 
 DROP TABLE IF EXISTS treso_facture;
 CREATE TABLE treso_facture (
-  id int(1) AUTO_INCREMENT,
+  id int(1) AUTO_INCREMENT NOT NULL,
   numero varchar(32),
   addressId int(11),
   clientName varchar(255),
   contactName varchar(255),
   contactEmail varchar(255),
-  studyId int(11) NOT NULL,
+  studyId int(11),
   typeId int(11) NOT NULL,
   amountDescription varchar(2048),
   subject varchar(255),
@@ -370,19 +371,19 @@ CREATE TABLE treso_facture (
   additionalInformation varchar(2048),
   createdDate date,
   createdById int(11),
-  validatedByUa boolean,
+  validatedByUa boolean NOT NULL,
   validatedByUaDate date,
   validatedByUaMemberId int(11),
-  validatedByPerf boolean,
+  validatedByPerf boolean NOT NULL,
   validatedByPerfDate date,
   validatedByPerfMemberId int(11),
   PRIMARY KEY (id),
   CONSTRAINT fk_facture_address FOREIGN KEY (addressId) REFERENCES core_address(id),
-  CONSTRAINT fk_facture_study FOREIGN KEY (studyId) REFERENCES ua_study(id),
+  CONSTRAINT fk_facture_study FOREIGN KEY (studyId) REFERENCES ua_study(id) ON DELETE SET NULL,
   CONSTRAINT fk_facture_facture_type FOREIGN KEY (typeId) REFERENCES treso_facture_type(id),
-  CONSTRAINT fk_facture_createdBy_member FOREIGN KEY (createdById) REFERENCES core_member(id),
-  CONSTRAINT fk_facture_validatedByUa_member FOREIGN KEY (validatedByUaMemberId) REFERENCES core_member(id),
-  CONSTRAINT fk_facture_validatedByPerf_member FOREIGN KEY (validatedByPerfMemberId) REFERENCES core_member(id)
+  CONSTRAINT fk_facture_createdBy_member FOREIGN KEY (createdById) REFERENCES core_member(id) ON DELETE SET NULL,
+  CONSTRAINT fk_facture_validatedByUa_member FOREIGN KEY (validatedByUaMemberId) REFERENCES core_member(id) ON DELETE SET NULL,
+  CONSTRAINT fk_facture_validatedByPerf_member FOREIGN KEY (validatedByPerfMemberId) REFERENCES core_member(id) ON DELETE SET NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
 DROP TABLE IF EXISTS treso_facture_document_type;
@@ -399,11 +400,11 @@ CREATE TABLE treso_facture_document_type (
 DROP TABLE IF EXISTS treso_facture_document;
 CREATE TABLE treso_facture_document (
   id int(11) AUTO_INCREMENT,
-  factureId int(11) NOT NULL,
+  factureId int(11),
   factureDocumentTypeId int(11) NOT NULL,
   PRIMARY KEY (id),
   CONSTRAINT fk_treso_document_core_document FOREIGN KEY (id) REFERENCES core_document(id),
-  CONSTRAINT `fk_treso_facture_document_treso_facture` FOREIGN KEY (factureId) REFERENCES treso_facture(`id`),
+  CONSTRAINT `fk_treso_facture_document_treso_facture` FOREIGN KEY (factureId) REFERENCES treso_facture(`id`) ON DELETE SET NULL,
   CONSTRAINT fk_treso_document_treso_document_type FOREIGN KEY (factureDocumentTypeId) REFERENCES treso_facture_document_type(id)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
 
@@ -468,6 +469,49 @@ CREATE TABLE sg_consultant_inscription (
   CONSTRAINT fk_sg_consultant_inscription_nationality FOREIGN KEY (nationalityId) REFERENCES core_country(id),
   CONSTRAINT fk_sg_consultant_inscription_gender FOREIGN KEY (genderId) REFERENCES core_gender(id),
   CONSTRAINT fk_sg_consultant_inscription_address FOREIGN KEY (addressId) REFERENCES core_address(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ 
+DROP TABLE IF EXISTS sg_member_inscription_document;
+CREATE TABLE sg_member_inscription_document (
+    id int(11) NOT NULL,
+    memberInscriptionId int(11),
+    memberInscriptionDocumentTypeId int(11) NOT NULL,
+    memberId int(11),
+    PRIMARY KEY (id),
+    CONSTRAINT fk_sg_member_insc_document_core_document FOREIGN KEY (id) REFERENCES core_document(id) ON DELETE CASCADE,
+    CONSTRAINT fk_sg_member_insc_document_sg_member_inscription FOREIGN KEY (memberInscriptionId) REFERENCES sg_member_inscription(id),
+    CONSTRAINT fk_sg_member_insc_document_member_insc_document_type FOREIGN KEY (memberInscriptionDocumentTypeId) REFERENCES sg_member_inscription_document_type(id),
+    CONSTRAINT fk_sg_member_insc_document_core_member FOREIGN KEY (memberId) REFERENCES core_member(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS treso_payment_slip;
+CREATE TABLE treso_payment_slip (
+    id int(11) NOT NULL AUTO_INCREMENT,
+    missionRecapNumber varchar(32),
+    consultantName varchar(255),
+    consultantSocialSecurityNumber varchar(255),
+    addressId int(11),
+    email varchar(255),
+    studyId int(11),
+    clientName varchar(255),
+    projectLead varchar(255),
+    isTotalJeh boolean,
+    isStudyPaid boolean,
+    amountDescription varchar(2048),
+    createdDate date,
+    creatorId int(11),
+    validatedByUa boolean,
+    validatedByUaDate date,
+    uaValidatorId int(11),
+    validatedByPerf boolean,
+    validatedByPerfDate date,
+    perfValidatorId int(11),
+    PRIMARY KEY (id),
+    CONSTRAINT fk_payment_slip_address FOREIGN KEY (addressId) REFERENCES  core_address(id),
+    CONSTRAINT fk_payment_slip_study FOREIGN KEY (studyId) REFERENCES  ua_study(id) ON DELETE SET NULL,
+    CONSTRAINT fk_payment_slip_creator FOREIGN KEY (creatorId) REFERENCES  core_member(id) ON DELETE SET NULL,
+    CONSTRAINT fk_payment_slip_ua_validator FOREIGN KEY (uaValidatorId) REFERENCES  core_member(id) ON DELETE SET NULL,
+    CONSTRAINT fk_payment_slip_perf_validator FOREIGN KEY (perfValidatorId) REFERENCES  core_member(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 SET AUTOCOMMIT = 1;

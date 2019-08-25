@@ -50,6 +50,7 @@ class ConfigLoader
             'CONSULTANT_VITALE_CARD_DIRECTORY' => $absoluteDirPath . $config['CONSULTANT_VITALE_CARD_DIRECTORY'],
             'CONSULTANT_RESIDENCE_PERMIT_DIRECTORY' => $absoluteDirPath . $config['CONSULTANT_RESIDENCE_PERMIT_DIRECTORY'],
             'CONSULTANT_CVEC_DIRECTORY' => $absoluteDirPath . $config['CONSULTANT_CVEC_DIRECTORY'],
+            'MEMBER_INSCRIPTION_DOCUMENT_DIRECTORY' => $absoluteDirPath . $config['MEMBER_INSCRIPTION_DOCUMENT_DIRECTORY']
         );
 
         return $absoluteConfig;

@@ -2,13 +2,13 @@
 
 namespace KerosTest\Treso;
 
+use Exception;
 use KerosTest\AppTestCase;
 use Slim\Http\Environment;
 use Slim\Http\Request;
 
 class FactureIntegrationTest extends AppTestCase
 {
-
     public function testValidateByUaShouldReturn200()
     {
         $env = Environment::mock([
@@ -120,9 +120,9 @@ class FactureIntegrationTest extends AppTestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
-    public function testPostFactureOnlyRequiredFieldShouldReturn201()
+    public function testPostFactureShouldReturn201()
     {
         $post_body = array(
             'numero' => "2134",
@@ -186,12 +186,11 @@ class FactureIntegrationTest extends AppTestCase
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
-    public function testPostFactureShouldReturn201()
+    public function testPostFactureOnlyRequiredFieldShouldReturn201()
     {
         $post_body = array(
-            'studyId' => 2,
             'type' => 'acompte',
         );
         $env = Environment::mock([
@@ -209,7 +208,7 @@ class FactureIntegrationTest extends AppTestCase
         $this->assertSame(null, $body->clientName);
         $this->assertSame(null, $body->contactName);
         $this->assertSame(null, $body->contactEmail);
-        $this->assertSame(2, $body->study->id);
+        $this->assertSame(null, $body->study);
         $this->assertSame(null, $body->amountDescription);
         $this->assertSame('acompte', $body->type);
         $this->assertSame(null, $body->subject);
@@ -278,6 +277,28 @@ class FactureIntegrationTest extends AppTestCase
         $this->assertSame(true, $body->documents[3]->isUploaded);
     }
 
+    /**
+     * @throws Exception
+     */
+    public function testPutFactureOnlyRequiredFieldShouldReturn201()
+    {
+        $post_body = array(
+            'type' => 'intermediaire',
+        );
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'PUT',
+            'REQUEST_URI' => '/api/v1/treso/facture/1',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withParsedBody($post_body);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+        $body = json_decode($response->getBody());
+
+        $this->assertSame('intermediaire', $body->type);
+    }
+
     public function testPutFactureWithEmptyBodyShouldReturn400()
     {
         $env = Environment::mock([
@@ -289,5 +310,19 @@ class FactureIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
 
         $this->assertSame(400, $response->getStatusCode());
+    }
+
+    public function testDeleteAllExistingFacturesShouldReturn204()
+    {
+        for($id = 1;  $id <= 4; $id++) {
+            $env = Environment::mock([
+                'REQUEST_METHOD' => 'DELETE',
+                'REQUEST_URI' => "/api/v1/treso/facture/$id",
+            ]);
+            $req = Request::createFromEnvironment($env);
+            $this->app->getContainer()['request'] = $req;
+            $response = $this->app->run(false);
+            $this->assertSame(204, $response->getStatusCode());
+        }
     }
 }

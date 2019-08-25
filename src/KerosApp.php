@@ -16,6 +16,7 @@ use Keros\Controllers\Core\GenderController;
 use Keros\Controllers\Core\MemberController;
 use Keros\Controllers\Core\PoleController;
 use Keros\Controllers\Core\PositionController;
+use Keros\Controllers\Treso\PaymentSlipController;
 use Keros\Controllers\Treso\FactureController;
 use Keros\Controllers\Treso\FactureTypeController;
 use Keros\Controllers\Ua\ContactController;
@@ -108,7 +109,6 @@ class KerosApp
                     $this->put("/{id:[0-9]+}", StudyController::class . ':updateStudy');
                     $this->delete("/{id:[0-9]+}", StudyController::class . ':deleteStudy');
                     $this->get("/{idStudy:[0-9]+}/document/{idDocumentType:[0-9]+}/generate", StudyDocumentController::class . ':generateStudyDocument');
-                    $this->get("/{id:[0-9]+}/documents", StudyController::class . ':getAllDocuments');
                     $this->post("/{studyId:[0-9]+}/document/{documentId:[0-9]+}", StudyDocumentController::class . ':createDocument');
                     $this->get("/{studyId:[0-9]+}/document/{documentId:[0-9]+}", StudyDocumentController::class . ':getDocument');
                 });
@@ -205,6 +205,15 @@ class KerosApp
                     $this->post("/{id:[0-9]+}/validate-perf", FactureController::class . ':validateFactureByPerf');
                     $this->get("/{idFacture:[0-9]+}/generateDocument", FactureDocumentController::class . ':generateFactureDocument');
                 });
+                $this->group('/payment-slip', function () {
+                    $this->post("", PaymentSlipController::class . ':createPaymentSlip');
+                    $this->get("", PaymentSlipController::class . ':getPagePaymentSlip');
+                    $this->get("/{id:[0-9]+}", PaymentSlipController::class . ':getPaymentSlip');
+                    $this->delete("/{id:[0-9]+}", PaymentSlipController::class . ':deletePaymentSlip');
+                    $this->put("/{id:[0-9]+}", PaymentSlipController::class . ':updatePaymentSlip');
+                    $this->post("/{id:[0-9]+}/validate-ua", PaymentSlipController::class . ':validateUA');
+                    $this->post("/{id:[0-9]+}/validate-perf", PaymentSlipController::class . ':validatePerf');
+                });
             })->add($this->getContainer()->get(AuthenticationMiddleware::class));
 
             $this->group('/sg', function () {
@@ -217,6 +226,8 @@ class KerosApp
                     $this->post("/{id:[0-9]+}/validate", MemberInscriptionController::class . ':validateMemberInscription');
                     $this->post("/{id:[0-9]+}/confirm-payment", MemberInscriptionController::class . ':confirmPaymentMemberInscription');
                     $this->get("/{id:[0-9]+}/document/{documentTypeId:[0-9]+}/generate", MemberInscriptionDocumentController::class . ':generateDocument');
+                    $this->post("/{id:[0-9]+}/document/{documentId:[0-9]+}", MemberInscriptionDocumentController::class . ':createDocument');
+                    $this->get("/{id:[0-9]+}/document/{documentId:[0-9]+}", MemberInscriptionDocumentController::class . ':getDocument');
                 });
                 $this->group('/consultant-inscription', function () {
                     $this->get("", ConsultantInscriptionController::class . ':getPageConsultantInscriptions');
@@ -229,7 +240,6 @@ class KerosApp
                     $this->post("/{id:[0-9]+}/document/{document_name:[a-zA-Z]+}", ConsultantInscriptionController::class . ':createDocument');
                 });
             })->add($this->getContainer()->get(AuthenticationMiddleware::class));
-
         });
 
         $this->app = $app;

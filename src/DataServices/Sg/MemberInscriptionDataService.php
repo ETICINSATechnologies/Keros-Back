@@ -101,7 +101,7 @@ class   MemberInscriptionDataService
             $memberInscription = $this->repository->find($id);
             return $memberInscription;
         } catch (Exception $e) {
-            $msg = "Error finding memberInscription with ID $id : " . $e->getMessage();
+            $msg = "Error finding member_inscription with ID $id : " . $e->getMessage();
             $this->logger->error($msg);
             throw new KerosException($msg, 500);
         }

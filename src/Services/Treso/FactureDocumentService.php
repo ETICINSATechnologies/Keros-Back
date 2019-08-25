@@ -162,7 +162,7 @@ class FactureDocumentService
     {
         $factureDocumentTypes = $this->getAll();
         foreach ($factureDocumentTypes as $factureDocumentType) {
-            if ($factureDocumentType->getId() == $documentTypeid && $factureDocumentType->getFacture()->getId() == $factureId)
+            if ($factureDocumentType->getFacture() != null && $factureDocumentType->getId() == $documentTypeid && $factureDocumentType->getFacture()->getId() == $factureId)
                 return true;
         }
         return false;

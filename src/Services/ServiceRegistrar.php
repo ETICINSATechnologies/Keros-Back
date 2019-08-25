@@ -1,8 +1,9 @@
 <?php
 
-
 namespace Keros\Services;
 
+use Keros\Services\Sg\MemberInscriptionDocumentService;
+use Keros\Services\Treso\PaymentSlipService;
 use Keros\Services\Sg\MemberInscriptionDocumentTypeService;
 use Keros\Services\Sg\MemberInscriptionService;
 use Keros\Services\Sg\ConsultantInscriptionService;
@@ -104,8 +105,8 @@ class ServiceRegistrar
             return new StudyService($container);
         };
         $container[StudyDocumentTypeService::class] = function ($container) {
-            return new StudyDocumentTypeService($container);
-        };
+        return new StudyDocumentTypeService($container);
+    };
         $container[StudyDocumentService::class] = function ($container) {
             return new StudyDocumentService($container);
         };
@@ -123,6 +124,9 @@ class ServiceRegistrar
         $container[FactureDocumentService::class] = function ($container) {
             return new FactureDocumentService($container);
         };
+        $container[PaymentSlipService::class] = function ($container) {
+            return new PaymentSlipService($container);
+        };
 
         //Sg
         $container[MemberInscriptionService::class] = function ($container) {
@@ -133,6 +137,9 @@ class ServiceRegistrar
         };
         $container[MemberInscriptionDocumentTypeService::class] = function ($container) {
             return new MemberInscriptionDocumentTypeService($container);
+        };
+        $container[MemberInscriptionDocumentService::class] = function ($container) {
+            return new MemberInscriptionDocumentService($container);
         };
     }
 }

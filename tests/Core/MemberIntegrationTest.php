@@ -451,7 +451,7 @@ class MemberIntegrationTest extends AppTestCase
     public function testPostMemberPhotoShouldReturn204()
     {
         $temp_fileName = "tempPhoto.jpg";
-        $handle = fopen($temp_fileName, 'w') or die('Cannot open file:  '.$temp_fileName);
+        $handle = fopen($temp_fileName, 'w') or die('Cannot open file:  ' . $temp_fileName);
         $file = new UploadedFile($temp_fileName, $temp_fileName, 'image/jpeg', filesize($temp_fileName));
 
         $env = Environment::mock([
@@ -470,7 +470,7 @@ class MemberIntegrationTest extends AppTestCase
     public function testPostMemberPhotoShouldReturn400()
     {
         $temp_fileName = "tempFile.csv";
-        $handle = fopen($temp_fileName, 'w') or die('Cannot open file:  '.$temp_fileName);
+        $handle = fopen($temp_fileName, 'w') or die('Cannot open file:  ' . $temp_fileName);
         $file = new UploadedFile($temp_fileName, $temp_fileName, 'text/csv', filesize($temp_fileName));
 
         $env = Environment::mock([
@@ -504,7 +504,7 @@ class MemberIntegrationTest extends AppTestCase
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
-        
+
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
             'REQUEST_URI' => '/api/v1/core/member/1/photo',
@@ -517,7 +517,7 @@ class MemberIntegrationTest extends AppTestCase
     }
 
     public function testGetMemberPhotoShouldReturn404()
-    {   
+    {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
             'REQUEST_URI' => '/api/v1/core/member/2/photo',
@@ -529,7 +529,8 @@ class MemberIntegrationTest extends AppTestCase
     }
 
     public function testDeleteMemberPhotoShouldReturn204()
-    {   $fileName = "tempPhoto.jpg";
+    {
+        $fileName = "tempPhoto.jpg";
         $handle = fopen($fileName, "w");
         fclose($handle);
         $file = new UploadedFile($fileName, $fileName, 'image/jpeg', filesize($fileName));
@@ -555,7 +556,7 @@ class MemberIntegrationTest extends AppTestCase
     }
 
     public function testDeleteMemberPhotoShouldReturn404()
-    {   
+    {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'DELETE',
             'REQUEST_URI' => '/api/v1/core/member/2/photo',
@@ -565,7 +566,7 @@ class MemberIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
         $this->assertSame(404, $response->getStatusCode());
     }
-    
+
     public function testPostMemberWithoutRightShouldReturn401()
     {
         $post_body = array(
@@ -632,4 +633,28 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(3, $body->content[0]->id);
     }
 
+
+    public function testDeleteAllExistingMemberShouldReturn204()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/core/member?pageSize=100',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $body = json_decode($response->getBody());
+
+        foreach ($body->content as $member) {
+            $env = Environment::mock([
+                'REQUEST_METHOD' => 'DELETE',
+                'REQUEST_URI' => '/api/v1/core/member/' . $member->id,
+            ]);
+            $req = Request::createFromEnvironment($env);
+            $this->app->getContainer()['request'] = $req;
+            $response = $this->app->run(false);
+
+            $this->assertSame(204, $response->getStatusCode());
+        }
+    }
 }
