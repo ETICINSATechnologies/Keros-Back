@@ -60,7 +60,7 @@ class UserIntegrationTest extends AppTestCase
 
         $body = json_decode($response->getBody());
         $this->assertNotNull($body->id);
-        $this->assertSame("uername1", $body->username);
+        $this->assertSame("username1", $body->username);
         $this->assertSame("lastname", $body->lastName);
         $this->assertSame(1, $body->gender->id);
         $this->assertSame("fakeEmail@gmail.com", $body->email);
