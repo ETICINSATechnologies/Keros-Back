@@ -2,67 +2,61 @@
 
 namespace Keros\Services\Core;
 
-
+use Exception;
 use Keros\DataServices\Core\MemberDataService;
 use Keros\DataServices\Core\TicketDataService;
+use Keros\DataServices\Treso\PaymentSlipDataService;
 use Keros\Entities\Core\Member;
 use Keros\Entities\Core\Page;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Error\KerosException;
+use Keros\Tools\ConfigLoader;
+use Keros\Tools\DirectoryManager;
 use Keros\Tools\Validator;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
-use Keros\Tools\ConfigLoader;
-use Keros\Tools\DirectoryManager;
-use phpDocumentor\Reflection\Types\String_;
 
 class MemberService
 {
-    /**
-     * @var AddressService
-     */
+    /** @var AddressService */
     private $addressService;
-    /**
-     * @var GenderService
-     */
+
+    /** @var GenderService */
     private $genderService;
-    /**
-     * @var UserService
-     */
+
+    /** @var UserService */
     private $userService;
-    /**
-     * @var DepartmentService
-     */
+
+    /** @var DepartmentService */
     private $departmentService;
-    /**
-     * @var PositionService
-     */
-    private $positionService;
-    /**
-     * @var TicketDataService
-     */
+
+    /** @var TicketDataService */
     private $ticketDataService;
+
     /**
-     * @var MemberDataService
+     * @var PaymentSlipDataService
      */
+    private $paymentSlipDataService;
+
+    /** @var MemberDataService */
     private $memberDataService;
-    /**
-     * @var MemberPositionService
-     */
+
+    /** @var MemberPositionService */
     private $memberPositionService;
-    /**
-     * @var ConfigLoader
-     */
+
+    /** @var ConfigLoader */
     private $kerosConfig;
-    /**
-     * @var DirectoryManager
-     */
+
+    /** @var DirectoryManager */
     private $directoryManager;
-    /**
-     * @var Logger
-     */
+
+    /** @var Logger */
     private $logger;
 
+    /**
+     * MemberService constructor.
+     * @param ContainerInterface $container
+     */
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get(Logger::class);
@@ -73,6 +67,7 @@ class MemberService
         $this->userService = $container->get(UserService::class);
         $this->memberDataService = $container->get(MemberDataService::class);
         $this->ticketDataService = $container->get(TicketDataService::class);
+        $this->paymentSlipDataService = $container->get(PaymentSlipDataService::class);
         $this->directoryManager = $container->get(DirectoryManager::class);
         $this->kerosConfig = ConfigLoader::getConfig();
     }
@@ -101,7 +96,7 @@ class MemberService
         $profilePicture = null;
         $droitImage = Validator::requiredBool($fields['droitImage']);
 
-        $member = new Member($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage);
+        $member = new Member($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage, array());
 
         $user = $this->userService->create($fields);
         $address = $this->addressService->create($fields["address"]);
@@ -120,6 +115,11 @@ class MemberService
         return $member;
     }
 
+    /**
+     * @param int $id
+     * @return Member
+     * @throws KerosException
+     */
     public function getOne(int $id): Member
     {
         $id = Validator::requiredId($id);
@@ -131,6 +131,12 @@ class MemberService
         return $member;
     }
 
+    /**
+     * @param RequestParameters $requestParameters
+     * @param array $queryParams
+     * @return Page
+     * @throws KerosException
+     */
     public function getPage(RequestParameters $requestParameters, array $queryParams): Page
     {
         if (isset($queryParams['year']) && $queryParams['year'] == 'latest') {
@@ -140,6 +146,11 @@ class MemberService
         return $this->memberDataService->getPage($requestParameters, $queryParams);
     }
 
+    /**
+     * @param array $ids
+     * @return array
+     * @throws KerosException
+     */
     public function getSome(array $ids): array
     {
         $members = [];
@@ -210,6 +221,10 @@ class MemberService
         return $member;
     }
 
+    /**
+     * @param int $id
+     * @throws KerosException
+     */
     public function delete(int $id)
     {
         $id = Validator::requiredId($id);
@@ -226,7 +241,6 @@ class MemberService
         $this->memberDataService->delete($member);
         $this->userService->delete($id);
         $this->addressService->delete($address->getId());
-
         if($profilepicture != null) {
             $filepath = $this->directoryManager->normalizePath($this->kerosConfig['MEMBER_PHOTO_DIRECTORY'] . $profilepicture);
             if (file_exists($filepath)) {
@@ -252,9 +266,10 @@ class MemberService
     }
 
     /**
+     * @param int $id
      * @param array $fields
      * @return Member
-     * @throws \Exception
+     * @throws Exception
      */
     public function createPhoto(int $id, ?array $fields): String
     {
@@ -275,12 +290,12 @@ class MemberService
         $filename = $member->getProfilePicture();
 
         if ($filename) {
-            $filepath =  $this->kerosConfig['MEMBER_PHOTO_DIRECTORY'] . $filename;
-            if (file_exists($filepath)){
+            $filepath = $this->kerosConfig['MEMBER_PHOTO_DIRECTORY'] . $filename;
+            if (file_exists($filepath)) {
                 unlink($filepath);
             }
         }
-        
+
         $filename = $this->directoryManager->uniqueFilename($file, false, $this->kerosConfig['MEMBER_PHOTO_DIRECTORY']);
 
         $this->directoryManager->mkdir($this->kerosConfig['MEMBER_PHOTO_DIRECTORY'] . pathinfo($filename, PATHINFO_DIRNAME));
@@ -293,7 +308,7 @@ class MemberService
 
     /**
      * @param int $id
-     * @throws \Keros\Error\KerosException
+     * @throws KerosException
      */
     public function deletePhoto(int $id): void
     {
@@ -311,9 +326,9 @@ class MemberService
             throw new KerosException("Profile picture could not be found", 404);
         }
 
-        $filepath =  $this->kerosConfig['MEMBER_PHOTO_DIRECTORY'] . $filename;
+        $filepath = $this->kerosConfig['MEMBER_PHOTO_DIRECTORY'] . $filename;
 
-        if (file_exists($filepath)){
+        if (file_exists($filepath)) {
             unlink($filepath);
         }
 
@@ -324,7 +339,7 @@ class MemberService
     /**
      * @param int $id
      * @return String
-     * @throws \Keros\Error\KerosException
+     * @throws KerosException
      */
     public function getPhoto(int $id): String
     {
@@ -342,7 +357,7 @@ class MemberService
             throw new KerosException("No profile picture for this member", 404);
         }
 
-        $filepath =  $this->kerosConfig['MEMBER_PHOTO_DIRECTORY'] . $filename;
+        $filepath = $this->kerosConfig['MEMBER_PHOTO_DIRECTORY'] . $filename;
 
         if (!file_exists($filepath)) {
             throw new KerosException("Profile picture could not be found", 404);

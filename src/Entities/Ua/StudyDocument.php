@@ -52,7 +52,7 @@ class StudyDocument extends Document implements JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return Study
      */
     public function getStudy()
     {

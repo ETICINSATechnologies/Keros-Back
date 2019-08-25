@@ -21,6 +21,9 @@ class StudyDocumentType implements \JsonSerializable
     /** @Column(type="string", length=255) */
     protected $location;
 
+    /** @Column(type="string", length=255) */
+    protected $name;
+
     /** @Column(type="boolean") */
     protected $isTemplatable;
 
@@ -33,11 +36,12 @@ class StudyDocumentType implements \JsonSerializable
      * @param $isTemplatable
      * @param $oneConsultant
      */
-    public function __construct($location, $isTemplatable, $oneConsultant)
+    public function __construct($location, $isTemplatable, $oneConsultant, $name)
     {
         $this->location = $location;
         $this->isTemplatable = $isTemplatable;
         $this->oneConsultant = $oneConsultant;
+        $this->name = $name;
     }
 
     public function jsonSerialize()
@@ -106,4 +110,19 @@ class StudyDocumentType implements \JsonSerializable
         $this->isTemplatable = $isTemplatable;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param mixed $name
+     */
+    public function setName($name): void
+    {
+        $this->name = $name;
+    }
 }

@@ -55,6 +55,10 @@ class FactureController
      */
     private $factureDocumentService;
 
+    /**
+     * FactureController constructor.
+     * @param ContainerInterface $container
+     */
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get(Logger::class);
@@ -75,7 +79,7 @@ class FactureController
      */
     public function getFacture(Request $request, Response $response, array $args)
     {
-        $this->logger->debug("Getting facture by ID from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->logger->debug("Getting facture " . $args['id']. " from " . $request->getServerParams()["REMOTE_ADDR"]);
 
         $facture = $this->factureService->getOne($args["id"]);
 
@@ -136,6 +140,7 @@ class FactureController
      */
     public function createFacture(Request $request, Response $response, array $args)
     {
+        $this->logger->debug("Creating facture from " . $request->getServerParams()["REMOTE_ADDR"]);
         $body = $request->getParsedBody();
         $body["createdBy"] = $request->getAttribute("userId");
         $this->entityManager->beginTransaction();
@@ -145,9 +150,16 @@ class FactureController
         return $response->withJson($this->addDocumentsToJsonFacture($facture), 201);
     }
 
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     * @throws KerosException
+     */
     public function deleteFacture(Request $request, Response $response, array $args)
     {
-        $this->logger->debug("Deleting facture from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->logger->debug("Deleting facture " . $args['id']. " from " . $request->getServerParams()["REMOTE_ADDR"]);
         $this->entityManager->beginTransaction();
         $this->factureService->delete($args['id']);
         $this->entityManager->commit();
@@ -164,7 +176,7 @@ class FactureController
      */
     public function updateFacture(Request $request, Response $response, array $args)
     {
-        $this->logger->debug("Updating facture from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->logger->debug("Updating facture " . $args['id']. " from " . $request->getServerParams()["REMOTE_ADDR"]);
         $body = $request->getParsedBody();
 
         $this->entityManager->beginTransaction();
@@ -183,7 +195,7 @@ class FactureController
      */
     public function validateFactureByUa(Request $request, Response $response, array $args)
     {
-        $this->logger->debug("Validating facture by Ua from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->logger->debug("Validating facture " . $args['id']. " by Ua " . $request->getAttribute("userId") . " from " . $request->getServerParams()["REMOTE_ADDR"]);
 
         $this->entityManager->beginTransaction();
         $this->factureService->validateByUa($args['id'], $request->getAttribute("userId"));
@@ -201,7 +213,7 @@ class FactureController
      */
     public function validateFactureByPerf(Request $request, Response $response, array $args)
     {
-        $this->logger->debug("Validating facture by Ua from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->logger->debug("Validating facture " . $args['id']. " by Perf " . $request->getAttribute("userId") . " from " . $request->getServerParams()["REMOTE_ADDR"]);
 
         $this->entityManager->beginTransaction();
         $this->factureService->validateByPerf($args['id'], $request->getAttribute("userId"));

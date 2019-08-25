@@ -104,6 +104,12 @@ class Facture implements \JsonSerializable
     protected $validatedByPerfMember;
 
     /**
+     * @var FactureDocument[]
+     * @OneToMany(targetEntity="FactureDocument", mappedBy="facture")
+     */
+    private $relatedDocuments;
+
+    /**
      * Facture constructor.
      * @param $numero
      * @param $fullAddress
@@ -256,7 +262,7 @@ class Facture implements \JsonSerializable
     }
 
     /**
-     * @return Study
+     * @return Study|null
      */
     public function getStudy()
     {
@@ -264,7 +270,7 @@ class Facture implements \JsonSerializable
     }
 
     /**
-     * @param Study $study
+     * @param Study|null $study
      */
     public function setStudy($study): void
     {
@@ -615,5 +621,25 @@ class Facture implements \JsonSerializable
     public function setContactEmail($contactEmail): void
     {
         $this->contactEmail = $contactEmail;
+    }
+
+    /**
+     * @return FactureDocument[]
+     */
+    public function getRelatedDocuments(): array
+    {
+        $relatedDocuments = array();
+        foreach ($this->relatedDocuments as $relatedDocument){
+            $relatedDocuments[] = $relatedDocument;
+        }
+        return $relatedDocuments;
+    }
+
+    /**
+     * @param FactureDocument[] $relatedDocuments
+     */
+    public function setRelatedDocuments(array $relatedDocuments): void
+    {
+        $this->relatedDocuments = $relatedDocuments;
     }
 }
