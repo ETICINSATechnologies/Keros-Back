@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Keros\Services\Sg;
 
 use Keros\DataServices\Sg\MemberInscriptionDocumentTypeDataService;
@@ -17,29 +16,16 @@ use \DateTime;
 
 class MemberInscriptionDocumentTypeService
 {
-    /**
-     * @var MemberInscriptionService
-     */
-    private $memberInscriptionService;
-
-    /**
-     * @var
-     */
+    /** @var */
     private $kerosConfig;
 
-    /**
-     * @var Logger
-     */
+    /** @var Logger */
     protected $logger;
 
-    /**
-     * @var MemberInscriptionDocumentTypeDataService
-     */
+    /** @var MemberInscriptionDocumentTypeDataService */
     protected $memberInscriptionDocumentTypeDataService;
 
-    /**
-     * @var DocumentGenerator
-     */
+    /** @var DocumentGenerator */
     protected $documentGenerator;
 
     /**
@@ -48,7 +34,6 @@ class MemberInscriptionDocumentTypeService
      */
     public function __construct(ContainerInterface $container)
     {
-        $this->memberInscriptionService = $container->get(MemberInscriptionService::class);
         $this->logger = $container->get(Logger::class);
         $this->kerosConfig = ConfigLoader::getConfig();
         $this->memberInscriptionDocumentTypeDataService = $container->get(MemberInscriptionDocumentTypeDataService::class);
@@ -72,14 +57,21 @@ class MemberInscriptionDocumentTypeService
     }
 
     /**
-     * @param int $memberInscriptionId
+     * @return MemberInscriptionDocumentType[]
+     */
+    public function getAll(): array
+    {
+        return $this->memberInscriptionDocumentTypeDataService->getAll();
+    }
+
+    /**
+     * @param MemberInscription $memberInscription
      * @param int $documentTypeId
      * @return string
      * @throws Exception
      */
-    public function generateMemberInscriptionDocument(int $memberInscriptionId, int $documentTypeId): string
+    public function generateMemberInscriptionDocument(MemberInscription $memberInscription, int $documentTypeId): string
     {
-        $memberInscription = $this->memberInscriptionService->getOne($memberInscriptionId);
         $documentType = $this->getOne($documentTypeId);
 
         if (!$documentType->getisTemplatable()) {

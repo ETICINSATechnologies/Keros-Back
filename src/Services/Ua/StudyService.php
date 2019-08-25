@@ -3,7 +3,6 @@
 
 namespace Keros\Services\Ua;
 
-use Keros\DataServices\Core\ConsultantDataService;
 use Keros\DataServices\Ua\StudyDataService;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Ua\Study;
@@ -64,7 +63,6 @@ class StudyService
      * @var StudyDataService
      */
     private $studyDataService;
-
     /**
      * @var ConsultantService
      */
@@ -188,25 +186,38 @@ class StudyService
         return $study;
     }
 
+    /**
+     * @param int $id
+     * @throws KerosException
+     */
     public function delete(int $id): void
     {
         $id = Validator::requiredId($id);
         $study = $this->getOne($id);
+
         $this->studyDataService->delete($study);
     }
 
+    /**
+     * @param int $idFirm
+     * @throws KerosException
+     */
     public function deleteStudiesRelatedtoFirm(int $idFirm): void
     {
-        $firm = $this->firmService->getOne($idFirm);
         $studies = $this->getAll();
         foreach ($studies as $study) {
             $study = Validator::requiredStudy($study);
-            if ($study->getFirm() == $firm) {
+            if ($study->getFirm()->getId() == $idFirm) {
                 $this->studyDataService->delete($study);
             }
         }
     }
 
+    /**
+     * @param int $id
+     * @return Study
+     * @throws KerosException
+     */
     public function getOne(int $id): Study
     {
         $id = Validator::requiredId($id);
@@ -218,21 +229,40 @@ class StudyService
         return $study;
     }
 
+    /**
+     * @return array
+     * @throws KerosException
+     */
     public function getAll(): array
     {
         return $this->studyDataService->getAll();
     }
 
+    /**
+     * @param RequestParameters $requestParameters
+     * @return array
+     * @throws KerosException
+     */
     public function getPage(RequestParameters $requestParameters): array
     {
         return $this->studyDataService->getPage($requestParameters);
     }
 
+    /**
+     * @param RequestParameters $requestParameters
+     * @return int
+     */
     public function getCount(RequestParameters $requestParameters): int
     {
         return $this->studyDataService->getCount($requestParameters);
     }
 
+    /**
+     * @param int $id
+     * @param array|null $fields
+     * @return Study
+     * @throws KerosException
+     */
     public function update(int $id, ?array $fields): Study
     {
 

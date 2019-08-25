@@ -80,6 +80,7 @@ class MemberDataService
     public function getPage(RequestParameters $requestParameters, array $queryParams)
     {
         try {
+            $this->queryBuilder = $this->entityManager->createQueryBuilder();
             $this->queryBuilder
                 ->select('m')
                 ->from(Member::class, 'm')
@@ -152,10 +153,8 @@ class MemberDataService
             $this->queryBuilder
                 ->setFirstResult($firstResult)
                 ->setMaxResults($pageSize);
-
             $query = $this->queryBuilder->getQuery();
             $paginator = new Paginator($query, $fetchJoinCollection = true);
-
             return new Page($query->execute(), $requestParameters, count($paginator));
 
         } catch (Exception $e) {
