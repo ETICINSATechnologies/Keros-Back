@@ -8,6 +8,20 @@ use Slim\Http\Request;
 
 class ContactIntegrationTest extends AppTestCase
 {
+    public function testDeleteAllContactsShouldReturn204()
+    {
+        for($id = 1;  $id <= 4; $id++) {
+            $env = Environment::mock([
+                'REQUEST_METHOD' => 'DELETE',
+                'REQUEST_URI' => "/api/v1/ua/contact/$id",
+            ]);
+            $req = Request::createFromEnvironment($env);
+            $this->app->getContainer()['request'] = $req;
+            $response = $this->app->run(false);
+            $this->assertSame(204, $response->getStatusCode());
+        }
+    }
+
     public function testFirmIdWithMainContact()
     {
         $env = Environment::mock([
