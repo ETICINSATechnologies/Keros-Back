@@ -14,13 +14,13 @@ use Keros\Services\Core\GenderService;
 use Keros\Services\Core\ConsultantService;
 use Keros\Tools\Validator;
 use Keros\Tools\Helpers\FileHelper;
-use Keros\Tools\Helpers\ConsultantInscriptionHelper;
-use Keros\Tools\Helpers\ConsultantHelper;
+use Keros\Tools\FileValidator;
+use Keros\Tools\Helpers\ConsultantInscriptionFileHelper;
+use Keros\Tools\Helpers\ConsultantFileHelper;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Keros\Tools\ConfigLoader;
 use Keros\Tools\DirectoryManager;
-use DateTime;
 
 class   ConsultantInscriptionService
 {
@@ -102,16 +102,18 @@ class   ConsultantInscriptionService
         $nationalityId = Validator::requiredId($fields["nationalityId"]);
         $nationality = $this->countryService->getOne($nationalityId);
         $address = $this->addressService->create($fields["address"]);
+        $socialSecurityNumber = Validator::requiredString($fields["socialSecurityNumber"]);
         $droitImage = Validator::requiredBool($fields['droitImage']);
         $isApprentice = Validator::requiredBool($fields['isApprentice']);
-        $documentIdentity = Validator::requiredString($fields['documentIdentity']);
-        $documentScolaryCertificate = Validator::requiredString($fields['documentScolaryCertificate']);
-        $documentRIB = Validator::requiredString($fields['documentRIB']);
-        $documentVitaleCard = Validator::requiredString($fields['documentVitaleCard']);
-        $documentResidencePermit = Validator::optionalString($fields['documentResidencePermit']) ? $fields['documentResidencePermit'] : null;
-        $documentCVEC = Validator::requiredString($fields['documentCVEC']);
+        $createdDate = new \DateTime();
+        $documentIdentity = Validator::requiredString($fields['documentIdentity'] ?? null);
+        $documentScolaryCertificate = Validator::requiredString($fields['documentScolaryCertificate'] ?? null);
+        $documentRIB = Validator::requiredString($fields['documentRIB'] ?? null);
+        $documentVitaleCard = Validator::requiredString($fields['documentVitaleCard'] ?? null);
+        $documentResidencePermit = Validator::optionalString($fields['documentResidencePermit'] ?? null);
+        $documentCVEC = Validator::requiredString($fields['documentCVEC']  ?? null);
 
-        $consultantInscription = new ConsultantInscription($firstName, $lastName, $gender, $birthday, $department, $email, $phoneNumber, $outYear, $nationality, $address, $droitImage, $isApprentice, $documentIdentity, $documentScolaryCertificate, $documentRIB, $documentVitaleCard, $documentResidencePermit, $documentCVEC);
+        $consultantInscription = new ConsultantInscription($firstName, $lastName, $gender, $birthday, $department, $email, $phoneNumber, $outYear, $nationality, $address, $socialSecurityNumber, $droitImage, $isApprentice, $createdDate, $documentIdentity, $documentScolaryCertificate, $documentRIB, $documentVitaleCard, $documentResidencePermit, $documentCVEC);
 
         $this->consultantInscriptionDataService->persist($consultantInscription);
 
@@ -127,7 +129,7 @@ class   ConsultantInscriptionService
         $id = Validator::requiredId($id);
         $consultantInscription = $this->getOne($id);
 
-        $consultantInscriptionFiles = ConsultantInscriptionHelper::getConsultantInscriptionFiles();
+        $consultantInscriptionFiles = ConsultantInscriptionFileHelper::getConsultantInscriptionFiles();
 
         foreach ($consultantInscriptionFiles as $consultantInscriptionFile) {
             $getFunction = $consultantInscriptionFile['get'];
@@ -206,6 +208,7 @@ class   ConsultantInscriptionService
         $nationalityId = Validator::requiredId($fields["nationalityId"]);
         $nationality = $this->countryService->getOne($nationalityId);
         $address = $this->addressService->create($fields["address"]);
+        $socialSecurityNumber = Validator::requiredString($fields["socialSecurityNumber"]);
         $droitImage = Validator::requiredBool($fields['droitImage']);
         $isApprentice = Validator::requiredBool($fields['isApprentice']);
 
@@ -221,6 +224,7 @@ class   ConsultantInscriptionService
         $this->addressService->update($consultantInscription->getAddress()->getId(), $fields["address"]);
         $consultantInscription->setDroitImage($droitImage);
         $consultantInscription->setIsApprentice($isApprentice);
+        $consultantInscription->setSocialSecurityNumber($socialSecurityNumber);
 
         $this->consultantInscriptionDataService->persist($consultantInscription);
 
@@ -235,7 +239,7 @@ class   ConsultantInscriptionService
     {
         $id = Validator::requiredId($id);
         $consultantInscription = $this->getOne($id);
-        $date = new DateTime();
+        $date = new \DateTime();
         $month = intval($date->format('m'));
         $year = intval($date->format('Y'));
 
@@ -259,23 +263,25 @@ class   ConsultantInscriptionService
                 "city" => $consultantInscription->getAddress()->getCity(),
                 "countryId" => $consultantInscription->getAddress()->getCountry()->getId()
             ),
+            "socialSecurityNumber" => $consultantInscription->getSocialSecurityNumber(),
             "droitImage" => $consultantInscription->isDroitImage(),
             "isApprentice" => $consultantInscription->getIsApprentice(),
+            "createdDate" => new \DateTime(),
         );
 
         //copy and add files to consultant
-        $consultantInscriptionFiles = ConsultantInscriptionHelper::getConsultantInscriptionFiles();
-        $consultantFiles = ConsultantHelper::getConsultantFiles();
+        $consultantInscriptionFiles = ConsultantInscriptionFileHelper::getConsultantInscriptionFiles();
+        $consultantFiles = ConsultantFileHelper::getConsultantFiles();
         foreach ($consultantInscriptionFiles as $consultantInscriptionFile) {
             $getFunction = $consultantInscriptionFile['get'];
             $filename = $consultantInscription->$getFunction();
             if ($filename){
                 $filepath = $this->kerosConfig[$consultantInscriptionFile['directory_key']] . $filename;
-                $consultantFile = $consultantFiles[$consultantInscriptionFile['name']] ?? null;
-                if ($consultantFile && file_exists($filepath)) {
-                    $newDirectory = $this->kerosConfig[$consultantFile['directory_key']];
+                $consultantInscriptionFile = $consultantFiles[$consultantInscriptionFile['name']] ?? null;
+                if ($consultantInscriptionFile && file_exists($filepath)) {
+                    $newDirectory = $this->kerosConfig[$consultantInscriptionFile['directory_key']];
                     $newFilename = FileHelper::safeCopyFileToDirectory($filepath,$newDirectory);
-                    $consultantArray[$consultantFile['name']] = $newFilename;
+                    $consultantArray[$consultantInscriptionFile['name']] = $newFilename;
                 }
             }  
         }
@@ -301,7 +307,7 @@ class   ConsultantInscriptionService
     {
         $id = Validator::requiredId($id);
         $consultantInscription = $this->getOne($id);
-        $consultantInscriptionFile = ConsultantInscriptionHelper::getConsultantInscriptionFiles()[$document_name];
+        $consultantInscriptionFile = ConsultantInscriptionFileHelper::getConsultantInscriptionFiles()[$document_name];
         $getFunction = $consultantInscriptionFile['get'];
         $filename = FileHelper::verifyFilename($consultantInscription->$getFunction(), $consultantInscriptionFile['name']);
         $filepath =  FileHelper::verifyFilepath($this->kerosConfig[$consultantInscriptionFile['directory_key']] . $filename, $consultantInscriptionFile['name']);
@@ -319,7 +325,7 @@ class   ConsultantInscriptionService
     {
         $id = Validator::requiredId($id);
         $consultantInscription = $this->getOne($id);
-        $consultantInscriptionFile = ConsultantInscriptionHelper::getConsultantInscriptionFiles()[$document_name];
+        $consultantInscriptionFile = ConsultantInscriptionFileHelper::getConsultantInscriptionFiles()[$document_name];
         $getFunction = $consultantInscriptionFile['get'];
         $oldFilename = $consultantInscription->$getFunction();
         $validator = $consultantInscriptionFile['string_validator'];
@@ -329,5 +335,38 @@ class   ConsultantInscriptionService
         $this->consultantInscriptionDataService->persist($consultantInscription);
         if ($oldFilename) $this->directoryManager->deleteFile($this->kerosConfig[$consultantInscriptionFile['directory_key']] . $oldFilename);
         return $consultantInscription;
+    }
+
+        /**
+     * @param int $id
+     * @param string $document_name
+     * @param string $file
+     * @return array
+     * @throws KerosException
+     */
+    public function getFileDetailsFromUploadedFiles(array $uploadedFiles, array $consultantInscriptionFile): ?array
+    {
+        $documenArray = null;
+        //get validator function name
+        $validatorFunction = $consultantInscriptionFile['validator'];
+        //get file
+        if (array_key_exists($consultantInscriptionFile['name'], $uploadedFiles)) {
+            $document = FileValidator::$validatorFunction($uploadedFiles[$consultantInscriptionFile['name']]);
+            if ($document) {
+                //get filename
+                $documentFilename = $document ? $this->directoryManager->uniqueFilenameOnly($document->getClientFileName(), false, $this->kerosConfig[$consultantInscriptionFile['directory_key']]) : null;
+                //get filepath
+                $documentFilepath = $document ? $this->kerosConfig[$consultantInscriptionFile['directory_key']] . $documentFilename : null;
+                //make directory and store filepath
+                $this->directoryManager->mkdir($this->kerosConfig[$consultantInscriptionFile['directory_key']]);
+                $documenArray = array(
+                    'file' => $document,
+                    'filepath' => $documentFilepath,
+                    'filename' => $documentFilename,
+                );
+            }
+        }
+
+        return $documenArray;
     }
 }

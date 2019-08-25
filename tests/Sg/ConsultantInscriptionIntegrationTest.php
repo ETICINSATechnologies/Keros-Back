@@ -1,8 +1,9 @@
 <?php
 
 
-namespace KerosTest\Sg_temp;
+namespace KerosTest\Sg;
 
+use DateTime;
 use KerosTest\AppTestCase;
 use Slim\Http\Environment;
 use Slim\Http\Request;
@@ -29,7 +30,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         $body = json_decode($response->getBody());
 
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame(2, count($body->content));
+        $this->assertSame(3, count($body->content));
         $this->assertSame(1, $body->content[0]->id);
         $this->assertSame('Bruce', $body->content[0]->firstName);
         $this->assertSame('Wayne', $body->content[0]->lastName);
@@ -38,11 +39,12 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         $this->assertSame(3, $body->content[0]->department->id);
         $this->assertSame('bruce.wayne@batman.com', $body->content[0]->email);
         $this->assertSame('0033123456789', $body->content[0]->phoneNumber);
+        $this->assertSame('12345678901234567', $body->content[0]->socialSecurityNumber);
         $this->assertSame(2021, $body->content[0]->outYear);
         $this->assertSame(42, $body->content[0]->nationality->id);
         $this->assertSame(1, $body->content[0]->address->id);
         $this->assertSame(false, $body->content[0]->droitImage);
-        $this->assertSame(2, $body->meta->totalItems);
+        $this->assertSame(3, $body->meta->totalItems);
         $this->assertSame(1, $body->meta->totalPages);
         $this->assertSame(0, $body->meta->page);
     }
@@ -85,6 +87,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
             ),
             'droitImage' => true,
             'isApprentice' => true,
+            "socialSecurityNumber" => "12346781300139041",
         );
 
         $env = Environment::mock([
@@ -123,6 +126,9 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         $this->assertSame('Lorem ipsum', $body->address->city);
         $this->assertSame(true, $body->droitImage);
         $this->assertSame(true,$body->isApprentice);
+        $this->assertSame('12346781300139041', $body->socialSecurityNumber);
+        $dateDiff = ((new \DateTime())->diff(new \DateTime($body->createdDate->date)))->format('%a');
+        $this->assertSame(intval($dateDiff),0);
     }
 
     /**
@@ -163,6 +169,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
             ),
             'droitImage' => true,
             'isApprentice' => true,
+            "socialSecurityNumber" => "12346781300139041",
         );
 
         $env = Environment::mock([
@@ -223,6 +230,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
             ),
             'droitImage' => true,
             'isApprentice' => true,
+            "socialSecurityNumber" => "12346781300139041",
         );
 
         $env = Environment::mock([
@@ -259,6 +267,9 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         $this->assertSame('Lorem ipsum', $body->address->city);
         $this->assertSame(true, $body->droitImage);
         $this->assertSame(true,$body->isApprentice);
+        $this->assertSame('12346781300139041', $body->socialSecurityNumber);
+        $dateDiff = ((new \DateTime())->diff(new \DateTime($body->createdDate->date)))->format('%a');
+        $this->assertSame(intval($dateDiff),0);
     }
 
     /**
@@ -290,6 +301,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         $this->assertSame(1, $body->address->id);
         $this->assertSame(false, $body->droitImage);
         $this->assertSame(true,$body->isApprentice);
+        $this->assertSame('12345678901234567', $body->socialSecurityNumber);
     }
 
     /**
@@ -335,6 +347,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
             ),
             'droitImage' => true,
             'isApprentice' => true,
+            "socialSecurityNumber" => "12346781300139041",
         );
 
         $env = Environment::mock([
@@ -361,6 +374,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         $this->assertSame('Lorem ipsum', $body->address->city);
         $this->assertSame(true, $body->droitImage);
         $this->assertSame(true,$body->isApprentice);
+        $this->assertSame('12346781300139041', $body->socialSecurityNumber);
     }
 
     /**
@@ -389,6 +403,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
             ),
             'droitImage' => true,
             'isApprentice' => true,
+            "socialSecurityNumber" => "12346781300139041",
         );
 
         $env = Environment::mock([
@@ -628,6 +643,8 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         $this->assertSame(null, $body->profilePicture);
         $this->assertNotNull($body->address->id);
         $this->assertSame('13 Rue du renard', $body->address->line1);
+        $dateDiff = ((new \DateTime())->diff(new \DateTime($body->createdDate->date)))->format('%a');
+        $this->assertSame(intval($dateDiff),0);
 
         foreach ($filepaths as $file_path) {
             FileHelper::deleteFile(FileHelper::normalizePath($file_path));

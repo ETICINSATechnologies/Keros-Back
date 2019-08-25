@@ -134,8 +134,5 @@ class ServiceRegistrar
         $container[MemberInscriptionDocumentTypeService::class] = function ($container) {
             return new MemberInscriptionDocumentTypeService($container);
         };
-        $container[ConsultantInscriptionService::class] = function ($container) {
-            return new ConsultantInscriptionService($container);
-        };
     }
 }

@@ -90,7 +90,8 @@ class ConsultantIntegrationTest extends AppTestCase
             "company" => "Amazon",
             "profilePicture" => "http://image.png",
             "droitImage" => true,
-            "isApprentice" => true
+            "isApprentice" => true,
+            "socialSecurityNumber" => "12346781300139041",
         );
 
         $env = Environment::mock([
@@ -199,6 +200,25 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame("Amazon", $body->company);
     }
 
+    public function testGetConsultantProtectedDataShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/core/consultant/2/protected',
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(200, $response->getStatusCode());
+
+        $body = json_decode($response->getBody());
+        $this->assertSame(2, $body->id);
+        $this->assertSame("123456789012345", $body->socialSecurityNumber);
+    }
+
+
     public function testGetConsultantShouldReturn404()
     {
         $env = Environment::mock([
@@ -237,6 +257,7 @@ class ConsultantIntegrationTest extends AppTestCase
             "profilePicture" => "http://image.png",
             "droitImage" => true,
             "isApprentice" => true,
+            "socialSecurityNumber" => "12346781300139041",
         );
 
         $env = Environment::mock([
@@ -303,6 +324,7 @@ class ConsultantIntegrationTest extends AppTestCase
             "profilePicture" => "http://image.png",
             "droitImage" => true,
             "isApprentice" => true,
+            "socialSecurityNumber" => "12346781300139041",
         );
 
         $env = Environment::mock([
@@ -540,6 +562,7 @@ class ConsultantIntegrationTest extends AppTestCase
             "profilePicture" => "http://image.png",
             "droitImage" => true,
             "isApprentice" => true,
+            "socialSecurityNumber" => "12346781300139041",
         );
 
         $env = Environment::mock([
@@ -577,5 +600,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame("http://image.png", $body->profilePicture);
         $this->assertSame(true,$body->droitImage);
         $this->assertSame(true,$body->isApprentice);
+        $dateDiff = ((new \DateTime())->diff(new \DateTime($body->createdDate->date)))->format('%a');
+        $this->assertSame(intval($dateDiff),0);
     }
 }

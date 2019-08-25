@@ -88,6 +88,12 @@ class ConsultantInscription implements JsonSerializable
     private $address;
 
     /**
+     * @var string
+     * @Column(type="string", length=255)
+     */
+    private $socialSecurityNumber;
+
+    /**
      * @var boolean
      * @Column(type="boolean")
      */
@@ -98,6 +104,12 @@ class ConsultantInscription implements JsonSerializable
      * @Column(type="boolean")
      */
     private $isApprentice;
+
+    /**
+     * @var DateTime
+     * @Column(type="datetime")
+     */
+    private $createdDate;
 
     /** 
      * @var string
@@ -147,8 +159,10 @@ class ConsultantInscription implements JsonSerializable
      * @param int|null $outYear
      * @param Country $nationality
      * @param Address $address
+     * @param string $socialSecurityNumber
      * @param bool $droitImage
      * @param bool $isApprentice
+     * @param DateTime $createdDate
      * @param string $documentIdentity
      * @param string $documentScolaryCertificate
      * @param string $documentRIB
@@ -156,7 +170,7 @@ class ConsultantInscription implements JsonSerializable
      * @param string $documentResidencePermit
      * @param string $documentCVEC
      */
-    public function __construct(string $firstName, string $lastName, Gender $gender, DateTime $birthday, Department $department, string $email, ?string $phoneNumber, ?int $outYear, Country $nationality, Address $address, bool $droitImage, bool $isApprentice, string $documentIdentity, string $documentScolaryCertificate, string $documentRIB, string $documentVitaleCard, ?string $documentResidencePermit, string $documentCVEC)
+    public function __construct(string $firstName, string $lastName, Gender $gender, DateTime $birthday, Department $department, string $email, ?string $phoneNumber, ?int $outYear, Country $nationality, Address $address, string $socialSecurityNumber, bool $droitImage, bool $isApprentice, DateTime $createdDate, string $documentIdentity, string $documentScolaryCertificate, string $documentRIB, string $documentVitaleCard, ?string $documentResidencePermit, string $documentCVEC)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -168,8 +182,10 @@ class ConsultantInscription implements JsonSerializable
         $this->outYear = $outYear;
         $this->nationality = $nationality;
         $this->address = $address;
+        $this->socialSecurityNumber = $socialSecurityNumber;
         $this->droitImage = $droitImage;
         $this->isApprentice = $isApprentice;
+        $this->createdDate = $createdDate;
         $this->documentIdentity = $documentIdentity;
         $this->documentScolaryCertificate = $documentScolaryCertificate;
         $this->documentRIB = $documentRIB;
@@ -196,8 +212,10 @@ class ConsultantInscription implements JsonSerializable
             'outYear' => $this->getOutYear(),
             'nationality' => $this->getNationality(),
             'address' => $this->getAddress(),
+            'socialSecurityNumber' => $this->getSocialSecurityNumber(),
             'droitImage' => $this->isDroitImage(),
             'isApprentice' => $this->getIsApprentice(),
+            'createdDate' => $this->getCreatedDate(),
         ];
     }
 
@@ -375,6 +393,23 @@ class ConsultantInscription implements JsonSerializable
     }
 
     /**
+     * @return string
+     */
+    public function getSocialSecurityNumber(): string
+    {
+        return $this->socialSecurityNumber;
+    }
+
+    /**
+     * @param string $socialSecurityNumber
+     */
+    public function setSocialSecurityNumber(string $socialSecurityNumber): void
+    {
+        $this->socialSecurityNumber = $socialSecurityNumber;
+    }
+
+
+    /**
      * @return bool
      */
     public function isDroitImage(): bool
@@ -404,6 +439,22 @@ class ConsultantInscription implements JsonSerializable
     public function setIsApprentice(bool $isApprentice): void
     {
         $this->isApprentice = $isApprentice;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getCreatedDate(): DateTime
+    {
+        return $this->createdDate;
+    }
+
+    /**
+     * @param DateTime $createdDate
+     */
+    public function setCreatedDate(DateTime $createdDate): void
+    {
+        $this->createdDate = $createdDate;
     }
 
     /**

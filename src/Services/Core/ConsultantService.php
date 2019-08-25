@@ -12,10 +12,10 @@ use Keros\Tools\Validator;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Keros\Tools\Helpers\FileHelper;
-use Keros\Tools\Helpers\ConsultantHelper;
+use Keros\Tools\FileValidator;
+use Keros\Tools\Helpers\ConsultantFileHelper;
 use Keros\Tools\ConfigLoader;
 use Keros\Tools\DirectoryManager;
-use Slim\Http\UploadedFile;
 
 class ConsultantService
 {
@@ -89,8 +89,10 @@ class ConsultantService
         $department = $this->departmentService->getOne($departmentId);
         $company = Validator::optionalString($fields["company"]);
         $profilePicture = Validator::optionalString($fields["profilePicture"]);
+        $socialSecurityNumber = Validator::optionalString($fields["socialSecurityNumber"]);
         $droitImage = Validator::requiredBool($fields['droitImage']);
         $isApprentice = Validator::requiredBool($fields['isApprentice']);
+        $createdDate = new \DateTime();
         $documentIdentity = Validator::optionalString($fields['documentIdentity'] ?? null);
         $documentScolaryCertificate = Validator::optionalString($fields['documentScolaryCertificate'] ?? null);
         $documentRIB = Validator::optionalString($fields['documentRIB'] ?? null);
@@ -98,7 +100,7 @@ class ConsultantService
         $documentResidencePermit = Validator::optionalString($fields['documentResidencePermit'] ?? null);
         $documentCVEC = Validator::optionalString($fields['documentCVEC'] ?? null);
 
-        $consultant = new Consultant($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage, $isApprentice, $documentIdentity, $documentScolaryCertificate, $documentRIB, $documentVitaleCard, $documentResidencePermit, $documentCVEC);
+        $consultant = new Consultant($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $socialSecurityNumber, $droitImage, $isApprentice, $createdDate, $documentIdentity, $documentScolaryCertificate, $documentRIB, $documentVitaleCard, $documentResidencePermit, $documentCVEC);
         $user = $this->userService->create($fields);
         $address = $this->addressService->create($fields["address"]);
         $consultant->setUser($user);
@@ -144,6 +146,24 @@ class ConsultantService
         return $consultants;
     }
 
+    /**
+     * @param int $id
+     * @return array
+     * @throws KerosException
+     */
+    public function getOneProtectedDataOnly(int $id): array
+    {
+        $id = Validator::requiredId($id);
+
+        $consultant = $this->consultantDataService->getOne($id);
+        if (!$consultant) {
+            throw new KerosException("The consultant could not be found", 404);
+        }
+        $consultantProtectedData = $consultant->getProtected();
+        return $consultantProtectedData;
+    }
+
+
     public function update(int $id, ?array $fields): Consultant
     {
         $id = Validator::requiredId($id);
@@ -162,6 +182,7 @@ class ConsultantService
         $department = $this->departmentService->getOne($departmentId);
         $company = Validator::optionalString($fields["company"]);
         $profilePicture = Validator::optionalString($fields["profilePicture"]);
+        $socialSecurityNumber = Validator::optionalString($fields["socialSecurityNumber"] ?? null);
         $isApprentice = Validator::requiredBool($fields['isApprentice']);
 
         $consultant->setFirstName($firstName);
@@ -175,6 +196,7 @@ class ConsultantService
         $consultant->setCompany($company);
         $consultant->setProfilePicture($profilePicture);
         $consultant->setIsApprentice($isApprentice);
+        $consultant->setSocialSecurityNumber($socialSecurityNumber);
 
         $this->addressService->update($consultant->getAddress()->getId(), $fields["address"]);
         $this->userService->update($consultant->getId(), $fields);
@@ -193,7 +215,7 @@ class ConsultantService
         $consultant->setStudiesAsConsultant([]);
         $this->consultantDataService->persist($consultant);
 
-        $consultantFiles = ConsultantHelper::getConsultantFiles();
+        $consultantFiles = ConsultantFileHelper::getConsultantFiles();
         foreach ($consultantFiles as $consultantFile) {
             $getFunction = $consultantFile['get'];
             $filename = $consultant->$getFunction();
@@ -214,7 +236,7 @@ class ConsultantService
     {
         $id = Validator::requiredId($id);
         $consultant = $this->getOne($id);
-        $consultantFile = ConsultantHelper::getConsultantFiles()[$document_name];
+        $consultantFile = ConsultantFileHelper::getConsultantFiles()[$document_name];
         $getFunction = $consultantFile['get'];
         $filename = FileHelper::verifyFilename($consultant->$getFunction(), $consultantFile['name']);
         $filepath =  FileHelper::verifyFilepath($this->kerosConfig[$consultantFile['directory_key']] . $filename, $consultantFile['name']);
@@ -232,7 +254,7 @@ class ConsultantService
     {
         $id = Validator::requiredId($id);
         $consultant = $this->getOne($id);
-        $consultantFile = ConsultantHelper::getConsultantFiles()[$document_name];
+        $consultantFile = ConsultantFileHelper::getConsultantFiles()[$document_name];
         $getFunction = $consultantFile['get'];
         $oldFilename = $consultant->$getFunction();
         $validator = $consultantFile['string_validator'];
@@ -258,7 +280,7 @@ class ConsultantService
         $validatorFunction = $consultantFile['validator'];
         //get file
         if (array_key_exists($consultantFile['name'], $uploadedFiles)) {
-            $document = FileHelper::$validatorFunction($uploadedFiles[$consultantFile['name']]);
+            $document = FileValidator::$validatorFunction($uploadedFiles[$consultantFile['name']]);
             if ($document) {
                 //get filename
                 $documentFilename = $document ? $this->directoryManager->uniqueFilenameOnly($document->getClientFileName(), false, $this->kerosConfig[$consultantFile['directory_key']]) : null;

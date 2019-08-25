@@ -13,7 +13,8 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Keros\Tools\Helpers\FileHelper;
-use Keros\Tools\Helpers\ConsultantHelper;
+use Keros\Tools\FileValidator;
+use Keros\Tools\Helpers\ConsultantFileHelper;
 use Keros\Tools\ConfigLoader;
 use Keros\Tools\DirectoryManager;
 
@@ -73,6 +74,37 @@ class ConsultantController
         return $response->withJson($consultant, 200);
     }
 
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return mixed
+     * @throws KerosException
+     */
+    public function getConsultantProtectedDataOnly(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Getting consultant protected data by ID from " . $request->getServerParams()["REMOTE_ADDR"]);
+
+        $consultantProtectedData = $this->consultantService->getOneProtectedDataOnly($args["id"]);
+
+        return $response->withJson($consultantProtectedData, 200);
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return mixed
+     * @throws KerosException
+     */
+    public function getConnectedConsultantProtectedDataOnly(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Getting connected consultant protected data by ID from " . $request->getServerParams()["REMOTE_ADDR"]);
+
+        $consultantProtectedData = $this->consultantService->getOneProtectedDataOnly($request->getAttribute("userId"));
+
+        return $response->withJson($consultantProtectedData, 200);
+    }
 
     public function updateConnectedConsultant(Request $request, Response $response, array $args)
     {
@@ -101,8 +133,8 @@ class ConsultantController
     public function createConsultant(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Creating consultant from " . $request->getServerParams()["REMOTE_ADDR"]);
-        $uploadedFiles = FileHelper::optionalFiles($request->getUploadedFiles());
-        $consultantFiles = ConsultantHelper::getConsultantFiles();
+        $uploadedFiles = FileValidator::optionalFiles($request->getUploadedFiles());
+        $consultantFiles = ConsultantFileHelper::getConsultantFiles();
         $body = $request->getParsedBody();
 
         $file_array = array();
@@ -161,7 +193,7 @@ class ConsultantController
     {
         $this->logger->debug("Getting consultant document from " . $request->getServerParams()["REMOTE_ADDR"]);
         
-        $document_name = ConsultantHelper::doesExist($args['document_name']);
+        $document_name = ConsultantFileHelper::doesExist($args['document_name']);
         $filepath = $this->consultantService->getDocument($args["id"], $document_name);
         $response = FileHelper::getFileResponse($filepath, $response);
         readfile($filepath);
@@ -180,11 +212,11 @@ class ConsultantController
     {
         $this->logger->debug("Creating consultant document from " . $request->getServerParams()["REMOTE_ADDR"]);
 
-        $document_name = ConsultantHelper::doesExist($args['document_name']);
-        $consultantFile = ConsultantHelper::getConsultantFiles()[$document_name];
+        $document_name = ConsultantFileHelper::doesExist($args['document_name']);
+        $consultantFile = ConsultantFileHelper::getConsultantFiles()[$document_name];
 
-        $uploadedFiles = FileHelper::requiredFiles($request->getUploadedFiles());
-        $uploadedFile = FileHelper::requiredFileMixed(reset($uploadedFiles));
+        $uploadedFiles = FileValidator::requiredFiles($request->getUploadedFiles());
+        $uploadedFile = FileValidator::requiredFileMixed(reset($uploadedFiles));
         $uploadedFileFilename = $this->directoryManager->uniqueFilenameOnly($uploadedFile->getClientFileName(), false, $this->kerosConfig[$consultantFile['directory_key']]);
         $uploadedFileFilepath = $this->kerosConfig[$consultantFile['directory_key']] . $uploadedFileFilename;
 

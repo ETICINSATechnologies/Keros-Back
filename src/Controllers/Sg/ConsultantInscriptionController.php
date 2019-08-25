@@ -13,7 +13,8 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Keros\Tools\Helpers\FileHelper;
-use Keros\Tools\Helpers\ConsultantInscriptionHelper;
+use Keros\Tools\FileValidator;
+use Keros\Tools\Helpers\ConsultantInscriptionFileHelper;
 use Keros\Tools\ConfigLoader;
 use Keros\Tools\DirectoryManager;
 
@@ -100,38 +101,18 @@ class ConsultantInscriptionController
     public function createConsultantInscription(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Creating consultantInscription from " . $request->getServerParams()["REMOTE_ADDR"]);
-        $uploadedFiles = FileHelper::requiredFiles($request->getUploadedFiles());
-        $consultantInscriptionFiles = ConsultantInscriptionHelper::getConsultantInscriptionFiles();
+        $uploadedFiles = FileValidator::requiredFiles($request->getUploadedFiles());
+        $consultantInscriptionFiles = ConsultantInscriptionFileHelper::getConsultantInscriptionFiles();
         $body = $request->getParsedBody();
 
         $file_array = array();
 
         foreach ($consultantInscriptionFiles as $consultantInscriptionFile) {
-            //get validator function name
-            $validatorFunction = $consultantInscriptionFile['validator'];
-            //get file
-            if (array_key_exists($consultantInscriptionFile['name'], $uploadedFiles)) {
-                $document = FileHelper::$validatorFunction($uploadedFiles[$consultantInscriptionFile['name']]);
-            } else {
-                $document = null;
+            $file_details = $this->consultantInscriptionService->getFileDetailsFromUploadedFiles($uploadedFiles,$consultantInscriptionFile);
+            if($file_details) {
+                $body[$consultantInscriptionFile['name']] = $file_details['filename'];
+                array_push($file_array,$file_details);
             }
-            //get filename
-            $documentFilename = $document ? $this->directoryManager->uniqueFilenameOnly($document->getClientFileName(), false, $this->kerosConfig[$consultantInscriptionFile['directory_key']]) : null;
-            //get filepath
-            $documentFilepath = $document ? $this->kerosConfig[$consultantInscriptionFile['directory_key']] . $documentFilename : null;
-            //make directory and store filename/filepath
-            if ($document) {
-                $this->directoryManager->mkdir($this->kerosConfig[$consultantInscriptionFile['directory_key']]);
-                array_push(
-                    $file_array,
-                    array(
-                        'file' => $document,
-                        'filepath' => $documentFilepath,
-                    )
-                );
-            }
-            //add to body
-            $body[$consultantInscriptionFile['name']] = $documentFilename;
         }
 
         $this->entityManager->beginTransaction();
@@ -193,8 +174,8 @@ class ConsultantInscriptionController
      */
     public function getDocument(Request $request, Response $response, array $args)
     {
-        $document_name = ConsultantInscriptionHelper::doesExist($args['document_name']);
-        $this->logger->debug("Getting consultantInscription $document_name from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->logger->debug("Getting consultantInscription document from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $document_name = ConsultantInscriptionFileHelper::doesExist($args['document_name']);
         $filepath = $this->consultantInscriptionService->getDocument($args["id"], $document_name);
         $response = FileHelper::getFileResponse($filepath, $response);
         readfile($filepath);
@@ -210,13 +191,13 @@ class ConsultantInscriptionController
      */
     public function createDocument(Request $request, Response $response, array $args)
     {
-        $document_name = ConsultantInscriptionHelper::doesExist($args['document_name']);
-        $this->logger->debug("Creating consultantInscription $document_name from " . $request->getServerParams()["REMOTE_ADDR"]);
-
-        $consultantInscriptionFile = ConsultantInscriptionHelper::getConsultantInscriptionFiles()[$document_name];
-
-        $uploadedFiles = FileHelper::requiredFiles($request->getUploadedFiles());
-        $uploadedFile = FileHelper::requiredFileMixed(reset($uploadedFiles));
+        $this->logger->debug("Creating consultantInscription document from " . $request->getServerParams()["REMOTE_ADDR"]);
+        
+        $document_name = ConsultantInscriptionFileHelper::doesExist($args['document_name']);
+        $consultantInscriptionFile = ConsultantInscriptionFileHelper::getConsultantInscriptionFiles()[$document_name];
+        
+        $uploadedFiles = FileValidator::requiredFiles($request->getUploadedFiles());
+        $uploadedFile = FileValidator::requiredFileMixed(reset($uploadedFiles));
         $uploadedFileFilename = $this->directoryManager->uniqueFilenameOnly($uploadedFile->getClientFileName(), false, $this->kerosConfig[$consultantInscriptionFile['directory_key']]);
         $uploadedFileFilepath = $this->kerosConfig[$consultantInscriptionFile['directory_key']] . $uploadedFileFilename;
 

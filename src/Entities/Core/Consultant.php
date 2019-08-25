@@ -60,6 +60,12 @@ class Consultant implements JsonSerializable
     protected $profilePicture;
 
     /**
+     * @var string|null
+     * @Column(type="string", length=255)
+     */
+    protected $socialSecurityNumber;
+
+    /**
      * @Column(type="boolean")
      */
     protected $droitImage;
@@ -68,6 +74,11 @@ class Consultant implements JsonSerializable
      * @Column(type="boolean")
      */
     protected $isApprentice;
+
+    /**
+     * @Column(type="datetime")
+     */
+    protected $createdDate;
 
     /**
      * @ManyToMany(targetEntity="Keros\Entities\Ua\Study", mappedBy="consultants")
@@ -110,7 +121,7 @@ class Consultant implements JsonSerializable
      */
     private $documentCVEC;
 
-    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage, $isApprentice, $documentIdentity, $documentScolaryCertificate, $documentRIB, $documentVitaleCard, $documentResidencePermit, $documentCVEC)
+    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $socialSecurityNumber, $droitImage, $isApprentice, $createdDate, $documentIdentity, $documentScolaryCertificate, $documentRIB, $documentVitaleCard, $documentResidencePermit, $documentCVEC)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -122,8 +133,10 @@ class Consultant implements JsonSerializable
         $this->department = $department;
         $this->company = $company;
         $this->profilePicture = $profilePicture;
+        $this->socialSecurityNumber = $socialSecurityNumber;
         $this->droitImage = $droitImage;
         $this->isApprentice = $isApprentice;
+        $this->createdDate = $createdDate;
         $this->documentIdentity = $documentIdentity;
         $this->documentScolaryCertificate = $documentScolaryCertificate;
         $this->documentRIB = $documentRIB;
@@ -149,6 +162,14 @@ class Consultant implements JsonSerializable
             'profilePicture' => $this->getProfilePicture(),
             'droitImage' => $this->isDroitImage(),
             'isApprentice' => $this->getIsApprentice(),
+            'createdDate' => $this->getCreatedDate(),
+        ];
+    }
+    public function getProtected()
+    {
+        return [
+            'id' => $this->getUser()->getId(),
+            'socialSecurityNumber' => $this->getSocialSecurityNumber(),
         ];
     }
     public static function getSearchFields(): array {
@@ -275,6 +296,20 @@ class Consultant implements JsonSerializable
         $this->address = $address;
     }
     /**
+     * @return string
+     */
+    public function getSocialSecurityNumber(): ?string
+    {
+        return $this->socialSecurityNumber;
+    }
+    /**
+     * @param string|null $socialSecurityNumber
+     */
+    public function setSocialSecurityNumber(?string $socialSecurityNumber): void
+    {
+        $this->socialSecurityNumber = $socialSecurityNumber;
+    }
+    /**
      * @return mixed
      */
     public function getCompany()
@@ -381,7 +416,20 @@ class Consultant implements JsonSerializable
     {
         $this->isApprentice = $isApprentice;
     }
-
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedDate(): \DateTime
+    {
+        return $this->createdDate;
+    }
+    /**
+     * @param \DateTime $createdDate
+     */
+    public function setCreatedDate(\DateTime $createdDate): void
+    {
+        $this->createdDate = $createdDate;
+    }
     /**
      * @return string
      */

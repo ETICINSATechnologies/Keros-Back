@@ -4,7 +4,7 @@ namespace Keros\Tools\Helpers;
 
 use Keros\Error\KerosException;
 
-class ConsultantInscriptionHelper
+class ConsultantInscriptionFileHelper
 {
     public static function getConsultantInscriptionFiles()
     {

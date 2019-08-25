@@ -127,9 +127,9 @@ INSERT INTO core_member (id, genderId, firstName, lastName, birthday, telephone,
 
 
 TRUNCATE TABLE core_consultant;
-INSERT INTO core_consultant (id, genderId, firstName, lastName, birthday, telephone, email, addressId, schoolYear, departmentId, company, profilePicture, droitImage, isApprentice, documentIdentity, documentScolaryCertificate, documentRIB, documentVitaleCard, documentResidencePermit, documentCVEC) VALUES
-  (2, 1, 'Marah', 'Cool', STR_TO_DATE('1976-10-27', '%Y-%m-%d'), '+332541541', 'fake.mail2@fake.com', 8, 3, 1, 'Amazon', NULL, true, true, "test.pdf", "test.pdf", "test.pdf", "test.pdf", "test.pdf", "test.pdf"),
-  (5, 3, 'Louis', 'Ung', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.mail3@fake.com', 7, 3, 4, NULL, NULL, false, true, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO core_consultant (id, genderId, firstName, lastName, birthday, telephone, email, addressId, socialSecurityNumber, schoolYear, departmentId, company, profilePicture, droitImage, isApprentice, createdDate, documentIdentity, documentScolaryCertificate, documentRIB, documentVitaleCard, documentResidencePermit, documentCVEC) VALUES
+  (2, 1, 'Marah', 'Cool', STR_TO_DATE('1976-10-27', '%Y-%m-%d'), '+332541541', 'fake.mail2@fake.com', 8, 123456789012345, 3, 1, 'Amazon', NULL, true, true, STR_TO_DATE('2019-09-01', '%Y-%m-%d'), "test.pdf", "test.pdf", "test.pdf", "test.pdf", "test.pdf", "test.pdf"),
+  (5, 3, 'Louis', 'Ung', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.mail3@fake.com', 7, 123456789012345, 3, 4, NULL, NULL, false, true, STR_TO_DATE('2019-09-01', '%Y-%m-%d'), NULL, NULL, NULL, NULL, NULL, NULL);
 
 TRUNCATE TABLE core_member_position;
 INSERT INTO core_member_position (id, memberId, positionId, isBoard, year) VALUES
@@ -266,8 +266,8 @@ INSERT INTO sg_member_inscription_document_type(id, location, `name`, isTemplata
     (1, 'Fiche_inscription_membre_actif.pdf', 'Fiche inscription membre', true);
 
 TRUNCATE TABLE sg_consultant_inscription;
-INSERT INTO sg_consultant_inscription (id, firstName, lastName, genderId, birthday, departmentId, email, phoneNumber, outYear, nationalityId, addressId, droitImage, isApprentice, documentIdentity, documentScolaryCertificate, documentRIB, documentVitaleCard, documentResidencePermit, documentCVEC) VALUES
-(1, 'Bruce', 'Wayne', 1, STR_TO_DATE('2000/2/14', '%Y/%m/%d'), 3, 'bruce.wayne@batman.com', '0033123456789', 2021, 42, 1, false, true, "test.pdf", "test.pdf", "test.pdf", "test.pdf", "test.pdf", "test.pdf"),
-(2, 'Clark', 'Kent', 1, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 2, 'clark.kent@dailyplanete.com', '0033123456789', 2023, 69, 1, true, true, "test.pdf", "test.pdf", "test.pdf", "test.pdf", NULL, "test.pdf");
-
+INSERT INTO `sg_consultant_inscription` (`id`, `firstName`, `lastName`, `birthday`, `genderId`, `departmentId`, `email`, `phoneNumber`, `outYear`, `nationalityId`, `addressId`, `socialSecurityNumber`, `droitImage`, `isApprentice`, `createdDate`, `documentIdentity`, `documentScolaryCertificate`, `documentRIB`, `documentVitaleCard`, `documentResidencePermit`, `documentCVEC`) VALUES
+(1, 'Bruce', 'Wayne', '2000-02-14', 1, 3, 'bruce.wayne@batman.com', '0033123456789', 2021, 42, 1, '12345678901234567', 0, 1, '2019-09-01', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf'),
+(2, 'Clark', 'Kent', '1998-01-15', 1, 2, 'clark.kent@dailyplanete.com', '0033123456789', 2023, 69, 1, '12345678901234567', 1, 1, '2019-09-01', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', NULL, 'test.pdf'),
+(3, 'Clark', 'Bent', '1998-01-15', 1, 2, 'clark.bent@dailyplanete.com', '0033123456789', 2023, 69, 1, '12345678901234567', 1, 1, '2019-09-01', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', NULL, 'test.pdf');
 COMMIT;
