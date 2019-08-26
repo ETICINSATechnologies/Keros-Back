@@ -81,11 +81,11 @@ class ConsultantController
      * @return mixed
      * @throws KerosException
      */
-    public function getConsultantProtectedDataOnly(Request $request, Response $response, array $args)
+    public function getConsultantProtectedData(Request $request, Response $response, array $args)
     {
-        $this->logger->debug("Getting consultant protected data by ID from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->logger->debug("Getting consultant protected data by ID " . $args["id"] . " from " . $request->getServerParams()["REMOTE_ADDR"]);
 
-        $consultantProtectedData = $this->consultantService->getOneProtectedDataOnly($args["id"]);
+        $consultantProtectedData = $this->consultantService->getOneProtectedData($args["id"]);
 
         return $response->withJson($consultantProtectedData, 200);
     }
@@ -97,11 +97,11 @@ class ConsultantController
      * @return mixed
      * @throws KerosException
      */
-    public function getConnectedConsultantProtectedDataOnly(Request $request, Response $response, array $args)
+    public function getConnectedConsultantProtectedData(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Getting connected consultant protected data by ID from " . $request->getServerParams()["REMOTE_ADDR"]);
 
-        $consultantProtectedData = $this->consultantService->getOneProtectedDataOnly($request->getAttribute("userId"));
+        $consultantProtectedData = $this->consultantService->getOneProtectedData($request->getAttribute("userId"));
 
         return $response->withJson($consultantProtectedData, 200);
     }

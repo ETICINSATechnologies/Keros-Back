@@ -172,6 +172,21 @@ class Consultant implements JsonSerializable
     {
         return [
             'id' => $this->getUser()->getId(),
+            'username' => $this->getUser()->getUsername(),
+            'firstName' => $this->getFirstName(),
+            'lastName' => $this->getLastName(),
+            'gender' => $this->getGender(),
+            'email' => $this->getEmail(),
+            'birthday' => $this->getBirthday()->format('Y-m-d'),
+            'department' => $this->getDepartment(),
+            'schoolYear' => $this->getSchoolYear(),
+            'telephone' => $this->getTelephone(),
+            'address' => $this->getAddress(),
+            'company' => $this->getCompany(),
+            'profilePicture' => $this->getProfilePicture(),
+            'droitImage' => $this->isDroitImage(),
+            'isApprentice' => $this->getIsApprentice(),
+            'createdDate' => $this->getCreatedDate(),
             'socialSecurityNumber' => $this->getSocialSecurityNumber(),
         ];
     }

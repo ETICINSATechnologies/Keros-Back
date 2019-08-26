@@ -151,7 +151,7 @@ class ConsultantService
      * @return array
      * @throws KerosException
      */
-    public function getOneProtectedDataOnly(int $id): array
+    public function getOneProtectedData(int $id): array
     {
         $id = Validator::requiredId($id);
 
