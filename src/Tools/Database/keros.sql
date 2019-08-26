@@ -130,11 +130,20 @@ CREATE TABLE `core_consultant` (
   `telephone`    varchar(20) DEFAULT NULL,
   `email`        varchar(255) NOT NULL UNIQUE,
   `addressId`    int(11)      NOT NULL UNIQUE,
+  `socialSecurityNumber`    varchar(255) DEFAULT NULL,  
   `schoolYear`   int(11)     DEFAULT NULL,
   `departmentId` int(11)     DEFAULT NULL,
   `company` varchar(255)     DEFAULT NULL,
   `profilePicture` varchar(255)     DEFAULT NULL,
   `droitImage` boolean DEFAULT TRUE,
+  `isApprentice` boolean NOT NULL,
+  `createdDate` date  NOT NULL,
+  `documentIdentity` varchar(255) DEFAULT NULL,
+  `documentScolaryCertificate` varchar(255) DEFAULT NULL,
+  `documentRIB` varchar(255) DEFAULT NULL,
+  `documentVitaleCard` varchar(255) DEFAULT NULL,
+  `documentResidencePermit` varchar(255) DEFAULT NULL,
+  `documentCVEC` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `core_consultant_userId_fk` FOREIGN KEY (`id`) REFERENCES `core_user` (`id`),
   CONSTRAINT `core_consultant_genderId_fk` FOREIGN KEY (`genderId`) REFERENCES `core_gender` (`id`),
@@ -432,6 +441,36 @@ CREATE TABLE sg_member_inscription_document_type (
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS sg_consultant_inscription;
+CREATE TABLE sg_consultant_inscription (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  firstName varchar(255) NOT NULL,
+  lastName varchar(255) NOT NULL,
+  birthday date NOT NULL,
+  genderId int(11) NOT NULL,
+  departmentId int(11) NOT NULL,
+  email varchar(255) NOT NULL,
+  phoneNumber varchar(255) DEFAULT NULL,
+  outYear int DEFAULT NULL,
+  nationalityId int(11) NOT NULL,
+  addressId int(11) NOT NULL,
+  socialSecurityNumber varchar(255) NOT NULL,  
+  droitImage boolean DEFAULT FALSE,
+  isApprentice boolean NOT NULL,
+  createdDate date  NOT NULL,
+  documentIdentity varchar(255) NOT NULL,
+  documentScolaryCertificate varchar(255) NOT NULL,
+  documentRIB varchar(255) NOT NULL,
+  documentVitaleCard varchar(255) NOT NULL,
+  documentResidencePermit varchar(255) DEFAULT NULL,
+  documentCVEC varchar(255) DEFAULT NULL,
+  PRIMARY KEY (id),
+  CONSTRAINT fk_sg_consultant_inscription_department FOREIGN KEY (departmentId) REFERENCES core_department(id),
+  CONSTRAINT fk_sg_consultant_inscription_nationality FOREIGN KEY (nationalityId) REFERENCES core_country(id),
+  CONSTRAINT fk_sg_consultant_inscription_gender FOREIGN KEY (genderId) REFERENCES core_gender(id),
+  CONSTRAINT fk_sg_consultant_inscription_address FOREIGN KEY (addressId) REFERENCES core_address(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ 
 DROP TABLE IF EXISTS sg_member_inscription_document;
 CREATE TABLE sg_member_inscription_document (
     id int(11) NOT NULL,

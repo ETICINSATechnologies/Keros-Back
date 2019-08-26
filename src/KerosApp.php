@@ -5,6 +5,7 @@ namespace Keros;
 use Keros\Controllers\Auth\LoginController;
 use Keros\Controllers\Sg\MemberInscriptionController;
 use Keros\Controllers\Sg\MemberInscriptionDocumentController;
+use Keros\Controllers\Sg\ConsultantInscriptionController;
 use Keros\Controllers\Treso\FactureDocumentController;
 use Keros\Controllers\Core\ConsultantController;
 use Keros\Controllers\Ua\StudyDocumentController;
@@ -175,6 +176,10 @@ class KerosApp
                     $this->post("", ConsultantController::class . ':createConsultant');
                     $this->put("/{id:[0-9]+}", ConsultantController::class . ':updateConsultant');
                     $this->delete("/{id:[0-9]+}", ConsultantController::class . ':deleteConsultant');
+                    $this->get("/{id:[0-9]+}/document/{document_name:[a-zA-Z]+}", ConsultantController::class . ':getDocument');
+                    $this->post("/{id:[0-9]+}/document/{document_name:[a-zA-Z]+}", ConsultantController::class . ':createDocument');
+                    $this->get("/{id:[0-9]+}/protected", ConsultantController::class . ':getConsultantProtectedData');
+                    $this->get("/me/protected", ConsultantController::class . ':getConnectedConsultantProtectedData');
                 });
 
                 $this->group('/ticket', function () {
@@ -224,6 +229,16 @@ class KerosApp
                     $this->get("/{id:[0-9]+}/document/{documentTypeId:[0-9]+}/generate", MemberInscriptionDocumentController::class . ':generateDocument');
                     $this->post("/{id:[0-9]+}/document/{documentId:[0-9]+}", MemberInscriptionDocumentController::class . ':createDocument');
                     $this->get("/{id:[0-9]+}/document/{documentId:[0-9]+}", MemberInscriptionDocumentController::class . ':getDocument');
+                });
+                $this->group('/consultant-inscription', function () {
+                    $this->get("", ConsultantInscriptionController::class . ':getPageConsultantInscriptions');
+                    $this->post("", ConsultantInscriptionController::class . ':createConsultantInscription');
+                    $this->get('/{id:[0-9]+}', ConsultantInscriptionController::class . ':getConsultantInscription');
+                    $this->delete("/{id:[0-9]+}", ConsultantInscriptionController::class . ':deleteConsultantInscription');
+                    $this->put("/{id:[0-9]+}", ConsultantInscriptionController::class . ':updateConsultantInscription');
+                    $this->post("/{id:[0-9]+}/validate", ConsultantInscriptionController::class . ':validateConsultantInscription');
+                    $this->get("/{id:[0-9]+}/document/{document_name:[a-zA-Z]+}", ConsultantInscriptionController::class . ':getDocument');
+                    $this->post("/{id:[0-9]+}/document/{document_name:[a-zA-Z]+}", ConsultantInscriptionController::class . ':createDocument');
                 });
             })->add($this->getContainer()->get(AuthenticationMiddleware::class));
         });

@@ -295,10 +295,10 @@ class MemberService
                 unlink($filepath);
             }
         }
+        
+        $filename = $this->directoryManager->uniqueFilenameOnly($file, false, $this->kerosConfig['MEMBER_PHOTO_DIRECTORY']);
 
-        $filename = $this->directoryManager->uniqueFilename($file, false, $this->kerosConfig['MEMBER_PHOTO_DIRECTORY']);
-
-        $this->directoryManager->mkdir($this->kerosConfig['MEMBER_PHOTO_DIRECTORY'] . pathinfo($filename, PATHINFO_DIRNAME));
+        $this->directoryManager->mkdir($this->kerosConfig['MEMBER_PHOTO_DIRECTORY']);
         $member->setProfilePicture($filename);
 
         $this->memberDataService->persist($member);

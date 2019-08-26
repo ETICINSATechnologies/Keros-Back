@@ -6,6 +6,7 @@ use Keros\Services\Sg\MemberInscriptionDocumentService;
 use Keros\Services\Treso\PaymentSlipService;
 use Keros\Services\Sg\MemberInscriptionDocumentTypeService;
 use Keros\Services\Sg\MemberInscriptionService;
+use Keros\Services\Sg\ConsultantInscriptionService;
 use Keros\Services\Treso\FactureDocumentService;
 use Keros\Services\Treso\FactureDocumentTypeService;
 use Keros\Services\Ua\StudyDocumentService;
@@ -130,6 +131,9 @@ class ServiceRegistrar
         //Sg
         $container[MemberInscriptionService::class] = function ($container) {
             return new MemberInscriptionService($container);
+        };
+        $container[ConsultantInscriptionService::class] = function ($container) {
+            return new ConsultantInscriptionService($container);
         };
         $container[MemberInscriptionDocumentTypeService::class] = function ($container) {
             return new MemberInscriptionDocumentTypeService($container);

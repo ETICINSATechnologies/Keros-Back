@@ -320,7 +320,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
 
         $this->assertSame(200, $response->getStatusCode());
         $this->assertNotNull($body->id);
-        $this->assertSame('Bruce.Wayne', $body->username);
+        $this->assertSame('bruce.wayne', $body->username);
         $this->assertSame("Bruce", $body->firstName);
         $this->assertSame("Wayne", $body->lastName);
         $this->assertSame(1, $body->gender->id);
