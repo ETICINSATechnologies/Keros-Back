@@ -22,7 +22,7 @@ class PositionIntegrationTest extends AppTestCase
         $this->assertSame(200, $response->getStatusCode());
 
         $body = json_decode($response->getBody());
-        $this->assertEquals(25, count($body));
+        $this->assertEquals(22, count($body));
         $this->assertNotNull(strlen($body[0]->id));
         $this->assertNotNull(strlen($body[0]->label));
     }
@@ -60,7 +60,7 @@ class PositionIntegrationTest extends AppTestCase
         $body = json_decode($response->getBody());
         $this->assertSame(3, $body->id);
         $this->assertSame("Chargé d'affaires", $body->label);
-        $this->assertEquals(3, $body->pole->id);
+        $this->assertEquals(7, $body->pole->id);
     }
 
     public function testGetPositionShouldReturn404()
