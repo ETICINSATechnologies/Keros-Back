@@ -71,6 +71,11 @@ class Member implements JsonSerializable
     protected $droitImage;
 
     /**
+     * @Column(type="datetime")
+     */
+    protected $createdDate;
+
+    /**
      * @ManyToMany(targetEntity="Keros\Entities\Ua\Study", mappedBy="qualityManagers")
      */
     protected $studiesAsQualityManager;
@@ -99,9 +104,10 @@ class Member implements JsonSerializable
      * @param $company
      * @param $profilePicture
      * @param $droitImage
+     * @param $createdDate
      * @param $memberInscriptionDocuments
      */
-    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage, $memberInscriptionDocuments)
+    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage, $createdDate, $memberInscriptionDocuments)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -114,6 +120,7 @@ class Member implements JsonSerializable
         $this->company = $company;
         $this->profilePicture = $profilePicture;
         $this->droitImage = $droitImage;
+        $this->createdDate = $createdDate;
         $this->memberInscriptionDocuments = $memberInscriptionDocuments;
     }
 
@@ -135,6 +142,7 @@ class Member implements JsonSerializable
             'company' => $this->getCompany(),
             'profilePicture' => $this->getProfilePicture(),
             'droitImage' => $this->isDroitImage(),
+            'createdDate' => $this->getCreatedDate(),
         ];
     }
 
@@ -432,6 +440,22 @@ class Member implements JsonSerializable
     public function setDroitImage(bool $droitImage): void
     {
         $this->droitImage = $droitImage;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedDate(): \DateTime
+    {
+        return $this->createdDate;
+    }
+    
+    /**
+     * @param \DateTime $createdDate
+     */
+    public function setCreatedDate(\DateTime $createdDate): void
+    {
+        $this->createdDate = $createdDate;
     }
 
     /**

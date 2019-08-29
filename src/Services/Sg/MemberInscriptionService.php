@@ -83,9 +83,10 @@ class   MemberInscriptionService
         $birthday = Validator::requiredDate($fields['birthday']);
         $hasPaid = Validator::optionalBool(isset($fields['hasPaid']) ? $fields['hasPaid'] : false);
         $droitImage = Validator::requiredBool($fields['droitImage']);
+        $createdDate = new \DateTime();
 
         $address = $this->addressService->create($fields["address"]);
-        $memberInscription = new MemberInscription($firstName, $lastName, $gender, $birthday, $department, $email, $phoneNumber, $outYear, $nationality, $address, $wantedPole, $hasPaid, $droitImage, array());
+        $memberInscription = new MemberInscription($firstName, $lastName, $gender, $birthday, $department, $email, $phoneNumber, $outYear, $nationality, $address, $wantedPole, $hasPaid, $droitImage, $createdDate, array());
 
         $this->memberInscriptionDataService->persist($memberInscription);
 
@@ -236,6 +237,7 @@ class   MemberInscriptionService
             ),
             "positions" => array(),
             "droitImage" => $memberInscription->isDroitImage(),
+            "createdDate" => new \DateTime(),
         );
 
         if ($memberInscription->getOutYear()) {

@@ -27,6 +27,7 @@ class MemberTest extends TestCase
                 "Google",
                 null,
                 true,
+                new DateTime("9/1/2019"),
                 array()
             )
         );
@@ -45,6 +46,7 @@ class MemberTest extends TestCase
             "Google",
             "randomstring.jpg",
             true,
+            new DateTime("9/1/2019"),
             array()
         );
 
@@ -59,5 +61,6 @@ class MemberTest extends TestCase
         $this->assertEquals("Google", $member->getCompany());
         $this->assertEquals("randomstring.jpg", $member->getProfilePicture());
         $this->assertEquals(true, $member->isDroitImage());
+        $this->assertEquals(new DateTime("9/1/2019"), $member->getCreatedDate());
     }
 }

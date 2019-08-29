@@ -279,6 +279,9 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(200, $response->getStatusCode());
 
         $body = json_decode($response->getBody());
+
+        $dateDiff = ((new \DateTime("9/1/2019"))->diff(new \DateTime($body->createdDate->date)))->format('%a');
+
         $this->assertSame(1, $body->id);
         $this->assertSame(1, $body->gender->id);
         $this->assertSame("Conor", $body->firstName);
@@ -288,6 +291,7 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame("fake.mail@fake.com", $body->email);
         $this->assertSame(2, $body->address->id);
         $this->assertSame(true, $body->droitImage);
+        $this->assertSame(intval($dateDiff),0);
     }
 
     public function testGetMemberShouldReturn404()
@@ -354,6 +358,9 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(201, $response->getStatusCode());
 
         $body = json_decode($response->getBody());
+
+        $dateDiff = ((new \DateTime())->diff(new \DateTime($body->createdDate->date)))->format('%a');
+
         $this->assertNotNull($body->id);
         $this->assertSame("newusername", $body->username);
         $this->assertSame("lastname", $body->lastName);
@@ -367,6 +374,7 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(3, $body->positions[0]->id);
         $this->assertSame(4, $body->positions[1]->id);
         $this->assertSame(false, $body->droitImage);
+        $this->assertSame(intval($dateDiff),0);
     }
 
     public function testPutMemberShouldReturn200()
@@ -418,6 +426,8 @@ class MemberIntegrationTest extends AppTestCase
 
         $body = json_decode($response->getBody());
 
+        $dateDiff = ((new \DateTime("9/1/2019"))->diff(new \DateTime($body->createdDate->date)))->format('%a');
+
         $this->assertNotNull($body->id);
         $this->assertSame("newusername", $body->username);
         $this->assertSame("firstName", $body->firstName);
@@ -433,6 +443,7 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(3, $body->positions[0]->id);
         $this->assertSame(4, $body->positions[1]->id);
         $this->assertSame(true, $body->droitImage);
+        $this->assertSame(intval($dateDiff),0);
     }
 
     public function testPutMemberEmptyBodyShouldReturn400()
