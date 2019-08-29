@@ -59,7 +59,7 @@ class PositionIntegrationTest extends AppTestCase
 
         $body = json_decode($response->getBody());
         $this->assertSame(3, $body->id);
-        $this->assertSame("Chargé d'affaires", $body->label);
+        $this->assertSame("Chargé d'Affaires", $body->label);
         $this->assertEquals(7, $body->pole->id);
     }
 

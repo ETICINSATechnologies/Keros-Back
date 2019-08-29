@@ -530,7 +530,7 @@ INSERT INTO `core_pole` (id, label, name) VALUES
 INSERT INTO `core_position` (id, label, poleId) VALUES
   (1, 'Auditeur orga', null),
   (2, 'Auditeur treso', null),
-  (3, 'Chargé d''affaires', 7),
+  (3, 'Chargé d''Affaires', 7),
   (4, 'Comptable', 6),
   (5, 'Junior com', 1),
   (6, 'Junior qualité', 2),
