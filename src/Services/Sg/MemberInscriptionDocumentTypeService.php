@@ -94,7 +94,14 @@ class MemberInscriptionDocumentTypeService
     public function getMemberInscriptionReplacementArray(MemberInscription $memberInscription): array
     {
         $date = new DateTime();
+        $month = intval($date->format('m'));
         $year = intval($date->format('Y'));
+        $schoolYear = null;
+        if ($memberInscription->getOutYear()) {
+            $schoolYear = 5 - ($memberInscription->getOutYear() - $year);
+            if ($month > 8 && $month <= 12) //between September and December
+                $schoolYear += 1;
+        }
         switch ($memberInscription->getWantedPole()->getId()) {
             case (1) :
                 $wantedPole = "comm";
@@ -126,7 +133,7 @@ class MemberInscriptionDocumentTypeService
             'email' => $memberInscription->getEmail(),
             'address.line1' => $memberInscription->getAddress()->getLine1() . ' ' . $memberInscription->getAddress()->getLine2(),
             'address.line2' => $memberInscription->getAddress()->getCity() . ' ' . $memberInscription->getAddress()->getPostalCode() . ' ' . $memberInscription->getAddress()->getCountry()->getLabel(),
-            'annee_departement' => (5 - ($memberInscription->getOutYear() - $year)) . $memberInscription->getDepartment()->getLabel(),
+            'annee_departement' => ($schoolYear) . $memberInscription->getDepartment()->getLabel(),
             'nationalite' => $memberInscription->getNationality()->getLabel(),
             'phoneNumber' => $memberInscription->getPhoneNumber(),
             'outYear' => $memberInscription->getOutYear(),
