@@ -4,35 +4,35 @@ SET UNIQUE_CHECKS = 0;
 
 /* Passwords are on the right */
 TRUNCATE TABLE core_user;
-INSERT INTO core_user (id, username, password, expiresAt) VALUES
-  (1, 'username', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (2, 'mcool', '$2y$10$fWnWMRQKKWInygzk.FNIP.BsnTp8e8XvDwj5YdGgVuIFXsz/XvVgm' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #hunter11
-  (3, 'lswollo', '$2y$10$9R4lfhp18.iVzsP8amDL5e7eumi48DmPPkoa5YLAm/thAZWIHaOtW' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #hunter12
-  (4, 'qualqual', '$2y$10$9R4lfhp18.iVzsP8amDL5e7eumi48DmPPkoa5YLAm/thAZWIHaOtW' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #hunter13
-  (5, 'lung', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (6, 'superuser', '$2y$10$fVPB3SLO54Ng5DjqUEr8/OSwOtOMy0gH4DiEqjvxXqRVdcM8hc7Du' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #superuser
-  (7, 'user7', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (8, 'user8', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (9, 'user9', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (10, 'user10', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (11, 'user11', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (12, 'user12', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (13, 'user13', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (14, 'user14', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (15, 'user15', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (16, 'user16', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (17, 'user17', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (18, 'user18', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (19, 'user19', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (20, 'user20', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (21, 'user21', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (22, 'user22', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (23, 'user23', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (24, 'user24', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (25, 'user25', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (26, 'user26', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (27, 'user27', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')), #password
-  (28, 'user28', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r')); #password
+INSERT INTO core_user (id, username, password, expiresAt, disabled) VALUES
+    (1, 'username', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (2, 'mcool', '$2y$10$fWnWMRQKKWInygzk.FNIP.BsnTp8e8XvDwj5YdGgVuIFXsz/XvVgm' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #hunter11
+    (3, 'lswollo', '$2y$10$9R4lfhp18.iVzsP8amDL5e7eumi48DmPPkoa5YLAm/thAZWIHaOtW' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #hunter12
+    (4, 'qualqual', '$2y$10$9R4lfhp18.iVzsP8amDL5e7eumi48DmPPkoa5YLAm/thAZWIHaOtW' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #hunter13
+    (5, 'lung', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (6, 'superuser', '$2y$10$fVPB3SLO54Ng5DjqUEr8/OSwOtOMy0gH4DiEqjvxXqRVdcM8hc7Du' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #superuser
+    (7, 'disabled', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), true), #password
+    (8, 'user8', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (9, 'user9', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (10, 'user10', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (11, 'user11', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (12, 'user12', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (13, 'user13', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (14, 'user14', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (15, 'user15', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (16, 'user16', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (17, 'user17', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (18, 'user18', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (19, 'user19', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (20, 'user20', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (21, 'user21', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (22, 'user22', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (23, 'user23', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (24, 'user24', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (25, 'user25', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (26, 'user26', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (27, 'user27', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (28, 'user28', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false); #password
 
 TRUNCATE TABLE core_address;
 INSERT INTO core_address (id, line1, line2, postalCode, city, countryId) VALUES
@@ -136,7 +136,7 @@ INSERT INTO core_member (id, genderId, firstName, lastName, birthday, telephone,
   (3, 1, 'Laurence', 'Tainturière', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.mail3@fake.com', 3, 5, 2, NULL, NULL, true),
   (4, 3, 'Stéphane4', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly4@fake.com', 6, 3, 4, NULL, NULL, false),
   (6, 3, 'SuperPrenom', 'SuperNom', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'super@vraimentsuper.com', 9, 3, 4, NULL, NULL, true),
-  (7, 3, 'Stéphane7', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly7@fake.com', 10, 3, 4, NULL, NULL, true),
+  (7, 3, 'Disabled', 'DisabledName', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'disabled@fake.com', 10, 3, 4, NULL, NULL, true), -- Disabled member
   (8, 3, 'Stéphane8', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly8@fake.com', 11, 3, 4, NULL, NULL, true),
   (9, 3, 'Stéphane9', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly9@fake.com', 12, 3, 4, NULL, NULL, true),
   (10, 3, 'Stéphane10', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly10@fake.com', 13, 3, 4, NULL, NULL, true),
@@ -296,36 +296,36 @@ INSERT INTO treso_facture_document(id, factureId, factureDocumentTypeId) VALUES
 
 TRUNCATE TABLE sg_member_inscription;
 INSERT INTO sg_member_inscription (id, firstName, lastName, genderId, birthday, departmentId, email, phoneNumber, outYear, nationalityId, wantedPoleId, addressId, hasPaid, droitImage) VALUES
-    (1, 'Bruce', 'Wayne', 1, STR_TO_DATE('2000/2/14', '%Y/%m/%d'), 3, 'bruce.wayne@batman.com', '0033123456789', 2021, 42, 8, 1, false, false),
-    (2, 'Clark', 'Kent', 1, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 2, 'clark.kent@dailyplanete.com', '0033123456789', 2023, 69, 4, 1, true, true),
-    (3, 'member inscription 3', 'member inscription 3 name', 3, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 9, 'memberInscription3@fake.com', '+33514785269', 2025, 115, 7, 56, true, false),
-    (4, 'member inscription 4', 'member inscription 4 name', 4, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 13, 'memberInscription4@fake.com', '+33514785269', 2020, 1, 4, 57, false, false),
-    (5, 'member inscription 5', 'member inscription 5 name', 1, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 2, 'memberInscription5@fake.com', '+33514785269', 2024, 60, 6, 58, false, true),
-    (6, 'member inscription 6', 'member inscription 6 name', 2, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 5, 'memberInscription6@fake.com', '+33514785269', 2022, 154, 2, 59, false, true),
-    (7, 'member inscription 7', 'member inscription 7 name', 4, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 2, 'memberInscription7@fake.com', '+33514785269', 2020, 182, 8, 60, false, false),
-    (8, 'member inscription 8', 'member inscription 8 name', 1, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 1, 'memberInscription8@fake.com', '+33514785269', 2021, 84, 6, 61, true, false),
-    (9, 'member inscription 9', 'member inscription 9 name', 1, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 1, 'memberInscription9@fake.com', '+33514785269', 2025, 87, 4, 62, true, true),
-    (10, 'member inscription 10', 'member inscription 10 name', 1, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 1, 'memberInscription10@fake.com', '+33514785269', 2025, 93, 4, 63, true, false),
-    (11, 'member inscription 11', 'member inscription 11 name', 1, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 7, 'memberInscription11@fake.com', '+33514785269', 2024, 131, 6, 64, false, true),
-    (12, 'member inscription 12', 'member inscription 12 name', 3, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 12, 'memberInscription12@fake.com', '+33514785269', 2025, 88, 8, 65, true, true),
-    (13, 'member inscription 13', 'member inscription 13 name', 2, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 8, 'memberInscription13@fake.com', '+33514785269', 2024, 22, 5, 66, true, true),
-    (14, 'member inscription 14', 'member inscription 14 name', 1, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 1, 'memberInscription14@fake.com', '+33514785269', 2023, 12, 6, 67, true, true),
-    (15, 'member inscription 15', 'member inscription 15 name', 3, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 12, 'memberInscription15@fake.com', '+33514785269', 2023, 76, 4, 68, false, false),
-    (16, 'member inscription 16', 'member inscription 16 name', 1, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 7, 'memberInscription16@fake.com', '+33514785269', 2023, 126, 3, 69, true, false),
-    (17, 'member inscription 17', 'member inscription 17 name', 3, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 9, 'memberInscription17@fake.com', '+33514785269', 2021, 183, 7, 70, false, true),
-    (18, 'member inscription 18', 'member inscription 18 name', 3, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 1, 'memberInscription18@fake.com', '+33514785269', 2022, 71, 5, 71, false, true),
-    (19, 'member inscription 19', 'member inscription 19 name', 1, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 6, 'memberInscription19@fake.com', '+33514785269', 2021, 70, 7, 72, true, false),
-    (20, 'member inscription 20', 'member inscription 20 name', 3, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 7, 'memberInscription20@fake.com', '+33514785269', 2023, 70, 3, 73, false, true),
-    (21, 'member inscription 21', 'member inscription 21 name', 4, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 6, 'memberInscription21@fake.com', '+33514785269', 2020, 195, 9, 74, false, true),
-    (22, 'member inscription 22', 'member inscription 22 name', 3, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 2, 'memberInscription22@fake.com', '+33514785269', 2020, 57, 6, 75, true, true),
-    (23, 'member inscription 23', 'member inscription 23 name', 2, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 4, 'memberInscription23@fake.com', '+33514785269', 2025, 14, 7, 76, true, false),
-    (24, 'member inscription 24', 'member inscription 24 name', 1, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 7, 'memberInscription24@fake.com', '+33514785269', 2021, 44, 4, 77, true, true),
-    (25, 'member inscription 25', 'member inscription 25 name', 1, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 3, 'memberInscription25@fake.com', '+33514785269', 2024, 131, 4, 78, true, false),
-    (26, 'member inscription 26', 'member inscription 26 name', 4, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 13, 'memberInscription26@fake.com', '+33514785269', 2023, 184, 4, 79, true, true),
-    (27, 'member inscription 27', 'member inscription 27 name', 4, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 1, 'memberInscription27@fake.com', '+33514785269', 2023, 2, 3, 80, false, false),
-    (28, 'member inscription 28', 'member inscription 28 name', 4, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 6, 'memberInscription28@fake.com', '+33514785269', 2021, 89, 6, 81, true, false),
-    (29, 'member inscription 29', 'member inscription 29 name', 4, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 3, 'memberInscription29@fake.com', '+33514785269', 2022, 141, 7, 82, true, true),
-    (30, 'member inscription 30', 'member inscription 30 name', 2, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 10, 'memberInscription30@fake.com', '+33514785269', 2025, 135, 4, 83, true, false);
+    (1, 'Bruce', 'Wayne', 1, STR_TO_DATE('2000/2/14', '%Y/%m/%d'), 3, 'bruce.wayne@batman.com', '0033123456789', 2022, 42, 8, 1, false, false),
+    (2, 'Clark', 'Kent', 1, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 2, 'clark.kent@dailyplanete.com', '0033123456789', 2024, 69, 4, 1, true, true),
+    (3, 'member inscription 3', 'member inscription 3 name', 3, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 9, 'memberInscription3@fake.com', '+33514785269', 2026, 115, 7, 56, true, false),
+    (4, 'member inscription 4', 'member inscription 4 name', 4, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 13, 'memberInscription4@fake.com', '+33514785269', 2021, 1, 4, 57, false, false),
+    (5, 'member inscription 5', 'member inscription 5 name', 1, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 2, 'memberInscription5@fake.com', '+33514785269', 2025, 60, 6, 58, false, true),
+    (6, 'member inscription 6', 'member inscription 6 name', 2, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 5, 'memberInscription6@fake.com', '+33514785269', 2023, 154, 2, 59, false, true),
+    (7, 'member inscription 7', 'member inscription 7 name', 4, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 2, 'memberInscription7@fake.com', '+33514785269', 2021, 182, 8, 60, false, false),
+    (8, 'member inscription 8', 'member inscription 8 name', 1, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 1, 'memberInscription8@fake.com', '+33514785269', 2022, 84, 6, 61, true, false),
+    (9, 'member inscription 9', 'member inscription 9 name', 1, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 1, 'memberInscription9@fake.com', '+33514785269', 2026, 87, 4, 62, true, true),
+    (10, 'member inscription 10', 'member inscription 10 name', 1, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 1, 'memberInscription10@fake.com', '+33514785269', 2026, 93, 4, 63, true, false),
+    (11, 'member inscription 11', 'member inscription 11 name', 1, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 7, 'memberInscription11@fake.com', '+33514785269', 2025, 131, 6, 64, false, true),
+    (12, 'member inscription 12', 'member inscription 12 name', 3, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 12, 'memberInscription12@fake.com', '+33514785269', 2026, 88, 8, 65, true, true),
+    (13, 'member inscription 13', 'member inscription 13 name', 2, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 8, 'memberInscription13@fake.com', '+33514785269', 2025, 22, 5, 66, true, true),
+    (14, 'member inscription 14', 'member inscription 14 name', 1, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 1, 'memberInscription14@fake.com', '+33514785269', 2024, 12, 6, 67, true, true),
+    (15, 'member inscription 15', 'member inscription 15 name', 3, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 12, 'memberInscription15@fake.com', '+33514785269', 2024, 76, 4, 68, false, false),
+    (16, 'member inscription 16', 'member inscription 16 name', 1, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 7, 'memberInscription16@fake.com', '+33514785269', 2024, 126, 3, 69, true, false),
+    (17, 'member inscription 17', 'member inscription 17 name', 3, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 9, 'memberInscription17@fake.com', '+33514785269', 2022, 183, 7, 70, false, true),
+    (18, 'member inscription 18', 'member inscription 18 name', 3, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 1, 'memberInscription18@fake.com', '+33514785269', 2023, 71, 5, 71, false, true),
+    (19, 'member inscription 19', 'member inscription 19 name', 1, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 6, 'memberInscription19@fake.com', '+33514785269', 2022, 70, 7, 72, true, false),
+    (20, 'member inscription 20', 'member inscription 20 name', 3, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 7, 'memberInscription20@fake.com', '+33514785269', 2024, 70, 3, 73, false, true),
+    (21, 'member inscription 21', 'member inscription 21 name', 4, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 6, 'memberInscription21@fake.com', '+33514785269', 2021, 195, 9, 74, false, true),
+    (22, 'member inscription 22', 'member inscription 22 name', 3, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 2, 'memberInscription22@fake.com', '+33514785269', 2021, 57, 6, 75, true, true),
+    (23, 'member inscription 23', 'member inscription 23 name', 2, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 4, 'memberInscription23@fake.com', '+33514785269', 2026, 14, 7, 76, true, false),
+    (24, 'member inscription 24', 'member inscription 24 name', 1, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 7, 'memberInscription24@fake.com', '+33514785269', 2022, 44, 4, 77, true, true),
+    (25, 'member inscription 25', 'member inscription 25 name', 1, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 3, 'memberInscription25@fake.com', '+33514785269', 2025, 131, 4, 78, true, false),
+    (26, 'member inscription 26', 'member inscription 26 name', 4, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 13, 'memberInscription26@fake.com', '+33514785269', 2024, 184, 4, 79, true, true),
+    (27, 'member inscription 27', 'member inscription 27 name', 4, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 1, 'memberInscription27@fake.com', '+33514785269', 2024, 2, 3, 80, false, false),
+    (28, 'member inscription 28', 'member inscription 28 name', 4, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 6, 'memberInscription28@fake.com', '+33514785269', 2022, 89, 6, 81, true, false),
+    (29, 'member inscription 29', 'member inscription 29 name', 4, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 3, 'memberInscription29@fake.com', '+33514785269', 2023, 141, 7, 82, true, true),
+    (30, 'member inscription 30', 'member inscription 30 name', 2, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 10, 'memberInscription30@fake.com', '+33514785269', 2026, 135, 4, 83, true, false);
 
 TRUNCATE TABLE sg_member_inscription_document_type;
 INSERT INTO sg_member_inscription_document_type(id, location, `name`, isTemplatable) VALUES

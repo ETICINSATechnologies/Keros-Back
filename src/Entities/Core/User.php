@@ -1,7 +1,7 @@
 <?php
 
 namespace Keros\Entities\Core;
-use JsonSerializable;
+
 use Keros\Tools\Searchable;
 
 /**
@@ -54,11 +54,13 @@ class User implements Searchable
         $this->expiresAt = $expiresAt;
     }
 
-    public static function getSearchFields(): array {
+    public static function getSearchFields(): array
+    {
         return ['username'];
     }
 
     // Getters and setters
+
     /**
      * @return mixed
      */
@@ -100,7 +102,7 @@ class User implements Searchable
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
     public function getDisabled()
     {
@@ -148,7 +150,7 @@ class User implements Searchable
     }
 
     /**
-     * @param mixed $disabled
+     * @param bool $disabled
      */
     public function setDisabled($disabled): void
     {
