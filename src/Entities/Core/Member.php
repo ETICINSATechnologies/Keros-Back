@@ -3,6 +3,7 @@
 namespace Keros\Entities\Core;
 
 use JsonSerializable;
+use Keros\Entities\Sg\MemberInscriptionDocument;
 
 /**
  * @Entity
@@ -78,8 +79,29 @@ class Member implements JsonSerializable
      * @ManyToMany(targetEntity="Keros\Entities\Ua\Study", mappedBy="leaders")
      */
     protected $studiesAsLeader;
-    
-    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage)
+
+    /**
+     * @var MemberInscriptionDocument[]
+     * @OneToMany(targetEntity="Keros\Entities\Sg\MemberInscriptionDocument", mappedBy="member")
+     */
+    private $memberInscriptionDocuments;
+
+    /**
+     * Member constructor.
+     * @param $firstName
+     * @param $lastName
+     * @param $birthday
+     * @param $telephone
+     * @param $email
+     * @param $schoolYear
+     * @param $gender
+     * @param $department
+     * @param $company
+     * @param $profilePicture
+     * @param $droitImage
+     * @param $memberInscriptionDocuments
+     */
+    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage, $memberInscriptionDocuments)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -92,6 +114,7 @@ class Member implements JsonSerializable
         $this->company = $company;
         $this->profilePicture = $profilePicture;
         $this->droitImage = $droitImage;
+        $this->memberInscriptionDocuments = $memberInscriptionDocuments;
     }
 
     public function jsonSerialize()
@@ -409,6 +432,34 @@ class Member implements JsonSerializable
     public function setDroitImage(bool $droitImage): void
     {
         $this->droitImage = $droitImage;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMemberInscriptionDocuments()
+    {
+        return $this->memberInscriptionDocuments;
+    }
+
+    /**
+     * @return MemberInscriptionDocument[]
+     */
+    public function getMemberInscriptionDocumentsArray() : array
+    {
+        $memberInscriptionDocuments = array();
+        foreach ($this->getMemberInscriptionDocuments() as $memberInscriptionDocument){
+            $memberInscriptionDocuments[] = $memberInscriptionDocument;
+        }
+        return $memberInscriptionDocuments;
+    }
+
+    /**
+     * @param MemberInscriptionDocument[] $memberInscriptionDocument
+     */
+    public function setMemberInscriptionDocuments(array $memberInscriptionDocument): void
+    {
+        $this->memberInscriptionDocuments = $memberInscriptionDocument;
     }
 
 }

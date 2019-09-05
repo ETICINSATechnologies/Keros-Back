@@ -5,6 +5,7 @@ namespace KerosTest\Consultant;
 use KerosTest\AppTestCase;
 use Slim\Http\Environment;
 use Slim\Http\Request;
+use Keros\Tools\Helpers\FileHelper;
 
 class ConsultantIntegrationTest extends AppTestCase
 {
@@ -76,7 +77,6 @@ class ConsultantIntegrationTest extends AppTestCase
             "genderId" => 1,
             "email" => "fakeEmail@gmail.com",
             "birthday" => "1975-12-01",
-            "telephone" => "0033675385495",
             "address" => [
                 "line1" => "20 avenue albert Einstein",
                 "line2" => "residence g",
@@ -88,7 +88,9 @@ class ConsultantIntegrationTest extends AppTestCase
             "departmentId" => 1,
             "company" => "Amazon",
             "profilePicture" => "http://image.png",
-            "droitImage" => true
+            "droitImage" => true,
+            "isApprentice" => true,
+            "socialSecurityNumber" => "12346781300139041",
         );
 
         $env = Environment::mock([
@@ -114,11 +116,12 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame("1975-12-01", $body->birthday);
         $this->assertSame(1, $body->department->id);
         $this->assertSame(1, $body->schoolYear);
-        $this->assertSame("0033675385495", $body->telephone);
+        $this->assertSame(null, $body->telephone);
         $this->assertSame("Amazon", $body->company);
         $this->assertSame("http://image.png", $body->profilePicture);
         $this->assertNotNull($body->address->id);
         $this->assertSame(true,$body->droitImage);
+        $this->assertSame(true,$body->isApprentice);
     }
 
     public function testDeleteConsultantShouldReturn204()
@@ -196,6 +199,44 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame("Amazon", $body->company);
     }
 
+    public function testGetConsultantProtectedDataShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/core/consultant/2/protected',
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(200, $response->getStatusCode());
+
+        $body = json_decode($response->getBody());
+        $this->assertSame(2, $body->id);
+        $this->assertSame("123456789012345", $body->socialSecurityNumber);
+    }
+
+    public function testGetConnectedConsultantProtectedDataShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/core/consultant/me/protected',
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId", 2);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(200, $response->getStatusCode());
+
+        $body = json_decode($response->getBody());
+        $this->assertSame(2, $body->id);
+        $this->assertSame("123456789012345", $body->socialSecurityNumber);
+    }
+
+
     public function testGetConsultantShouldReturn404()
     {
         $env = Environment::mock([
@@ -209,7 +250,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame(404, $response->getStatusCode());
     }
 
-    public function testPostConsultantShouldReturn200()
+    public function testPostConsultantShouldReturn201()
     {
         $post_body = array(
             "username" => "newusername",
@@ -232,7 +273,9 @@ class ConsultantIntegrationTest extends AppTestCase
             "disabled" => null,
             "company" => "Amazon",
             "profilePicture" => "http://image.png",
-            "droitImage" => true
+            "droitImage" => true,
+            "isApprentice" => true,
+            "socialSecurityNumber" => "12346781300139041",
         );
 
         $env = Environment::mock([
@@ -260,7 +303,9 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame("Amazon", $body->company);
         $this->assertSame("http://image.png", $body->profilePicture);
         $this->assertSame(true,$body->droitImage);
+        $this->assertSame(true,$body->isApprentice);
     }
+    
     public function testPutConsultantShouldReturn200()
     {
         $post_body = array(
@@ -295,7 +340,9 @@ class ConsultantIntegrationTest extends AppTestCase
             ],
             "company" => "Amazon",
             "profilePicture" => "http://image.png",
-            "droitImage" => true
+            "droitImage" => true,
+            "isApprentice" => true,
+            "socialSecurityNumber" => "12346781300139041",
         );
 
         $env = Environment::mock([
@@ -326,6 +373,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame("http://image.png", $body->profilePicture);
         $this->assertNotNull($body->address->id);
         $this->assertSame(true,$body->droitImage);
+        $this->assertSame(true,$body->isApprentice);
     }
 
     public function testPutConsultantEmptyBodyShouldReturn400()
@@ -339,5 +387,238 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
         $this->assertSame(400, $response->getStatusCode());
+    }
+
+    /**
+     * @throws MethodNotAllowedException
+     * @throws NotFoundException
+     */
+    public function testPostConsultantDocumentShouldReturn201()
+    {
+
+        $filename = 'documentIdentity';
+        $uploaded_files = array();
+
+        $filename_ext = $filename . '.pdf';
+        $temp_file = FileHelper::makeNewFile($filename_ext);
+        $uploaded_files[$filename] = FileHelper::getUploadedFile($filename_ext);
+
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => "/api/v1/core/consultant/2/document/$filename",
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withUploadedFiles($uploaded_files);
+
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        FileHelper::closeFile($temp_file);
+        FileHelper::deleteFile($filename_ext);
+
+        $this->assertSame(201, $response->getStatusCode());
+    }
+
+    /**
+     * @throws MethodNotAllowedException
+     * @throws NotFoundException
+     */
+    public function testPostConsultantDocumentUnacceptedFormatShouldReturn400()
+    {
+
+        $filename = 'documentIdentity';
+        $uploaded_files = array();
+
+        $filename_ext = $filename . '.exe';
+        $temp_file = FileHelper::makeNewFile($filename_ext);
+        $uploaded_files[$filename] = FileHelper::getUploadedFile($filename_ext);
+
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => "/api/v1/core/consultant/2/document/$filename",
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withUploadedFiles($uploaded_files);
+
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        FileHelper::closeFile($temp_file);
+        FileHelper::deleteFile($filename_ext);
+
+        $this->assertSame(400, $response->getStatusCode());
+    }
+
+    /**
+     * @throws MethodNotAllowedException
+     * @throws NotFoundException
+     */
+    public function testPostConsultantDocumentShouldReturn404()
+    {
+
+        $filename = 'documentthatdoesntexist';
+        $uploaded_files = array();
+
+        $filename_ext = $filename . '.pdf';
+        $temp_file = FileHelper::makeNewFile($filename_ext);
+        $uploaded_files[$filename] = FileHelper::getUploadedFile($filename_ext);
+
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => "/api/v1/core/consultant/2/document/$filename",
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withUploadedFiles($uploaded_files);
+
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        FileHelper::closeFile($temp_file);
+        FileHelper::deleteFile($filename_ext);
+
+        $this->assertSame(404, $response->getStatusCode());
+    }
+
+    /**
+     * @throws MethodNotAllowedException
+     * @throws NotFoundException
+     */
+    public function testPostConsultantDocumentShouldReturn400()
+    {
+
+        $filename = 'documentIdentity';
+        $uploaded_files = array();
+
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => "/api/v1/core/consultant/2/document/$filename",
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withUploadedFiles($uploaded_files);
+
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(400, $response->getStatusCode());
+    }
+
+    public function testGetConsultantDocumentShouldReturn200()
+    {
+        $filename = 'documentIdentity';
+        $file_path = "documents/consultant/identity/test.pdf";
+        $temp_file = FileHelper::makeNewFile(FileHelper::normalizePath($file_path));
+        FileHelper::closeFile($temp_file);
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => "/api/v1/core/consultant/2/document/$filename",
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+        FileHelper::deleteFile(FileHelper::normalizePath($file_path));
+    }
+
+    public function testGetConsultantDocumentShouldReturn404()
+    {
+        $filename = 'documentIdentity';
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => "/api/v1/core/consultant/1/document/$filename",
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(404, $response->getStatusCode());
+    }
+
+    public function testPostConsultantWithFilesShouldReturn201()
+    {
+        $filename_set = array('documentIdentity', 'documentScolaryCertificate', 'documentRIB', 'documentVitaleCard', 'documentResidencePermit', 'documentCVEC');
+        $uploaded_files = array();
+        $temp_files = array();
+        $file_paths = array();
+
+        foreach ($filename_set as $filename) {
+            $filename_ext = $filename . '.pdf';
+            $file_paths[$filename] = $filename_ext;
+            $temp_files[$filename] = FileHelper::makeNewFile($filename_ext);
+            $uploaded_files[$filename] = FileHelper::getUploadedFile($filename_ext);
+        }
+
+        $post_body = array(
+            "username" => "newusername",
+            "password" => "password",
+            "firstName" => "firstname",
+            "lastName" => "lastname",
+            "genderId" => 1,
+            "email" => "fakeEmail@gmail.com",
+            "birthday" => "1975-12-01",
+            "telephone" => "0033675385495",
+            "departmentId" => 1,
+            "schoolYear" => 1,
+            "address" => [
+                "line1" => "20 avenue albert Eistein",
+                "line2" => "residence g",
+                "city" => "lyon",
+                "postalCode" => 69100,
+                "countryId" => 1
+            ],
+            "disabled" => null,
+            "company" => "Amazon",
+            "profilePicture" => "http://image.png",
+            "droitImage" => true,
+            "isApprentice" => true,
+            "socialSecurityNumber" => "12346781300139041",
+        );
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => '/api/v1/core/consultant',
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withParsedBody($post_body);
+        $req = $req->withUploadedFiles($uploaded_files);
+
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        array_walk($temp_files, function ($temp_file) {
+            FileHelper::closeFile($temp_file);
+        });
+        array_walk($file_paths, function ($file_path) {
+            FileHelper::deleteFile($file_path);
+        });
+
+        $this->assertSame(201, $response->getStatusCode());
+
+        $body = json_decode($response->getBody());
+        $this->assertNotNull($body->id);
+        $this->assertSame("newusername", $body->username);
+        $this->assertSame("lastname", $body->lastName);
+        $this->assertSame(1, $body->gender->id);
+        $this->assertSame("fakeEmail@gmail.com", $body->email);
+        $this->assertSame("1975-12-01", $body->birthday);
+        $this->assertSame(1, $body->department->id);
+        $this->assertSame(1, $body->schoolYear);
+        $this->assertSame("0033675385495", $body->telephone);
+        $this->assertSame("Amazon", $body->company);
+        $this->assertSame("http://image.png", $body->profilePicture);
+        $this->assertSame(true,$body->droitImage);
+        $this->assertSame(true,$body->isApprentice);
+        $dateDiff = ((new \DateTime())->diff(new \DateTime($body->createdDate->date)))->format('%a');
+        $this->assertSame(intval($dateDiff),0);
     }
 }

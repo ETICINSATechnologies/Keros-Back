@@ -15,6 +15,7 @@ class FactureDocument extends Document implements JsonSerializable
 {
 
     /**
+     * @var Facture|null
      * @ManyToOne(targetEntity="Keros\Entities\Treso\Facture")
      * @JoinColumn(name="factureId", referencedColumnName="id")
      **/
@@ -52,9 +53,9 @@ class FactureDocument extends Document implements JsonSerializable
     }
 
     /**
-     * @return Facture
+     * @return Facture|null
      */
-    public function getFacture() : Facture
+    public function getFacture() : ?Facture
     {
         return $this->facture;
     }

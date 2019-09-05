@@ -26,7 +26,16 @@ class ConsultantTest extends TestCase
                 new Department(1, "IF", "Informatique"),
                 "Google",
                 "http://photoprofile.jpg",
-                true));
+                "12345678901234",
+                true,
+                true,
+                new DateTime(),
+                null,
+                null,
+                null,
+                null,
+                null,
+                null));
     }
 
     public function testConsultantShouldCreateWithParams()
@@ -34,25 +43,35 @@ class ConsultantTest extends TestCase
         $consultant = new Consultant("Basmah",
             "Maiga",
             new DateTime("11/26/1998"),
-            "0675385495",
+            null,
             "basmah.maiga@gmail.com",
             "2018",
             new Gender("Femme"),
             new Department(1, "IF", "Informatique"),
             "Google",
             "http://photoprofile.jpg",
-            true);
+            "12345678901234",
+            true,
+            true,
+            new DateTime(),
+            null,
+            null,
+            null,
+            null,
+            null,
+            null);
 
 
         $this->assertInstanceOf(Consultant::class, $consultant);
         $this->assertEquals("Basmah", $consultant->getFirstName());
         $this->assertEquals("Maiga", $consultant->getLastName());
         $this->assertEquals(new DateTime("11/26/1998"), $consultant->getBirthday());
-        $this->assertEquals("0675385495", $consultant->getTelephone());
+        $this->assertEquals(null, $consultant->getTelephone());
         $this->assertEquals("basmah.maiga@gmail.com", $consultant->getEmail());
         $this->assertEquals("2018", $consultant->getSchoolYear());
         $this->assertEquals("Google", $consultant->getCompany());
         $this->assertEquals("http://photoprofile.jpg", $consultant->getProfilePicture());
+        $this->assertEquals(true, $consultant->getIsApprentice());
         $this->assertEquals(true, $consultant->isDroitImage());
     }
 }

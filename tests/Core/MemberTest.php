@@ -26,7 +26,8 @@ class MemberTest extends TestCase
                 new Department(1, "IF", "Informatique"),
                 "Google",
                 null,
-                true
+                true,
+                array()
             )
         );
     }
@@ -43,7 +44,8 @@ class MemberTest extends TestCase
             new Department(1, "IF", "Informatique"),
             "Google",
             "randomstring.jpg",
-            true
+            true,
+            array()
         );
 
 

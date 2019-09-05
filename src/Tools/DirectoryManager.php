@@ -46,13 +46,41 @@ class DirectoryManager
     }
 
     /**
+     * @param $file
+     * @param bool $usingDate
+     * @param string $location
+     * @return string
+     * @throws Exception
+     */
+    public function uniqueFilenameOnly($filename, $usingDate = false, $location = ''): string
+    {
+        $newfilename = $filename;
+        $filepath = $location . $filename;
+        do {
+            if (!$usingDate) {
+                $newfilename = md5(pathinfo($filename, PATHINFO_FILENAME) . microtime()) . '.' . pathinfo($filename, PATHINFO_EXTENSION);
+                $filepath = $location . $newfilename;
+            }
+            else {
+                $date = new \DateTime();
+                $newfilename = $date->format('d-m-Y_H:i:s:u') . '.' . pathinfo($filename, PATHINFO_EXTENSION);
+                $filepath = $location . $newfilename;
+            }
+        } while (file_exists($filepath));
+        return $newfilename;
+    }
+
+    /**
      * @param string $target
      * @param string $link
      * @throws KerosException
      */
-    public function symlink(string $target, string $link){
+    public function symlink(string $target, string $link)
+    {
+        $link = $this->normalizePath($link);
+        $target = $this->normalizePath($target);
         $this->mkdir(pathinfo($link, PATHINFO_DIRNAME));
-        if(!symlink($target, $link)){
+        if (!symlink($target, $link)) {
             $msg = 'Error during symlink';
             $this->logger->err($msg);
             throw new KerosException($msg, 500);
@@ -69,4 +97,24 @@ class DirectoryManager
             mkdir($path, $mode, true);
         }
     }
+
+    /**
+     * @param string $path
+     * @return string
+     */
+    public function normalizePath(string $path): string
+    {
+        return preg_replace('/(?<!\\\)\//', DIRECTORY_SEPARATOR, $path);
+    }
+    
+    /**
+     * @param $path
+     */
+    public function deleteFile($path)
+    {
+        if (file_exists($path)){
+            unlink($path);
+        }
+    }
+
 }
