@@ -11,6 +11,8 @@ use Keros\Error\KerosException;
 use Keros\Services\Core\AddressService;
 use Keros\Services\Core\MemberService;
 use Keros\Services\Ua\StudyService;
+use Keros\Tools\ConfigLoader;
+use Keros\Tools\DocumentGenerator;
 use Keros\Tools\Validator;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
@@ -39,6 +41,15 @@ class PaymentSlipService
      */
     private $logger;
 
+    /** @var array */
+    private $kerosConfig;
+
+    /** @var PaymentSlipDocumentTypeService */
+    private $paymentSlipDocumentTypeService;
+
+    /** @var DocumentGenerator */
+    private $documentGenerator;
+
     /**
      * PaymentSlipService constructor.
      * @param ContainerInterface $container
@@ -50,6 +61,47 @@ class PaymentSlipService
         $this->memberService = $container->get(MemberService::class);
         $this->paymentSlipDataService = $container->get(PaymentSlipDataService::class);
         $this->studyService = $container->get(StudyService::class);
+        $this->kerosConfig = ConfigLoader::getConfig();
+        $this->paymentSlipDocumentTypeService = $container->get(PaymentSlipDocumentTypeService::class);
+        $this->documentGenerator = $container->get(DocumentGenerator::class);
+    }
+
+    /**
+     * @param int $id
+     * @return string
+     * @throws Exception
+     */
+    public function generateDocument(int $id) : string
+    {
+        $paymentSlip = $this->getOne($id);
+        $templateFile = $this->paymentSlipDocumentTypeService->get();
+
+        return $this->documentGenerator->generateSimpleDocument($templateFile, $this->getReplacementArray($paymentSlip));
+    }
+
+    /**
+     * @param PaymentSlip $paymentSlip
+     * @return array
+     */
+    private function getReplacementArray(PaymentSlip $paymentSlip) : array
+    {
+        return array(
+            '${NUMEROETUDE}' => $paymentSlip->getStudy()->getId() ?? '${NUMEROETUDE}',
+            '${NUMINTER}' => '${NUMINTER}',
+            '${CIVILITEINTERVENANT}' => '',
+            '${NOMINTERVENANT}' => $paymentSlip->getClientName() ?? '${NOMINTERVENANT}',
+            '${PRENOMINTERVENANT}' => '',
+            '${SECUINTERVENANT}' => $paymentSlip->getConsultantSocialSecurityNumber() ?? '${SECUINTERVENANT}',
+            '${ADRESSEINTERVENANT}' => ($paymentSlip->getAddress() != null) ? $paymentSlip->getAddress()->getLine1() . ($paymentSlip->getAddress()->getLine2() ?? '') : '${ADRESSEINTERVENANT}',
+            '${CPINTERVENANT}' => ($paymentSlip->getAddress() != null) ? $paymentSlip->getAddress()->getPostalCode() : '${CPINTERVENANT}',
+            '${VILLEINTERVENANT}' => ($paymentSlip->getAddress() != null) ? $paymentSlip->getAddress()->getCity() : '${VILLEINTERVENANT}',
+            '${MAILCONSULTANT}' => $paymentSlip->getEmail() ?? '${MAILCONSULTANT}',
+            '${NOMENTREPRISE}' => $paymentSlip->getClientName() ?? '${NOMENTREPRISE}',
+            '${NOMUSER}' => $paymentSlip->getCreatedBy()->getLastName() ?? '${NOMENTREPRISE}',
+            '${PRENOMUSER}' => $paymentSlip->getCreatedBy()->getFirstName() ?? '${PRENOMUSER}',
+            '${DEPARTEMENT}' => $paymentSlip->getStudy()->getField()->getLabel() ?? '${DEPARTEMENT}',
+
+        );
     }
 
     /**

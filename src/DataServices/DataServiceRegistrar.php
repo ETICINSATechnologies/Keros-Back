@@ -22,6 +22,7 @@ use Keros\DataServices\Treso\FactureDocumentTypeDataService;
 use Keros\DataServices\Treso\FactureTypeDataService;
 use Keros\DataServices\Treso\FactureDataService;
 use Keros\DataServices\Core\ConsultantDataService;
+use Keros\DataServices\Treso\PaymentSlipDocumentTypeDataService;
 use Keros\DataServices\Ua\ContactDataService;
 use Keros\DataServices\Ua\FirmTypeDataService;
 use Keros\DataServices\Ua\FirmDataService;
@@ -108,6 +109,9 @@ class DataServiceRegistrar
         //Treso
         $container[PaymentSlipDataService::class] = function ($container) {
             return new PaymentSlipDataService($container);
+        };
+        $container[PaymentSlipDocumentTypeDataService::class] = function ($container) {
+            return new PaymentSlipDocumentTypeDataService($container);
         };
         $container[FactureTypeDataService::class] = function ($container) {
             return new FactureTypeDataService($container);

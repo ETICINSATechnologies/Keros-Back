@@ -214,6 +214,7 @@ class KerosApp
                     $this->put("/{id:[0-9]+}", PaymentSlipController::class . ':updatePaymentSlip');
                     $this->post("/{id:[0-9]+}/validate-ua", PaymentSlipController::class . ':validateUA');
                     $this->post("/{id:[0-9]+}/validate-perf", PaymentSlipController::class . ':validatePerf');
+                    $this->get("/{id:[0-9]+}/generateDocument", PaymentSlipController::class . ':generatePaymentSlipDocument');
                 });
             })->add($this->getContainer()->get(AuthenticationMiddleware::class));
 

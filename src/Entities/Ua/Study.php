@@ -239,7 +239,7 @@ class Study implements JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return Field|null
      */
     public function getField()
     {

@@ -119,7 +119,7 @@ INSERT INTO core_address (id, line1, line2, postalCode, city, countryId) VALUES
     (81, 'rue member inscription 28', 'Meat', '14785', 'Villeurbanne City', 77), # memberInscription 28
     (82, 'rue member inscription 29', 'Meat', '14785', 'Villeurbanne City', 146), # memberInscription 29
     (83, 'rue member inscription 30', 'Meat', '14785', 'Villeurbanne City', 130), # memberInscription 30
-    (84, '14 PaymentSlip 1', 'Quoi ?', '32456', 'Lyon', 22), #Payment Slip 1
+    (84, '14 PaymentSlip 1', null, '32456', 'Lyon', 22), #Payment Slip 1
     (85, '14 PaymentSlip 2', 'Ter', '32456', 'Lyon', 22), #Payment Slip 2
     (86, 'rue facture 1', 'Meat', '674A4', 'Paris', 40), # facture 1
     (87, 'rue facture 2', 'Meat', '674A4', 'Paris', 40), # facture 2
@@ -343,7 +343,12 @@ INSERT INTO sg_member_inscription_document(id, memberInscriptionId, memberInscri
 
 TRUNCATE TABLE treso_payment_slip;
 INSERT INTO treso_payment_slip (id, missionRecapNumber, consultantName, consultantSocialSecurityNumber, addressId, email, studyId, clientName, projectLead, isTotalJeh, isStudyPaid, amountDescription, createdDate, creatorId, validatedByUa, validatedByUaDate, uaValidatorId, validatedByPerf, validatedByPerfDate, perfValidatorId) VALUES
-  (1, '102383203', 'Shrek', '12320183', 84, 'shrek@fortfortlointain.fr', 1, 'L''âne', 'Le chat Potté', false, false, 'Facture payée', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), 1, false, null, null, false, null, null),
-  (2, '102383204', 'Shrek', '12320183', 85, 'shrek@fortfortlointain.fr', 1, 'L''âne', 'Le chat Potté', false, false, 'Facture payée', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), 1, true, STR_TO_DATE('5/16/2022', '%c/%e/%Y'), 4, true, STR_TO_DATE('5/17/2022', '%c/%e/%Y'), 8);
+    (1, '102383203', 'Shrek', '12320183', 84, 'shrek@fortfortlointain.fr', 1, 'L''âne', 'Le chat Potté', false, false, 'Facture payée', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), 1, false, null, null, false, null, null),
+    (2, '102383204', 'Shrek', '12320183', 85, 'shrek@fortfortlointain.fr', 1, 'L''âne', 'Le chat Potté', false, false, 'Facture payée', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), 1, true, STR_TO_DATE('5/16/2022', '%c/%e/%Y'), 4, true, STR_TO_DATE('5/17/2022', '%c/%e/%Y'), 8),
+    (3, null, null, null, null, null, 3, null, null, null, null, null, STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), 1, false, null, null, false, null, null);
+
+TRUNCATE TABLE treso_payment_slip_document_type;
+INSERT INTO treso_payment_slip_document_type (id, location) VALUES
+    (1, 'DemandeBV_RM.docx');
 
 COMMIT;

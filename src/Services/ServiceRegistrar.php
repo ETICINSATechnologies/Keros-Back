@@ -3,6 +3,7 @@
 namespace Keros\Services;
 
 use Keros\Services\Sg\MemberInscriptionDocumentService;
+use Keros\Services\Treso\PaymentSlipDocumentTypeService;
 use Keros\Services\Treso\PaymentSlipService;
 use Keros\Services\Sg\MemberInscriptionDocumentTypeService;
 use Keros\Services\Sg\MemberInscriptionService;
@@ -126,6 +127,9 @@ class ServiceRegistrar
         };
         $container[PaymentSlipService::class] = function ($container) {
             return new PaymentSlipService($container);
+        };
+        $container[PaymentSlipDocumentTypeService::class] = function ($container) {
+            return new PaymentSlipDocumentTypeService($container);
         };
 
         //Sg

@@ -34,7 +34,7 @@ class PaymentSlipController
     private $entityManager;
 
     /**
-     * @var
+     * @var array
      */
     private $kerosConfig;
 
@@ -48,6 +48,25 @@ class PaymentSlipController
         $this->entityManager = $container->get(EntityManager::class);
         $this->paymentSlipService = $container->get(PaymentSlipService::class);
         $this->kerosConfig = ConfigLoader::getConfig();
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     * @throws KerosException
+     */
+    public function generatePaymentSlipDocument(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Generating document for paymentSlip " . $args["id"] . " from " . $request->getServerParams()["REMOTE_ADDR"]);
+
+        $filename = $this->paymentSlipService->generateDocument($args['id']);
+        $responseBody = array (
+            'location' => $this->kerosConfig['BACK_URL'] . '/generated/' . $filename
+        );
+
+        return $response->withJson($responseBody, 200);
     }
 
     /**
@@ -169,7 +188,6 @@ class PaymentSlipController
     public function validatePerf(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Validating paymentSlip " . $args["id"] . " by Perf " . $request->getAttribute("userId") . " from " . $request->getServerParams()["REMOTE_ADDR"]);
-        $body = $request->getParsedBody();
 
         $this->entityManager->beginTransaction();
         $this->paymentSlipService->validatePerf($args["id"], $request->getAttribute("userId"));

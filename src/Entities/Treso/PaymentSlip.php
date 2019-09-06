@@ -226,6 +226,7 @@ class PaymentSlip implements JsonSerializable
     }
 
     /**
+     * Consultant address
      * @return Address
      */
     public function getAddress()
@@ -242,6 +243,7 @@ class PaymentSlip implements JsonSerializable
     }
 
     /**
+     * Consultant Email
      * @return string
      */
     public function getEmail()
