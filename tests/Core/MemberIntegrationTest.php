@@ -174,7 +174,7 @@ class MemberIntegrationTest extends AppTestCase
                     "isBoard" => true
                 ),
                 array(
-                    "id" => 4,
+                    "id" => 3,
                     "year" => 2019,
                     "isBoard" => false
                 )
@@ -209,7 +209,7 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame("Amazon", $body->company);
         $this->assertNotNull($body->address->id);
         $this->assertSame(3, $body->positions[0]->id);
-        $this->assertSame(4, $body->positions[1]->id);
+        $this->assertSame(3, $body->positions[1]->id);
         $this->assertSame(true, $body->droitImage);
     }
 
@@ -335,7 +335,7 @@ class MemberIntegrationTest extends AppTestCase
                     "isBoard" => true
                 ),
                 array(
-                    "id" => 4,
+                    "id" => 3,
                     "year" => 2019,
                     "isBoard" => false
                 )
@@ -372,7 +372,7 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame("0033675385495", $body->telephone);
         $this->assertSame("Amazon", $body->company);
         $this->assertSame(3, $body->positions[0]->id);
-        $this->assertSame(4, $body->positions[1]->id);
+        $this->assertSame(3, $body->positions[1]->id);
         $this->assertSame(false, $body->droitImage);
         $this->assertSame(intval($dateDiff),0);
     }
@@ -404,7 +404,7 @@ class MemberIntegrationTest extends AppTestCase
                     "isBoard" => true
                 ),
                 array(
-                    "id" => 4,
+                    "id" => 3,
                     "year" => 2019,
                     "isBoard" => false
                 )
@@ -441,7 +441,7 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame("Amazon", $body->company);
         $this->assertNotNull($body->address->id);
         $this->assertSame(3, $body->positions[0]->id);
-        $this->assertSame(4, $body->positions[1]->id);
+        $this->assertSame(3, $body->positions[1]->id);
         $this->assertSame(true, $body->droitImage);
         $this->assertSame(intval($dateDiff),0);
     }
@@ -606,7 +606,7 @@ class MemberIntegrationTest extends AppTestCase
                     "isBoard" => true
                 ),
                 array(
-                    "id" => 4,
+                    "id" => 3,
                     "year" => 2019,
                     "isBoard" => false
                 )

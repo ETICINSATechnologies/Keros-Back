@@ -522,24 +522,19 @@ SET UNIQUE_CHECKS = 1;
 
 INSERT INTO `core_pole` (id, label, name) VALUES
   (1, 'Com', 'Communication'),
-  (2, 'Cons', 'Consultant'),
-  (3, 'DevCo', 'Developpement Commercial'),
   (4, 'Perf', 'Performance'),
   (5, 'Prez', 'Présidence'),
   (6, 'RH', 'Ressources Humaines'),
-  (7, 'SI', 'Systèmes d''Information,'),
+  (7, 'SI', 'Systèmes d''Information'),
   (8, 'Treso', 'Trésorerie'),
-  (9, 'UA', 'Unité d''affaires');
+  (9, 'UA', 'Unité d''Affaires');
 
 INSERT INTO `core_position` (id, label, poleId) VALUES
   (1, 'Auditeur orga', null),
   (2, 'Auditeur treso', null),
-  (3, 'Chargé d''affaires', 3),
-  (4, 'Chef de projets', 9),
+  (3, 'Chargé d''affaires', 9),
   (5, 'Comptable', 8),
-  (6, 'Consultant', 2),
   (7, 'Junior com', 1),
-  (8, 'Junior devCo', 3),
   (9, 'Junior qualité', 4),
   (10, 'Junior SI', 7),
   (11, 'Junior UA', 9),
@@ -548,7 +543,6 @@ INSERT INTO `core_position` (id, label, poleId) VALUES
   (14, 'Président', 5),
   (15, 'Responsable BU', 9),
   (16, 'Responsable com', 1),
-  (17, 'Responsable devCo', 3),
   (18, 'Responsable qualité', 4),
   (19, 'Responsable RH', 6),
   (20, 'Responsable SI', 7),
@@ -556,7 +550,8 @@ INSERT INTO `core_position` (id, label, poleId) VALUES
   (22, 'Secrétaire général', 6),
   (23, 'Trésorier', 8),
   (24, 'Vice-Président', 5),
-  (25, 'Vice-Trésorier', 8);
+  (25, 'Vice-Trésorier', 8),
+  (26, 'Autre', null);
 
 INSERT INTO core_department (id, label, name) VALUES
   (1, 'BB', 'Biochimie et Biotechnologies'),
@@ -569,7 +564,7 @@ INSERT INTO core_department (id, label, name) VALUES
   (8, 'GMD', 'Génie mécanique développement'),
   (9, 'GMPP', 'Génie mécanique procédés plasturgie'),
   (10, 'IF', 'Informatique'),
-  (11, 'PC', 'Premier Cycle'),
+  (11, 'FIMI', 'Formation initiale aux métiers d''ingénieur'),
   (12, 'SGM', 'Science et Génie des Matériaux'),
   (13, 'TC', 'Télécommunications, Services et Usages');
 
