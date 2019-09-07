@@ -41,7 +41,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->assertSame('0033123456789', $body->content[0]->phoneNumber);
         $this->assertSame(2021, $body->content[0]->outYear);
         $this->assertSame(42, $body->content[0]->nationality->id);
-        $this->assertSame(7, $body->content[0]->wantedPole->id);
+        $this->assertSame(8, $body->content[0]->wantedPole->id);
         $this->assertSame(1, $body->content[0]->address->id);
         $this->assertSame(false, $body->content[0]->hasPaid);
         $this->assertSame(false, $body->content[0]->droitImage);
@@ -224,7 +224,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->assertSame('0033123456789', $body->phoneNumber);
         $this->assertSame(2021, $body->outYear);
         $this->assertSame(42, $body->nationality->id);
-        $this->assertSame(7, $body->wantedPole->id);
+        $this->assertSame(8, $body->wantedPole->id);
         $this->assertSame(1, $body->address->id);
         $this->assertSame(false, $body->hasPaid);
         $this->assertSame(false, $body->droitImage);
