@@ -36,7 +36,7 @@ class UserIntegrationTest extends AppTestCase
                     "isBoard" => true
                 ),
                 array(
-                    "id" => 4,
+                    "id" => 3,
                     "year" => 2019,
                     "isBoard" => false
                 )
