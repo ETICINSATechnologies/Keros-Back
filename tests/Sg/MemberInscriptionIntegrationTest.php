@@ -29,6 +29,8 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
         $body = json_decode($response->getBody());
 
+        $dateDiff = ((new \DateTime("9/1/2019"))->diff(new \DateTime($body->content[0]->createdDate->date)))->format('%a');
+
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame(25, count($body->content));
         $this->assertSame(1, $body->content[0]->id);
@@ -39,12 +41,13 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->assertSame(3, $body->content[0]->department->id);
         $this->assertSame('bruce.wayne@batman.com', $body->content[0]->email);
         $this->assertSame('0033123456789', $body->content[0]->phoneNumber);
-        $this->assertSame(2021, $body->content[0]->outYear);
+        $this->assertSame(2022, $body->content[0]->outYear);
         $this->assertSame(42, $body->content[0]->nationality->id);
         $this->assertSame(8, $body->content[0]->wantedPole->id);
         $this->assertSame(1, $body->content[0]->address->id);
         $this->assertSame(false, $body->content[0]->hasPaid);
         $this->assertSame(false, $body->content[0]->droitImage);
+        $this->assertSame(intval($dateDiff),0);
         $this->assertIsArray($body->content[0]->documents);
         $this->assertSame(1, $body->content[0]->documents[0]->id);
         $this->assertSame("Fiche inscription membre", $body->content[0]->documents[0]->name);
@@ -117,6 +120,9 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
 
         $body = json_decode($response->getBody());
+
+        $dateDiff = ((new \DateTime())->diff(new \DateTime($body->createdDate->date)))->format('%a');
+
         $this->assertSame(201, $response->getStatusCode());
         $this->assertSame('Thanos', $body->firstName);
         $this->assertSame('Tueur de monde', $body->lastName);
@@ -132,6 +138,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->assertSame('Lorem ipsum', $body->address->city);
         $this->assertSame(true, $body->hasPaid);
         $this->assertSame(true, $body->droitImage);
+        $this->assertSame(intval($dateDiff),0);
         $this->assertIsArray($body->documents);
         $this->assertSame(1, $body->documents[0]->id);
         $this->assertSame("Fiche inscription membre", $body->documents[0]->name);
@@ -176,6 +183,9 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
 
         $body = json_decode($response->getBody());
+
+        $dateDiff = ((new \DateTime())->diff(new \DateTime($body->createdDate->date)))->format('%a');
+
         $this->assertSame(201, $response->getStatusCode());
         $this->assertSame('Thanos', $body->firstName);
         $this->assertSame('Tueur de monde', $body->lastName);
@@ -191,6 +201,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->assertSame('Lorem ipsum', $body->address->city);
         $this->assertSame(true, $body->hasPaid);
         $this->assertSame(true, $body->droitImage);
+        $this->assertSame(intval($dateDiff),0);
         $this->assertIsArray($body->documents);
         $this->assertSame(1, $body->documents[0]->id);
         $this->assertSame("Fiche inscription membre", $body->documents[0]->name);
@@ -213,6 +224,8 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
         $body = json_decode($response->getBody());
 
+        $dateDiff = ((new \DateTime("9/1/2019"))->diff(new \DateTime($body->createdDate->date)))->format('%a');
+
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame(1, $body->id);
         $this->assertSame('Bruce', $body->firstName);
@@ -222,12 +235,13 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->assertSame(3, $body->department->id);
         $this->assertSame('bruce.wayne@batman.com', $body->email);
         $this->assertSame('0033123456789', $body->phoneNumber);
-        $this->assertSame(2021, $body->outYear);
+        $this->assertSame(2022, $body->outYear);
         $this->assertSame(42, $body->nationality->id);
         $this->assertSame(8, $body->wantedPole->id);
         $this->assertSame(1, $body->address->id);
         $this->assertSame(false, $body->hasPaid);
         $this->assertSame(false, $body->droitImage);
+        $this->assertSame(intval($dateDiff),0);
         $this->assertIsArray($body->documents);
         $this->assertSame(1, $body->documents[0]->id);
         $this->assertSame("Fiche inscription membre", $body->documents[0]->name);
@@ -318,6 +332,8 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
         $body = json_decode($response->getBody());
 
+        $dateDiff = ((new \DateTime())->diff(new \DateTime($body->createdDate->date)))->format('%a');
+
         $this->assertSame(200, $response->getStatusCode());
         $this->assertNotNull($body->id);
         $this->assertSame('bruce.wayne', $body->username);
@@ -332,6 +348,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->assertSame("0033123456789", $body->telephone);
         $this->assertSame(null, $body->company);
         $this->assertSame(null, $body->profilePicture);
+        $this->assertSame(intval($dateDiff),0);
         $this->assertNotNull($body->address->id);
         $this->assertSame('13 Rue du renard', $body->address->line1);
         $this->assertSame(0, count($body->positions));
