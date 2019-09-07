@@ -2,7 +2,6 @@
 
 namespace Keros\Services\Auth;
 
-
 use Keros\DataServices\Core\UserDataService;
 use Keros\Entities\Auth\LoginResponse;
 use Keros\Error\KerosException;
@@ -10,7 +9,6 @@ use Keros\Tools\Authorization\JwtCodec;
 use Keros\Tools\Authorization\PasswordEncryption;
 use Keros\Tools\Validator;
 use Psr\Container\ContainerInterface;
-
 
 class LoginService
 {
@@ -41,6 +39,10 @@ class LoginService
         }
 
         if (PasswordEncryption::verify($password, $user->getPassword())) {
+            if($user->getDisabled()){
+                throw new KerosException("Account disabled", 401);
+            }
+
             // the token will expire in exactly in one day
             $exp = time() + 24 * 3600;
 
