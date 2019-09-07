@@ -21,7 +21,7 @@ class PoleIntegrationTest extends AppTestCase
         $this->assertSame(200, $response->getStatusCode());
 
         $body = json_decode($response->getBody());
-        $this->assertEquals(7, count($body));
+        $this->assertEquals(9, count($body));
         $this->assertNotNull(strlen($body[0]->id));
         $this->assertNotNull(strlen($body[0]->label));
     }
