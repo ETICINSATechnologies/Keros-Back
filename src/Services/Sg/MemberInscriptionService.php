@@ -81,7 +81,7 @@ class   MemberInscriptionService
         $genderId = Validator::requiredId($fields['genderId']);
         $gender = $this->genderService->getOne($genderId);
         $birthday = Validator::requiredDate($fields['birthday']);
-        $hasPaid = Validator::optionalBool(isset($fields['hasPaid']) ? $fields['hasPaid'] : false);
+        $hasPaid = false;
         $droitImage = Validator::requiredBool($fields['droitImage']);
         $createdDate = new \DateTime();
 
@@ -181,7 +181,6 @@ class   MemberInscriptionService
         $genderId = Validator::requiredId($fields['genderId']);
         $gender = $this->genderService->getOne($genderId);
         $birthday = Validator::requiredDate($fields['birthday']);
-        $hasPaid = Validator::optionalBool(isset($fields['hasPaid']) ? $fields['hasPaid'] : false);
         $droitImage = Validator::requiredBool($fields['droitImage']);
 
         $memberInscription->setFirstName($firstName);
@@ -194,7 +193,6 @@ class   MemberInscriptionService
         $memberInscription->setWantedPole($wantedPole);
         $memberInscription->setGender($gender);
         $memberInscription->setBirthday($birthday);
-        $memberInscription->setHasPaid($hasPaid);
         $memberInscription->setDroitImage($droitImage);
         $this->addressService->update($memberInscription->getAddress()->getId(), $fields["address"]);
 

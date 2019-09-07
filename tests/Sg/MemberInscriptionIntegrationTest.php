@@ -106,7 +106,6 @@ class MemberInscriptionIntegrationTest extends AppTestCase
                 'postalCode' => 66666,
                 'countryId' => 133,
             ),
-            'hasPaid' => true,
             'droitImage' => true,
         );
 
@@ -136,7 +135,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->assertSame(5, $body->wantedPole->id);
         $this->assertSame('je sais pas quoi mettre', $body->address->line1);
         $this->assertSame('Lorem ipsum', $body->address->city);
-        $this->assertSame(true, $body->hasPaid);
+        $this->assertSame(false, $body->hasPaid);
         $this->assertSame(true, $body->droitImage);
         $this->assertSame(intval($dateDiff),0);
         $this->assertIsArray($body->documents);
@@ -169,7 +168,6 @@ class MemberInscriptionIntegrationTest extends AppTestCase
                 'postalCode' => 66666,
                 'countryId' => 133,
             ),
-            'hasPaid' => true,
             'droitImage' => true,
         );
 
@@ -199,7 +197,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->assertSame(5, $body->wantedPole->id);
         $this->assertSame('je sais pas quoi mettre', $body->address->line1);
         $this->assertSame('Lorem ipsum', $body->address->city);
-        $this->assertSame(true, $body->hasPaid);
+        $this->assertSame(false, $body->hasPaid);
         $this->assertSame(true, $body->droitImage);
         $this->assertSame(intval($dateDiff),0);
         $this->assertIsArray($body->documents);
@@ -423,7 +421,6 @@ class MemberInscriptionIntegrationTest extends AppTestCase
                 'postalCode' => 66666,
                 'countryId' => 133,
             ),
-            'hasPaid' => true,
             'droitImage' => true,
         );
 
@@ -450,7 +447,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->assertSame(5, $body->wantedPole->id);
         $this->assertSame('je sais pas quoi mettre', $body->address->line1);
         $this->assertSame('Lorem ipsum', $body->address->city);
-        $this->assertSame(true, $body->hasPaid);
+        $this->assertSame(false, $body->hasPaid);
         $this->assertSame(true, $body->droitImage);
     }
 
@@ -479,7 +476,6 @@ class MemberInscriptionIntegrationTest extends AppTestCase
                 'postalCode' => 66666,
                 'countryId' => 133,
             ),
-            'hasPaid' => true,
             'droitImage' => true,
         );
 
