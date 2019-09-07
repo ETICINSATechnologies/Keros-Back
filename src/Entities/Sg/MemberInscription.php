@@ -108,6 +108,12 @@ class MemberInscription implements JsonSerializable
     private $droitImage;
 
     /**
+     * @var DateTime
+     * @Column(type="datetime")
+     */
+    private $createdDate;
+
+    /**
      * @var MemberInscriptionDocument[]
      * @OneToMany(targetEntity="MemberInscriptionDocument", mappedBy="memberInscription")
      */
@@ -128,9 +134,10 @@ class MemberInscription implements JsonSerializable
      * @param Pole $wantedPole
      * @param bool $hasPaid
      * @param bool $droitImage
+     * @param DateTime $createdDate
      * @param array $memberInscriptionDocument
      */
-    public function __construct(string $firstName, string $lastName, Gender $gender, DateTime $birthday, Department $department, string $email, ?string $phoneNumber, ?int $outYear, Country $nationality, Address $address, Pole $wantedPole, bool $hasPaid, bool $droitImage, array $memberInscriptionDocument)
+    public function __construct(string $firstName, string $lastName, Gender $gender, DateTime $birthday, Department $department, string $email, ?string $phoneNumber, ?int $outYear, Country $nationality, Address $address, Pole $wantedPole, bool $hasPaid, bool $droitImage, DateTime $createdDate, array $memberInscriptionDocument)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -145,6 +152,7 @@ class MemberInscription implements JsonSerializable
         $this->wantedPole = $wantedPole;
         $this->hasPaid = $hasPaid;
         $this->droitImage = $droitImage;
+        $this->createdDate = $createdDate;
         $this->memberInscriptionDocuments = $memberInscriptionDocument;
     }
 
@@ -169,6 +177,7 @@ class MemberInscription implements JsonSerializable
             'address' => $this->getAddress(),
             'hasPaid' => $this->isHasPaid(),
             'droitImage' => $this->isDroitImage(),
+            'createdDate' => $this->getCreatedDate(),
         ];
     }
 
@@ -391,6 +400,22 @@ class MemberInscription implements JsonSerializable
     public function setDroitImage(bool $droitImage): void
     {
         $this->droitImage = $droitImage;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getCreatedDate(): DateTime
+    {
+        return $this->createdDate;
+    }
+
+    /**
+     * @param DateTime $createdDate
+     */
+    public function setCreatedDate(DateTime $createdDate): void
+    {
+        $this->createdDate = $createdDate;
     }
 
     /**

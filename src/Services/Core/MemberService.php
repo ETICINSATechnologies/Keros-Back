@@ -91,12 +91,12 @@ class MemberService
         $department = null;
         $departmentId = Validator::requiredId(isset($fields["departmentId"]) ? $fields["departmentId"] : null);
         $department = $this->departmentService->getOne($departmentId);
-
+        $createdDate = new \DateTime();
         $company = Validator::optionalString($fields["company"]);
         $profilePicture = null;
         $droitImage = Validator::requiredBool($fields['droitImage']);
 
-        $member = new Member($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage, array());
+        $member = new Member($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage, $createdDate, array());
 
         $user = $this->userService->create($fields);
         $address = $this->addressService->create($fields["address"]);
