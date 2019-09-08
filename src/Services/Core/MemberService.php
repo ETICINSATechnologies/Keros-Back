@@ -192,7 +192,7 @@ class MemberService
         $department = $this->departmentService->getOne($departmentId);
 
         $company = Validator::optionalString($fields["company"]);
-        $isAlumni = Validator::optionalBool($fields['isAlumni'] ?? $member->isAlumni);
+        $isAlumni = Validator::optionalBool($fields['isAlumni'] ?? $member->getIsAlumni());
 
         $memberPositions = $member->getMemberPositions();
         foreach ($memberPositions as $memberPosition)
