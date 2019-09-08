@@ -2,7 +2,7 @@
 <phpunit>
     <testsuites>
         <testsuite name="Keros Tests">
-            <directory>./Core</directory>
+            <directory>.</directory>
         </testsuite>
     </testsuites>
     <logging>
