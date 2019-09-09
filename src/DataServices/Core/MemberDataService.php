@@ -94,7 +94,7 @@ class MemberDataService
             $whereParameters = array();
 
             foreach ($queryParams as $key => $value) {
-                if (in_array($key, ['search', 'poleId', 'positionId', 'year', 'firstName', 'lastName', 'company'])) {
+                if (in_array($key, ['search', 'poleId', 'positionId', 'year', 'firstName', 'lastName', 'company', 'isAlumni'])) {
                     if (!empty($whereStatement))
                         $whereStatement .= ' AND ';
 
@@ -130,6 +130,10 @@ class MemberDataService
                             // where with the form: 'm.key = :key'
                             $whereStatement .= 'm.' . $key . ' LIKE :' . $key;
                             $whereParameters[':' . $key] = '%' . $value . '%';
+                        } elseif ($key == 'isAlumni') {
+                            $booleanValue = filter_var(strtolower($value), FILTER_VALIDATE_BOOLEAN);
+                            $whereStatement .= 'm.' . $key . ' = :' . $key;
+                            $whereParameters[':' . $key] = $booleanValue;
                         }
                     }
                 }

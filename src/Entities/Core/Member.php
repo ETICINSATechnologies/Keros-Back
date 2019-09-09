@@ -76,6 +76,11 @@ class Member implements JsonSerializable
     protected $createdDate;
 
     /**
+     * @Column(type="boolean")
+     */
+    protected $isAlumni;
+
+    /**
      * @ManyToMany(targetEntity="Keros\Entities\Ua\Study", mappedBy="qualityManagers")
      */
     protected $studiesAsQualityManager;
@@ -105,9 +110,10 @@ class Member implements JsonSerializable
      * @param $profilePicture
      * @param $droitImage
      * @param $createdDate
+     * @param $isAlumni
      * @param $memberInscriptionDocuments
      */
-    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage, $createdDate, $memberInscriptionDocuments)
+    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage, $createdDate, $isAlumni, $memberInscriptionDocuments)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -121,6 +127,7 @@ class Member implements JsonSerializable
         $this->profilePicture = $profilePicture;
         $this->droitImage = $droitImage;
         $this->createdDate = $createdDate;
+        $this->isAlumni = $isAlumni;
         $this->memberInscriptionDocuments = $memberInscriptionDocuments;
     }
 
@@ -143,6 +150,7 @@ class Member implements JsonSerializable
             'profilePicture' => $this->getProfilePicture(),
             'droitImage' => $this->isDroitImage(),
             'createdDate' => $this->getCreatedDate(),
+            'isAlumni' => $this->getIsAlumni(),
         ];
     }
 
@@ -456,6 +464,22 @@ class Member implements JsonSerializable
     public function setCreatedDate(\DateTime $createdDate): void
     {
         $this->createdDate = $createdDate;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsAlumni(): bool
+    {
+        return $this->isAlumni;
+    }
+
+    /**
+     * @param bool $isAlumni
+     */
+    public function setIsAlumni(bool $isAlumni): void
+    {
+        $this->isAlumni = $isAlumni;
     }
 
     /**

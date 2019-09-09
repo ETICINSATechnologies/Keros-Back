@@ -131,33 +131,33 @@ INSERT INTO core_ticket (id, userId, title, message, type, status) VALUES
   (1, 1, 'Impossible de changer son mot de passe', 'Bonjour, je narrive pas à changer mon mot de passe', 'Problème de compte', 'En cours'); # ticket 1
 
 TRUNCATE TABLE core_member;
-INSERT INTO core_member (id, genderId, firstName, lastName, birthday, telephone, email, addressId, schoolYear, departmentId, company, profilePicture, droitImage, createdDate) VALUES
-  (1, 1, 'Conor', 'Breeze', STR_TO_DATE('1975-12-25', '%Y-%m-%d'), '+332541254', 'fake.mail@fake.com', 2, 3, 1, 'Google', '1c518c591e1be2f2703dd8c9bb77dbb5.jpg', true, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
-  (3, 1, 'Laurence', 'Tainturière', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.mail3@fake.com', 3, 5, 2, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
-  (4, 3, 'Stéphane4', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly4@fake.com', 6, 3, 4, NULL, NULL, false, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
-  (6, 3, 'SuperPrenom', 'SuperNom', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'super@vraimentsuper.com', 9, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
-  (7, 3, 'Disabled', 'DisabledName', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'disabled@fake.com', 10, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d')), -- Disabled member
-  (8, 3, 'Stéphane8', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly8@fake.com', 11, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
-  (9, 3, 'Stéphane9', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly9@fake.com', 12, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
-  (10, 3, 'Stéphane10', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly10@fake.com', 13, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
-  (11, 3, 'Stéphane11', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly11@fake.com', 14, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
-  (12, 3, 'Stéphane12', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly12@fake.com', 15, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
-  (13, 3, 'Stéphane13', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly13@fake.com', 16, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
-  (14, 3, 'Stéphane14', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly14@fake.com', 17, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
-  (15, 3, 'Stéphane15', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly15@fake.com', 18, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
-  (16, 3, 'Stéphane16', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly16@fake.com', 19, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
-  (17, 3, 'Stéphane17', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly17@fake.com', 20, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
-  (18, 3, 'Stéphane18', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly18@fake.com', 21, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
-  (19, 3, 'Stéphane19', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly19@fake.com', 22, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
-  (20, 3, 'Stéphane20', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly20@fake.com', 23, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
-  (21, 3, 'Stéphane21', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly21@fake.com', 24, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
-  (22, 3, 'Stéphane22', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly22@fake.com', 25, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
-  (23, 3, 'Stéphane23', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly23@fake.com', 26, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
-  (24, 3, 'Stéphane24', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly24@fake.com', 27, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
-  (25, 3, 'Stéphane25', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly25@fake.com', 28, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
-  (26, 3, 'Stéphane26', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly26@fake.com', 29, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
-  (27, 3, 'Stéphane27', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly27@fake.com', 30, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
-  (28, 3, 'Stéphane28', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly28@fake.com', 31, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'));
+INSERT INTO core_member (id, genderId, firstName, lastName, birthday, telephone, email, addressId, schoolYear, departmentId, company, profilePicture, droitImage, createdDate, isAlumni) VALUES
+  (1, 1, 'Conor', 'Breeze', STR_TO_DATE('1975-12-25', '%Y-%m-%d'), '+332541254', 'fake.mail@fake.com', 2, 3, 1, 'Google', '1c518c591e1be2f2703dd8c9bb77dbb5.jpg', true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false),
+  (3, 1, 'Laurence', 'Tainturière', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.mail3@fake.com', 3, 5, 2, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false),
+  (4, 3, 'Stéphane4', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly4@fake.com', 6, 3, 4, NULL, NULL, false, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false),
+  (6, 3, 'SuperPrenom', 'SuperNom', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'super@vraimentsuper.com', 9, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false),
+  (7, 3, 'Disabled', 'DisabledName', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'disabled@fake.com', 10, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false), -- Disabled member
+  (8, 3, 'Stéphane8', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly8@fake.com', 11, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false),
+  (9, 3, 'Stéphane9', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly9@fake.com', 12, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false),
+  (10, 3, 'Stéphane10', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly10@fake.com', 13, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false),
+  (11, 3, 'Stéphane11', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly11@fake.com', 14, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false),
+  (12, 3, 'Stéphane12', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly12@fake.com', 15, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false),
+  (13, 3, 'Stéphane13', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly13@fake.com', 16, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false),
+  (14, 3, 'Stéphane14', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly14@fake.com', 17, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false),
+  (15, 3, 'Stéphane15', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly15@fake.com', 18, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false),
+  (16, 3, 'Stéphane16', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly16@fake.com', 19, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false),
+  (17, 3, 'Stéphane17', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly17@fake.com', 20, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false),
+  (18, 3, 'Stéphane18', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly18@fake.com', 21, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false),
+  (19, 3, 'Stéphane19', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly19@fake.com', 22, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false),
+  (20, 3, 'Stéphane20', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly20@fake.com', 23, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false),
+  (21, 3, 'Stéphane21', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly21@fake.com', 24, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false),
+  (22, 3, 'Stéphane22', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly22@fake.com', 25, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false),
+  (23, 3, 'Stéphane23', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly23@fake.com', 26, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false),
+  (24, 3, 'Stéphane24', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly24@fake.com', 27, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false),
+  (25, 3, 'Stéphane25', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly25@fake.com', 28, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false),
+  (26, 3, 'Stéphane26', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly26@fake.com', 29, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false),
+  (27, 3, 'Stéphane27', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly27@fake.com', 30, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), true),
+  (28, 3, 'Stéphane28', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly28@fake.com', 31, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), true);
 
 TRUNCATE TABLE core_consultant;
 INSERT INTO core_consultant (id, genderId, firstName, lastName, birthday, telephone, email, addressId, socialSecurityNumber, schoolYear, departmentId, company, profilePicture, droitImage, isApprentice, createdDate, documentIdentity, documentScolaryCertificate, documentRIB, documentVitaleCard, documentResidencePermit, documentCVEC) VALUES
