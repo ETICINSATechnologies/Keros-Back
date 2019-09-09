@@ -131,7 +131,7 @@ class MemberDataService
                             $whereStatement .= 'm.' . $key . ' LIKE :' . $key;
                             $whereParameters[':' . $key] = '%' . $value . '%';
                         } elseif ($key == 'isAlumni') {
-                            $booleanValue = ($value === 'true');
+                            $booleanValue = filter_var(strtolower($value), FILTER_VALIDATE_BOOLEAN);
                             $whereStatement .= 'm.' . $key . ' = :' . $key;
                             $whereParameters[':' . $key] = $booleanValue;
                         }
