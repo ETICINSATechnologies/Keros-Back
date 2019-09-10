@@ -80,6 +80,7 @@ class MemberDataService
     public function getPage(RequestParameters $requestParameters, array $queryParams)
     {
         try {
+            $this->queryBuilder = $this->entityManager->createQueryBuilder();
             $this->queryBuilder
                 ->select('m')
                 ->from(Member::class, 'm')
@@ -93,7 +94,7 @@ class MemberDataService
             $whereParameters = array();
 
             foreach ($queryParams as $key => $value) {
-                if (in_array($key, ['search', 'poleId', 'positionId', 'year', 'firstName', 'lastName', 'company'])) {
+                if (in_array($key, ['search', 'poleId', 'positionId', 'year', 'firstName', 'lastName', 'company', 'isAlumni'])) {
                     if (!empty($whereStatement))
                         $whereStatement .= ' AND ';
 
@@ -129,6 +130,10 @@ class MemberDataService
                             // where with the form: 'm.key = :key'
                             $whereStatement .= 'm.' . $key . ' LIKE :' . $key;
                             $whereParameters[':' . $key] = '%' . $value . '%';
+                        } elseif ($key == 'isAlumni') {
+                            $booleanValue = filter_var(strtolower($value), FILTER_VALIDATE_BOOLEAN);
+                            $whereStatement .= 'm.' . $key . ' = :' . $key;
+                            $whereParameters[':' . $key] = $booleanValue;
                         }
                     }
                 }
@@ -152,10 +157,8 @@ class MemberDataService
             $this->queryBuilder
                 ->setFirstResult($firstResult)
                 ->setMaxResults($pageSize);
-
             $query = $this->queryBuilder->getQuery();
             $paginator = new Paginator($query, $fetchJoinCollection = true);
-
             return new Page($query->execute(), $requestParameters, count($paginator));
 
         } catch (Exception $e) {

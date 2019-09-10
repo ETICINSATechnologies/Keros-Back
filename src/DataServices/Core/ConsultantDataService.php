@@ -143,7 +143,6 @@ class ConsultantDataService
             $paginator = new Paginator($query, $fetchJoinCollection = true);
 
             return new Page($query->execute(), $requestParameters, count($paginator));
-
         } catch (Exception $e) {
             $msg = "Error finding page of consultants : " . $e->getMessage();
             $this->logger->error($msg);

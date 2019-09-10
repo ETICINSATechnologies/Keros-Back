@@ -174,7 +174,7 @@ class MemberIntegrationTest extends AppTestCase
                     "isBoard" => true
                 ),
                 array(
-                    "id" => 4,
+                    "id" => 3,
                     "year" => 2019,
                     "isBoard" => false
                 )
@@ -209,8 +209,9 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame("Amazon", $body->company);
         $this->assertNotNull($body->address->id);
         $this->assertSame(3, $body->positions[0]->id);
-        $this->assertSame(4, $body->positions[1]->id);
+        $this->assertSame(3, $body->positions[1]->id);
         $this->assertSame(true, $body->droitImage);
+        $this->assertSame(false, $body->isAlumni);
     }
 
     public function testDeleteMembersShouldReturn204()
@@ -279,6 +280,9 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(200, $response->getStatusCode());
 
         $body = json_decode($response->getBody());
+
+        $dateDiff = ((new \DateTime("9/1/2019"))->diff(new \DateTime($body->createdDate->date)))->format('%a');
+
         $this->assertSame(1, $body->id);
         $this->assertSame(1, $body->gender->id);
         $this->assertSame("Conor", $body->firstName);
@@ -288,6 +292,7 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame("fake.mail@fake.com", $body->email);
         $this->assertSame(2, $body->address->id);
         $this->assertSame(true, $body->droitImage);
+        $this->assertSame(intval($dateDiff),0);
     }
 
     public function testGetMemberShouldReturn404()
@@ -331,13 +336,14 @@ class MemberIntegrationTest extends AppTestCase
                     "isBoard" => true
                 ),
                 array(
-                    "id" => 4,
+                    "id" => 3,
                     "year" => 2019,
                     "isBoard" => false
                 )
             ],
             "company" => "Amazon",
-            "droitImage" => false
+            "droitImage" => false,
+            "isAlumni" => true,
         );
 
         $env = Environment::mock([
@@ -354,6 +360,9 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(201, $response->getStatusCode());
 
         $body = json_decode($response->getBody());
+
+        $dateDiff = ((new \DateTime())->diff(new \DateTime($body->createdDate->date)))->format('%a');
+
         $this->assertNotNull($body->id);
         $this->assertSame("newusername", $body->username);
         $this->assertSame("lastname", $body->lastName);
@@ -365,8 +374,11 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame("0033675385495", $body->telephone);
         $this->assertSame("Amazon", $body->company);
         $this->assertSame(3, $body->positions[0]->id);
-        $this->assertSame(4, $body->positions[1]->id);
+        $this->assertSame(3, $body->positions[1]->id);
         $this->assertSame(false, $body->droitImage);
+        $this->assertSame(intval($dateDiff),0);
+        $this->assertSame(true, $body->isAlumni);
+
     }
 
     public function testPutMemberShouldReturn200()
@@ -396,7 +408,7 @@ class MemberIntegrationTest extends AppTestCase
                     "isBoard" => true
                 ),
                 array(
-                    "id" => 4,
+                    "id" => 3,
                     "year" => 2019,
                     "isBoard" => false
                 )
@@ -418,6 +430,8 @@ class MemberIntegrationTest extends AppTestCase
 
         $body = json_decode($response->getBody());
 
+        $dateDiff = ((new \DateTime("9/1/2019"))->diff(new \DateTime($body->createdDate->date)))->format('%a');
+
         $this->assertNotNull($body->id);
         $this->assertSame("newusername", $body->username);
         $this->assertSame("firstName", $body->firstName);
@@ -431,8 +445,10 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame("Amazon", $body->company);
         $this->assertNotNull($body->address->id);
         $this->assertSame(3, $body->positions[0]->id);
-        $this->assertSame(4, $body->positions[1]->id);
+        $this->assertSame(3, $body->positions[1]->id);
         $this->assertSame(true, $body->droitImage);
+        $this->assertSame(intval($dateDiff),0);
+        $this->assertSame(false, $body->isAlumni);
     }
 
     public function testPutMemberEmptyBodyShouldReturn400()
@@ -451,7 +467,7 @@ class MemberIntegrationTest extends AppTestCase
     public function testPostMemberPhotoShouldReturn204()
     {
         $temp_fileName = "tempPhoto.jpg";
-        $handle = fopen($temp_fileName, 'w') or die('Cannot open file:  '.$temp_fileName);
+        $handle = fopen($temp_fileName, 'w') or die('Cannot open file:  ' . $temp_fileName);
         $file = new UploadedFile($temp_fileName, $temp_fileName, 'image/jpeg', filesize($temp_fileName));
 
         $env = Environment::mock([
@@ -470,7 +486,7 @@ class MemberIntegrationTest extends AppTestCase
     public function testPostMemberPhotoShouldReturn400()
     {
         $temp_fileName = "tempFile.csv";
-        $handle = fopen($temp_fileName, 'w') or die('Cannot open file:  '.$temp_fileName);
+        $handle = fopen($temp_fileName, 'w') or die('Cannot open file:  ' . $temp_fileName);
         $file = new UploadedFile($temp_fileName, $temp_fileName, 'text/csv', filesize($temp_fileName));
 
         $env = Environment::mock([
@@ -504,7 +520,7 @@ class MemberIntegrationTest extends AppTestCase
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
-        
+
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
             'REQUEST_URI' => '/api/v1/core/member/1/photo',
@@ -517,7 +533,7 @@ class MemberIntegrationTest extends AppTestCase
     }
 
     public function testGetMemberPhotoShouldReturn404()
-    {   
+    {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
             'REQUEST_URI' => '/api/v1/core/member/2/photo',
@@ -529,7 +545,8 @@ class MemberIntegrationTest extends AppTestCase
     }
 
     public function testDeleteMemberPhotoShouldReturn204()
-    {   $fileName = "tempPhoto.jpg";
+    {
+        $fileName = "tempPhoto.jpg";
         $handle = fopen($fileName, "w");
         fclose($handle);
         $file = new UploadedFile($fileName, $fileName, 'image/jpeg', filesize($fileName));
@@ -555,7 +572,7 @@ class MemberIntegrationTest extends AppTestCase
     }
 
     public function testDeleteMemberPhotoShouldReturn404()
-    {   
+    {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'DELETE',
             'REQUEST_URI' => '/api/v1/core/member/2/photo',
@@ -565,7 +582,7 @@ class MemberIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
         $this->assertSame(404, $response->getStatusCode());
     }
-    
+
     public function testPostMemberWithoutRightShouldReturn401()
     {
         $post_body = array(
@@ -594,7 +611,7 @@ class MemberIntegrationTest extends AppTestCase
                     "isBoard" => true
                 ),
                 array(
-                    "id" => 4,
+                    "id" => 3,
                     "year" => 2019,
                     "isBoard" => false
                 )
@@ -632,4 +649,62 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(3, $body->content[0]->id);
     }
 
+
+    public function testDeleteAllExistingMemberShouldReturn204()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/core/member?pageSize=100',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $body = json_decode($response->getBody());
+
+        foreach ($body->content as $member) {
+            $env = Environment::mock([
+                'REQUEST_METHOD' => 'DELETE',
+                'REQUEST_URI' => '/api/v1/core/member/' . $member->id,
+            ]);
+            $req = Request::createFromEnvironment($env);
+            $this->app->getContainer()['request'] = $req;
+            $response = $this->app->run(false);
+
+            $this->assertSame(204, $response->getStatusCode());
+        }
+    }
+
+    public function testGetOnlyAlumniMembersShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/core/member?isAlumni=true',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+
+        $body = json_decode($response->getBody());
+        $this->assertNotNull($body->content);
+        $this->assertEquals(2, count($body->content));
+        $this->assertSame(true, $body->content[0]->isAlumni);
+    }
+
+    public function testGetOnlyActiveMembersShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/core/member?isAlumni=false',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+
+        $body = json_decode($response->getBody());
+        $this->assertNotNull($body->content);
+        $this->assertEquals(24, count($body->content));
+        $this->assertSame(false, $body->content[0]->isAlumni);
+    }
 }

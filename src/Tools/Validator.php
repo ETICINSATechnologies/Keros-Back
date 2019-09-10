@@ -283,6 +283,17 @@ class Validator
         return $array;
     }
 
+    public static function optionalArray($array): ?array
+    {
+        if ($array == null) {
+            return null;
+        }
+        if (!is_array($array)) {
+            throw new KerosException("The provided array is not actually an array", 400);
+        }
+        return $array;
+    }
+
     public static function requiredContact($contact): Contact
     {
         if (!$contact) {

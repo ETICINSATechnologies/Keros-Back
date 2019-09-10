@@ -7,7 +7,7 @@ Options -ExecCGI
 AddHandler cgi-script .php .pl .py .jsp .asp .htm .shtml .sh .cgi
 
 # Allow method
-RewriteCond %{REQUEST_METHOD} !^(GET|HEAD|OPTIONS|POST|PUT)
+RewriteCond %{REQUEST_METHOD} !^(GET|HEAD|OPTIONS|POST|PUT|DELETE)
 RewriteRule .? - [F]
 
 # Desactivate directories content display

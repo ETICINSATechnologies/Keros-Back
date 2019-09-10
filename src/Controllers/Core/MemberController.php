@@ -17,7 +17,6 @@ use Keros\Tools\ConfigLoader;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-
 class MemberController
 {
     /**
@@ -134,7 +133,7 @@ class MemberController
 
     public function updateMember(Request $request, Response $response, array $args)
     {
-        $this->logger->debug("Updating member from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->logger->debug("Updating member " . $args['id'] . " from " . $request->getServerParams()["REMOTE_ADDR"]);
         $body = $request->getParsedBody();
 
         $this->entityManager->beginTransaction();
@@ -146,7 +145,7 @@ class MemberController
 
     public function deleteMember(Request $request, Response $response, array $args)
     {
-        $this->logger->debug("Deleting member from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->logger->debug("Deleting member " . $args['id'] . " from " . $request->getServerParams()["REMOTE_ADDR"]);
 
         $this->entityManager->beginTransaction();
         $this->memberService->delete($args['id']);

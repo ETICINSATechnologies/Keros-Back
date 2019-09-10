@@ -3,6 +3,7 @@
 
 namespace Keros\Services\Sg;
 
+use DateTime;
 use Keros\DataServices\Sg\MemberInscriptionDataService;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Sg\MemberInscription;
@@ -16,49 +17,35 @@ use Keros\Services\Core\PoleService;
 use Keros\Tools\Validator;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
-use DateTime;
 
 class   MemberInscriptionService
 {
-    /**
-     * @var AddressService
-     */
+    /** @var AddressService */
     private $addressService;
 
-    /**
-     * @var GenderService
-     */
+    /** @var GenderService */
     private $genderService;
 
-    /**
-     * @var MemberService
-     */
+    /** @var MemberService */
     private $memberService;
 
-    /**
-     * @var MemberInscriptionDataService
-     */
+    /** @var MemberInscriptionDataService */
     private $memberInscriptionDataService;
 
-    /**
-     * @var CountryService
-     */
+    /** @var CountryService */
     private $countryService;
 
-    /**
-     * @var DepartmentService
-     */
+    /** @var DepartmentService */
     private $departmentService;
 
-    /**
-     * @var PoleService
-     */
+    /** @var PoleService */
     private $poleService;
 
-    /**
-     * @var Logger
-     */
+    /** @var Logger */
     private $logger;
+
+    /** @var MemberInscriptionDocumentService */
+    private $memberInscriptionDocumentService;
 
     public function __construct(ContainerInterface $container)
     {
@@ -70,6 +57,7 @@ class   MemberInscriptionService
         $this->memberService = $container->get(MemberService::class);
         $this->poleService = $container->get(PoleService::class);
         $this->memberInscriptionDataService = $container->get(MemberInscriptionDataService::class);
+        $this->memberInscriptionDocumentService = $container->get(MemberInscriptionDocumentService::class);
     }
 
     /**
@@ -93,11 +81,12 @@ class   MemberInscriptionService
         $genderId = Validator::requiredId($fields['genderId']);
         $gender = $this->genderService->getOne($genderId);
         $birthday = Validator::requiredDate($fields['birthday']);
-        $hasPaid = Validator::optionalBool(isset($fields['hasPaid']) ? $fields['hasPaid'] : false);
+        $hasPaid = false;
         $droitImage = Validator::requiredBool($fields['droitImage']);
+        $createdDate = new \DateTime();
 
         $address = $this->addressService->create($fields["address"]);
-        $memberInscription = new MemberInscription($firstName, $lastName, $gender, $birthday, $department, $email, $phoneNumber, $outYear, $nationality, $address, $wantedPole, $hasPaid, $droitImage);
+        $memberInscription = new MemberInscription($firstName, $lastName, $gender, $birthday, $department, $email, $phoneNumber, $outYear, $nationality, $address, $wantedPole, $hasPaid, $droitImage, $createdDate, array());
 
         $this->memberInscriptionDataService->persist($memberInscription);
 
@@ -112,6 +101,14 @@ class   MemberInscriptionService
     {
         $id = Validator::requiredId($id);
         $memberInscription = $this->getOne($id);
+        $memberInscriptionDocuments = $memberInscription->getMemberInscriptionDocumentsArray();
+        foreach ($memberInscriptionDocuments as $memberInscriptionDocument) {
+            $member = $memberInscriptionDocument->getMember();
+            $this->memberInscriptionDocumentService->update($memberInscriptionDocument->getId(), null, $member);
+            if ($member == null)
+                $this->memberInscriptionDocumentService->delete($memberInscriptionDocument->getId());
+
+        }
         $this->memberInscriptionDataService->delete($memberInscription);
     }
 
@@ -126,7 +123,7 @@ class   MemberInscriptionService
 
         $memberInscription = $this->memberInscriptionDataService->getOne($id);
         if (!$memberInscription) {
-            throw new KerosException("The memberInscription " . $id . " could not be found", 404);
+            throw new KerosException("The member_inscription " . $id . " could not be found", 404);
         }
         return $memberInscription;
     }
@@ -184,7 +181,6 @@ class   MemberInscriptionService
         $genderId = Validator::requiredId($fields['genderId']);
         $gender = $this->genderService->getOne($genderId);
         $birthday = Validator::requiredDate($fields['birthday']);
-        $hasPaid = Validator::optionalBool(isset($fields['hasPaid']) ? $fields['hasPaid'] : false);
         $droitImage = Validator::requiredBool($fields['droitImage']);
 
         $memberInscription->setFirstName($firstName);
@@ -197,7 +193,6 @@ class   MemberInscriptionService
         $memberInscription->setWantedPole($wantedPole);
         $memberInscription->setGender($gender);
         $memberInscription->setBirthday($birthday);
-        $memberInscription->setHasPaid($hasPaid);
         $memberInscription->setDroitImage($droitImage);
         $this->addressService->update($memberInscription->getAddress()->getId(), $fields["address"]);
 
@@ -239,17 +234,22 @@ class   MemberInscriptionService
                 "countryId" => $memberInscription->getAddress()->getCountry()->getId()
             ),
             "positions" => array(),
-            "droitImage" => $memberInscription->isDroitImage()
+            "droitImage" => $memberInscription->isDroitImage(),
+            "createdDate" => new \DateTime(),
         );
 
         if ($memberInscription->getOutYear()) {
             $schoolYear = 5 - ($memberInscription->getOutYear() - $year);
-            if($month > 8 && $month <= 12) //between September and December
+            if ($month > 8 && $month <= 12) //between September and December
                 $schoolYear += 1;
             $memberArray["schoolYear"] = $schoolYear;
         }
 
-        $this->memberService->create($memberArray);
+        $member = $this->memberService->create($memberArray);
+        foreach ($memberInscription->getMemberInscriptionDocumentsArray() as $memberInscriptionDocument) {
+            $this->memberInscriptionDocumentService->update($memberInscriptionDocument->getId(), null, $member);
+        }
+
         $this->delete($memberInscription->getId());
     }
 

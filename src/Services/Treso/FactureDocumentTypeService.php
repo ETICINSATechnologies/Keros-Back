@@ -236,7 +236,7 @@ class FactureDocumentTypeService
         $president = null;
         $board = $this->memberService->getLatestBoard();
         foreach ($board as $member) {
-            foreach ($member->getPositionsArray() as $position) {
+            foreach ($member->getMemberPositionsArray() as $position) {
                 if ($position->getIsBoard()) {
                     if ($position->getPosition()->getId() == 23)
                         $tresorier = $position->getMember();

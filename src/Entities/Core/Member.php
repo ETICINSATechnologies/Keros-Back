@@ -3,6 +3,7 @@
 namespace Keros\Entities\Core;
 
 use JsonSerializable;
+use Keros\Entities\Sg\MemberInscriptionDocument;
 
 /**
  * @Entity
@@ -70,6 +71,16 @@ class Member implements JsonSerializable
     protected $droitImage;
 
     /**
+     * @Column(type="datetime")
+     */
+    protected $createdDate;
+
+    /**
+     * @Column(type="boolean")
+     */
+    protected $isAlumni;
+
+    /**
      * @ManyToMany(targetEntity="Keros\Entities\Ua\Study", mappedBy="qualityManagers")
      */
     protected $studiesAsQualityManager;
@@ -78,8 +89,31 @@ class Member implements JsonSerializable
      * @ManyToMany(targetEntity="Keros\Entities\Ua\Study", mappedBy="leaders")
      */
     protected $studiesAsLeader;
-    
-    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage)
+
+    /**
+     * @var MemberInscriptionDocument[]
+     * @OneToMany(targetEntity="Keros\Entities\Sg\MemberInscriptionDocument", mappedBy="member")
+     */
+    private $memberInscriptionDocuments;
+
+    /**
+     * Member constructor.
+     * @param $firstName
+     * @param $lastName
+     * @param $birthday
+     * @param $telephone
+     * @param $email
+     * @param $schoolYear
+     * @param $gender
+     * @param $department
+     * @param $company
+     * @param $profilePicture
+     * @param $droitImage
+     * @param $createdDate
+     * @param $isAlumni
+     * @param $memberInscriptionDocuments
+     */
+    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage, $createdDate, $isAlumni, $memberInscriptionDocuments)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -92,6 +126,9 @@ class Member implements JsonSerializable
         $this->company = $company;
         $this->profilePicture = $profilePicture;
         $this->droitImage = $droitImage;
+        $this->createdDate = $createdDate;
+        $this->isAlumni = $isAlumni;
+        $this->memberInscriptionDocuments = $memberInscriptionDocuments;
     }
 
     public function jsonSerialize()
@@ -112,6 +149,8 @@ class Member implements JsonSerializable
             'company' => $this->getCompany(),
             'profilePicture' => $this->getProfilePicture(),
             'droitImage' => $this->isDroitImage(),
+            'createdDate' => $this->getCreatedDate(),
+            'isAlumni' => $this->getIsAlumni(),
         ];
     }
 
@@ -409,6 +448,66 @@ class Member implements JsonSerializable
     public function setDroitImage(bool $droitImage): void
     {
         $this->droitImage = $droitImage;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedDate(): \DateTime
+    {
+        return $this->createdDate;
+    }
+    
+    /**
+     * @param \DateTime $createdDate
+     */
+    public function setCreatedDate(\DateTime $createdDate): void
+    {
+        $this->createdDate = $createdDate;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsAlumni(): bool
+    {
+        return $this->isAlumni;
+    }
+
+    /**
+     * @param bool $isAlumni
+     */
+    public function setIsAlumni(bool $isAlumni): void
+    {
+        $this->isAlumni = $isAlumni;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMemberInscriptionDocuments()
+    {
+        return $this->memberInscriptionDocuments;
+    }
+
+    /**
+     * @return MemberInscriptionDocument[]
+     */
+    public function getMemberInscriptionDocumentsArray() : array
+    {
+        $memberInscriptionDocuments = array();
+        foreach ($this->getMemberInscriptionDocuments() as $memberInscriptionDocument){
+            $memberInscriptionDocuments[] = $memberInscriptionDocument;
+        }
+        return $memberInscriptionDocuments;
+    }
+
+    /**
+     * @param MemberInscriptionDocument[] $memberInscriptionDocument
+     */
+    public function setMemberInscriptionDocuments(array $memberInscriptionDocument): void
+    {
+        $this->memberInscriptionDocuments = $memberInscriptionDocument;
     }
 
 }
