@@ -23,7 +23,7 @@ class ContactIntegrationTest extends AppTestCase
 
         $body = json_decode($response->getBody());
         $this->assertNotNull($body->content);
-        $this->assertSame(3, sizeof($body->content));
+        $this->assertSame(6, sizeof($body->content));
         $this->assertSame(4, $body->content[0]->id);
         $this->assertSame(2, $body->content[1]->id);
         $this->assertSame(3, $body->content[2]->id);
@@ -80,7 +80,7 @@ class ContactIntegrationTest extends AppTestCase
         $this->assertSame($response->getStatusCode(), 200);
         $body = json_decode($response->getBody());
 
-        $this->assertEquals(count($body->content), 4);
+        $this->assertEquals(count($body->content), 25);
     }
 
     public function testGetContactShouldReturn200()
@@ -112,7 +112,7 @@ class ContactIntegrationTest extends AppTestCase
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/api/v1/ua/contact/6',
+            'REQUEST_URI' => '/api/v1/ua/contact/664654',
         ]);
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
@@ -198,7 +198,6 @@ class ContactIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
 
         $this->assertSame(204, $response->getStatusCode());
-
     }
 
     public function testSearchContactUsingSearchShouldReturn200()
@@ -218,5 +217,62 @@ class ContactIntegrationTest extends AppTestCase
         $this->assertNotNull($body->content);
         $this->assertSame(1, sizeof($body->content));
         $this->assertSame(1, $body->content[0]->id);
+    }
+
+    public function testGetAllContactsPage0ShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/ua/contact?pageNumber=0',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+        $body = json_decode($response->getBody());
+        $this->assertEquals(25, count($body->content));
+        $this->assertNotNull(strlen($body->content[0]->id));
+        $this->assertNotNull(strlen($body->content[0]->firstName));
+        $this->assertNotNull(strlen($body->content[0]->lastName));
+        $this->assertNotNull(strlen($body->content[0]->firm->id));
+        $this->assertNotNull(strlen($body->content[0]->gender->id));
+        $this->assertNotNull(strlen($body->content[0]->email));
+        $this->assertNotNull(strlen($body->content[0]->telephone));
+        $this->assertNotNull(strlen($body->content[0]->cellphone));
+        $this->assertNotNull(strlen($body->content[0]->position));
+        $this->assertNotNull(strlen($body->content[0]->notes));
+        $this->assertNotNull($body->content[0]->old);
+        $this->assertSame(0, $body->meta->page);
+        $this->assertSame(2, $body->meta->totalPages);
+        $this->assertSame(30, $body->meta->totalItems);
+        $this->assertSame(25, $body->meta->itemsPerPage);
+    }
+    public function testGetAllContactsPage1ShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/ua/contact?pageNumber=1',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+        $body = json_decode($response->getBody());
+        $this->assertEquals(5, count($body->content));
+        $this->assertNotNull(strlen($body->content[0]->id));
+        $this->assertNotNull(strlen($body->content[0]->firstName));
+        $this->assertNotNull(strlen($body->content[0]->lastName));
+        $this->assertNotNull(strlen($body->content[0]->firm->id));
+        $this->assertNotNull(strlen($body->content[0]->gender->id));
+        $this->assertNotNull(strlen($body->content[0]->email));
+        $this->assertNotNull(strlen($body->content[0]->telephone));
+        $this->assertNotNull(strlen($body->content[0]->cellphone));
+        $this->assertNotNull(strlen($body->content[0]->position));
+        $this->assertNotNull(strlen($body->content[0]->notes));
+        $this->assertNotNull($body->content[0]->old);
+        $this->assertSame(1, $body->meta->page);
+        $this->assertSame(2, $body->meta->totalPages);
+        $this->assertSame(30, $body->meta->totalItems);
+        $this->assertSame(25, $body->meta->itemsPerPage);
     }
 }

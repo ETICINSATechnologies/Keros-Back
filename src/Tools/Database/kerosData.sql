@@ -210,10 +210,36 @@ INSERT INTO ua_firm (id, siret, name, addressId, typeId, mainContact) VALUES
 
 TRUNCATE TABLE ua_contact;
 INSERT INTO `ua_contact` (`id`, `firstName`, `lastName`, `genderId`, `firmId`, `email`, `telephone`, `cellphone`, `position`, `notes`, `old`) VALUES
-  (1, 'Alexandre', 'Lang', 1, 2, 'alexandre.lang@etic.com', NULL, '0033175985495', 'Directeur Marketing', 'RAS', 1),
-  (2, 'Conor', 'Ryan', 1, 1, 'conor.ryan@etic.com', '0033666666666', '0033666666666', 'Architecte Réseau', null, 1),
-  (3, 'Laurent', 'Tainturier', 1, 1, 'laurent.tainturier@etic.com', '0033333333333', '0033222222222', 'Chercheur', 'Part de la boite bientôt', 1),
-  (4, 'Marah', 'Galy Adam', 1, 1, 'marah.galy@etic-insa.com', '0033646786532', NULL, NULL, NULL, 0);
+  (1, 'Alexandre', 'Lang', 1, 2, 'alexandre.lang@etic.com', NULL, '0033175985495', 'Directeur Marketing', 'RAS', true),
+  (2, 'Conor', 'Ryan', 1, 1, 'conor.ryan@etic.com', '0033666666666', '0033666666666', 'Architecte Réseau', null, true),
+  (3, 'Laurent', 'Tainturier', 1, 1, 'laurent.tainturier@etic.com', '0033333333333', '0033222222222', 'Chercheur', 'Part de la boite bientôt', true),
+  (4, 'Marah', 'Galy Adam', 1, 1, 'marah.galy@etic-insa.com', '0033646786532', NULL, NULL, NULL, false),
+  (5, 'Contact 5', 'Contact Name 5', 3, 17, 'Contact 5@fake.com', '0033646786532', '0033222222222', 'CEO', 'Sample data', true),
+  (6, 'Contact 6', 'Contact Name 6', 3, 8, 'Contact 6@fake.com', '0033646786532', '0033222222222', 'CEO', 'Sample data', false),
+  (7, 'Contact 7', 'Contact Name 7', 1, 14, 'Contact 7@fake.com', '0033646786532', '0033222222222', 'CEO', 'Sample data', false),
+  (8, 'Contact 8', 'Contact Name 8', 4, 10, 'Contact 8@fake.com', '0033646786532', '0033222222222', 'CEO', 'Sample data', false),
+  (9, 'Contact 9', 'Contact Name 9', 1, 1, 'Contact 9@fake.com', '0033646786532', '0033222222222', 'CEO', 'Sample data', false),
+  (10, 'Contact 10', 'Contact Name 10', 3, 12, 'Contact 10@fake.com', '0033646786532', '0033222222222', 'CEO', 'Sample data', true),
+  (11, 'Contact 11', 'Contact Name 11', 4, 9, 'Contact 11@fake.com', '0033646786532', '0033222222222', 'CEO', 'Sample data', true),
+  (12, 'Contact 12', 'Contact Name 12', 3, 1, 'Contact 12@fake.com', '0033646786532', '0033222222222', 'CEO', 'Sample data', true),
+  (13, 'Contact 13', 'Contact Name 13', 3, 23, 'Contact 13@fake.com', '0033646786532', '0033222222222', 'CEO', 'Sample data', false),
+  (14, 'Contact 14', 'Contact Name 14', 2, 16, 'Contact 14@fake.com', '0033646786532', '0033222222222', 'CEO', 'Sample data', false),
+  (15, 'Contact 15', 'Contact Name 15', 3, 15, 'Contact 15@fake.com', '0033646786532', '0033222222222', 'CEO', 'Sample data', true),
+  (16, 'Contact 16', 'Contact Name 16', 2, 25, 'Contact 16@fake.com', '0033646786532', '0033222222222', 'CEO', 'Sample data', false),
+  (17, 'Contact 17', 'Contact Name 17', 1, 8, 'Contact 17@fake.com', '0033646786532', '0033222222222', 'CEO', 'Sample data', false),
+  (18, 'Contact 18', 'Contact Name 18', 3, 5, 'Contact 18@fake.com', '0033646786532', '0033222222222', 'CEO', 'Sample data', false),
+  (19, 'Contact 19', 'Contact Name 19', 2, 4, 'Contact 19@fake.com', '0033646786532', '0033222222222', 'CEO', 'Sample data', true),
+  (20, 'Contact 20', 'Contact Name 20', 2, 1, 'Contact 20@fake.com', '0033646786532', '0033222222222', 'CEO', 'Sample data', true),
+  (21, 'Contact 21', 'Contact Name 21', 3, 18, 'Contact 21@fake.com', '0033646786532', '0033222222222', 'CEO', 'Sample data', false),
+  (22, 'Contact 22', 'Contact Name 22', 1, 18, 'Contact 22@fake.com', '0033646786532', '0033222222222', 'CEO', 'Sample data', true),
+  (23, 'Contact 23', 'Contact Name 23', 2, 5, 'Contact 23@fake.com', '0033646786532', '0033222222222', 'CEO', 'Sample data', true),
+  (24, 'Contact 24', 'Contact Name 24', 4, 16, 'Contact 24@fake.com', '0033646786532', '0033222222222', 'CEO', 'Sample data', false),
+  (25, 'Contact 25', 'Contact Name 25', 4, 25, 'Contact 25@fake.com', '0033646786532', '0033222222222', 'CEO', 'Sample data', true),
+  (26, 'Contact 26', 'Contact Name 26', 4, 3, 'Contact 26@fake.com', '0033646786532', '0033222222222', 'CEO', 'Sample data', false),
+  (27, 'Contact 27', 'Contact Name 27', 4, 6, 'Contact 27@fake.com', '0033646786532', '0033222222222', 'CEO', 'Sample data', true),
+  (28, 'Contact 28', 'Contact Name 28', 4, 24, 'Contact 28@fake.com', '0033646786532', '0033222222222', 'CEO', 'Sample data', true),
+  (29, 'Contact 29', 'Contact Name 29', 1, 3, 'Contact 29@fake.com', '0033646786532', '0033222222222', 'CEO', 'Sample data', false),
+  (30, 'Contact 30', 'Contact Name 30', 1, 7, 'Contact 30@fake.com', '0033646786532', '0033222222222', 'CEO', 'Sample data', true);
 
 #Penser à update StudyIntegrationTest.testDeleteAllStudyShouldReturn204
 TRUNCATE TABLE ua_study;
