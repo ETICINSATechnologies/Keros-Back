@@ -6,6 +6,8 @@ use KerosTest\AppTestCase;
 use Slim\Http\Environment;
 use Slim\Http\Request;
 use Keros\Tools\Helpers\FileHelper;
+use Slim\Exception\MethodNotAllowedException;
+use Slim\Exception\NotFoundException;
 
 class ConsultantIntegrationTest extends AppTestCase
 {
@@ -164,7 +166,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame(200, $response->getStatusCode());
 
         $body = json_decode($response->getBody());
-        $this->assertEquals(2, count($body->content));
+        $this->assertEquals(25, count($body->content));
         $this->assertNotNull(strlen($body->content[0]->id));
         $this->assertNotNull(strlen($body->content[0]->username));
         $this->assertNotNull(strlen($body->content[0]->firstName));
@@ -380,7 +382,7 @@ class ConsultantIntegrationTest extends AppTestCase
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'PUT',
-            'REQUEST_URI' => '/api/v1/core/member/1',
+            'REQUEST_URI' => '/api/v1/core/consultant/2',
         ]);
 
         $req = Request::createFromEnvironment($env);
@@ -521,7 +523,6 @@ class ConsultantIntegrationTest extends AppTestCase
             'REQUEST_METHOD' => 'GET',
             'REQUEST_URI' => "/api/v1/core/consultant/2/document/$filename",
         ]);
-
         $req = Request::createFromEnvironment($env);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
@@ -620,5 +621,57 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame(true,$body->isApprentice);
         $dateDiff = ((new \DateTime())->diff(new \DateTime($body->createdDate->date)))->format('%a');
         $this->assertSame(intval($dateDiff),0);
+    }
+
+    public function testGetAllConsultantsPage0ShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/core/consultant?pageNumber=0',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+        $body = json_decode($response->getBody());
+        $this->assertEquals(25, count($body->content));
+        $this->assertNotNull(strlen($body->content[0]->id));
+        $this->assertNotNull(strlen($body->content[0]->username));
+        $this->assertNotNull(strlen($body->content[0]->firstName));
+        $this->assertNotNull(strlen($body->content[0]->lastName));
+        $this->assertNotNull(strlen($body->content[0]->gender->id));
+        $this->assertNotNull(strlen($body->content[0]->email));
+        $this->assertNotNull(strlen($body->content[0]->birthday));
+        $this->assertNotNull(strlen($body->content[0]->address->id));
+        $this->assertSame(0, $body->meta->page);
+        $this->assertSame(2, $body->meta->totalPages);
+        $this->assertSame(29, $body->meta->totalItems);
+        $this->assertSame(25, $body->meta->itemsPerPage);
+    }
+
+    public function testGetAllConsultantsPage1ShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/core/consultant?pageNumber=1',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+        $body = json_decode($response->getBody());
+        $this->assertEquals(4, count($body->content));
+        $this->assertNotNull(strlen($body->content[0]->id));
+        $this->assertNotNull(strlen($body->content[0]->username));
+        $this->assertNotNull(strlen($body->content[0]->firstName));
+        $this->assertNotNull(strlen($body->content[0]->lastName));
+        $this->assertNotNull(strlen($body->content[0]->gender->id));
+        $this->assertNotNull(strlen($body->content[0]->email));
+        $this->assertNotNull(strlen($body->content[0]->birthday));
+        $this->assertNotNull(strlen($body->content[0]->address->id));
+        $this->assertSame(1, $body->meta->page);
+        $this->assertSame(2, $body->meta->totalPages);
+        $this->assertSame(29, $body->meta->totalItems);
+        $this->assertSame(25, $body->meta->itemsPerPage);
     }
 }

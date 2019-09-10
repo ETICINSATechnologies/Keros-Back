@@ -32,7 +32,34 @@ INSERT INTO core_user (id, username, password, expiresAt, disabled) VALUES
     (25, 'user25', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
     (26, 'user26', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
     (27, 'user27', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
-    (28, 'user28', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false); #password
+    (28, 'user28', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG' , STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (29, 'consultant 29', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (30, 'consultant 30', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (31, 'consultant 31', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (32, 'consultant 32', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (33, 'consultant 33', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (34, 'consultant 34', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (35, 'consultant 35', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (36, 'consultant 36', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (37, 'consultant 37', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (38, 'consultant 38', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (39, 'consultant 39', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (40, 'consultant 40', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (41, 'consultant 41', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (42, 'consultant 42', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (43, 'consultant 43', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (44, 'consultant 44', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (45, 'consultant 45', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (46, 'consultant 46', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (47, 'consultant 47', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (48, 'consultant 48', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (49, 'consultant 49', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (50, 'consultant 50', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (51, 'consultant 51', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (52, 'consultant 52', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (53, 'consultant 53', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (54, 'consultant 54', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (55, 'consultant 55', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false); #password
 
 TRUNCATE TABLE core_address;
 INSERT INTO core_address (id, line1, line2, postalCode, city, countryId) VALUES
@@ -124,7 +151,34 @@ INSERT INTO core_address (id, line1, line2, postalCode, city, countryId) VALUES
     (86, 'rue facture 1', 'Meat', '674A4', 'Paris', 40), # facture 1
     (87, 'rue facture 2', 'Meat', '674A4', 'Paris', 40), # facture 2
     (88, 'rue facture 3', 'Meat', '674A4', 'Paris', 40), # facture 3
-    (89, 'rue facture 4', 'Meat', '674A4', 'Paris', 40); # facture 4
+    (89, 'rue facture 4', 'Meat', '674A4', 'Paris', 40), # facture 4
+    (90, 'Rue consultant 29', 'Ter', '79413', 'Lyon City', 35), #consultant 29
+    (91, 'Rue consultant 30', 'Ter', '79413', 'Lyon City', 33), #consultant 30
+    (92, 'Rue consultant 31', 'Ter', '79413', 'Lyon City', 52), #consultant 31
+    (93, 'Rue consultant 32', 'Ter', '79413', 'Lyon City', 90), #consultant 32
+    (94, 'Rue consultant 33', 'Ter', '79413', 'Lyon City', 67), #consultant 33
+    (95, 'Rue consultant 34', 'Ter', '79413', 'Lyon City', 38), #consultant 34
+    (96, 'Rue consultant 35', 'Ter', '79413', 'Lyon City', 77), #consultant 35
+    (97, 'Rue consultant 36', 'Ter', '79413', 'Lyon City', 56), #consultant 36
+    (98, 'Rue consultant 37', 'Ter', '79413', 'Lyon City', 32), #consultant 37
+    (99, 'Rue consultant 38', 'Ter', '79413', 'Lyon City', 57), #consultant 38
+    (100, 'Rue consultant 39', 'Ter', '79413', 'Lyon City', 59), #consultant 39
+    (101, 'Rue consultant 40', 'Ter', '79413', 'Lyon City', 44), #consultant 40
+    (102, 'Rue consultant 41', 'Ter', '79413', 'Lyon City', 40), #consultant 41
+    (103, 'Rue consultant 42', 'Ter', '79413', 'Lyon City', 53), #consultant 42
+    (104, 'Rue consultant 43', 'Ter', '79413', 'Lyon City', 23), #consultant 43
+    (105, 'Rue consultant 44', 'Ter', '79413', 'Lyon City', 12), #consultant 44
+    (106, 'Rue consultant 45', 'Ter', '79413', 'Lyon City', 84), #consultant 45
+    (107, 'Rue consultant 46', 'Ter', '79413', 'Lyon City', 86), #consultant 46
+    (108, 'Rue consultant 47', 'Ter', '79413', 'Lyon City', 99), #consultant 47
+    (109, 'Rue consultant 48', 'Ter', '79413', 'Lyon City', 22), #consultant 48
+    (110, 'Rue consultant 49', 'Ter', '79413', 'Lyon City', 85), #consultant 49
+    (111, 'Rue consultant 50', 'Ter', '79413', 'Lyon City', 58), #consultant 50
+    (112, 'Rue consultant 51', 'Ter', '79413', 'Lyon City', 92), #consultant 51
+    (113, 'Rue consultant 52', 'Ter', '79413', 'Lyon City', 61), #consultant 52
+    (114, 'Rue consultant 53', 'Ter', '79413', 'Lyon City', 85), #consultant 53
+    (115, 'Rue consultant 54', 'Ter', '79413', 'Lyon City', 71), #consultant 54
+    (116, 'Rue consultant 55', 'Ter', '79413', 'Lyon City', 97); #consultant 55
 
 TRUNCATE TABLE core_ticket;
 INSERT INTO core_ticket (id, userId, title, message, type, status) VALUES
@@ -161,8 +215,35 @@ INSERT INTO core_member (id, genderId, firstName, lastName, birthday, telephone,
 
 TRUNCATE TABLE core_consultant;
 INSERT INTO core_consultant (id, genderId, firstName, lastName, birthday, telephone, email, addressId, socialSecurityNumber, schoolYear, departmentId, company, profilePicture, droitImage, isApprentice, createdDate, documentIdentity, documentScolaryCertificate, documentRIB, documentVitaleCard, documentResidencePermit, documentCVEC) VALUES
-  (2, 1, 'Marah', 'Cool', STR_TO_DATE('1976-10-27', '%Y-%m-%d'), '+332541541', 'fake.mail2@fake.com', 8, 123456789012345, 3, 1, 'Amazon', NULL, true, true, STR_TO_DATE('2019-09-01', '%Y-%m-%d'), "test.pdf", "test.pdf", "test.pdf", "test.pdf", "test.pdf", "test.pdf"),
-  (5, 3, 'Louis', 'Ung', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.mail3@fake.com', 7, 123456789012345, 3, 4, NULL, NULL, false, true, STR_TO_DATE('2019-09-01', '%Y-%m-%d'), NULL, NULL, NULL, NULL, NULL, NULL);
+  (2, 1, 'Marah', 'Cool', STR_TO_DATE('1976-10-27', '%Y-%m-%d'), '+332541541', 'fake.mail2@fake.com', 8, 123456789012345, 3, 1, 'Amazon', NULL, true, true, STR_TO_DATE('2019-09-01', '%Y-%m-%d'), 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf'),
+  (5, 3, 'Louis', 'Ung', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.mail3@fake.com', 7, 123456789012345, 3, 4, NULL, NULL, false, true, STR_TO_DATE('2019-09-01', '%Y-%m-%d'), NULL, NULL, NULL, NULL, NULL, NULL),
+  (29, 1, 'Consultant 29', 'Consultant Name29', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant29@fake.com', 90, null, 1, 1, 'Fake Enterprise Consultant 29', NULL, true, true, STR_TO_DATE('2019-09-01', '%Y-%m-%d'), NULL, NULL, NULL, NULL, NULL, NULL),
+  (30, 4, 'Consultant 30', 'Consultant Name30', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant30@fake.com', 91, null, 3, 11, 'Fake Enterprise Consultant 30', NULL, false, true, STR_TO_DATE('2019-09-01', '%Y-%m-%d'), NULL, NULL, NULL, NULL, NULL, NULL),
+  (31, 4, 'Consultant 31', 'Consultant Name31', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant31@fake.com', 92, null, 5, 2, 'Fake Enterprise Consultant 31', NULL, true, true, STR_TO_DATE('2019-09-01', '%Y-%m-%d'), NULL, NULL, NULL, NULL, NULL, NULL),
+  (32, 3, 'Consultant 32', 'Consultant Name32', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant32@fake.com', 93, null, 4, 7, 'Fake Enterprise Consultant 32', NULL, true, true, STR_TO_DATE('2019-09-01', '%Y-%m-%d'), NULL, NULL, NULL, NULL, NULL, NULL),
+  (33, 4, 'Consultant 33', 'Consultant Name33', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant33@fake.com', 94, null, 8, 4, 'Fake Enterprise Consultant 33', NULL, false, true, STR_TO_DATE('2019-09-01', '%Y-%m-%d'), NULL, NULL, NULL, NULL, NULL, NULL),
+  (34, 1, 'Consultant 34', 'Consultant Name34', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant34@fake.com', 95, null, 5, 7, 'Fake Enterprise Consultant 34', NULL, true, true, STR_TO_DATE('2019-09-01', '%Y-%m-%d'), NULL, NULL, NULL, NULL, NULL, NULL),
+  (35, 1, 'Consultant 35', 'Consultant Name35', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant35@fake.com', 96, null, 5, 7, 'Fake Enterprise Consultant 35', NULL, true, true, STR_TO_DATE('2019-09-01', '%Y-%m-%d'), NULL, NULL, NULL, NULL, NULL, NULL),
+  (36, 4, 'Consultant 36', 'Consultant Name36', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant36@fake.com', 97, null, 2, 12, 'Fake Enterprise Consultant 36', NULL, false, true, STR_TO_DATE('2019-09-01', '%Y-%m-%d'), NULL, NULL, NULL, NULL, NULL, NULL),
+  (37, 1, 'Consultant 37', 'Consultant Name37', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant37@fake.com', 98, null, 7, 2, 'Fake Enterprise Consultant 37', NULL, false, true, STR_TO_DATE('2019-09-01', '%Y-%m-%d'), NULL, NULL, NULL, NULL, NULL, NULL),
+  (38, 2, 'Consultant 38', 'Consultant Name38', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant38@fake.com', 99, null, 2, 9, 'Fake Enterprise Consultant 38', NULL, true, true, STR_TO_DATE('2019-09-01', '%Y-%m-%d'), NULL, NULL, NULL, NULL, NULL, NULL),
+  (39, 3, 'Consultant 39', 'Consultant Name39', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant39@fake.com', 100, null, 2, 11, 'Fake Enterprise Consultant 39', NULL, false, true, STR_TO_DATE('2019-09-01', '%Y-%m-%d'), NULL, NULL, NULL, NULL, NULL, NULL),
+  (40, 3, 'Consultant 40', 'Consultant Name40', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant40@fake.com', 101, null, 1, 11, 'Fake Enterprise Consultant 40', NULL, false, true, STR_TO_DATE('2019-09-01', '%Y-%m-%d'), NULL, NULL, NULL, NULL, NULL, NULL),
+  (41, 2, 'Consultant 41', 'Consultant Name41', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant41@fake.com', 102, null, 1, 3, 'Fake Enterprise Consultant 41', NULL, false, true, STR_TO_DATE('2019-09-01', '%Y-%m-%d'), NULL, NULL, NULL, NULL, NULL, NULL),
+  (42, 3, 'Consultant 42', 'Consultant Name42', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant42@fake.com', 103, null, 7, 6, 'Fake Enterprise Consultant 42', NULL, false, true, STR_TO_DATE('2019-09-01', '%Y-%m-%d'), NULL, NULL, NULL, NULL, NULL, NULL),
+  (43, 3, 'Consultant 43', 'Consultant Name43', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant43@fake.com', 104, null, 6, 11, 'Fake Enterprise Consultant 43', NULL, true, true, STR_TO_DATE('2019-09-01', '%Y-%m-%d'), NULL, NULL, NULL, NULL, NULL, NULL),
+  (44, 3, 'Consultant 44', 'Consultant Name44', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant44@fake.com', 105, null, 7, 2, 'Fake Enterprise Consultant 44', NULL, true, true, STR_TO_DATE('2019-09-01', '%Y-%m-%d'), NULL, NULL, NULL, NULL, NULL, NULL),
+  (45, 1, 'Consultant 45', 'Consultant Name45', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant45@fake.com', 106, null, 7, 11, 'Fake Enterprise Consultant 45', NULL, true, true, STR_TO_DATE('2019-09-01', '%Y-%m-%d'), NULL, NULL, NULL, NULL, NULL, NULL),
+  (46, 1, 'Consultant 46', 'Consultant Name46', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant46@fake.com', 107, null, 6, 5, 'Fake Enterprise Consultant 46', NULL, true, true, STR_TO_DATE('2019-09-01', '%Y-%m-%d'), NULL, NULL, NULL, NULL, NULL, NULL),
+  (47, 2, 'Consultant 47', 'Consultant Name47', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant47@fake.com', 108, null, 5, 4, 'Fake Enterprise Consultant 47', NULL, true, true, STR_TO_DATE('2019-09-01', '%Y-%m-%d'), NULL, NULL, NULL, NULL, NULL, NULL),
+  (48, 1, 'Consultant 48', 'Consultant Name48', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant48@fake.com', 109, null, 2, 9, 'Fake Enterprise Consultant 48', NULL, true, true, STR_TO_DATE('2019-09-01', '%Y-%m-%d'), NULL, NULL, NULL, NULL, NULL, NULL),
+  (49, 4, 'Consultant 49', 'Consultant Name49', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant49@fake.com', 110, null, 2, 8, 'Fake Enterprise Consultant 49', NULL, true, true, STR_TO_DATE('2019-09-01', '%Y-%m-%d'), NULL, NULL, NULL, NULL, NULL, NULL),
+  (50, 1, 'Consultant 50', 'Consultant Name50', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant50@fake.com', 111, null, 7, 5, 'Fake Enterprise Consultant 50', NULL, true, true, STR_TO_DATE('2019-09-01', '%Y-%m-%d'), NULL, NULL, NULL, NULL, NULL, NULL),
+  (51, 1, 'Consultant 51', 'Consultant Name51', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant51@fake.com', 112, null, 8, 10, 'Fake Enterprise Consultant 51', NULL, true, true, STR_TO_DATE('2019-09-01', '%Y-%m-%d'), NULL, NULL, NULL, NULL, NULL, NULL),
+  (52, 3, 'Consultant 52', 'Consultant Name52', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant52@fake.com', 113, null, 5, 10, 'Fake Enterprise Consultant 52', NULL, false, true, STR_TO_DATE('2019-09-01', '%Y-%m-%d'), NULL, NULL, NULL, NULL, NULL, NULL),
+  (53, 3, 'Consultant 53', 'Consultant Name53', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant53@fake.com', 114, null, 3, 2, 'Fake Enterprise Consultant 53', NULL, false, true, STR_TO_DATE('2019-09-01', '%Y-%m-%d'), NULL, NULL, NULL, NULL, NULL, NULL),
+  (54, 4, 'Consultant 54', 'Consultant Name54', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant54@fake.com', 115, null, 4, 4, 'Fake Enterprise Consultant 54', NULL, true, true, STR_TO_DATE('2019-09-01', '%Y-%m-%d'), NULL, NULL, NULL, NULL, NULL, NULL),
+  (55, 3, 'Consultant 55', 'Consultant Name55', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant55@fake.com', 116, null, 7, 3, 'Fake Enterprise Consultant 55', NULL, false, true, STR_TO_DATE('2019-09-01', '%Y-%m-%d'), NULL, NULL, NULL, NULL, NULL, NULL);
 
 TRUNCATE TABLE core_member_position;
 INSERT INTO core_member_position (id, memberId, positionId, isBoard, year) VALUES
