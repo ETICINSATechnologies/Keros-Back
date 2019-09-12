@@ -76,7 +76,7 @@ class PaymentSlipService
         $paymentSlip = $this->getOne($id);
         $templateFile = $this->paymentSlipDocumentTypeService->get();
 
-        return $this->documentGenerator->generateSimpleDocument($templateFile, $this->getReplacementArray($paymentSlip));
+        return pathinfo($this->documentGenerator->generateSimpleDocument($templateFile, $this->getReplacementArray($paymentSlip)), PATHINFO_BASENAME);
     }
 
     /**
@@ -89,7 +89,7 @@ class PaymentSlipService
             '${NUMEROETUDE}' => $paymentSlip->getStudy()->getId() ?? '${NUMEROETUDE}',
             '${NUMINTER}' => '${NUMINTER}',
             '${CIVILITEINTERVENANT}' => '',
-            '${NOMINTERVENANT}' => $paymentSlip->getClientName() ?? '${NOMINTERVENANT}',
+            '${NOMINTERVENANT}' => $paymentSlip->getConsultantName() ?? '${NOMINTERVENANT}',
             '${PRENOMINTERVENANT}' => '',
             '${SECUINTERVENANT}' => $paymentSlip->getConsultantSocialSecurityNumber() ?? '${SECUINTERVENANT}',
             '${ADRESSEINTERVENANT}' => ($paymentSlip->getAddress() != null) ? $paymentSlip->getAddress()->getLine1() . ($paymentSlip->getAddress()->getLine2() ?? '') : '${ADRESSEINTERVENANT}',

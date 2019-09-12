@@ -2,14 +2,56 @@
 
 namespace KerosTest\Treso;
 
-use Keros\Tools\ConfigLoader;
-use Keros\Tools\Validator;
 use KerosTest\AppTestCase;
+use Exception;
 use Slim\Http\Environment;
 use Slim\Http\Request;
+use Throwable;
+use ZipArchive;
 
 class PaymentSlipIntegrationTest extends AppTestCase
 {
+    /**
+     * @throws Throwable
+     */
+    public function testGenerateDocumentShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/treso/payment-slip/1/generateDocument',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(200, $response->getStatusCode());
+        $body = json_decode($response->getBody());
+
+        $this->assertNotNull($body->location);
+
+        $locationGenerated = strstr($body->location, "/generated/");
+        $locationGenerated = str_replace("/generated/", "documents/tmp/", $locationGenerated);
+
+        $zip = new ZipArchive();
+        $fileToOpen = 'word/document.xml';
+
+        if ($zip->open($locationGenerated) === TRUE) {
+            $generatedContent = $zip->getFromName($fileToOpen);
+            $zip->close();
+        } else {
+            throw new Exception("Unable to open generated file");
+        }
+
+        if ($zip->open("tests/DocumentsTests/PaymentSlip1.docx") === TRUE) {
+            $expectedContent = $zip->getFromName($fileToOpen);
+            $zip->close();
+        } else {
+            throw new Exception("Unable to open expected file");
+        }
+
+        $this->assertSame($expectedContent, $generatedContent);
+    }
+
     public function testGetAllPaymentSlipShouldReturn200()
     {
         $env = Environment::mock([
@@ -23,7 +65,7 @@ class PaymentSlipIntegrationTest extends AppTestCase
         $this->assertSame(200, $response->getStatusCode());
         $body = json_decode($response->getBody());
 
-        $this->assertEquals(2, count($body->content));
+        $this->assertEquals(3, count($body->content));
     }
 
     public function testGetPaymentSlipShouldReturn200()
@@ -115,7 +157,7 @@ class PaymentSlipIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
         $this->assertSame(201, $response->getStatusCode());
         $body = json_decode($response->getBody());
-        $this->assertSame(3, $body->id);
+        $this->assertSame(4, $body->id);
         $this->assertSame(null, $body->missionRecapNumber);
         $this->assertSame(null, $body->consultantName);
         $this->assertSame(null, $body->consultantSocialSecurityNumber);
@@ -136,7 +178,7 @@ class PaymentSlipIntegrationTest extends AppTestCase
         $this->assertSame(null, $body->validatedByPerfMember);
     }
 
-    public function testPostStudyShouldReturn201()
+    public function testPostPaymentSlipShouldReturn201()
     {
         $post_body = array(
             "missionRecapNumber" => "string",
@@ -167,7 +209,7 @@ class PaymentSlipIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
         $this->assertSame(201, $response->getStatusCode());
         $body = json_decode($response->getBody());
-        $this->assertSame(3, $body->id);
+        $this->assertSame(4, $body->id);
         $this->assertSame("string", $body->missionRecapNumber);
         $this->assertSame("LOREM Ipsum-Nawa", $body->consultantName);
         $this->assertSame("string", $body->consultantSocialSecurityNumber);
@@ -188,7 +230,7 @@ class PaymentSlipIntegrationTest extends AppTestCase
         $this->assertSame(null, $body->validatedByPerfMember);
     }
 
-    public function testPutStudyShouldReturn201()
+    public function testPutPaymentSlipShouldReturn201()
     {
         $post_body = array(
             "missionRecapNumber" => "string",
@@ -240,7 +282,7 @@ class PaymentSlipIntegrationTest extends AppTestCase
         $this->assertEquals(null, $body->validatedByPerfMember);
     }
 
-    public function testPutStudyWithEmptyBodyShouldReturn400()
+    public function testPutPaymentSlipWithEmptyBodyShouldReturn400()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'PUT',
@@ -253,7 +295,7 @@ class PaymentSlipIntegrationTest extends AppTestCase
         $this->assertSame(400, $response->getStatusCode());
     }
 
-    public function testPutStudyWithOnlyRequiredParamsShouldReturn200()
+    public function testPutPaymentSlipWithOnlyRequiredParamsShouldReturn200()
     {
         $post_body = array(
             "studyId" => 2
