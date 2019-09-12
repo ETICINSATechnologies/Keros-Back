@@ -27,10 +27,10 @@
     "slim/slim": "^3.10",
     "monolog/monolog": "^1.23",
     "doctrine/orm": "^2.6",
-    "ext-json": "^1.6",
-    "ext-PDO": "^7.2",
+    "ext-json": "*",
+    "ext-PDO": "*",
     "mikehaertl/php-pdftk": "^0.5.0",
-    "ext-zip": "^7.2"
+    "ext-zip": "*"
   },
   "config": {
     "platform": {
