@@ -270,31 +270,31 @@ class StudyService
         $study = $this->getOne($id);
 
         $name = Validator::requiredString($fields["name"]);
-        $description = Validator::optionalString(isset($fields["description"]) ? $fields["description"] : null);
+        $description = Validator::optionalString(isset($fields["description"]) ? $fields["description"] : $study->getDescription());
 
-        $statusId = Validator::optionalId(isset($fields["statusId"]) ? $fields["statusId"] : null);
+        $statusId = Validator::optionalId(isset($fields["statusId"]) ? $fields["statusId"] : $study->getStatus());
         if ($statusId != null)
             $status = $this->statusService->getOne($statusId);
         else
             $status = null;
 
-        $firmId = Validator::optionalId(isset($fields["firmId"]) ? $fields["firmId"] : null);
+        $firmId = Validator::optionalId(isset($fields["firmId"]) ? $fields["firmId"] : !is_null($study->getFirm()) ? $study->getFirm()->getId() : null);
         if ($firmId != null)
             $firm = $this->firmService->getOne($firmId);
         else
             $firm = null;
 
-        $signDate = Validator::optionalDate(isset($fields["signDate"]) ? $fields["signDate"] : null);
+        $signDate = Validator::optionalDate(isset($fields["signDate"]) ? $fields["signDate"] : $study->getSignDate());
 
-        $endDate = Validator::optionalDate(isset($fields["endDate"]) ? $fields["endDate"] : null);
+        $endDate = Validator::optionalDate(isset($fields["endDate"]) ? $fields["endDate"] : $study->getEndDate());
 
-        $managementFee = Validator::optionalFloat(isset($fields["managementFee"]) ? $fields["managementFee"] : null);
-        $realizationFee = Validator::optionalFloat(isset($fields["realizationFee"]) ? $fields["realizationFee"] : null);
-        $rebilledFee = Validator::optionalFloat(isset($fields["rebilledFee"]) ? $fields["rebilledFee"] : null);
-        $ecoparticipationFee = Validator::optionalFloat(isset($fields["ecoparticipationFee"]) ? $fields["ecoparticipationFee"] : null);
-        $outsourcingFee = Validator::optionalFloat(isset($fields["outsourcingFee"]) ? $fields["outsourcingFee"] : null);
+        $managementFee = Validator::optionalFloat(isset($fields["managementFee"]) ? $fields["managementFee"] : $study->getManagementFee());
+        $realizationFee = Validator::optionalFloat(isset($fields["realizationFee"]) ? $fields["realizationFee"] : $study->getRealizationFee());
+        $rebilledFee = Validator::optionalFloat(isset($fields["rebilledFee"]) ? $fields["rebilledFee"] : $study->getRebilledFee());
+        $ecoparticipationFee = Validator::optionalFloat(isset($fields["ecoparticipationFee"]) ? $fields["ecoparticipationFee"] : $study->getEcoParticipationFee());
+        $outsourcingFee = Validator::optionalFloat(isset($fields["outsourcingFee"]) ? $fields["outsourcingFee"] : $study->getOutsourcingFee());
 
-        $archivedDate = Validator::optionalDate(isset($fields["archivedDate"]) ? $fields["archivedDate"] : null);
+        $archivedDate = Validator::optionalDate(isset($fields["archivedDate"]) ? $fields["archivedDate"] : $study->getArchivedDate());
 
         if (isset($fields["contactIds"])) {
             $contactIds = $fields["contactIds"];
@@ -321,22 +321,22 @@ class StudyService
             $qualityManagers = array();
 
         $provenance = null;
-        $provenanceId = Validator::optionalId(isset($fields["provenanceId"]) ? $fields["provenanceId"] : null);
+        $provenanceId = Validator::optionalId(isset($fields["provenanceId"]) ? $fields["provenanceId"] : $study->getProvenance());
         if (isset($provenanceId)) {
             $provenance = $this->provenanceService->getOne($provenanceId);
         }
 
-        $fieldId = Validator::optionalId(isset($fields["fieldId"]) ? $fields["fieldId"] : null);
+        $fieldId = Validator::optionalId(isset($fields["fieldId"]) ? $fields["fieldId"] : !is_null($study->getField()) ? $study->getField()->getId() : null);
         if ($fieldId != null)
             $field = $this->fieldService->getOne($fieldId);
         else
             $field = null;
 
-        $confidential = Validator::optionalBool(isset($fields["confidential"]) ? $fields["confidential"] : null);
+        $confidential = Validator::optionalBool(isset($fields["confidential"]) ? $fields["confidential"] : $study->getConfidential());
 
-        $mainLeader = Validator::optionalInt(isset($fields["mainLeader"]) ? $fields["mainLeader"] : null);
-        $mainQualityManager = Validator::optionalInt(isset($fields["mainQualityManager"]) ? $fields["mainQualityManager"] : null);
-        $mainConsultant = Validator::optionalInt(isset($fields["mainConsultant"]) ? $fields["mainConsultant"] : null);
+        $mainLeader = Validator::optionalInt(isset($fields["mainLeader"]) ? $fields["mainLeader"] : $study->getMainLeader());
+        $mainQualityManager = Validator::optionalInt(isset($fields["mainQualityManager"]) ? $fields["mainQualityManager"] : $study->getMainQualityManager());
+        $mainConsultant = Validator::optionalInt(isset($fields["mainConsultant"]) ? $fields["mainConsultant"] : $study->getMainConsultant());
 
         $study->setName($name);
         $study->setDescription($description);

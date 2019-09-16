@@ -239,17 +239,17 @@ class Study implements JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return Field
      */
-    public function getField()
+    public function getField() : Field
     {
         return $this->field;
     }
 
     /**
-     * @param mixed $field
+     * @param Field $field
      */
-    public function setField($field): void
+    public function setField(Field $field): void
     {
         $this->field = $field;
     }

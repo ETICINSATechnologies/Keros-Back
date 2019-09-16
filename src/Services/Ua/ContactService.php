@@ -163,11 +163,11 @@ class ContactService
         $gender = $this->genderService->getOne($genderId);
         $firmId = Validator::requiredId($fields["firmId"]);
         $firm = $this->firmService->getOne($firmId);
-        $telephone = Validator::optionalPhone(isset($fields["telephone"]) ? $fields["telephone"] : null);
-        $cellphone = Validator::optionalPhone(isset($fields["cellphone"]) ? $fields["cellphone"] : null);
-        $position = Validator::optionalString(isset($fields["position"]) ? $fields["position"] : null);
-        $notes = Validator::optionalString(isset($fields["notes"]) ? $fields["notes"] : null);
-        $old = Validator::optionalBool(isset($fields["old"]) ? $fields["old"] : false);
+        $telephone = Validator::optionalPhone(isset($fields["telephone"]) ? $fields["telephone"] : $contact->getTelephone());
+        $cellphone = Validator::optionalPhone(isset($fields["cellphone"]) ? $fields["cellphone"] : $contact->getCellphone());
+        $position = Validator::optionalString(isset($fields["position"]) ? $fields["position"] : $contact->getPosition());
+        $notes = Validator::optionalString(isset($fields["notes"]) ? $fields["notes"] : $contact->getNotes());
+        $old = Validator::optionalBool(isset($fields["old"]) ? $fields["old"] : $contact->getOld());
 
         $contact->setFirstName($firstName);
         $contact->setLastName($lastName);
