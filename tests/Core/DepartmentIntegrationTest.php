@@ -22,7 +22,7 @@ class DepartmentIntegrationTest extends AppTestCase
         $this->assertSame(200, $response->getStatusCode());
 
         $body = json_decode($response->getBody());
-        $this->assertEquals(13, sizeof($body));
+        $this->assertEquals(11, sizeof($body));
     }
     public function testGetDepartmentShouldReturn200()
     {
