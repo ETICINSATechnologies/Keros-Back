@@ -568,7 +568,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
 
         $body = json_decode($response->getBody());
         $this->assertNotNull($body->content);
-        $this->assertEquals(15, count($body->content));
+        $this->assertEquals(12, count($body->content));
         $this->assertSame(false, $body->content[0]->hasPaid);
     }
 }
