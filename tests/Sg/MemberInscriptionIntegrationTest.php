@@ -537,4 +537,38 @@ class MemberInscriptionIntegrationTest extends AppTestCase
 
         $this->assertSame(404, $response->getStatusCode());
     }
+
+    public function testGetOnlyPaidMembersShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/sg/membre-inscription?hasPaid=true',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+
+        $body = json_decode($response->getBody());
+        $this->assertNotNull($body->content);
+        $this->assertEquals(18, count($body->content));
+        $this->assertSame(true, $body->content[0]->hasPaid);
+    }
+
+    public function testGetOnlyNonPaidMembersShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/sg/membre-inscription?hasPaid=false',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+
+        $body = json_decode($response->getBody());
+        $this->assertNotNull($body->content);
+        $this->assertEquals(15, count($body->content));
+        $this->assertSame(false, $body->content[0]->hasPaid);
+    }
 }
