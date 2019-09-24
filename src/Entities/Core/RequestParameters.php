@@ -37,25 +37,42 @@ class RequestParameters
      * @var array the fields of the entity to search - usually defined by getSearchFields in the entitie's class
      */
     private $searchFields;
+    /**
+     * @var array the fields of the entity to filter by - usually defined by getFilterFields in the entitie's class
+     */
+    private $filterFields;
+    /**
+     * @var array - The array of parameters of the reques.
+     * Default is empty
+     */
+    public $params;
 
     /**
      * RequestParameters constructor.
      * @param array $params the parameters from the Request
      * @param array $searchFields
+     * @param array $filterFields
      */
-    public function __construct(array $params, array $searchFields)
+    public function __construct(array $params, array $searchFields, array $filterFields=[])
     {
         // Array of search values for member with the parameter search
         if (isset($params['search'])) {
             $this->search = explode(" ", $params['search']);
         }
 
+        // Search fields
         $this->searchFields = $searchFields;
+
+        // Filter fields
+        $this->filterFields = $filterFields;
+
+        // Parameters
+        $this->params = $params;
 
         // Page number
         $this->pageNumber = 0; // Default value
         if (isset($params['pageNumber'])) {
-            $pageNumber = (int)$params['pageNumber'];
+            $pageNumber = (int) $params['pageNumber'];
             if ($pageNumber >= 0) {
                 $this->pageNumber = $pageNumber;
             }
@@ -64,7 +81,7 @@ class RequestParameters
         // Page Size
         $this->pageSize = 25; // Default value
         if (isset($params['pageSize'])) {
-            $pageSize = (int)$params['pageSize'];
+            $pageSize = (int) $params['pageSize'];
             if ($pageSize >= 10 && $pageSize <= 100) {
                 $this->pageSize = $pageSize;
             }
@@ -98,12 +115,21 @@ class RequestParameters
     {
         $expr = Criteria::expr();
         $search = Criteria::create();
+        // searching
         if (!empty($this->search)) {
             foreach ($this->search as $s) {
                 if (isset($s) && isset($this->searchFields)) {
                     foreach ($this->searchFields as $value) {
                         $search = $search->orWhere($expr->contains($value, $s));
                     }
+                }
+            }
+        }
+        // filtering
+        if (!empty($this->params) && !empty($this->filterFields)) {
+            foreach ($this->params as $key => $value) {
+                if (in_array($key, $this->filterFields)) {
+                    $search = $search->andWhere($expr->eq($key, $value));
                 }
             }
         }
@@ -120,6 +146,7 @@ class RequestParameters
     {
         $expr = Criteria::expr();
         $search = Criteria::create();
+        // searching
         if (!empty($this->search)) {
             foreach ($this->search as $s) {
                 if (isset($s) && isset($this->searchFields)) {
@@ -129,7 +156,14 @@ class RequestParameters
                 }
             }
         }
-
+        // filtering
+        if (!empty($this->params) && !empty($this->filterFields)) {
+            foreach ($this->params as $key => $value) {
+                if (in_array($key, $this->filterFields)) {
+                    $search = $search->andWhere($expr->eq($key, $value));
+                }
+            }
+        }
         return $search;
     }
 }

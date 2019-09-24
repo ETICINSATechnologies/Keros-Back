@@ -68,7 +68,11 @@ class MemberInscriptionController
     {
         $this->logger->debug("Get page memberInscriptions from " . $request->getServerParams()["REMOTE_ADDR"]);
         $queryParams = $request->getQueryParams();
-        $params = new RequestParameters($queryParams, MemberInscription::getSearchFields());
+        if (isset($queryParams['hasPaid'])) {
+            $value = $queryParams['hasPaid']; 
+            $queryParams['hasPaid'] = filter_var(strtolower($value), FILTER_VALIDATE_BOOLEAN);
+        }
+        $params = new RequestParameters($queryParams, MemberInscription::getSearchFields(), MemberInscription::getFilterFields());
 
         $memberInscriptions = $this->memberInscriptionService->getPage($params);
         $memberInscriptionsWithDocument = array();
