@@ -85,18 +85,17 @@ class MailSender
             foreach($tos as $toMail => $toName) {
                 $email->addTo(new To($toMail, $toName));
             }
+            foreach($globalFields as $fieldName => $fieldValue) {
+                $email->addDynamicTemplateData(new Substitution($fieldName, $fieldValue));
+            }
         } else {
             $index = 0;
             foreach($tos as $toMail => $toFields) {
-                $email->addTo(new To($toMail, $toFields["full_name"], $toFields), null, null, $index++);
+                $email->addTo(new To($toMail, $toFields["full_name"], array_merge($toFields, $globalFields)), null, null, $index++);
             }
         }
 
         $email->setTemplateId(new TemplateId($this->kerosConfig[$templateName]));
-
-        foreach($globalFields as $fieldName => $fieldValue) {
-            $email->addDynamicTemplateData(new Substitution($fieldName, $fieldValue));
-        }
 
         return $email;
     }
