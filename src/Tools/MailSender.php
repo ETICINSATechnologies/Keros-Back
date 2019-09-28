@@ -43,11 +43,16 @@ class MailSender
      * @param string $senderName
      * Apparent name on the mail.
      */
-    public function __construct(string $senderMail, string $senderName)
+    public function __construct(string $senderMail = "no-reply@etic-insa.com", string $senderName = "ETIC INSA Tech.")
     {
         $this->kerosConfig = ConfigLoader::getConfig();
         $this->sender = new SendGrid($this->kerosConfig['MAIL_API_KEY']);
         $this->from = new From($senderMail, $senderName);
+    }
+
+    public function setFrom(string $mail, string $name)
+    {
+        $this->from = new From($mail, $name);
     }
 
     /**
@@ -81,8 +86,9 @@ class MailSender
                 $email->addTo(new To($toMail, $toName));
             }
         } else {
+            $index = 0;
             foreach($tos as $toMail => $toFields) {
-                $email->addTo(new To($toMail, $toFields["full_name"], $toFields));
+                $email->addTo(new To($toMail, $toFields["full_name"], $toFields), null, null, $index++);
             }
         }
 

@@ -7,6 +7,7 @@ use Keros\Error\ErrorHandler;
 use Keros\Tools\Authorization\AuthenticationMiddleware;
 use Keros\Tools\Authorization\JwtCodec;
 use Keros\Tools\Database\EntityManagerBuilder;
+use Keros\Tools\MailSender;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 
@@ -41,6 +42,9 @@ class ToolRegistrar
         };
         $container[DocumentGenerator::class] = function ($container){
             return new DocumentGenerator($container);
+        };
+        $container[MailSender::class] = function (){
+            return new MailSender();
         };
     }
 }
