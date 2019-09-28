@@ -38,10 +38,6 @@ class MailSender
 
     /**
      * MailSender constructor
-     * @param string $senderMail
-     * Apparent email of the sender, can be a non-existing mail.
-     * @param string $senderName
-     * Apparent name on the mail.
      */
     public function __construct()
     {
