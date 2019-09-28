@@ -43,11 +43,11 @@ class MailSender
      * @param string $senderName
      * Apparent name on the mail.
      */
-    public function __construct(string $senderMail = "no-reply@etic-insa.com", string $senderName = "ETIC INSA Tech.")
+    public function __construct()
     {
         $this->kerosConfig = ConfigLoader::getConfig();
         $this->sender = new SendGrid($this->kerosConfig['MAIL_API_KEY']);
-        $this->from = new From($senderMail, $senderName);
+        $this->from = new From("no-reply@etic-insa.com", "ETIC INSA Tech.");
     }
 
     public function setFrom(string $mail, string $name)
@@ -74,6 +74,7 @@ class MailSender
      * Signature : [email: string] => [field_values: array]
      * In this case, the full_name key must exist as one of the entries in field_values.
      * @return Mail
+     * @throws SendGrid\Mail\TypeException
      */
     public function createTemplateMail(string $templateName, array $globalFields, bool $generic, array $tos): Mail
     {
@@ -110,7 +111,7 @@ class MailSender
      * @param string $plainTextContent
      * @return Mail
      */
-    private function createSimpleMail(string $subject, string $toMail, string $toName, string $htmlContent, string $plainTextContent): Mail
+    public function createSimpleMail(string $subject, string $toMail, string $toName, string $htmlContent, string $plainTextContent): Mail
     {
         $to = new To($toMail, $toName);
         $mailSubject = new Subject($subject);
@@ -132,19 +133,12 @@ class MailSender
      */
     public function sendMail(Mail $mail)
     {
-        $statusCode = 500;
-        try {
-            if($this->kerosConfig['isTesting']){
-                return;
-            }
-            $response = $this->sender->send($mail);
-            if ($response->statusCode() != 202) {
-                $statusCode = $response->statusCode();
-                throw new Exception($response->body());
-            }
-        } catch(Exception $e) {
-            $msg = "Error sending mail: " . $e->getMessage();
-            throw new KerosException($msg, $statusCode);
+        if($this->kerosConfig['isTesting']){
+            return;
+        }
+        $response = $this->sender->send($mail);
+        if ($response->statusCode() != 202) {
+            throw new KerosException($response->body(), $response->statusCode());
         }
     }
 }
