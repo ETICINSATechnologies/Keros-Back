@@ -34,6 +34,7 @@ class FileValidator
         }
 
         $extension = pathinfo($file->getClientFilename(), PATHINFO_EXTENSION);
+        $extension= strtolower($extension);
 
         if (!($extension == 'jpg' || $extension == 'jpeg' || $extension == 'png')) {
             $msg = 'File format not supported, only jpg and png formats supported';
@@ -54,6 +55,7 @@ class FileValidator
         }
 
         $extension = pathinfo($file->getClientFilename(), PATHINFO_EXTENSION);
+        $extension= strtolower($extension);
 
         if (!($extension == 'jpg' || $extension == 'jpeg' || $extension == 'png')) {
             $msg = 'File format not supported, only picture formats supported';
@@ -74,6 +76,7 @@ class FileValidator
         }
 
         $extension = pathinfo($file->getClientFilename(), PATHINFO_EXTENSION);
+        $extension= strtolower($extension);
 
         if (!($extension == 'pdf' || $extension == 'doc' || $extension == 'docx')) {
             $msg = 'File format not supported, only document formats supported';
@@ -94,6 +97,7 @@ class FileValidator
         }
 
         $extension = pathinfo($file->getClientFilename(), PATHINFO_EXTENSION);
+        $extension= strtolower($extension);
 
         if (!($extension == 'pdf' || $extension == 'doc' || $extension == 'docx')) {
             $msg = 'File format not supported, only document formats supported';
@@ -112,6 +116,7 @@ class FileValidator
         }
 
         $extension = pathinfo($file->getClientFilename(), PATHINFO_EXTENSION);
+        $extension= strtolower($extension);
 
         if (!in_array($extension, self::$mixedExtensions)) {
             throw new KerosException('File extension is not supported', 400);
@@ -132,6 +137,7 @@ class FileValidator
         }
 
         $extension = pathinfo($file->getClientFilename(), PATHINFO_EXTENSION);
+        $extension= strtolower($extension);
 
         if (!in_array($extension, self::$mixedExtensions)) {
             throw new KerosException('File extension is not supported', 400);
