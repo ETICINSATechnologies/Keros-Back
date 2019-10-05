@@ -226,6 +226,6 @@ class ConsultantInscriptionController
         $consultant = $this->consultantInscriptionService->validateConsultantInscription($args['id']);
         $this->entityManager->commit();
 
-        return $response->withJson($consultant, 201);
+        return $response->withJson($consultant, 204);
     }
 }

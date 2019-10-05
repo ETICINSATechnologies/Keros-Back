@@ -630,7 +630,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
 
         $body = json_decode($response->getBody());
 
-        $this->assertSame(201, $response->getStatusCode());
+        $this->assertSame(204, $response->getStatusCode());
         $this->assertNotNull($body->id);
         $this->assertSame('bruce.wayne', $body->username);
         $this->assertSame("Bruce", $body->firstName);
