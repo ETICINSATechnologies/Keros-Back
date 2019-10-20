@@ -168,6 +168,6 @@ class AccessRightsService
                 return;
             }
         }
-        throw new KerosException("You cannot validate inscriptions", 401);
+        throw new KerosException("You cannot validate or update inscriptions", 401);
     }
 }
