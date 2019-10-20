@@ -7,6 +7,7 @@ use Keros\Entities\Core\Page;
 use Keros\Entities\Sg\ConsultantInscription;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Services\Sg\ConsultantInscriptionService;
+use Keros\Services\Auth\AccessRightsService;
 use Keros\Error\KerosException;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;

@@ -8,6 +8,7 @@ use Psr\Container\ContainerInterface;
 use Keros\Entities\UA\Study;
 use Keros\Error\KerosException;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
 class AccessRightsService
 {
@@ -169,5 +170,31 @@ class AccessRightsService
             }
         }
         throw new KerosException("You cannot validate or update inscriptions", 401);
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param callable $next
+     * @throws KerosException 
+     * @return Response
+     */
+    public function checkRightsMemberAccess(Request $request, Response $response, callable $next)
+    {
+        $isAlumni = false;
+
+        try {
+            $currentMember = $this->memberService->getOne($request->getAttribute("userId"));
+            $isAlumni = $currentMember->getIsAlumni();            
+        } catch (KerosException $e) {
+            //un consultant
+        }
+
+        if($isAlumni){
+            throw new KerosException("You cannot access this route", 401);
+        }
+
+        $response = $next($request, $response);
+        return $response;
     }
 }
