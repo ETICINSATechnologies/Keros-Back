@@ -63,6 +63,25 @@ class MemberInscriptionIntegrationTest extends AppTestCase
      * @throws MethodNotAllowedException
      * @throws NotFoundException
      */
+    public function testGetPage0MemberInscriptionAsAlumniShouldReturn401()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/sg/membre-inscription',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId", 27);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $body = json_decode($response->getBody());
+
+        $this->assertSame(401, $response->getStatusCode());
+    }
+    
+    /**
+     * @throws MethodNotAllowedException
+     * @throws NotFoundException
+     */
     public function testGetPage1MemberInscriptionShouldReturn200()
     {
         $env = Environment::mock([
