@@ -41,6 +41,11 @@ class ConsultantInscriptionController
     private $kerosConfig;
 
     /**
+     * @var AccessRightsService
+     */
+    private $accessRightsService;
+
+    /**
      * @var DirectoryManager
      */
     private $directoryManager;
@@ -52,6 +57,7 @@ class ConsultantInscriptionController
         $this->consultantInscriptionService = $container->get(ConsultantInscriptionService::class);
         $this->directoryManager = $container->get(DirectoryManager::class);
         $this->kerosConfig = ConfigLoader::getConfig();
+        $this->accessRightsService = $container->get(AccessRightsService::class);
     }
 
     /**
@@ -136,6 +142,8 @@ class ConsultantInscriptionController
      */
     public function updateConsultantInscription(Request $request, Response $response, array $args)
     {
+        $this->accessRightsService->checkRightsValidateOrModifyInscription($request);
+
         $this->logger->debug("Updating consultantInscription from " . $request->getServerParams()["REMOTE_ADDR"]);
 
         $body = $request->getParsedBody();
@@ -220,6 +228,8 @@ class ConsultantInscriptionController
      */
     public function validateConsultantInscription(Request $request, Response $response, array $args)
     {
+        $this->accessRightsService->checkRightsValidateOrModifyInscription($request);
+
         $this->logger->debug("Validating consultantInscription from " . $request->getServerParams()["REMOTE_ADDR"]);
 
         $this->entityManager->beginTransaction();

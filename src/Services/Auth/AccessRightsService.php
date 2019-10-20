@@ -152,4 +152,22 @@ class AccessRightsService
         }
         throw new KerosException("You cannot attribute a quality manager", 401);
     }
+
+    /**
+     * @param Request $request
+     * @throws KerosException
+     */
+    public function checkRightsValidateOrModifyInscription(Request $request)
+    {
+        $accessAllowed = array(self::GENERAL_SECRETARY_ID);
+        $currentMember = $this->memberService->getOne($request->getAttribute("userId"));
+        $memberPositions = $currentMember->getMemberPositions();
+
+        foreach ($memberPositions as $memberPosition) {
+            if (in_array($memberPosition->getPosition()->getId(), $accessAllowed)) {
+                return;
+            }
+        }
+        throw new KerosException("You cannot validate inscriptions", 401);
+    }
 }
