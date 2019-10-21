@@ -8,6 +8,7 @@ use Psr\Container\ContainerInterface;
 use Keros\Entities\UA\Study;
 use Keros\Error\KerosException;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 
 class AccessRightsService
 {
@@ -151,5 +152,49 @@ class AccessRightsService
             }
         }
         throw new KerosException("You cannot attribute a quality manager", 401);
+    }
+
+    /**
+     * @param Request $request
+     * @throws KerosException
+     */
+    public function checkRightsValidateOrModifyInscription(Request $request)
+    {
+        $accessAllowed = array(self::GENERAL_SECRETARY_ID);
+        $currentMember = $this->memberService->getOne($request->getAttribute("userId"));
+        $memberPositions = $currentMember->getMemberPositions();
+
+        foreach ($memberPositions as $memberPosition) {
+            if (in_array($memberPosition->getPosition()->getId(), $accessAllowed)) {
+                return;
+            }
+        }
+        throw new KerosException("You cannot validate or update inscriptions", 401);
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param callable $next
+     * @throws KerosException 
+     * @return Response
+     */
+    public function checkRightsNotAlumni(Request $request, Response $response, callable $next)
+    {
+        $isAlumni = false;
+
+        try {
+            $currentMember = $this->memberService->getOne($request->getAttribute("userId"));
+            $isAlumni = $currentMember->getIsAlumni();            
+        } catch (KerosException $e) {
+            //un consultant
+        }
+
+        if($isAlumni){
+            throw new KerosException("You cannot access this route", 401);
+        }
+
+        $response = $next($request, $response);
+        return $response;
     }
 }

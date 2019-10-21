@@ -9,6 +9,7 @@ use Keros\Entities\Core\RequestParameters;
 use Keros\Services\Sg\MemberInscriptionDocumentService;
 use Keros\Services\Sg\MemberInscriptionDocumentTypeService;
 use Keros\Services\Sg\MemberInscriptionService;
+use Keros\Services\Auth\AccessRightsService;
 use Keros\Error\KerosException;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
@@ -32,6 +33,9 @@ class MemberInscriptionController
     /** @var MemberInscriptionDocumentService */
     private $memberInscriptionDocumentService;
 
+    /** @var AccessRightsService */
+    private $accessRightsService;
+
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get(Logger::class);
@@ -39,6 +43,7 @@ class MemberInscriptionController
         $this->memberInscriptionService = $container->get(MemberInscriptionService::class);
         $this->memberInscriptionDocumentTypeService = $container->get(MemberInscriptionDocumentTypeService::class);
         $this->memberInscriptionDocumentService = $container->get(MemberInscriptionDocumentService::class);
+        $this->accessRightsService = $container->get(AccessRightsService::class);
     }
 
     /**
@@ -115,6 +120,8 @@ class MemberInscriptionController
      */
     public function updateMemberInscription(Request $request, Response $response, array $args)
     {
+        $this->accessRightsService->checkRightsValidateOrModifyInscription($request);
+
         $this->logger->debug("Updating member_inscription from " . $request->getServerParams()["REMOTE_ADDR"]);
         $body = $request->getParsedBody();
 
@@ -152,6 +159,8 @@ class MemberInscriptionController
      */
     public function validateMemberInscription(Request $request, Response $response, array $args)
     {
+        $this->accessRightsService->checkRightsValidateOrModifyInscription($request);
+
         $this->logger->debug("Validating member_inscription from " . $request->getServerParams()["REMOTE_ADDR"]);
 
         $this->entityManager->beginTransaction();

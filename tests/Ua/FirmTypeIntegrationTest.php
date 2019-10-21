@@ -22,6 +22,19 @@ class FirmTypeIntegrationTest extends AppTestCase
         $body = json_decode($response->getBody());
         $this->assertEquals(7, sizeof($body));
     }
+    public function testGetAllFirmTypeAsAlumniShouldReturn401()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/ua/firm-type',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId", 27);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(401, $response->getStatusCode());
+    }
     public function testGetFirmTypeShouldReturn200()
     {
         $env = Environment::mock([

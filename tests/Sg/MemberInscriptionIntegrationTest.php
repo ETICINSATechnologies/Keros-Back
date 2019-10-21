@@ -63,6 +63,25 @@ class MemberInscriptionIntegrationTest extends AppTestCase
      * @throws MethodNotAllowedException
      * @throws NotFoundException
      */
+    public function testGetPage0MemberInscriptionAsAlumniShouldReturn401()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/sg/membre-inscription',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId", 27);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $body = json_decode($response->getBody());
+
+        $this->assertSame(401, $response->getStatusCode());
+    }
+    
+    /**
+     * @throws MethodNotAllowedException
+     * @throws NotFoundException
+     */
     public function testGetPage1MemberInscriptionShouldReturn200()
     {
         $env = Environment::mock([
@@ -313,6 +332,8 @@ class MemberInscriptionIntegrationTest extends AppTestCase
             'REQUEST_URI' => '/api/v1/sg/membre-inscription/1/validate',
         ]);
         $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId",6);
+
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 
@@ -326,6 +347,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
             'REQUEST_URI' => '/api/v1/core/member/56', //On get le dernier USER (max de kerosData.sql + 1)
         ]);
         $req = Request::createFromEnvironment($env);
+
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
         $body = json_decode($response->getBody());
@@ -356,6 +378,23 @@ class MemberInscriptionIntegrationTest extends AppTestCase
      * @throws MethodNotAllowedException
      * @throws NotFoundException
      */
+    public function testValidateMemberInscriptionShouldReturn401()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => '/api/v1/sg/membre-inscription/1/validate',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(401, $response->getStatusCode());
+    }
+
+    /**
+     * @throws MethodNotAllowedException
+     * @throws NotFoundException
+     */
     public function testValidateMemberInscriptionShouldReturn404()
     {
         $env = Environment::mock([
@@ -363,6 +402,8 @@ class MemberInscriptionIntegrationTest extends AppTestCase
             'REQUEST_URI' => '/api/v1/sg/membre-inscription/1000/validate',
         ]);
         $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId",6);
+
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 
@@ -380,6 +421,8 @@ class MemberInscriptionIntegrationTest extends AppTestCase
             'REQUEST_URI' => '/api/v1/sg/membre-inscription/1/validate',
         ]);
         $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId",6);
+
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 
@@ -390,6 +433,8 @@ class MemberInscriptionIntegrationTest extends AppTestCase
             'REQUEST_URI' => '/api/v1/sg/membre-inscription/1/validate',
         ]);
         $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId",6);
+        
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 
@@ -430,6 +475,8 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         ]);
         $req = Request::createFromEnvironment($env);
         $req = $req->withParsedBody($put_body);
+        $req = $req->withAttribute("userId",6);
+
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 
@@ -449,6 +496,47 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->assertSame('Lorem ipsum', $body->address->city);
         $this->assertSame(false, $body->hasPaid);
         $this->assertSame(true, $body->droitImage);
+    }
+
+    /**
+     * @throws MethodNotAllowedException
+     * @throws NotFoundException
+     */
+    public function testPutMemberInscriptionShouldReturn401()
+    {
+
+        $put_body = array(
+            'firstName' => 'Thanos',
+            'lastName' => 'Tueur de monde',
+            'genderId' => 4,
+            'birthday' => '1000-01-01',
+            'departmentId' => 4,
+            'email' => 'thanos@claquementdedoigts.com',
+            'phoneNumber' => '0033454653254',
+            'outYear' => 6666,
+            'nationalityId' => 133,
+            'wantedPoleId' => 5,
+            'address' => array(
+                'line1' => 'je sais pas quoi mettre',
+                'line2' => "",
+                'city' => 'Lorem ipsum',
+                'postalCode' => 66666,
+                'countryId' => 133,
+            ),
+            'droitImage' => true,
+        );
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'PUT',
+            'REQUEST_URI' => '/api/v1/sg/membre-inscription/1',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withParsedBody($put_body);
+        
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(401, $response->getStatusCode());
     }
 
     /**
@@ -485,6 +573,8 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         ]);
         $req = Request::createFromEnvironment($env);
         $req = $req->withParsedBody($put_body);
+        $req = $req->withAttribute("userId",6);
+
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 

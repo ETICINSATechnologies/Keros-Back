@@ -23,4 +23,17 @@ class FactureTypeIntegrationTest extends AppTestCase
         $body = json_decode($response->getBody());
         $this->assertEquals(4, sizeof($body));
     }
+    public function testGetAllFactureTypesAsAlumniShouldReturn401()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/treso/facture-types',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId", 27);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(401, $response->getStatusCode());
+    }
 }

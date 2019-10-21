@@ -356,6 +356,8 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         ]);
         $req = Request::createFromEnvironment($env);
         $req = $req->withParsedBody($put_body);
+        $req = $req->withAttribute("userId",6);
+
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 
@@ -412,11 +414,55 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         ]);
         $req = Request::createFromEnvironment($env);
         $req = $req->withParsedBody($put_body);
+        $req = $req->withAttribute("userId",6);
+
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 
         $this->assertSame(404, $response->getStatusCode());
     }
+
+    /**
+     * @throws MethodNotAllowedException
+     * @throws NotFoundException
+     */
+    public function testPutConsultantInscriptionShouldReturn401()
+    {
+        $put_body = array(
+            'firstName' => 'Thanos',
+            'lastName' => 'Tueur de monde',
+            'genderId' => 4,
+            'birthday' => '1000-01-01',
+            'departmentId' => 4,
+            'email' => 'thanos@claquementdedoigts.com',
+            'phoneNumber' => '0033454653254',
+            'outYear' => 6666,
+            'nationalityId' => 133,
+            'address' => array(
+                'line1' => 'je sais pas quoi mettre',
+                'line2' => "",
+                'city' => 'Lorem ipsum',
+                'postalCode' => 66666,
+                'countryId' => 133,
+            ),
+            'droitImage' => true,
+            'isApprentice' => true,
+            "socialSecurityNumber" => "12346781300139041",
+        );
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'PUT',
+            'REQUEST_URI' => '/api/v1/sg/consultant-inscription/1',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withParsedBody($put_body);
+
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(401, $response->getStatusCode());
+    }
+
 
     /**
      * @throws MethodNotAllowedException
@@ -609,7 +655,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
      * @throws MethodNotAllowedException
      * @throws NotFoundException
      */
-    public function testValidateConsultantInscriptionShouldReturn201()
+    public function testValidateConsultantInscriptionShouldReturn204()
     {
         $filetypes = array('identity', 'residence_permit', 'rib', 'scolary_document', 'vitale_card', 'cvec');
         $filepaths = array();
@@ -625,6 +671,8 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
             'REQUEST_URI' => '/api/v1/sg/consultant-inscription/1/validate',
         ]);
         $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId",6);
+
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 
@@ -655,6 +703,33 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
      * @throws MethodNotAllowedException
      * @throws NotFoundException
      */
+    public function testValidateConsultantInscriptionShouldReturn401()
+    {
+        $filetypes = array('identity', 'residence_permit', 'rib', 'scolary_document', 'vitale_card', 'cvec');
+        $filepaths = array();
+        foreach ($filetypes as $fileType) {
+            $file_path = "documents/inscription/$fileType/test.pdf";
+            array_push($filepaths, $file_path);
+            $temp_file = FileHelper::makeNewFile(FileHelper::normalizePath($file_path));
+            FileHelper::closeFile($temp_file);
+        }
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => '/api/v1/sg/consultant-inscription/1/validate',
+        ]);
+        $req = Request::createFromEnvironment($env);
+
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(401, $response->getStatusCode());
+    }
+
+    /**
+     * @throws MethodNotAllowedException
+     * @throws NotFoundException
+     */
     public function testValidateConsultantInscriptionShouldReturn404()
     {
         $env = Environment::mock([
@@ -662,6 +737,8 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
             'REQUEST_URI' => '/api/v1/sg/consultant-inscription/1000/validate',
         ]);
         $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId",6);
+
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 

@@ -25,6 +25,7 @@ use Keros\Controllers\Ua\FirmTypeController;
 use Keros\Controllers\Ua\StudyController;
 use Keros\DataServices\DataServiceRegistrar;
 use Keros\Services\ServiceRegistrar;
+use Keros\Services\Auth\AccessRightsService;
 use Keros\Tools\Authorization\AuthenticationMiddleware;
 use Keros\Tools\ConfigLoader;
 use Keros\Tools\JwtCodec;
@@ -124,8 +125,9 @@ class KerosApp
                     $this->get("", StudyController::class . ':getAllStatus');
                     $this->get("/{id:[0-9]+}", StudyController::class . ':getStatus');
                 });
-
-            })->add($this->getContainer()->get(AuthenticationMiddleware::class));
+            })
+            ->add(AccessRightsService::class . ":checkRightsNotAlumni")
+            ->add($this->getContainer()->get(AuthenticationMiddleware::class));
 
             $this->group('/core', function () {
 
@@ -215,7 +217,9 @@ class KerosApp
                     $this->post("/{id:[0-9]+}/validate-ua", PaymentSlipController::class . ':validateUA');
                     $this->post("/{id:[0-9]+}/validate-perf", PaymentSlipController::class . ':validatePerf');
                 });
-            })->add($this->getContainer()->get(AuthenticationMiddleware::class));
+            })
+            ->add(AccessRightsService::class . ":checkRightsNotAlumni")
+            ->add($this->getContainer()->get(AuthenticationMiddleware::class));
 
             $this->group('/sg', function () {
                 $this->group('/membre-inscription', function () {
@@ -240,7 +244,9 @@ class KerosApp
                     $this->get("/{id:[0-9]+}/document/{document_name:[a-zA-Z]+}", ConsultantInscriptionController::class . ':getDocument');
                     $this->post("/{id:[0-9]+}/document/{document_name:[a-zA-Z]+}", ConsultantInscriptionController::class . ':createDocument');
                 });
-            })->add($this->getContainer()->get(AuthenticationMiddleware::class));
+            })
+            ->add(AccessRightsService::class . ":checkRightsNotAlumni")
+            ->add($this->getContainer()->get(AuthenticationMiddleware::class));
         });
 
         $this->app = $app;
