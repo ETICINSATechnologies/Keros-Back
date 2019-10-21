@@ -126,7 +126,7 @@ class KerosApp
                     $this->get("/{id:[0-9]+}", StudyController::class . ':getStatus');
                 });
             })
-            ->add(AccessRightsService::class . ":checkRightsMemberAccess")
+            ->add(AccessRightsService::class . ":checkRightsNotAlumni")
             ->add($this->getContainer()->get(AuthenticationMiddleware::class));
 
             $this->group('/core', function () {
@@ -218,7 +218,7 @@ class KerosApp
                     $this->post("/{id:[0-9]+}/validate-perf", PaymentSlipController::class . ':validatePerf');
                 });
             })
-            ->add(AccessRightsService::class . ":checkRightsMemberAccess")
+            ->add(AccessRightsService::class . ":checkRightsNotAlumni")
             ->add($this->getContainer()->get(AuthenticationMiddleware::class));
 
             $this->group('/sg', function () {
@@ -245,7 +245,7 @@ class KerosApp
                     $this->post("/{id:[0-9]+}/document/{document_name:[a-zA-Z]+}", ConsultantInscriptionController::class . ':createDocument');
                 });
             })
-            ->add(AccessRightsService::class . ":checkRightsMemberAccess")
+            ->add(AccessRightsService::class . ":checkRightsNotAlumni")
             ->add($this->getContainer()->get(AuthenticationMiddleware::class));
         });
 

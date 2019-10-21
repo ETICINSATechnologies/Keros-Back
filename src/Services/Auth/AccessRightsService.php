@@ -179,7 +179,7 @@ class AccessRightsService
      * @throws KerosException 
      * @return Response
      */
-    public function checkRightsMemberAccess(Request $request, Response $response, callable $next)
+    public function checkRightsNotAlumni(Request $request, Response $response, callable $next)
     {
         $isAlumni = false;
 
