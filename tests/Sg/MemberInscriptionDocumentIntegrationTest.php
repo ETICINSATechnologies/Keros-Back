@@ -33,6 +33,27 @@ class MemberInscriptionDocumentIntegrationTest extends AppTestCase
         $this->assertEquals($pdf1->getDataFields(), $pdf2->getDataFields());
     }
 
+    public function testGetGeneratedDocumentWithAccentShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/sg/membre-inscription/3/document/1/generate',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $body = json_decode($response->getBody());
+
+        $this->assertSame(200, $response->getStatusCode());
+
+
+        $location = strstr($body->location, "/generated/");
+        $location = str_replace("/generated/", "documents/tmp/", $location);
+        $pdf1 = new Pdf("tests/DocumentsTests/memberInscription3.pdf");
+        $pdf2 = new Pdf($location);
+        $this->assertEquals($pdf1->getDataFields(), $pdf2->getDataFields());
+    }
+
     public function testPostDocumentShouldReturn200()
     {
         $handle = fopen("test.txt", "w");
