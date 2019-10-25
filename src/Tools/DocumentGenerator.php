@@ -2,6 +2,7 @@
 
 namespace Keros\Tools;
 
+use FPDM;
 use \ZipArchive;
 use Keros\Error\KerosException;
 use Monolog\Logger;
@@ -159,7 +160,7 @@ class DocumentGenerator
      * from https://www.sitepoint.com/filling-pdf-forms-pdftk-php/
      * and https://github.com/mikehaertl/php-pdftk
      * @param string $location
-     * @param string $documentTypeLocation
+     * @param string $documentTypeLocation template to be publiposted
      * @param array $replacementArray
      * @return bool
      * @throws KerosException
@@ -169,7 +170,7 @@ class DocumentGenerator
         // Fill form with data array
         $pdf = new Pdf($documentTypeLocation);
         $pdf->fillForm(array_map(function ($val) {
-            return utf8_decode($val);
+            return mb_convert_encoding($val, 'ISO-8859-1', 'ASCII');//utf8_decode($val);
         }, $replacementArray))
             ->needAppearances();
 

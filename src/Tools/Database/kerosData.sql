@@ -404,7 +404,7 @@ TRUNCATE TABLE sg_member_inscription;
 INSERT INTO sg_member_inscription (id, firstName, lastName, genderId, birthday, departmentId, email, phoneNumber, outYear, nationalityId, wantedPoleId, addressId, hasPaid, droitImage, createdDate) VALUES
     (1, 'Bruce', 'Wayne', 1, STR_TO_DATE('2000/2/14', '%Y/%m/%d'), 3, 'bruce.wayne@batman.com', '0033123456789', 2022, 42, 8, 1, false, false, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
     (2, 'Clark', 'Kent', 1, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 2, 'clark.kent@dailyplanete.com', '0033123456789', 2024, 69, 4, 1, true, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
-    (3, 'member inscription 3', 'member inscription 3 name', 3, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 7, 'memberInscription3@fake.com', '+33514785269', 2026, 115, 7, 56, true, false, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
+    (3, 'member ìnscription 3', 'member inscription 3 name', 3, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 7, 'memberInscription3@fake.com', '+33514785269', 2026, 115, 7, 56, true, false, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
     (4, 'member inscription 4', 'member inscription 4 name', 4, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 13, 'memberInscription4@fake.com', '+33514785269', 2021, 1, 4, 57, false, false, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
     (5, 'member inscription 5', 'member inscription 5 name', 1, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 2, 'memberInscription5@fake.com', '+33514785269', 2025, 60, 6, 58, false, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
     (6, 'member inscription 6', 'member inscription 6 name', 2, STR_TO_DATE('1998/1/15', '%Y/%m/%d'), 5, 'memberInscription6@fake.com', '+33514785269', 2023, 154, 4, 59, false, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
