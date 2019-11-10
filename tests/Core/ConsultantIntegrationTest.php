@@ -118,7 +118,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame("1975-12-01", $body->birthday);
         $this->assertSame(1, $body->department->id);
         $this->assertSame(1, $body->schoolYear);
-        $this->assertSame(null, $body->telephone);
+        $this->assertSame("+332541541", $body->telephone);
         $this->assertSame("Amazon", $body->company);
         $this->assertSame("http://image.png", $body->profilePicture);
         $this->assertNotNull($body->address->id);
@@ -438,7 +438,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame(1, $body->schoolYear);
         $this->assertSame("0033675385495", $body->telephone);
         $this->assertSame("Amazon", $body->company);
-        $this->assertSame("http://image.png", $body->profilePicture);
+        $this->assertSame(null, $body->profilePicture);
         $this->assertNotNull($body->address->id);
         $this->assertSame(true,$body->droitImage);
         $this->assertSame(true,$body->isApprentice);
