@@ -272,7 +272,7 @@ class StudyService
         $name = Validator::requiredString($fields["name"]);
         $description = Validator::optionalString(isset($fields["description"]) ? $fields["description"] : $study->getDescription());
 
-        $statusId = Validator::optionalId(isset($fields["statusId"]) ? $fields["statusId"] : $study->getStatus());
+        $statusId = Validator::optionalId(isset($fields["statusId"]) ? $fields["statusId"] : ((!is_null($study->getStatus())) ? $study->getStatus()->getId() : null));
         if ($statusId != null)
             $status = $this->statusService->getOne($statusId);
         else
@@ -284,9 +284,9 @@ class StudyService
         else
             $firm = null;
 
-        $signDate = Validator::optionalDate(isset($fields["signDate"]) ? $fields["signDate"] : $study->getSignDate());
+        $signDate = Validator::optionalDate(isset($fields["signDate"]) ? $fields["signDate"] : $study->getSignDateFormatted());
 
-        $endDate = Validator::optionalDate(isset($fields["endDate"]) ? $fields["endDate"] : $study->getEndDate());
+        $endDate = Validator::optionalDate(isset($fields["endDate"]) ? $fields["endDate"] : $study->getEndDateFormatted());
 
         $managementFee = Validator::optionalFloat(isset($fields["managementFee"]) ? $fields["managementFee"] : $study->getManagementFee());
         $realizationFee = Validator::optionalFloat(isset($fields["realizationFee"]) ? $fields["realizationFee"] : $study->getRealizationFee());
@@ -294,7 +294,7 @@ class StudyService
         $ecoparticipationFee = Validator::optionalFloat(isset($fields["ecoparticipationFee"]) ? $fields["ecoparticipationFee"] : $study->getEcoParticipationFee());
         $outsourcingFee = Validator::optionalFloat(isset($fields["outsourcingFee"]) ? $fields["outsourcingFee"] : $study->getOutsourcingFee());
 
-        $archivedDate = Validator::optionalDate(isset($fields["archivedDate"]) ? $fields["archivedDate"] : $study->getArchivedDate());
+        $archivedDate = Validator::optionalDate(isset($fields["archivedDate"]) ? $fields["archivedDate"] : $study->getArchivedDateFormatted());
 
         if (isset($fields["contactIds"])) {
             $contactIds = $fields["contactIds"];
@@ -321,12 +321,12 @@ class StudyService
             $qualityManagers = array();
 
         $provenance = null;
-        $provenanceId = Validator::optionalId(isset($fields["provenanceId"]) ? $fields["provenanceId"] : $study->getProvenance());
+        $provenanceId = Validator::optionalId(isset($fields["provenanceId"]) ? $fields["provenanceId"] : ((!is_null($study->getProvenance())) ? $study->getProvenance()->getId() : null));
         if (isset($provenanceId)) {
             $provenance = $this->provenanceService->getOne($provenanceId);
         }
 
-        $fieldId = Validator::optionalId(isset($fields["fieldId"]) ? $fields["fieldId"] : !is_null($study->getField()) ? $study->getField()->getId() : null);
+        $fieldId = Validator::optionalId(isset($fields["fieldId"]) ? $fields["fieldId"] : (!is_null($study->getField()) ? $study->getField()->getId() : null));
         if ($fieldId != null)
             $field = $this->fieldService->getOne($fieldId);
         else

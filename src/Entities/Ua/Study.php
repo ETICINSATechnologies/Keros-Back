@@ -239,25 +239,25 @@ class Study implements JsonSerializable
     }
 
     /**
-     * @return Field
+     * @return Field | null
      */
-    public function getField() : Field
+    public function getField() : ?Field
     {
         return $this->field;
     }
 
     /**
-     * @param Field $field
+     * @param Field | null $field
      */
-    public function setField(Field $field): void
+    public function setField(?Field $field): void
     {
         $this->field = $field;
     }
 
     /**
-     * @return mixed
+     * @return Provenance|null
      */
-    public function getProvenance()
+    public function getProvenance() : ?Provenance
     {
         return $this->provenance;
     }
@@ -271,9 +271,9 @@ class Study implements JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return Status|null
      */
-    public function getStatus()
+    public function getStatus() : ?Status
     {
         return $this->status;
     }

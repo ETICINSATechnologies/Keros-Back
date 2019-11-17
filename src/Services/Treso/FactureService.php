@@ -161,7 +161,7 @@ class FactureService
         $clientName = Validator::optionalString(isset($fields["clientName"]) ? $fields["clientName"] : $facture->getClientName());
         $contactName = Validator::optionalString(isset($fields["contactName"]) ? $fields["contactName"] : $facture->getContactName());
         $contactEmail = Validator::optionalString(isset($fields["contactEmail"]) ? $fields["contactEmail"] : $facture->getContactEmail());
-        $studyId = Validator::optionalId(isset($fields["studyId"]) ? $fields["studyId"] : !is_null($facture->getStudy()) ? $facture->getStudy()->getId() : null);
+        $studyId = Validator::optionalId(isset($fields["studyId"]) ? $fields["studyId"] : (!is_null($facture->getStudy()) ? $facture->getStudy()->getId() : null));
         if ($studyId != null)
             $study = $this->studyService->getOne($studyId);
         else
@@ -171,10 +171,10 @@ class FactureService
         $type = $this->factureTypeService->getFromLabel($typeId);
         $amountDescription = Validator::optionalString(isset($fields["amountDescription"]) ? $fields["amountDescription"] : $facture->getAmountDescription());
         $subject = Validator::optionalString(isset($fields["subject"]) ? $fields["subject"] : $facture->getSubject());
-        $agreementSignDate = Validator::optionalDate(isset($fields["agreementSignDate"]) ? $fields["agreementSignDate"] : $facture->getAgreementSignDate());
+        $agreementSignDate = Validator::optionalDate(isset($fields["agreementSignDate"]) ? $fields["agreementSignDate"] : $facture->getAgreementSignDateFormatted());
         $amountHT = Validator::optionalFloat(isset($fields["amountHT"]) ? $fields["amountHT"] : $facture->getAmountHT());
         $taxPercentage = Validator::optionalFloat(isset($fields["taxPercentage"]) ? $fields["taxPercentage"] : $facture->getTaxPercentage());
-        $dueDate = Validator::optionalDate(isset($fields["dueDate"]) ? $fields["dueDate"] : $facture->getDueDate());
+        $dueDate = Validator::optionalDate(isset($fields["dueDate"]) ? $fields["dueDate"] : $facture->getDueDateFormatted());
         $additionalInformation = Validator::optionalString(isset($fields["additionalInformation"]) ? $fields["additionalInformation"] : $facture->getAdditionalInformation());
 
         $facture->setNumero($numero);
