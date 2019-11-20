@@ -172,8 +172,8 @@ class   MemberInscriptionService
         $departmentId = Validator::requiredId($fields["departmentId"]);
         $department = $this->departmentService->getOne($departmentId);
         $email = Validator::requiredEmail($fields["email"]);
-        $phoneNumber = Validator::optionalPhone(isset($fields["phoneNumber"]) ? $fields["phoneNumber"] : null);
-        $outYear = Validator::optionalInt(isset($fields["outYear"]) ? $fields["outYear"] : null);
+        $phoneNumber = Validator::optionalPhone(isset($fields["phoneNumber"]) ? $fields["phoneNumber"] : $memberInscription->getPhoneNumber());
+        $outYear = Validator::optionalInt(isset($fields["outYear"]) ? $fields["outYear"] : $memberInscription->getOutYear());
         $nationalityId = Validator::requiredId($fields["nationalityId"]);
         $nationality = $this->countryService->getOne($nationalityId);
         $wantedPoleId = Validator::requiredId($fields["wantedPoleId"]);
