@@ -167,6 +167,8 @@ class KerosApp
                     $this->get("/board/latest", MemberController::class . ':getLatestBoard');
                     $this->post("/{id:[0-9]+}/photo", MemberController::class . ':createProfilePicture');
                     $this->get("/{id:[0-9]+}/photo", MemberController::class . ':getProfilePicture');
+                    $this->post("/me/photo", MemberController::class . ':createCurrentUserProfilePicture');
+                    $this->get("/me/photo", MemberController::class . ':getCurrentUserProfilePicture');
                     $this->delete("/{id:[0-9]+}/photo", MemberController::class . ':deleteProfilePicture');
                 });
 
