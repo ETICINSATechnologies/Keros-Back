@@ -139,7 +139,7 @@ class MemberController
         $this->entityManager->beginTransaction();
         $member = $this->memberService->update($args['id'], $body);
         $this->entityManager->commit();
-        
+
         return $response->withJson($member, 200);
     }
 
@@ -166,7 +166,7 @@ class MemberController
     public function createProfilePicture(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Uploading profile picture for member " . $args['id'] . " from " . $request->getServerParams()["REMOTE_ADDR"]);
-        
+
         if ($request->getUploadedFiles() == null) {
             $msg = 'No file given';
             $this->logger->error($msg);
@@ -193,7 +193,7 @@ class MemberController
         }
         $body = $args;
         $body['file'] = $uploadedFile->getClientFileName();
-        
+
         $this->entityManager->beginTransaction();
         $filename = $this->memberService->createPhoto($args['id'], $body);
         $filepath = $this->kerosConfig['MEMBER_PHOTO_DIRECTORY'] . $filename;
@@ -201,6 +201,12 @@ class MemberController
         $this->entityManager->commit();
 
         return $response->withStatus(204);
+    }
+
+    public function createCurrentUserProfilePicture(Request $request, Response $response, array $args)
+    {
+        $args['id'] = $request->getAttribute("userId");
+        return $this->createProfilePicture($request, $response, $args);
     }
 
     public function getProfilePicture(Request $request, Response $response, array $args)
@@ -224,6 +230,12 @@ class MemberController
         readfile($filepath);
 
         return $response;
+    }
+
+    public function getCurrentUserProfilePicture(Request $request, Response $response, array $args)
+    {
+        $args['id'] = $request->getAttribute("userId");
+        return $this->getProfilePicture($request, $response, $args);
     }
 
     public function deleteProfilePicture(Request $request, Response $response, array $args)
