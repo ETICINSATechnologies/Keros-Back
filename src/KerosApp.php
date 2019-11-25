@@ -36,7 +36,17 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-
+//A mettre dans des fichiers séparés
+/**
+ * @OA\Tag(
+ *     name="Authentification",
+ *     description="Login (connexion)"
+ * )
+ * @OA\Tag(
+ *     name="Core - Member",
+ *     description="Member (membre)"
+ * )
+ */
 /**
  * Class KerosApp - Main class ran by index.php. Used to configure
  * the Slim app
@@ -69,7 +79,9 @@ class KerosApp
         $app = new \Slim\App(['settings' => ConfigLoader::getConfig()]);
 
         $this->prepareContainer($app->getContainer());
-
+        /**
+         * @OA\Info(title="Keros-Back API Documentation", version="1.0.3")
+         */
         $app->group("/api/v1", function () {
             $this->get("/health", function (Request $request, Response $response, array $args) {
                 $response->getBody()->write('{"health": "OK"}');
@@ -77,6 +89,13 @@ class KerosApp
             });
 
             $this->group("/auth", function () {
+                /**
+                 * @OA\Post(
+                 *     path="/auth/login",
+                 *     tags={"Authentification"},
+                 *     @OA\Response(response="200", description="OK")
+                 * )
+                 */
                 $this->post("/login", LoginController::class . ':login');
             });
 
@@ -157,6 +176,92 @@ class KerosApp
                 });
 
                 $this->group('/member', function () {
+                    /**
+                     * @OA\Get(
+                     *  path="/core/member",
+                     *  tags={"Core - Member"},
+                     *  @OA\Parameter(
+                     *     name="poleId",
+                     *     in="query",
+                     *     description="Si ce paramètre est défini, filtre les objets par poleId",
+                     *     required=false,
+                     *     @OA\Schema(
+                     *      type="integer",
+                     *     ),
+                     *  ),
+                     *  @OA\Parameter(
+                     *     name="positionId",
+                     *     in="query",
+                     *     description="Si ce paramètre est défini, filtre les objets par positionId",
+                     *     required=false,
+                     *     @OA\Schema(
+                     *      type="integer",
+                     *     ),
+                     *  ),
+                     *  @OA\Parameter(
+                     *     name="search",
+                     *     in="query",
+                     *     description="Si ce paramètre est défini, filtre les objets par en recherchant le string défini dans ses attributs",
+                     *     required=false,
+                     *     @OA\Schema(
+                     *      type="string",
+                     *     ),
+                     *  ),
+                     *  @OA\Parameter(
+                     *     name="orderBy",
+                     *     in="query",
+                     *     description="Si ce paramètre est défini, spécifie le champ par laquelle les objets doivent être triés",
+                     *     required=false,
+                     *     @OA\Schema(
+                     *      type="string",
+                     *     ),
+                     *  ),
+                     *  @OA\Parameter(
+                     *     name="order",
+                     *     in="query",
+                     *     description="Si ce paramètre est défini, spécifie le sens du trie",
+                     *     required=false,
+                     *     @OA\Schema(
+                     *      type="string",
+                     *      enum={"asc", "desc"},
+                     *      default="asc",
+                     *     ),
+                     *  ),
+                     *  @OA\Parameter(
+                     *     name="pageNumber",
+                     *     in="query",
+                     *     description="Si ce paramètre est défini, spécifie le numéro du page à récupérer (commençant à 0)",
+                     *     required=false,
+                     *     @OA\Schema(
+                     *      type="integer",
+                     *      default=0,
+                     *     ),
+                     *  ),
+                     *  @OA\Parameter(
+                     *     name="pageSize",
+                     *     in="query",
+                     *     description="Si ce paramètre est défini, spécifie la taille de la page à récupérer",
+                     *     required=false,
+                     *     @OA\Schema(
+                     *      type="integer",
+                     *      default=25,
+                     *     ),
+                     *  ),
+                     *  @OA\Response(
+                     *     response="200",
+                     *     description="OK",
+                     *     @OA\JsonContent(
+                     *      type="object",
+                     *      @OA\Items(ref="#/components/schemas/Member"),
+                     *      example={"firstName"="Paul", "lastName"="Goux", "telephone"="0488888888", "email"="hi@gmail.com"},
+                     *     ),
+                     *  ),
+                     *	@OA\Response(response="400", description="Erreur dans la requête (paramètre manquant, paramètre illogique, etc)"),
+                     *	@OA\Response(response="401", description="Erreur lorsque l'utilisateur essaye d'accéder à l'API sans être connecté (header Authorization manquant par exemple)"),
+                     *	@OA\Response(response="403", description="Erreur lorsque l'utilisateur essaye d'accéder à un endpoint pour laquelle il n'a pas les droits"),
+                     *	@OA\Response(response="500", description="Réponse lorsqu'une erreur est survenue qui n'est pas défini au-dessus")
+                     * )
+                     */
                     $this->get("", MemberController::class . ':getPageMembers');
                     $this->get("/me", MemberController::class . ':getConnectedUser');
                     $this->put("/me", MemberController::class . ':updateConnectedUser');

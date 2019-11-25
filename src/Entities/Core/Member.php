@@ -8,6 +8,9 @@ use Keros\Entities\Sg\MemberInscriptionDocument;
 /**
  * @Entity
  * @Table(name="core_member")
+ * @OA\Schema(
+ *     schema="Member",
+ * )
  */
 class Member implements JsonSerializable
 {
@@ -24,19 +27,35 @@ class Member implements JsonSerializable
      **/
     protected $gender;
 
-    /** @Column(type="string", length=100) */
+    /**
+     * @Column(type="string", length=100)
+     * @var string
+     * @OA\Property()
+     */
     protected $firstName;
 
-    /** @Column(type="string", length=100) */
+    /**
+     * @Column(type="string", length=100)
+     * @var string
+     * @OA\Property()
+     */
     protected $lastName;
 
     /** @Column(type="datetime") */
     protected $birthday;
 
-    /** @Column(type="string", length=20) */
+    /**
+     * @Column(type="string", length=20)
+     * @var string
+     * @OA\Property()
+     */
     protected $telephone;
 
-    /** @Column(type="string", length=255) */
+    /**
+     * @Column(type="string", length=255)
+     * @var string
+     * @OA\Property()
+     */
     protected $email;
 
     /**
