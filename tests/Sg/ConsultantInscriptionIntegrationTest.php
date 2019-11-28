@@ -30,7 +30,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         $body = json_decode($response->getBody());
 
         $this->assertSame(200, $response->getStatusCode());
-        $this->assertSame(3, count($body->content));
+        $this->assertSame(25, count($body->content));
         $this->assertSame(1, $body->content[0]->id);
         $this->assertSame('Bruce', $body->content[0]->firstName);
         $this->assertSame('Wayne', $body->content[0]->lastName);
@@ -743,5 +743,65 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
 
         $this->assertSame(404, $response->getStatusCode());
+    }
+
+    /**
+     * @throws MethodNotAllowedException
+     * @throws NotFoundException
+     */
+    public function testGetPage0ConsultantInscriptionShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/sg/consultant-inscription',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $body = json_decode($response->getBody());
+
+        $dateDiff = ((new \DateTime("9/1/2019"))->diff(new \DateTime($body->content[0]->createdDate->date)))->format('%a');
+
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame(25, count($body->content));
+        $this->assertSame(1, $body->content[0]->id);
+        $this->assertSame('Bruce', $body->content[0]->firstName);
+        $this->assertSame('Wayne', $body->content[0]->lastName);
+        $this->assertSame(1, $body->content[0]->gender->id);
+        $this->assertSame('2000-02-14', $body->content[0]->birthday);
+        $this->assertSame(3, $body->content[0]->department->id);
+        $this->assertSame('bruce.wayne@batman.com', $body->content[0]->email);
+        $this->assertSame('0033123456789', $body->content[0]->phoneNumber);
+        $this->assertSame('12345678901234567', $body->content[0]->socialSecurityNumber);
+        $this->assertSame(2021, $body->content[0]->outYear);
+        $this->assertSame(42, $body->content[0]->nationality->id);
+        $this->assertSame(1, $body->content[0]->address->id);
+        $this->assertSame(false, $body->content[0]->droitImage);
+
+        $this->assertSame(0, $body->meta->page);
+        $this->assertSame(2, $body->meta->totalPages);
+        $this->assertSame(26, $body->meta->totalItems);
+        $this->assertSame(25, $body->meta->itemsPerPage);
+    }
+
+    /**
+     * @throws MethodNotAllowedException
+     * @throws NotFoundException
+     */
+    public function testGetPage1MemberInscriptionShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/sg/consultant-inscription?pageNumber=1',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $body = json_decode($response->getBody());
+
+        $dateDiff = ((new \DateTime("9/1/2019"))->diff(new \DateTime($body->content[0]->createdDate->date)))->format('%a');
+
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame(1, count($body->content));
     }
 }
