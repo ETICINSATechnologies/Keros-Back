@@ -14,9 +14,11 @@ use Keros\Services\Core\DepartmentService;
 use Keros\Services\Core\GenderService;
 use Keros\Services\Core\MemberService;
 use Keros\Services\Core\PoleService;
+use Keros\Tools\MailSender;
 use Keros\Tools\Validator;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
+use function SendGrid\sendHelloEmail;
 
 class   MemberInscriptionService
 {
@@ -47,6 +49,9 @@ class   MemberInscriptionService
     /** @var MemberInscriptionDocumentService */
     private $memberInscriptionDocumentService;
 
+    /** */
+    private $mailSender;
+
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get(Logger::class);
@@ -58,6 +63,7 @@ class   MemberInscriptionService
         $this->poleService = $container->get(PoleService::class);
         $this->memberInscriptionDataService = $container->get(MemberInscriptionDataService::class);
         $this->memberInscriptionDocumentService = $container->get(MemberInscriptionDocumentService::class);
+        $this->mailSender = new MailSender($container);
     }
 
     /**
@@ -89,6 +95,15 @@ class   MemberInscriptionService
         $memberInscription = new MemberInscription($firstName, $lastName, $gender, $birthday, $department, $email, $phoneNumber, $outYear, $nationality, $address, $wantedPole, $hasPaid, $droitImage, $createdDate, array());
 
         $this->memberInscriptionDataService->persist($memberInscription);
+
+        try{
+            //  $json = json_decode($request->getBody());
+
+            // $mailSender->sendMailInscription($json);
+             $this->mailSender->sendMailMemberInscriptionFromTemplate($memberInscription);
+        }catch (Throwable $th){
+            $this->logger->error($th->getMessage());
+        }
 
         return $memberInscription;
     }
