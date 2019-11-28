@@ -26,7 +26,7 @@ class CountryIntegrationTest extends AppTestCase
         $this->assertNotNull(strlen($body[0]->label));
     }
 
-    public function testGetCountryShouldReturn200()
+    public function testGetCountryNotEuShouldReturn200()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
@@ -41,6 +41,25 @@ class CountryIntegrationTest extends AppTestCase
         $body = json_decode($response->getBody());
         $this->assertSame(1, $body->id);
         $this->assertSame("Afghanistan", $body->label);
+        $this->assertSame(false, $body->isEu);
+    }
+
+    public function testGetCountryIsEuShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/core/country/5',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(200, $response->getStatusCode());
+
+        $body = json_decode($response->getBody());
+        $this->assertSame(5, $body->id);
+        $this->assertSame("Allemagne", $body->label);
+        $this->assertSame(true, $body->isEu);
     }
 
     public function testGetCountryShouldReturn404()

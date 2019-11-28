@@ -26,12 +26,20 @@ class Country implements JsonSerializable, Searchable
     protected $label;
 
     /**
+     * @Column(type="boolean", nullable=false)
+     * @var boolean
+     */
+    protected $isEu;
+
+    /**
      * Country constructor.
      * @param $label
+     * @param $isEu
      */
-    public function __construct($label)
+    public function __construct($label, $isEu)
     {
         $this->label = $label;
+        $this->isEu = $isEu;
     }
 
     public function jsonSerialize()
@@ -39,6 +47,7 @@ class Country implements JsonSerializable, Searchable
         return [
             'id' => $this->getId(),
             'label' => $this->getLabel(),
+            'isEu' => $this->getIsEu()
         ];
     }
 
@@ -69,5 +78,13 @@ class Country implements JsonSerializable, Searchable
     public function setLabel($label): void
     {
         $this->label = $label;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsEu()
+    {
+        return $this->isEu;
     }
 }
