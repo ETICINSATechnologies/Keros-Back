@@ -45,7 +45,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         $this->assertSame(1, $body->content[0]->address->id);
         $this->assertSame(false, $body->content[0]->droitImage);
         $this->assertSame(26, $body->meta->totalItems);
-        $this->assertSame(1, $body->meta->totalPages);
+        $this->assertSame(2, $body->meta->totalPages);
         $this->assertSame(0, $body->meta->page);
     }
 
