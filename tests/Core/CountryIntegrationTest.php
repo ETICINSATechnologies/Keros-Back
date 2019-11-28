@@ -26,7 +26,7 @@ class CountryIntegrationTest extends AppTestCase
         $this->assertNotNull(strlen($body[0]->label));
     }
 
-    public function testGetCountry1ShouldReturn200()
+    public function testGetCountryNotEuShouldReturn200()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
@@ -44,7 +44,7 @@ class CountryIntegrationTest extends AppTestCase
         $this->assertSame(false, $body->isEu);
     }
 
-    public function testGetCountry2ShouldReturn200()
+    public function testGetCountryIsEuShouldReturn200()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',

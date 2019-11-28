@@ -25,7 +25,10 @@ class Country implements JsonSerializable, Searchable
     /** @Column(type="string", length=64) */
     protected $label;
 
-    /** @Column(type="boolean") */
+    /**
+     * @Column(type="boolean", nullable=false)
+     * @var boolean
+     */
     protected $isEu;
 
     /**
