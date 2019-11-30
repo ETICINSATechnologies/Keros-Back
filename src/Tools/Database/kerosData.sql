@@ -184,6 +184,7 @@ TRUNCATE TABLE core_ticket;
 INSERT INTO core_ticket (id, userId, title, message, type, status) VALUES
   (1, 1, 'Impossible de changer son mot de passe', 'Bonjour, je narrive pas à changer mon mot de passe', 'Problème de compte', 'En cours'); # ticket 1
 
+#si vous ajouter des core_member, pensez à mettre à jour MemberIntegrationTest.testDeleteAllExistingMemberShouldReturn204
 TRUNCATE TABLE core_member;
 INSERT INTO core_member (id, genderId, firstName, lastName, birthday, telephone, email, addressId, schoolYear, departmentId, company, profilePicture, droitImage, createdDate, isAlumni) VALUES
   (1, 1, 'Conor', 'Breeze', STR_TO_DATE('1975-12-25', '%Y-%m-%d'), '+332541254', 'fake.mail@fake.com', 2, 3, 1, 'Google', '1c518c591e1be2f2703dd8c9bb77dbb5.jpg', true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false),
@@ -368,7 +369,7 @@ INSERT INTO core_document(id, uploadDate, location, discr) VALUES
   (3, STR_TO_DATE('2018/12/16 10:40:10', '%Y/%m/%d %h:%i:%s'), 'facture_1/document_3/proformat.docx', 'treso_facture_document'),
   (4, STR_TO_DATE('2019/04/19 10:40:10', '%Y/%m/%d %h:%i:%s'), 'facture_1/document_4/solde.docx', 'treso_facture_document'),
   (5, STR_TO_DATE('2019/04/19 10:40:10', '%Y/%m/%d %h:%i:%s'), 'member_inscription_1/document_1/Fiche_membre_1.pdf', 'sg_member_inscription_document'),
-  (6, STR_TO_DATE('2019/04/19 10:40:10', '%Y/%m/%d %h:%i:%s'), 'member_inscription_2/document_1/Fiche_membre_1.pdf', 'sg_member_inscription_document');
+  (6, STR_TO_DATE('2019/04/19 10:40:10', '%Y/%m/%d %h:%i:%s'), 'member_inscription_2/document_1/Fiche_membre_2.pdf', 'sg_member_inscription_document');
 
 TRUNCATE TABLE ua_study_document;
 INSERT INTO `ua_study_document`(id, studyId, studyDocumentTypeId) VALUES
