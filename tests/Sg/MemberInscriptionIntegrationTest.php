@@ -29,7 +29,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
         $body = json_decode($response->getBody());
 
-        $dateDiff = ((new \DateTime("9/1/2019"))->diff(new \DateTime($body->content[0]->createdDate->date)))->format('%a');
+        $dateDiff = ((new \DateTime("9/1/2019"))->diff(new \DateTime($body->content[0]->createdDate)))->format('%a');
 
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame(25, count($body->content));
@@ -352,7 +352,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
         $body = json_decode($response->getBody());
 
-        $dateDiff = ((new \DateTime())->diff(new \DateTime($body->createdDate->date)))->format('%a');
+        $dateDiff = ((new \DateTime())->diff(new \DateTime($body->createdDate)))->format('%a');
 
         $this->assertSame(200, $response->getStatusCode());
         $this->assertNotNull($body->id);
