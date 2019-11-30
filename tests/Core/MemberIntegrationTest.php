@@ -281,7 +281,7 @@ class MemberIntegrationTest extends AppTestCase
 
         $body = json_decode($response->getBody());
 
-        $dateDiff = ((new \DateTime("9/1/2019"))->diff(new \DateTime($body->createdDate->date)))->format('%a');
+        $dateDiff = ((new \DateTime("9/1/2019"))->diff(new \DateTime($body->createdDate)))->format('%a');
 
         $this->assertSame(1, $body->id);
         $this->assertSame(1, $body->gender->id);
@@ -361,7 +361,7 @@ class MemberIntegrationTest extends AppTestCase
 
         $body = json_decode($response->getBody());
 
-        $dateDiff = ((new \DateTime())->diff(new \DateTime($body->createdDate->date)))->format('%a');
+        $dateDiff = ((new \DateTime())->diff(new \DateTime($body->createdDate)))->format('%a');
 
         $this->assertNotNull($body->id);
         $this->assertSame("newusername", $body->username);
@@ -430,7 +430,7 @@ class MemberIntegrationTest extends AppTestCase
 
         $body = json_decode($response->getBody());
 
-        $dateDiff = ((new \DateTime("9/1/2019"))->diff(new \DateTime($body->createdDate->date)))->format('%a');
+        $dateDiff = ((new \DateTime("9/1/2019"))->diff(new \DateTime($body->createdDate)))->format('%a');
 
         $this->assertNotNull($body->id);
         $this->assertSame("newusername", $body->username);
