@@ -107,7 +107,8 @@ class MemberInscriptionDocumentService
 
         $latestDocument = null;
         foreach ($documents as $document) {
-            if ($document->getMemberInscription()->getId() == $memberInscriptionId && $document->getMemberInscriptionDocumentType()->getId() == $documentType)
+            //if memberInscription is null, the inscription have been validated and is now related to a member
+            if (!is_null($document->getMemberInscription()) && $document->getMemberInscription()->getId() == $memberInscriptionId && $document->getMemberInscriptionDocumentType()->getId() == $documentType)
                 if ($latestDocument == null || $document->getUploadDate() > $latestDocument->getUploadDate())
                     $latestDocument = $document;
         }

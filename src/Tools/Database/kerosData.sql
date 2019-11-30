@@ -367,7 +367,8 @@ INSERT INTO core_document(id, uploadDate, location, discr) VALUES
   (2, STR_TO_DATE('2018/12/16 10:40:10', '%Y/%m/%d %h:%i:%s'), 'study_1/document_3/FE.docx', 'ua_study_document'),
   (3, STR_TO_DATE('2018/12/16 10:40:10', '%Y/%m/%d %h:%i:%s'), 'facture_1/document_3/proformat.docx', 'treso_facture_document'),
   (4, STR_TO_DATE('2019/04/19 10:40:10', '%Y/%m/%d %h:%i:%s'), 'facture_1/document_4/solde.docx', 'treso_facture_document'),
-  (5, STR_TO_DATE('2019/04/19 10:40:10', '%Y/%m/%d %h:%i:%s'), 'member_inscription_1/document_1/Fiche_membre_1.pdf', 'sg_member_inscription_document');
+  (5, STR_TO_DATE('2019/04/19 10:40:10', '%Y/%m/%d %h:%i:%s'), 'member_inscription_1/document_1/Fiche_membre_1.pdf', 'sg_member_inscription_document'),
+  (6, STR_TO_DATE('2019/04/19 10:40:10', '%Y/%m/%d %h:%i:%s'), 'member_inscription_X/document_1/Fiche_membre_1.pdf', 'sg_member_inscription_document');
 
 TRUNCATE TABLE ua_study_document;
 INSERT INTO `ua_study_document`(id, studyId, studyDocumentTypeId) VALUES
@@ -436,7 +437,7 @@ INSERT INTO sg_member_inscription (id, firstName, lastName, genderId, birthday, 
 TRUNCATE TABLE sg_member_inscription_document_type;
 INSERT INTO sg_member_inscription_document_type(id, location, `name`, isTemplatable) VALUES
     (1, 'Fiche_inscription_membre_actif.pdf', 'Fiche inscription membre', true),
-    (2, 'Fiche_inscription_membre_actif2.pdf', 'Fiche inscription membre2', true);
+    (2, 'Fiche_inscription_membre_actif2.pdf', 'Fiche inscription membre', true);
 
 TRUNCATE TABLE sg_consultant_inscription;
 INSERT INTO `sg_consultant_inscription` (`id`, `firstName`, `lastName`, `birthday`, `genderId`, `departmentId`, `email`, `phoneNumber`, `outYear`, `nationalityId`, `addressId`, `socialSecurityNumber`, `droitImage`, `isApprentice`, `createdDate`, `documentIdentity`, `documentScolaryCertificate`, `documentRIB`, `documentVitaleCard`, `documentResidencePermit`, `documentCVEC`) VALUES
