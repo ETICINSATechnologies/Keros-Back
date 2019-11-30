@@ -226,9 +226,6 @@ class MemberIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
 
         $this->assertSame(204, $response->getStatusCode());
-
-        $file = FileHelper::makeNewFile("documents/document/member_inscription/member_inscription_1/document_1/Fiche_membre_2.pdf");
-        FileHelper::closeFile($file);
     }
 
     public function testDeleteInvalidMemberShouldReturn404()
@@ -737,7 +734,7 @@ class MemberIntegrationTest extends AppTestCase
     public function testDeleteAllExistingMemberShouldReturn204()
     {
         for($id = 1;  $id <= 28; $id++) {
-            if(in_array($id, array(2, 5))){
+            if(in_array($id, array(1, 2, 5))){
                 continue;
             }
             $env = Environment::mock([
