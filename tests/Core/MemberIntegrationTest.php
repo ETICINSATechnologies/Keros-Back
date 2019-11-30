@@ -2,6 +2,7 @@
 
 namespace KerosTest\Member;
 
+use Keros\Tools\Helpers\FileHelper;
 use KerosTest\AppTestCase;
 use Slim\Http\Environment;
 use Slim\Http\Request;
@@ -225,6 +226,9 @@ class MemberIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
 
         $this->assertSame(204, $response->getStatusCode());
+
+        $file = FileHelper::makeNewFile("documents/document/member_inscription/member_inscription_1/document_1/Fiche_membre_2.pdf");
+        FileHelper::closeFile($file);
     }
 
     public function testDeleteInvalidMemberShouldReturn404()
