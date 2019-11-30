@@ -485,7 +485,7 @@ CREATE TABLE sg_member_inscription_document (
     CONSTRAINT fk_sg_member_insc_document_core_document FOREIGN KEY (id) REFERENCES core_document(id) ON DELETE CASCADE,
     CONSTRAINT fk_sg_member_insc_document_sg_member_inscription FOREIGN KEY (memberInscriptionId) REFERENCES sg_member_inscription(id),
     CONSTRAINT fk_sg_member_insc_document_member_insc_document_type FOREIGN KEY (memberInscriptionDocumentTypeId) REFERENCES sg_member_inscription_document_type(id),
-    CONSTRAINT fk_sg_member_insc_document_core_member FOREIGN KEY (memberId) REFERENCES core_member(id)
+    CONSTRAINT fk_sg_member_insc_document_core_member FOREIGN KEY (memberId) REFERENCES core_member(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS treso_payment_slip;

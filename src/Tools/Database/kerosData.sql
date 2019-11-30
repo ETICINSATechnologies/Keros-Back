@@ -435,7 +435,8 @@ INSERT INTO sg_member_inscription (id, firstName, lastName, genderId, birthday, 
 
 TRUNCATE TABLE sg_member_inscription_document_type;
 INSERT INTO sg_member_inscription_document_type(id, location, `name`, isTemplatable) VALUES
-    (1, 'Fiche_inscription_membre_actif.pdf', 'Fiche inscription membre', true);
+    (1, 'Fiche_inscription_membre_actif.pdf', 'Fiche inscription membre', true),
+    (2, 'Fiche_inscription_membre_actif2.pdf', 'Fiche inscription membre2', true);
 
 TRUNCATE TABLE sg_consultant_inscription;
 INSERT INTO `sg_consultant_inscription` (`id`, `firstName`, `lastName`, `birthday`, `genderId`, `departmentId`, `email`, `phoneNumber`, `outYear`, `nationalityId`, `addressId`, `socialSecurityNumber`, `droitImage`, `isApprentice`, `createdDate`, `documentIdentity`, `documentScolaryCertificate`, `documentRIB`, `documentVitaleCard`, `documentResidencePermit`, `documentCVEC`) VALUES
@@ -446,6 +447,8 @@ INSERT INTO `sg_consultant_inscription` (`id`, `firstName`, `lastName`, `birthda
 TRUNCATE TABLE sg_member_inscription_document;
 INSERT INTO sg_member_inscription_document(id, memberInscriptionId, memberInscriptionDocumentTypeId) VALUES
 (5, 1, 1);
+INSERT INTO sg_member_inscription_document(id, memberId, memberInscriptionDocumentTypeId) VALUES
+(6, 1, 1);
 
 TRUNCATE TABLE treso_payment_slip;
 INSERT INTO treso_payment_slip (id, missionRecapNumber, consultantName, consultantSocialSecurityNumber, addressId, email, studyId, clientName, projectLead, isTotalJeh, isStudyPaid, amountDescription, createdDate, creatorId, validatedByUa, validatedByUaDate, uaValidatorId, validatedByPerf, validatedByPerfDate, perfValidatorId) VALUES
