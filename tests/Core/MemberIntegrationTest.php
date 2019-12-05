@@ -2,6 +2,7 @@
 
 namespace KerosTest\Member;
 
+use Keros\Tools\Helpers\FileHelper;
 use KerosTest\AppTestCase;
 use Slim\Http\Environment;
 use Slim\Http\Request;
@@ -732,19 +733,13 @@ class MemberIntegrationTest extends AppTestCase
 
     public function testDeleteAllExistingMemberShouldReturn204()
     {
-        $env = Environment::mock([
-            'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/api/v1/core/member?pageSize=100',
-        ]);
-        $req = Request::createFromEnvironment($env);
-        $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(false);
-        $body = json_decode($response->getBody());
-
-        foreach ($body->content as $member) {
+        for($id = 1;  $id <= 28; $id++) {
+            if(in_array($id, array(1, 2, 5))){
+                continue;
+            }
             $env = Environment::mock([
                 'REQUEST_METHOD' => 'DELETE',
-                'REQUEST_URI' => '/api/v1/core/member/' . $member->id,
+                'REQUEST_URI' => '/api/v1/core/member/' . $id,
             ]);
             $req = Request::createFromEnvironment($env);
             $this->app->getContainer()['request'] = $req;
