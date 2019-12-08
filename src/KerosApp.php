@@ -8,6 +8,7 @@ use Keros\Controllers\Sg\MemberInscriptionDocumentController;
 use Keros\Controllers\Sg\ConsultantInscriptionController;
 use Keros\Controllers\Treso\FactureDocumentController;
 use Keros\Controllers\Core\ConsultantController;
+use Keros\Controllers\Treso\TurnoverController;
 use Keros\Controllers\Ua\StudyDocumentController;
 use Keros\Controllers\Core\TicketController;
 use Keros\Controllers\Core\CountryController;
@@ -195,6 +196,13 @@ class KerosApp
 
                 $this->group('/facture-types', function () {
                     $this->get("", FactureTypeController::class . ':getAllFactureTypes');
+                });
+                $this->group('/turnover', function () {
+                    $this->get("", TurnoverController::class . ':getPageTurnover');
+                    $this->get("/latest", TurnoverController::class . ':getLatestTurnover');
+                    $this->get('/{id:[0-9]+}', TurnoverController::class . ':getTurnover');
+                    $this->post("", TurnoverController::class . ':createTurnover');
+
                 });
                 $this->group('/facture', function () {
                     $this->get("", FactureController::class . ':getPageFacture');

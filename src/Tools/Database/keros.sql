@@ -517,6 +517,14 @@ CREATE TABLE treso_payment_slip (
     CONSTRAINT fk_payment_slip_perf_validator FOREIGN KEY (perfValidatorId) REFERENCES  core_member(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS treso_turnover;
+CREATE TABLE treso_turnover (
+    id int(11) NOT NULL AUTO_INCREMENT,
+    date date,
+    revenue int(11) NOT NULL,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 SET AUTOCOMMIT = 1;
 SET FOREIGN_KEY_CHECKS = 1;
 SET UNIQUE_CHECKS = 1;

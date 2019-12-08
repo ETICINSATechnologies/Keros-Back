@@ -80,6 +80,7 @@ class ConsultantController
      * @param array $args
      * @return mixed
      * @throws KerosException
+     * @throws \Keros\Error\KerosException
      */
     public function getConsultantProtectedData(Request $request, Response $response, array $args)
     {

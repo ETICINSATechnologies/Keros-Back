@@ -97,7 +97,7 @@ class FactureDocumentController
      * @param Response $response
      * @param array $args
      * @return Response
-     * @throws \Keros\Error\KerosException
+     * @throws KerosException
      */
     public function getDocument(Request $request, Response $response, array $args)
     {

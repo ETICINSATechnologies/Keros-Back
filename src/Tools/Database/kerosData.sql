@@ -452,4 +452,9 @@ INSERT INTO treso_payment_slip (id, missionRecapNumber, consultantName, consulta
   (1, '102383203', 'Shrek', '12320183', 84, 'shrek@fortfortlointain.fr', 1, 'L''âne', 'Le chat Potté', false, false, 'Facture payée', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), 1, false, null, null, false, null, null),
   (2, '102383204', 'Shrek', '12320183', 85, 'shrek@fortfortlointain.fr', 1, 'L''âne', 'Le chat Potté', false, false, 'Facture payée', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), 1, true, STR_TO_DATE('5/16/2022', '%c/%e/%Y'), 4, true, STR_TO_DATE('5/17/2022', '%c/%e/%Y'), 8);
 
+TRUNCATE TABLE treso_turnover;
+INSERT INTO treso_turnover (id, date, revenue) VALUES
+(1,  STR_TO_DATE('2019/11/28 10:40:10', '%Y/%m/%d %h:%i:%s'), 100),
+(2,  STR_TO_DATE('2019/11/29 10:40:10', '%Y/%m/%d %h:%i:%s'), 200);
+
 COMMIT;

@@ -9,6 +9,7 @@ use Keros\Services\Sg\MemberInscriptionService;
 use Keros\Services\Sg\ConsultantInscriptionService;
 use Keros\Services\Treso\FactureDocumentService;
 use Keros\Services\Treso\FactureDocumentTypeService;
+use Keros\Services\Treso\TurnoverService;
 use Keros\Services\Ua\StudyDocumentService;
 use Keros\Services\Treso\FactureService;
 use Keros\Services\Treso\FactureTypeService;
@@ -126,6 +127,9 @@ class ServiceRegistrar
         };
         $container[PaymentSlipService::class] = function ($container) {
             return new PaymentSlipService($container);
+        };
+        $container[TurnoverService::class] = function ($container) {
+            return new TurnoverService($container);
         };
 
         //Sg
