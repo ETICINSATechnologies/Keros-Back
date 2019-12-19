@@ -202,9 +202,9 @@ class Consultant implements JsonSerializable
         return $this->getUser()->getId();
     }
     /**
-     * @return mixed
+     * @return User
      */
-    public function getUser()
+    public function getUser(): User
     {
         return $this->user;
     }

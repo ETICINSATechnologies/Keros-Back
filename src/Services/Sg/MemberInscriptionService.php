@@ -18,6 +18,7 @@ use Keros\Tools\MailSender;
 use Keros\Tools\Validator;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
+use Throwable;
 use function SendGrid\sendHelloEmail;
 
 class   MemberInscriptionService
@@ -49,7 +50,7 @@ class   MemberInscriptionService
     /** @var MemberInscriptionDocumentService */
     private $memberInscriptionDocumentService;
 
-    /** */
+    /** @var MailSender */
     private $mailSender;
 
     public function __construct(ContainerInterface $container)
@@ -97,9 +98,6 @@ class   MemberInscriptionService
         $this->memberInscriptionDataService->persist($memberInscription);
 
         try{
-            //  $json = json_decode($request->getBody());
-
-            // $mailSender->sendMailInscription($json);
              $this->mailSender->sendMailMemberInscriptionFromTemplate($memberInscription);
         }catch (Throwable $th){
             $this->logger->error($th->getMessage());
@@ -263,6 +261,12 @@ class   MemberInscriptionService
         $member = $this->memberService->create($memberArray);
         foreach ($memberInscription->getMemberInscriptionDocumentsArray() as $memberInscriptionDocument) {
             $this->memberInscriptionDocumentService->update($memberInscriptionDocument->getId(), null, $member);
+        }
+
+        try{
+            $this->mailSender->sendMailMemberValidationFromTemplate($member,$memberArray["password"]);
+        }catch (Throwable $th){
+            $this->logger->error($th->getMessage());
         }
 
         $this->delete($memberInscription->getId());
