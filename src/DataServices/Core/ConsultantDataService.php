@@ -132,7 +132,13 @@ class ConsultantDataService
             }
 
             if (isset($orderBy)) {
-                $this->queryBuilder->orderBy($orderBy, $order);
+                switch ($orderBy) {
+                    case 'lastName' :
+                    case 'firstName' :
+                    case 'company' :
+                        $this->queryBuilder->orderBy("c.$orderBy", $order);
+                        break;
+                }
             }
 
             $this->queryBuilder
