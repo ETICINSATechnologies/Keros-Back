@@ -89,7 +89,7 @@ class RequestParameters
 
         // Order By
         if (isset($params['orderBy'])) {
-            $this->orderBy = strtolower($params['orderBy']);
+            $this->orderBy = $params['orderBy'];
         }
 
         // Order
