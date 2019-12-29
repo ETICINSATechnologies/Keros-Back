@@ -3,7 +3,6 @@
 
 namespace KerosTest\Sg;
 
-use DateTime;
 use KerosTest\AppTestCase;
 use Slim\Http\Environment;
 use Slim\Http\Request;
@@ -760,8 +759,6 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
         $body = json_decode($response->getBody());
 
-        $dateDiff = ((new \DateTime("9/1/2019"))->diff(new \DateTime($body->content[0]->createdDate->date)))->format('%a');
-
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame(25, count($body->content));
         $this->assertSame(1, $body->content[0]->id);
@@ -798,8 +795,6 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
         $body = json_decode($response->getBody());
-
-        $dateDiff = ((new \DateTime("9/1/2019"))->diff(new \DateTime($body->content[0]->createdDate->date)))->format('%a');
 
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame(1, count($body->content));
