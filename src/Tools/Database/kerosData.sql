@@ -444,7 +444,30 @@ TRUNCATE TABLE sg_consultant_inscription;
 INSERT INTO `sg_consultant_inscription` (`id`, `firstName`, `lastName`, `birthday`, `genderId`, `departmentId`, `email`, `phoneNumber`, `outYear`, `nationalityId`, `addressId`, `socialSecurityNumber`, `droitImage`, `isApprentice`, `createdDate`, `documentIdentity`, `documentScolaryCertificate`, `documentRIB`, `documentVitaleCard`, `documentResidencePermit`, `documentCVEC`) VALUES
 (1, 'Bruce', 'Wayne', '2000-02-14', 1, 3, 'bruce.wayne@batman.com', '0033123456789', 2021, 42, 1, '12345678901234567', 0, 1, '2019-09-01', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf'),
 (2, 'Clark', 'Kent', '1998-01-15', 1, 2, 'clark.kent@dailyplanete.com', '0033123456789', 2023, 69, 1, '12345678901234567', 1, 1, '2019-09-01', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', NULL, 'test.pdf'),
-(3, 'Clark', 'Bent', '1998-01-15', 1, 2, 'clark.bent@dailyplanete.com', '0033123456789', 2023, 69, 1, '12345678901234567', 1, 1, '2019-09-01', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', NULL, 'test.pdf');
+(3, 'Clark', 'Bent', '1998-01-15', 1, 2, 'clark.bent@dailyplanete.com', '0033123456789', 2023, 69, 1, '12345678901234567', 1, 1, '2019-09-01', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', NULL, 'test.pdf'),
+(4, 'Bruce', 'Wayne', '2000-02-14', 1, 3, 'bruce.wayne@batman.com', '0033123456789', 2025, 42, 1, '12345678901234567', 0, 1, '2019-09-01', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf'),
+(5, 'Clark', 'Kent', '1998-01-15', 1, 2, 'clark.kent@dailyplanete.com', '0033123456789', 2024, 69, 1, '12345678901234567', 1, 1, '2019-09-01', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', NULL, 'test.pdf'),
+(6, 'Bruce', 'Wayne', '2000-02-14', 1, 3, 'bruce.wayne@batman.com', '0033123456789', 2023, 42, 1, '12345678901234567', 0, 1, '2019-09-01', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf'),
+(7, 'Clark', 'Kent', '1998-01-15', 1, 2, 'clark.kent@dailyplanete.com', '0033123456789', 2022, 69, 1, '12345678901234567', 1, 1, '2019-09-01', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', NULL, 'test.pdf'),
+(8, 'Bruce', 'Wayne', '2000-02-14', 1, 3, 'bruce.wayne@batman.com', '0033123456789', 2021, 42, 1, '12345678901234567', 0, 1, '2019-09-01', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf'),
+(9, 'Clark', 'Kent', '1998-01-15', 1, 2, 'clark.kent@dailyplanete.com', '0033123456789', 2023, 69, 1, '12345678901234567', 1, 1, '2019-09-01', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', NULL, 'test.pdf'),
+(10, 'Bruce', 'Wayne', '2000-02-14', 1, 3, 'bruce.wayne@batman.com', '0033123456789', 2020, 42, 1, '12345678901234567', 0, 1, '2019-09-01', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf'),
+(11, 'Clark', 'Kent', '1998-01-15', 1, 2, 'clark.kent@dailyplanete.com', '0033123456789', 2022, 69, 1, '12345678901234567', 1, 1, '2019-09-01', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', NULL, 'test.pdf'),
+(12, 'Bruce', 'Wayne', '2000-02-14', 1, 3, 'bruce.wayne@batman.com', '0033123456789', 2023, 42, 1, '12345678901234567', 0, 1, '2019-09-01', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf'),
+(13, 'Clark', 'Kent', '1998-01-15', 1, 2, 'clark.kent@dailyplanete.com', '0033123456789', 2023, 69, 1, '12345678901234567', 1, 1, '2019-09-01', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', NULL, 'test.pdf'),
+(14, 'Bruce', 'Wayne', '2000-02-14', 1, 3, 'bruce.wayne@batman.com', '0033123456789', 2022, 42, 1, '12345678901234567', 0, 1, '2019-09-01', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf'),
+(15, 'Clark', 'Kent', '1998-01-15', 1, 2, 'clark.kent@dailyplanete.com', '0033123456789', 2023, 69, 1, '12345678901234567', 1, 1, '2019-09-01', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', NULL, 'test.pdf'),
+(16, 'Bruce', 'Wayne', '2000-02-14', 1, 3, 'bruce.wayne@batman.com', '0033123456789', 2023, 42, 1, '12345678901234567', 0, 1, '2019-09-01', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf'),
+(17, 'Clark', 'Kent', '1998-01-15', 1, 2, 'clark.kent@dailyplanete.com', '0033123456789', 2023, 69, 1, '12345678901234567', 1, 1, '2019-09-01', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', NULL, 'test.pdf'),
+(18, 'Bruce', 'Wayne', '2000-02-14', 1, 3, 'bruce.wayne@batman.com', '0033123456789', 2021, 42, 1, '12345678901234567', 0, 1, '2019-09-01', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf'),
+(19, 'Clark', 'Kent', '1998-01-15', 1, 2, 'clark.kent@dailyplanete.com', '0033123456789', 2023, 69, 1, '12345678901234567', 1, 1, '2019-09-01', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', NULL, 'test.pdf'),
+(20, 'Bruce', 'Wayne', '2000-02-14', 1, 3, 'bruce.wayne@batman.com', '0033123456789', 2021, 42, 1, '12345678901234567', 0, 1, '2019-09-01', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf'),
+(21, 'Clark', 'Kent', '1998-01-15', 1, 2, 'clark.kent@dailyplanete.com', '0033123456789', 2023, 69, 1, '12345678901234567', 1, 1, '2019-09-01', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', NULL, 'test.pdf'),
+(22, 'Bruce', 'Wayne', '2000-02-14', 1, 3, 'bruce.wayne@batman.com', '0033123456789', 2021, 42, 1, '12345678901234567', 0, 1, '2019-09-01', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf'),
+(23, 'Clark', 'Kent', '1998-01-15', 1, 2, 'clark.kent@dailyplanete.com', '0033123456789', 2023, 69, 1, '12345678901234567', 1, 1, '2019-09-01', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', NULL, 'test.pdf'),
+(24, 'Bruce', 'Wayne', '2000-02-14', 1, 3, 'bruce.wayne@batman.com', '0033123456789', 2021, 42, 1, '12345678901234567', 0, 1, '2019-09-01', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf'),
+(25, 'Clark', 'Kent', '1998-01-15', 1, 2, 'clark.kent@dailyplanete.com', '0033123456789', 2023, 69, 1, '12345678901234567', 1, 1, '2019-09-01', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', NULL, 'test.pdf'),
+(26, 'Clark', 'Kent', '1998-01-15', 1, 2, 'clark.kent@dailyplanete.com', '0033123456789', 2023, 69, 1, '12345678901234567', 1, 1, '2019-09-01', 'test.pdf', 'test.pdf', 'test.pdf', 'test.pdf', NULL, 'test.pdf');
 
 TRUNCATE TABLE sg_member_inscription_document;
 INSERT INTO sg_member_inscription_document(id, memberInscriptionId, memberInscriptionDocumentTypeId) VALUES
