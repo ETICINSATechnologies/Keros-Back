@@ -11,12 +11,10 @@ use Keros\Services\Sg\MemberInscriptionDocumentTypeService;
 use Keros\Services\Sg\MemberInscriptionService;
 use Keros\Services\Auth\AccessRightsService;
 use Keros\Error\KerosException;
-use Keros\Tools\MailSender;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Throwable;
 
 class MemberInscriptionController
 {
@@ -38,11 +36,8 @@ class MemberInscriptionController
     /** @var AccessRightsService */
     private $accessRightsService;
 
-    private $container;
-
     public function __construct(ContainerInterface $container)
     {
-        $this->container = $container;
         $this->logger = $container->get(Logger::class);
         $this->entityManager = $container->get(EntityManager::class);
         $this->memberInscriptionService = $container->get(MemberInscriptionService::class);
@@ -112,11 +107,6 @@ class MemberInscriptionController
         $this->entityManager->beginTransaction();
         $memberInscription = $this->memberInscriptionService->create($body);
         $this->entityManager->commit();
-
-      //  $json = json_decode($request->getBody());
-       // $mailSender = new MailSender($this->container);
-       // $mailSender->sendMailInscription($json);
-       // $mailSender->sendMailValidationFromTemplate($json);
 
         return $response->withJson($this->addDocumentsToJsonMemberInscription($memberInscription), 201);
     }

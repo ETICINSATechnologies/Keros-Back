@@ -14,6 +14,7 @@ use Keros\Services\Core\DepartmentService;
 use Keros\Services\Core\GenderService;
 use Keros\Services\Core\MemberService;
 use Keros\Services\Core\PoleService;
+use Keros\Tools\Mail\MailFactory;
 use Keros\Tools\MailSender;
 use Keros\Tools\Validator;
 use Monolog\Logger;
@@ -50,8 +51,8 @@ class   MemberInscriptionService
     /** @var MemberInscriptionDocumentService */
     private $memberInscriptionDocumentService;
 
-    /** @var MailSender */
-    private $mailSender;
+    /** @var MailFactory */
+    private $mailFactory;
 
     public function __construct(ContainerInterface $container)
     {
@@ -64,7 +65,7 @@ class   MemberInscriptionService
         $this->poleService = $container->get(PoleService::class);
         $this->memberInscriptionDataService = $container->get(MemberInscriptionDataService::class);
         $this->memberInscriptionDocumentService = $container->get(MemberInscriptionDocumentService::class);
-        $this->mailSender = new MailSender($container);
+        $this->mailFactory = $container->get(MailFactory::class);
     }
 
     /**
@@ -97,11 +98,8 @@ class   MemberInscriptionService
 
         $this->memberInscriptionDataService->persist($memberInscription);
 
-        try{
-             $this->mailSender->sendMailMemberInscriptionFromTemplate($memberInscription);
-        }catch (Throwable $th){
-            $this->logger->error($th->getMessage());
-        }
+        $this->mailFactory->sendMailCreateMemberInscriptionFromTemplate($memberInscription);
+
 
         return $memberInscription;
     }
@@ -263,11 +261,7 @@ class   MemberInscriptionService
             $this->memberInscriptionDocumentService->update($memberInscriptionDocument->getId(), null, $member);
         }
 
-        try{
-            $this->mailSender->sendMailMemberValidationFromTemplate($member,$memberArray["password"]);
-        }catch (Throwable $th){
-            $this->logger->error($th->getMessage());
-        }
+        $this->mailFactory->sendMailMemberValidationFromTemplate($member,$memberArray["password"]);
 
         $this->delete($memberInscription->getId());
     }

@@ -12,7 +12,7 @@ use Keros\Services\Core\CountryService;
 use Keros\Services\Core\DepartmentService;
 use Keros\Services\Core\GenderService;
 use Keros\Services\Core\ConsultantService;
-use Keros\Tools\MailSender;
+use Keros\Tools\Mail\MailFactory;
 use Keros\Tools\Validator;
 use Keros\Tools\Helpers\FileHelper;
 use Keros\Tools\FileValidator;
@@ -71,8 +71,8 @@ class   ConsultantInscriptionService
      */
     private $logger;
 
-    /** @var MailSender */
-    private $mailSender;
+    /** @var MailFactory */
+    private $mailFactory;
 
     public function __construct(ContainerInterface $container)
     {
@@ -85,7 +85,7 @@ class   ConsultantInscriptionService
         $this->consultantInscriptionDataService = $container->get(ConsultantInscriptionDataService::class);
         $this->directoryManager = $container->get(DirectoryManager::class);
         $this->kerosConfig = ConfigLoader::getConfig();
-        $this->mailSender = new MailSender($container);
+        $this->mailFactory = $container->get(MailFactory::class);
     }
 
     /**
@@ -123,11 +123,7 @@ class   ConsultantInscriptionService
 
         $this->consultantInscriptionDataService->persist($consultantInscription);
 
-        try {
-            $this->mailSender->sendMailConsultantInscriptionFromTemplate($consultantInscription);
-        } catch (Throwable $th) {
-            $this->logger->error($th->getMessage());
-        }
+        $this->mailFactory->sendMailCreateConsultantInscriptionFromTemplate($consultantInscription);
 
         return $consultantInscription;
     }
@@ -310,11 +306,7 @@ class   ConsultantInscriptionService
         $consultant = $this->consultantService->create($consultantArray);
         $this->delete($consultantInscription->getId());
 
-        try {
-            $this->mailSender->sendMailConsultantValidationFromTemplate($consultant, $consultantArray["password"]);
-        } catch (Throwable $th) {
-            $this->logger->error($th->getMessage());
-        }
+        $this->mailFactory->sendMailConsultantValidationFromTemplate($consultant, $consultantArray["password"]);
 
         return $consultant;
     }

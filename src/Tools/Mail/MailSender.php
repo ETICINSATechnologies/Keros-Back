@@ -1,6 +1,6 @@
 <?php
 
-namespace Keros\Tools;
+namespace Keros\Tools\Mail;
 
 use Keros\Entities\Core\Consultant;
 use Keros\Entities\Core\Member;
@@ -8,6 +8,7 @@ use Keros\Entities\Sg\ConsultantInscription;
 use Keros\Entities\Sg\MemberInscription;
 use Keros\Error\KerosException;
 
+use Keros\Tools\ConfigLoader;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use \SendGrid as SendGrid;
@@ -19,7 +20,6 @@ use \SendGrid\Mail\Substitution as Substitution;
 use \SendGrid\Mail\PlainTextContent as PlainTextContent;
 use \SendGrid\Mail\HtmlContent as HtmlContent;
 use \SendGrid\Mail\Mail as Mail;
-use Throwable;
 
 
 /**
@@ -58,8 +58,6 @@ class MailSender
         $this->kerosConfig = ConfigLoader::getConfig();
         $this->sender = new SendGrid($this->kerosConfig['MAIL_API_KEY']);
         $this->from = new From("no-reply@etic-insa.com", "ETIC INSA Tech.");
-
-        $this->logger->debug("MailSender constructeur");
     }
 
     public function setFrom(string $mail, string $name)
@@ -137,91 +135,6 @@ class MailSender
             $mailPlainTextContent,
             $mailHtmlContent
         );
-    }
-
-    /**
-     * Envoie de mail pour la notification de l'inscription d'un membre
-     *
-     * @param MemberInscription $memberInscription
-     * @throws SendGrid\Mail\TypeException
-     */
-    public function sendMailMemberInscriptionFromTemplate(MemberInscription $memberInscription){
-        $globalFields = array();
-        $tos = array($memberInscription->getEmail() => array(
-            "nom"=>$memberInscription->getFirstName()." ".$memberInscription->getLastName(),
-            "full_name"=>"Bonsoir")
-        );
-        $email = $this->createTemplateMail("MAIL_MEMBRE_INSCRIPTION",$globalFields,false,$tos);
-
-        try {
-            $this->sendMail($email);
-        }catch (Throwable $th){
-            print $th->getMessage();
-        }
-    }
-
-    /**
-     * Envoie de mail pour la validation de l'inscription d'un membre
-     *
-     * @param Member $member
-     * @param String $password
-     * @throws SendGrid\Mail\TypeException
-     */
-    public function sendMailMemberValidationFromTemplate(Member $member, String $password){
-        $globalFields = array();
-        $tos = array($member->getEmail() => array(
-            "nom"=>$member->getFirstName()." ".$member->getLastName(),
-            "identifiant"=>$member->getUser()->getUsername(),"mdp"=>$password)
-        );
-        $email = $this->createTemplateMail("MAIL_MEMBRE_VALIDATION",$globalFields,false,$tos);
-
-        try {
-            $this->sendMail($email);
-        }catch (Throwable $th){
-            print $th->getMessage();
-        }
-    }
-
-    /**
-     * Envoie de mail pour la validation de l'inscription d'un consultant
-     *
-     * @param Consultant $consultant
-     * @param String $password
-     * @throws SendGrid\Mail\TypeException
-     */
-    public function sendMailConsultantValidationFromTemplate(Consultant $consultant, String $password){
-        $globalFields = array();
-        $tos = array($consultant->getEmail() => array(
-            "nom"=>$consultant->getFirstName()." ".$consultant->getLastName(),
-            "identifiant"=>$consultant->getUser()->getUsername(),"mdp"=>$password)
-        );
-        $email = $this->createTemplateMail("MAIL_CONSULTANT_VALIDATION",$globalFields,false,$tos);
-
-        try {
-            $this->sendMail($email);
-        }catch (Throwable $th){
-            print $th->getMessage();
-        }
-    }
-
-    /**
-     * Envoie de mail pour la notification de l'inscription d'un consultant
-     *
-     * @param ConsultantInscription $consultatInscription
-     * @throws SendGrid\Mail\TypeException
-     */
-    public function sendMailConsultantInscriptionFromTemplate(ConsultantInscription $consultantInscription){
-        $globalFields = array();
-        $tos = array($consultantInscription->getEmail() => array(
-            "nom"=>$consultantInscription->getFirstName()." ".$consultantInscription->getLastName())
-        );
-        $email = $this->createTemplateMail("MAIL_CONSULTANT_INSCRIPTION",$globalFields,false,$tos);
-
-        try {
-            $this->sendMail($email);
-        }catch (Throwable $th){
-            print $th->getMessage();
-        }
     }
 
     /**
