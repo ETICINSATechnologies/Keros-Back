@@ -42,7 +42,7 @@ class MailFactory
             $email = $this->mailSender->createTemplateMail("MAIL_MEMBRE_INSCRIPTION",$globalFields,false,$tos);
             $this->mailSender->sendMail($email);
         } catch (KerosException | TypeException $e) {
-            $this->logger->error("Failed to send MemberInscription mail : ".$e->getMessage());
+            $this->logger->warning("Failed to send MemberInscription mail : ".$e->getMessage());
         }
     }
 
@@ -65,7 +65,7 @@ class MailFactory
             $email = $this->mailSender->createTemplateMail("MAIL_MEMBRE_VALIDATION",$globalFields,false,$tos);
             $this->mailSender->sendMail($email);
         }catch (KerosException | TypeException $e) {
-            $this->logger->error("Failed to send MemberValidation mail : ".$e->getMessage());
+            $this->logger->warning("Failed to send MemberValidation mail : ".$e->getMessage());
         }
     }
 
@@ -86,7 +86,7 @@ class MailFactory
             $email = $this->mailSender->createTemplateMail("MAIL_CONSULTANT_VALIDATION",$globalFields,false,$tos);
             $this->mailSender->sendMail($email);
         }catch (KerosException |TypeException $e) {
-            $this->logger->error("Failed to send ConsultantValidation mail : ".$e->getMessage());
+            $this->logger->warning("Failed to send ConsultantValidation mail : ".$e->getMessage());
         }
     }
 
@@ -105,7 +105,7 @@ class MailFactory
             $email = $this->mailSender->createTemplateMail("MAIL_CONSULTANT_INSCRIPTION",$globalFields,false,$tos);
             $this->mailSender->sendMail($email);
         }catch (KerosException |TypeException $e) {
-            $this->logger->error("Failed to send ConsultantInscription mail : ".$e->getMessage());
+            $this->logger->warning("Failed to send ConsultantInscription mail : ".$e->getMessage());
         }
     }
 

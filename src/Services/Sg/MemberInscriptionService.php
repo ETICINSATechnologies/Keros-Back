@@ -15,12 +15,9 @@ use Keros\Services\Core\GenderService;
 use Keros\Services\Core\MemberService;
 use Keros\Services\Core\PoleService;
 use Keros\Tools\Mail\MailFactory;
-use Keros\Tools\MailSender;
 use Keros\Tools\Validator;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
-use Throwable;
-use function SendGrid\sendHelloEmail;
 
 class   MemberInscriptionService
 {

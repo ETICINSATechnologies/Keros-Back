@@ -2,10 +2,6 @@
 
 namespace Keros\Tools\Mail;
 
-use Keros\Entities\Core\Consultant;
-use Keros\Entities\Core\Member;
-use Keros\Entities\Sg\ConsultantInscription;
-use Keros\Entities\Sg\MemberInscription;
 use Keros\Error\KerosException;
 
 use Keros\Tools\ConfigLoader;
@@ -147,8 +143,6 @@ class MailSender
             return;
         }
         $response = $this->sender->send($mail);
-        $this->logger->debug($response->statusCode());
-        $this->logger->debug($response->body());
         if ($response->statusCode() != 202) {
             throw new KerosException($response->body(), $response->statusCode());
         }

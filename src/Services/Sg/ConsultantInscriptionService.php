@@ -22,7 +22,6 @@ use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Keros\Tools\ConfigLoader;
 use Keros\Tools\DirectoryManager;
-use Throwable;
 
 class   ConsultantInscriptionService
 {
