@@ -14,6 +14,7 @@ use Keros\Services\Core\DepartmentService;
 use Keros\Services\Core\GenderService;
 use Keros\Services\Core\MemberService;
 use Keros\Services\Core\PoleService;
+use Keros\Tools\Mail\MailFactory;
 use Keros\Tools\Validator;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
@@ -47,6 +48,9 @@ class   MemberInscriptionService
     /** @var MemberInscriptionDocumentService */
     private $memberInscriptionDocumentService;
 
+    /** @var MailFactory */
+    private $mailFactory;
+
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get(Logger::class);
@@ -58,6 +62,7 @@ class   MemberInscriptionService
         $this->poleService = $container->get(PoleService::class);
         $this->memberInscriptionDataService = $container->get(MemberInscriptionDataService::class);
         $this->memberInscriptionDocumentService = $container->get(MemberInscriptionDocumentService::class);
+        $this->mailFactory = $container->get(MailFactory::class);
     }
 
     /**
@@ -89,6 +94,9 @@ class   MemberInscriptionService
         $memberInscription = new MemberInscription($firstName, $lastName, $gender, $birthday, $department, $email, $phoneNumber, $outYear, $nationality, $address, $wantedPole, $hasPaid, $droitImage, $createdDate, array());
 
         $this->memberInscriptionDataService->persist($memberInscription);
+
+        $this->mailFactory->sendMailCreateMemberInscriptionFromTemplate($memberInscription);
+
 
         return $memberInscription;
     }
@@ -249,6 +257,8 @@ class   MemberInscriptionService
         foreach ($memberInscription->getMemberInscriptionDocumentsArray() as $memberInscriptionDocument) {
             $this->memberInscriptionDocumentService->update($memberInscriptionDocument->getId(), null, $member);
         }
+
+        $this->mailFactory->sendMailMemberValidationFromTemplate($member,$memberArray["password"]);
 
         $this->delete($memberInscription->getId());
     }

@@ -12,6 +12,7 @@ use Keros\Services\Core\CountryService;
 use Keros\Services\Core\DepartmentService;
 use Keros\Services\Core\GenderService;
 use Keros\Services\Core\ConsultantService;
+use Keros\Tools\Mail\MailFactory;
 use Keros\Tools\Validator;
 use Keros\Tools\Helpers\FileHelper;
 use Keros\Tools\FileValidator;
@@ -69,6 +70,9 @@ class   ConsultantInscriptionService
      */
     private $logger;
 
+    /** @var MailFactory */
+    private $mailFactory;
+
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get(Logger::class);
@@ -80,6 +84,7 @@ class   ConsultantInscriptionService
         $this->consultantInscriptionDataService = $container->get(ConsultantInscriptionDataService::class);
         $this->directoryManager = $container->get(DirectoryManager::class);
         $this->kerosConfig = ConfigLoader::getConfig();
+        $this->mailFactory = $container->get(MailFactory::class);
     }
 
     /**
@@ -111,11 +116,13 @@ class   ConsultantInscriptionService
         $documentRIB = Validator::requiredString($fields['documentRIB'] ?? null);
         $documentVitaleCard = Validator::requiredString($fields['documentVitaleCard'] ?? null);
         $documentResidencePermit = Validator::optionalString($fields['documentResidencePermit'] ?? null);
-        $documentCVEC = Validator::requiredString($fields['documentCVEC']  ?? null);
+        $documentCVEC = Validator::requiredString($fields['documentCVEC'] ?? null);
 
         $consultantInscription = new ConsultantInscription($firstName, $lastName, $gender, $birthday, $department, $email, $phoneNumber, $outYear, $nationality, $address, $socialSecurityNumber, $droitImage, $isApprentice, $createdDate, $documentIdentity, $documentScolaryCertificate, $documentRIB, $documentVitaleCard, $documentResidencePermit, $documentCVEC);
 
         $this->consultantInscriptionDataService->persist($consultantInscription);
+
+        $this->mailFactory->sendMailCreateConsultantInscriptionFromTemplate($consultantInscription);
 
         return $consultantInscription;
     }
@@ -233,6 +240,7 @@ class   ConsultantInscriptionService
 
     /**
      * @param int $id
+     * @return \Keros\Entities\Core\Consultant
      * @throws KerosException
      */
     public function validateConsultantInscription(int $id)
@@ -272,19 +280,19 @@ class   ConsultantInscriptionService
         //copy and add files to consultant
         $consultantInscriptionFiles = ConsultantInscriptionFileHelper::getConsultantInscriptionFiles();
         $consultantFiles = ConsultantFileHelper::getConsultantFiles();
-        
+
         foreach ($consultantInscriptionFiles as $consultantInscriptionFile) {
             $getFunction = $consultantInscriptionFile['get'];
             $filename = $consultantInscription->$getFunction();
-            if ($filename){
+            if ($filename) {
                 $filepath = $this->kerosConfig[$consultantInscriptionFile['directory_key']] . $filename;
                 $consultantInscriptionFile = $consultantFiles[$consultantInscriptionFile['name']] ?? null;
                 if ($consultantInscriptionFile && file_exists($filepath)) {
                     $newDirectory = $this->kerosConfig[$consultantInscriptionFile['directory_key']];
-                    $newFilename = FileHelper::safeCopyFileToDirectory($filepath,$newDirectory);
+                    $newFilename = FileHelper::safeCopyFileToDirectory($filepath, $newDirectory);
                     $consultantArray[$consultantInscriptionFile['name']] = $newFilename;
                 }
-            }  
+            }
         }
 
         if ($consultantInscription->getOutYear()) {
@@ -296,6 +304,9 @@ class   ConsultantInscriptionService
 
         $consultant = $this->consultantService->create($consultantArray);
         $this->delete($consultantInscription->getId());
+
+        $this->mailFactory->sendMailConsultantValidationFromTemplate($consultant, $consultantArray["password"]);
+
         return $consultant;
     }
 
@@ -311,7 +322,7 @@ class   ConsultantInscriptionService
         $consultantInscriptionFile = ConsultantInscriptionFileHelper::getConsultantInscriptionFiles()[$document_name];
         $getFunction = $consultantInscriptionFile['get'];
         $filename = FileHelper::verifyFilename($consultantInscription->$getFunction(), $consultantInscriptionFile['name']);
-        $filepath =  FileHelper::verifyFilepath($this->kerosConfig[$consultantInscriptionFile['directory_key']] . $filename, $consultantInscriptionFile['name']);
+        $filepath = FileHelper::verifyFilepath($this->kerosConfig[$consultantInscriptionFile['directory_key']] . $filename, $consultantInscriptionFile['name']);
         return $filepath;
     }
 
@@ -338,7 +349,7 @@ class   ConsultantInscriptionService
         return $consultantInscription;
     }
 
-        /**
+    /**
      * @param int $id
      * @param string $document_name
      * @param string $file
