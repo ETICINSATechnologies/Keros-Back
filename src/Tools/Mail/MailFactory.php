@@ -98,7 +98,7 @@ class MailFactory
     public function sendMailCreateConsultantInscriptionFromTemplate(ConsultantInscription $consultantInscription){
         $globalFields = array();
         $tos = array($consultantInscription->getEmail() => array(
-            "nom"=>$consultantInscription->getFirstName()." ".$consultantInscription->getLastName(),"full_name"=>$consultantInscription->getFirstName()." ".$consultantInscription>getLastName())
+            "nom"=>$consultantInscription->getFirstName()." ".$consultantInscription->getLastName(),"full_name"=>$consultantInscription->getFirstName()." ".$consultantInscription->getLastName())
         );
 
         try {
