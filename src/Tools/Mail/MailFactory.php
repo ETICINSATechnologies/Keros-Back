@@ -35,7 +35,7 @@ class MailFactory
     public function sendMailCreateMemberInscriptionFromTemplate(MemberInscription $memberInscription){
         $globalFields = array();
         $tos = array($memberInscription->getEmail() => array(
-            "nom"=>$memberInscription->getFirstName()." ".$memberInscription->getLastName(),"full_name"=>"cc")
+            "nom"=>$memberInscription->getFirstName()." ".$memberInscription->getLastName(),"full_name"=>$memberInscription->getFirstName()." ".$memberInscription->getLastName())
         );
 
         try {
@@ -56,7 +56,9 @@ class MailFactory
         $globalFields = array();
         $tos = array($member->getEmail() => array(
             "nom"=>$member->getFirstName()." ".$member->getLastName(),
-            "identifiant"=>$member->getUser()->getUsername(),"mdp"=>$password)
+            "identifiant"=>$member->getUser()->getUsername(),
+            "mdp"=>$password,
+            "full_name"=>$member->getFirstName()." ".$member->getLastName())
         );
 
         try {
@@ -77,7 +79,7 @@ class MailFactory
         $globalFields = array();
         $tos = array($consultant->getEmail() => array(
             "nom"=>$consultant->getFirstName()." ".$consultant->getLastName(),
-            "identifiant"=>$consultant->getUser()->getUsername(),"mdp"=>$password)
+            "identifiant"=>$consultant->getUser()->getUsername(),"mdp"=>$password,"full_name"=>$consultant->getFirstName()." ".$consultant->getLastName())
         );
 
         try {
@@ -96,7 +98,7 @@ class MailFactory
     public function sendMailCreateConsultantInscriptionFromTemplate(ConsultantInscription $consultantInscription){
         $globalFields = array();
         $tos = array($consultantInscription->getEmail() => array(
-            "nom"=>$consultantInscription->getFirstName()." ".$consultantInscription->getLastName())
+            "nom"=>$consultantInscription->getFirstName()." ".$consultantInscription->getLastName(),"full_name"=>$consultantInscription->getFirstName()." ".$consultantInscription>getLastName())
         );
 
         try {
