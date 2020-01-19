@@ -62,7 +62,7 @@ class AddressService
         $address = $this->getOne($id);
 
         $line1 = Validator::requiredString($fields["line1"]);
-        $line2 = Validator::optionalString($fields["line2"]);
+        $line2 = Validator::optionalString(isset($fields["line2"]) ? $fields["line2"] : $address->getLine2());
         $postalCode = Validator::requiredString($fields["postalCode"]);
         $city = Validator::requiredString($fields["city"]);
         $countryId = Validator::requiredId($fields["countryId"]);

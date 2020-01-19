@@ -202,9 +202,9 @@ class Consultant implements JsonSerializable
         return $this->getUser()->getId();
     }
     /**
-     * @return mixed
+     * @return User
      */
-    public function getUser()
+    public function getUser(): User
     {
         return $this->user;
     }
@@ -370,16 +370,16 @@ class Consultant implements JsonSerializable
         $this->schoolYear = $schoolYear;
     }
     /**
-     * @return mixed
+     * @return Department
      */
-    public function getDepartment()
+    public function getDepartment() : Department
     {
         return $this->department;
     }
     /**
-     * @param mixed $department
+     * @param Department $department
      */
-    public function setDepartment($department): void
+    public function setDepartment(Department $department): void
     {
         $this->department = $department;
     }

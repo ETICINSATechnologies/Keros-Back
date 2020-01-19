@@ -11,6 +11,7 @@ use Keros\Entities\Core\Member;
 use Keros\Entities\Core\Page;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Error\KerosException;
+use Keros\Services\Sg\MemberInscriptionDocumentService;
 use Keros\Tools\ConfigLoader;
 use Keros\Tools\DirectoryManager;
 use Keros\Tools\Validator;
@@ -54,6 +55,9 @@ class MemberService
     /** @var Logger */
     private $logger;
 
+    /** @var MemberInscriptionDocumentService */
+    private $memberInscriptionDocumentService;
+
     /**
      * MemberService constructor.
      * @param ContainerInterface $container
@@ -71,6 +75,7 @@ class MemberService
         $this->paymentSlipDataService = $container->get(PaymentSlipDataService::class);
         $this->directoryManager = $container->get(DirectoryManager::class);
         $this->kerosConfig = ConfigLoader::getConfig();
+        $this->memberInscriptionDocumentService = $container->get(MemberInscriptionDocumentService::class);
     }
 
     /**
@@ -182,17 +187,17 @@ class MemberService
         $firstName = Validator::requiredString($fields["firstName"]);
         $lastName = Validator::requiredString($fields["lastName"]);
         $email = Validator::requiredEmail($fields["email"]);
-        $telephone = Validator::requiredPhone(isset($fields["telephone"]) ? $fields["telephone"] : null);
+        $telephone = Validator::requiredPhone($fields["telephone"]);
         $birthday = Validator::requiredDate($fields["birthday"]);
-        $schoolYear = Validator::requiredSchoolYear(isset($fields["schoolYear"]) ? $fields["schoolYear"] : null);
+        $schoolYear = Validator::requiredSchoolYear($fields["schoolYear"]);
 
         $genderId = Validator::requiredId($fields["genderId"]);
         $gender = $this->genderService->getOne($genderId);
         $department = null;
-        $departmentId = Validator::requiredId(isset($fields["departmentId"]) ? $fields["departmentId"] : null);
+        $departmentId = Validator::requiredId($fields["departmentId"]);
         $department = $this->departmentService->getOne($departmentId);
 
-        $company = Validator::optionalString($fields["company"]);
+        $company = Validator::optionalString(isset($fields["company"]) ? $fields["company"] : $member->getCompany());
         $isAlumni = Validator::optionalBool($fields['isAlumni'] ?? $member->getIsAlumni());
 
         $memberPositions = $member->getMemberPositions();
@@ -242,6 +247,10 @@ class MemberService
         $this->memberDataService->persist($member);
         $this->ticketDataService->deleteTicketsRelatedToMember($id);
         $profilepicture = $member->getProfilePicture();
+        foreach ($member->getMemberInscriptionDocumentsArray() as $memberInscriptionsDocument) {
+            $this->memberInscriptionDocumentService->delete($memberInscriptionsDocument->getId());
+        }
+        $member->setMemberInscriptionDocuments([]);
         $this->memberDataService->delete($member);
         $this->userService->delete($id);
         $this->addressService->delete($address->getId());

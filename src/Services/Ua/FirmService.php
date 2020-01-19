@@ -86,9 +86,9 @@ class FirmService
         $firm = $this->getOne($id);
 
         $name = Validator::requiredString($fields["name"]);
-        $siret = Validator::optionalString(isset($fields["siret"]) ? $fields["siret"] : null);
+        $siret = Validator::optionalString(isset($fields["siret"]) ? $fields["siret"] : $firm->getSiret());
         $typeId = Validator::requiredId($fields["typeId"]);
-        $mainContact = Validator::optionalInt(isset($fields["mainContact"]) ? $fields["mainContact"] : null);
+        $mainContact = Validator::optionalInt(isset($fields["mainContact"]) ? $fields["mainContact"] : $firm->getMainContact());
 
         $firmType = $this->firmTypeService->getOne($typeId);
 

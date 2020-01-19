@@ -3,7 +3,6 @@
 namespace Keros\DataServices\Core;
 
 
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
@@ -151,19 +150,34 @@ class MemberDataService
                 }
             }
 
-            $order = $requestParameters->getParameters()['order'];
-            $orderBy = $requestParameters->getParameters()['orderBy'];
-            $pageSize = $requestParameters->getParameters()['pageSize'];
-            $firstResult = $pageSize * $requestParameters->getParameters()['pageNumber'];
-
             if (!empty($whereStatement)) {
                 $this->queryBuilder
                     ->where($whereStatement)
                     ->setParameters($whereParameters);
             }
 
+            $order = $requestParameters->getParameters()['order'];
+            $orderBy = $requestParameters->getParameters()['orderBy'];
+            $pageSize = $requestParameters->getParameters()['pageSize'];
+            $firstResult = $pageSize * $requestParameters->getParameters()['pageNumber'];
+
             if (isset($orderBy)) {
-                $this->queryBuilder->orderBy($orderBy, $order);
+                switch ($orderBy) {
+                    case 'lastName' :
+                    case 'firstName' :
+                    case 'email' :
+                        $this->queryBuilder->orderBy("m.$orderBy", $order);
+                        break;
+                    case 'username':
+                        $this->queryBuilder->orderBy("u.$orderBy", $order);
+                        break;
+                    case 'poleLabel' :
+                        $this->queryBuilder->orderBy("pole.label", $order);
+                        break;
+                    case 'positionLabel' :
+                        $this->queryBuilder->orderBy("p.label", $order);
+                        break;
+                }
             }
 
             $this->queryBuilder

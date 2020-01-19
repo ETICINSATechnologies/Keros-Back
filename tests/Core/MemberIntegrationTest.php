@@ -2,6 +2,7 @@
 
 namespace KerosTest\Member;
 
+use Keros\Tools\Helpers\FileHelper;
 use KerosTest\AppTestCase;
 use Slim\Http\Environment;
 use Slim\Http\Request;
@@ -544,6 +545,86 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(404, $response->getStatusCode());
     }
 
+    public function testPostCurrentUserPhotoShouldReturn204()
+    {
+        $temp_fileName = "tempPhoto.jpg";
+        $handle = fopen($temp_fileName, 'w') or die('Cannot open file:  ' . $temp_fileName);
+        $file = new UploadedFile($temp_fileName, $temp_fileName, 'image/jpeg', filesize($temp_fileName));
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => '/api/v1/core/member/me/photo',
+            'slim.files' => ['file' => $file],
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        fclose($handle);
+        $response = $this->app->run(false);
+        $this->assertSame(204, $response->getStatusCode());
+    }
+
+    public function testPostCurrentUserPhotoShouldReturn400()
+    {
+        $temp_fileName = "tempFile.csv";
+        $handle = fopen($temp_fileName, 'w') or die('Cannot open file:  ' . $temp_fileName);
+        $file = new UploadedFile($temp_fileName, $temp_fileName, 'text/csv', filesize($temp_fileName));
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => '/api/v1/core/member/me/photo',
+            'slim.files' => ['file' => $file],
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        fclose($handle);
+        $response = $this->app->run(false);
+        if (file_exists($temp_fileName)) {
+            unlink($temp_fileName);
+        }
+        $this->assertSame(400, $response->getStatusCode());
+    }
+
+    public function testGetCurrentUserPhotoShouldReturn200()
+    {
+        $fileName = "tempPhoto.jpg";
+        $handle = fopen($fileName, "w");
+        $file = new UploadedFile($fileName, $fileName, 'image/jpeg', filesize($fileName));
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => '/api/v1/core/member/me/photo',
+            'slim.files' => ['file' => $file],
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/core/member/1/photo',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        fclose($handle);
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+    }
+
+    public function testGetCurrentUserPhotoShouldReturn404()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/core/member/me/photo',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(404, $response->getStatusCode());
+    }
+
     public function testDeleteMemberPhotoShouldReturn204()
     {
         $fileName = "tempPhoto.jpg";
@@ -652,19 +733,13 @@ class MemberIntegrationTest extends AppTestCase
 
     public function testDeleteAllExistingMemberShouldReturn204()
     {
-        $env = Environment::mock([
-            'REQUEST_METHOD' => 'GET',
-            'REQUEST_URI' => '/api/v1/core/member?pageSize=100',
-        ]);
-        $req = Request::createFromEnvironment($env);
-        $this->app->getContainer()['request'] = $req;
-        $response = $this->app->run(false);
-        $body = json_decode($response->getBody());
-
-        foreach ($body->content as $member) {
+        for($id = 1;  $id <= 28; $id++) {
+            if(in_array($id, array(1, 2, 5))){
+                continue;
+            }
             $env = Environment::mock([
                 'REQUEST_METHOD' => 'DELETE',
-                'REQUEST_URI' => '/api/v1/core/member/' . $member->id,
+                'REQUEST_URI' => '/api/v1/core/member/' . $id,
             ]);
             $req = Request::createFromEnvironment($env);
             $this->app->getContainer()['request'] = $req;

@@ -118,7 +118,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame("1975-12-01", $body->birthday);
         $this->assertSame(1, $body->department->id);
         $this->assertSame(1, $body->schoolYear);
-        $this->assertSame(null, $body->telephone);
+        $this->assertSame("+332541541", $body->telephone);
         $this->assertSame("Amazon", $body->company);
         $this->assertSame("http://image.png", $body->profilePicture);
         $this->assertNotNull($body->address->id);
@@ -373,6 +373,72 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame("0033675385495", $body->telephone);
         $this->assertSame("Amazon", $body->company);
         $this->assertSame("http://image.png", $body->profilePicture);
+        $this->assertNotNull($body->address->id);
+        $this->assertSame(true,$body->droitImage);
+        $this->assertSame(true,$body->isApprentice);
+    }
+
+    public function testPutConsultantOnlyRequiredFieldShouldReturn200()
+    {
+        $post_body = array(
+            "username" => "newusername",
+            "firstName" => "newfirstName",
+            "lastName" => "newlastName",
+            "genderId" => 2,
+            "email" => "fakeEmail@gmail.com",
+            "birthday" => "1975-12-01",
+            "telephone" => "0033675385495",
+            "address" => [
+                "line1" => "20 avenue albert Einstein",
+                "city" => "lyon",
+                "postalCode" => 69100,
+                "countryId" => 1
+            ],
+            "schoolYear" => 1,
+            "departmentId" => 1,
+            "positions" => [
+                array(
+                    "id" => 3,
+                    "year" => 2018,
+                    "isBoard" => true
+                ),
+                array(
+                    "id" => 4,
+                    "year" => 2019,
+                    "isBoard" => false
+                )
+            ],
+            "droitImage" => true,
+            "isApprentice" => true,
+            "socialSecurityNumber" => "12346781300139041",
+        );
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'PUT',
+            'REQUEST_URI' => '/api/v1/core/consultant/2',
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withParsedBody($post_body);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(200, $response->getStatusCode());
+
+        $body = json_decode($response->getBody());
+
+        $this->assertNotNull($body->id);
+        $this->assertSame("newusername", $body->username);
+        $this->assertSame("newfirstName", $body->firstName);
+        $this->assertSame("newlastName", $body->lastName);
+        $this->assertSame(2, $body->gender->id);
+        $this->assertSame("fakeEmail@gmail.com", $body->email);
+        $this->assertSame("1975-12-01", $body->birthday);
+        $this->assertSame(1, $body->department->id);
+        $this->assertSame(1, $body->schoolYear);
+        $this->assertSame("0033675385495", $body->telephone);
+        $this->assertSame("Amazon", $body->company);
+        $this->assertSame(null, $body->profilePicture);
         $this->assertNotNull($body->address->id);
         $this->assertSame(true,$body->droitImage);
         $this->assertSame(true,$body->isApprentice);

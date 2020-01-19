@@ -163,7 +163,12 @@ class ConsultantService
         return $consultantProtectedData;
     }
 
-
+    /**
+     * @param int $id
+     * @param array|null $fields
+     * @return Consultant
+     * @throws KerosException
+     */
     public function update(int $id, ?array $fields): Consultant
     {
         $id = Validator::requiredId($id);
@@ -172,17 +177,17 @@ class ConsultantService
         $firstName = Validator::requiredString($fields["firstName"]);
         $lastName = Validator::requiredString($fields["lastName"]);
         $email = Validator::requiredEmail($fields["email"]);
-        $telephone = Validator::optionalPhone(isset($fields["telephone"]) ? $fields["telephone"] : null);
+        $telephone = Validator::optionalPhone(isset($fields["telephone"]) ? $fields["telephone"] : $consultant->getTelephone());
         $birthday = Validator::requiredDate($fields["birthday"]);
-        $schoolYear = Validator::requiredSchoolYear(isset($fields["schoolYear"]) ? $fields["schoolYear"] : null);
+        $schoolYear = Validator::requiredSchoolYear(isset($fields["schoolYear"]) ? $fields["schoolYear"] : $consultant->getSchoolYear());
         $genderId = Validator::requiredId($fields["genderId"]);
         $gender = $this->genderService->getOne($genderId);
         $department = null;
-        $departmentId = Validator::requiredId(isset($fields["departmentId"]) ? $fields["departmentId"] : null);
+        $departmentId = Validator::requiredId(isset($fields["departmentId"]) ? $fields["departmentId"] : $consultant->getDepartment()->getId());
         $department = $this->departmentService->getOne($departmentId);
-        $company = Validator::optionalString($fields["company"]);
-        $profilePicture = Validator::optionalString($fields["profilePicture"]);
-        $socialSecurityNumber = Validator::optionalString($fields["socialSecurityNumber"] ?? null);
+        $company = Validator::optionalString(isset($fields["company"]) ? $fields["company"] : $consultant->getCompany());
+        $profilePicture = Validator::optionalString(isset($fields["profilePicture"]) ? $fields["profilePicture"] : $consultant->getProfilePicture());
+        $socialSecurityNumber = Validator::optionalString(isset($fields["socialSecurityNumber"]) ? $fields["socialSecurityNumber"] : $consultant->getSocialSecurityNumber());
         $isApprentice = Validator::requiredBool($fields['isApprentice']);
 
         $consultant->setFirstName($firstName);

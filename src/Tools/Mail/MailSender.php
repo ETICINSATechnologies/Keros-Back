@@ -1,9 +1,12 @@
 <?php
 
-namespace Keros\Tools;
+namespace Keros\Tools\Mail;
 
 use Keros\Error\KerosException;
 
+use Keros\Tools\ConfigLoader;
+use Monolog\Logger;
+use Psr\Container\ContainerInterface;
 use \SendGrid as SendGrid;
 use \SendGrid\Mail\From as From;
 use \SendGrid\Mail\To as To;
@@ -13,6 +16,7 @@ use \SendGrid\Mail\Substitution as Substitution;
 use \SendGrid\Mail\PlainTextContent as PlainTextContent;
 use \SendGrid\Mail\HtmlContent as HtmlContent;
 use \SendGrid\Mail\Mail as Mail;
+
 
 /**
  * This whole tool is built based on SendGrid (https://github.com/sendgrid/sendgrid-php)
@@ -36,11 +40,17 @@ class MailSender
      */
     protected $kerosConfig;
 
+    /** @var Logger */
+    private $logger;
+
     /**
      * MailSender constructor
+     * @param ContainerInterface $container
      */
-    public function __construct()
+    public function __construct(ContainerInterface $container)
     {
+        $this->logger = $container->get(Logger::class);
+
         $this->kerosConfig = ConfigLoader::getConfig();
         $this->sender = new SendGrid($this->kerosConfig['MAIL_API_KEY']);
         $this->from = new From("no-reply@etic-insa.com", "ETIC INSA Tech.");
@@ -121,7 +131,7 @@ class MailSender
             $mailPlainTextContent,
             $mailHtmlContent
         );
-    } 
+    }
 
     /**
      * @param Mail $mail
@@ -138,3 +148,4 @@ class MailSender
         }
     }
 }
+
