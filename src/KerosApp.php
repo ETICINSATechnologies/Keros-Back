@@ -80,6 +80,14 @@ class KerosApp
                 $this->post("/login", LoginController::class . ':login');
             });
 
+            $this->group("/reset-password-member", function () {
+                $this->post("", LoginController::class . ':resetPasswordMember');
+            });
+
+            $this->group("/forgot-password-member", function () {
+                $this->post("", LoginController::class . ':forgotMemberPassword');
+            });
+
             $this->group('/ua', function () {
                 $this->group('/firm-type', function () {
                     $this->get("", FirmTypeController::class . ':getAllFirmType');
@@ -168,6 +176,8 @@ class KerosApp
                     $this->post("/{id:[0-9]+}/photo", MemberController::class . ':createProfilePicture');
                     $this->get("/{id:[0-9]+}/photo", MemberController::class . ':getProfilePicture');
                     $this->delete("/{id:[0-9]+}/photo", MemberController::class . ':deleteProfilePicture');
+                    $this->post("/reset-password", MemberController::class . ':postResetPassword');
+
                 });
 
                 $this->group('/consultant', function () {

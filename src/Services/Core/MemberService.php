@@ -6,6 +6,7 @@ use Exception;
 use Keros\DataServices\Core\MemberDataService;
 use Keros\DataServices\Core\TicketDataService;
 use Keros\DataServices\Treso\PaymentSlipDataService;
+use Keros\Entities\Auth\LoginResponse;
 use Keros\Entities\Core\Member;
 use Keros\Entities\Core\Page;
 use Keros\Entities\Core\RequestParameters;
@@ -369,4 +370,62 @@ class MemberService
         return $filepath;
     }
 
+    public function findMemberByEmail(String $email)
+    {
+        $email = Validator::requiredEmail($email);
+
+        $member = $this->memberDataService->findByEmail($email);
+
+        if (is_null($member)) {
+            throw new KerosException("The member with this email could not be found", 404);
+        }
+
+        return $member;
+        //appel d'un tool pour generer le new mdp
+        //update du membre
+    }
+
+    public function sendTokenForReset(array $args)
+    {
+        $member = $this->findMemberByEmail($args['email']);
+
+        if (is_null($member)) {
+            throw new KerosException("The member doesn't exist", 404);
+        }
+
+        $user = $member->getUser();
+
+        // the token will expire in exactly in two hours
+        $exp = time() + 2 * 3600;
+
+        // creation of the payload
+        $payload = array(
+            "id" => $user->getId(),
+            "exp" => $exp
+        );
+
+        // create the token from the payload
+        $token = $this->jwtCodec->encode($payload);
+
+        //send email
+    }
+
+
+    function generateUpdateNewPassword($length = 8, $member) {
+
+        $chars = 'abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ123456789@#$%^&*';
+        $count = mb_strlen($chars);
+
+        for ($i = 0, $result = ''; $i < $length; $i++) {
+            $index = rand(0, $count - 1);
+            $result .= mb_substr($chars, $index, 1);
+        }
+
+        $fields = array (
+            'username' => $member['username'],
+            'password' => $member['password']//new mdp
+        );
+
+        $this->userService->update($member['id'], $fields);
+    }
 }

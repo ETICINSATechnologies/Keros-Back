@@ -71,6 +71,18 @@ class MemberDataService
         }
     }
 
+    public function findByEmail(string $email): ?Member
+    {
+        try {
+            $member = $this->repository->findOneBy(array ("email" => $email));
+            return $member;
+        } catch (Exception $e) {
+            $msg = "Error finding member with email $email : " . $e->getMessage();
+            $this->logger->error($msg);
+            throw new KerosException($msg, 500);
+        }
+    }
+
     /**
      * @param RequestParameters $requestParameters
      * @param $queryParams
