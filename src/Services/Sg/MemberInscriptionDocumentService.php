@@ -125,11 +125,32 @@ class MemberInscriptionDocumentService
      * @param int $id
      * @throws KerosException
      */
-    public function delete(int $id){
+    public function delete(int $id)
+    {
         $id = Validator::requiredId($id);
         $memberInscriptionDocument = $this->memberInscriptionDocumentDataService->getOne($id);
         unlink($this->directoryManager->normalizePath($this->kerosConfig["MEMBER_INSCRIPTION_DOCUMENT_DIRECTORY"] . $memberInscriptionDocument->getLocation()));
         $this->memberInscriptionDocumentDataService->delete($memberInscriptionDocument);
+    }
+
+    /**
+     * @param int $documentTypeId
+     * @param int $memberId
+     * @return bool
+     * @throws KerosException
+     */
+    public function documentTypeIsUploadedForMemberInscription(int $documentTypeId, int $memberId): bool
+    {
+        $memberInscriptionDocuments = $this->getAll();
+        foreach ($memberInscriptionDocuments as $memberInscriptionDocument) {
+            //if the MemberInscription related to this document is null, it means that the document is now related to is accepted Member
+            if (!is_null($memberInscriptionDocument->getMemberInscription())) {
+                if ($memberInscriptionDocument->getMemberInscriptionDocumentType()->getId() == $documentTypeId && $memberInscriptionDocument->getMemberInscription()->getId() == $memberId) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -139,21 +160,5 @@ class MemberInscriptionDocumentService
     public function getAll(): array
     {
         return $this->memberInscriptionDocumentDataService->getAll();
-    }
-
-    /**
-     * @param int $documentTypeid
-     * @param int $memberId
-     * @return bool
-     * @throws KerosException
-     */
-    public function documentTypeIsUploadedForMemberInscription(int $documentTypeid, int $memberId): bool
-    {
-        $memberInscriptionDocumentTypes = $this->getAll();
-        foreach ($memberInscriptionDocumentTypes as $memberInscriptionDocumentType) {
-            if ($memberInscriptionDocumentType->getId() == $documentTypeid && $memberInscriptionDocumentType->getMemberInscription()->getId() == $memberId)
-                return true;
-        }
-        return false;
     }
 }

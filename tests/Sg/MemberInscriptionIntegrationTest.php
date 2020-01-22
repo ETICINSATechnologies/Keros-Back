@@ -52,7 +52,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->assertSame(1, $body->content[0]->documents[0]->id);
         $this->assertSame("Fiche inscription membre", $body->content[0]->documents[0]->name);
         $this->assertSame(true, $body->content[0]->documents[0]->isTemplatable);
-        $this->assertSame(false, $body->content[0]->documents[0]->isUploaded);
+        $this->assertSame(true, $body->content[0]->documents[0]->isUploaded);
         $this->assertSame(0, $body->meta->page);
         $this->assertSame(2, $body->meta->totalPages);
         $this->assertSame(30, $body->meta->totalItems);
@@ -263,7 +263,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->assertSame(1, $body->documents[0]->id);
         $this->assertSame("Fiche inscription membre", $body->documents[0]->name);
         $this->assertSame(true, $body->documents[0]->isTemplatable);
-        $this->assertSame(false, $body->documents[0]->isUploaded);
+        $this->assertSame(true, $body->documents[0]->isUploaded);
     }
 
     /**
