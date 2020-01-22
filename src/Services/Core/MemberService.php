@@ -15,6 +15,7 @@ use Keros\Services\Sg\MemberInscriptionDocumentService;
 use Keros\Tools\ConfigLoader;
 use Keros\Tools\DirectoryManager;
 use Keros\Tools\Validator;
+use Keros\Tools\Mail\MailFactory;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 
@@ -22,6 +23,9 @@ class MemberService
 {
     /** @var AddressService */
     private $addressService;
+
+    /** @var MailFactory */
+    private $mailFactory;
 
     /** @var GenderService */
     private $genderService;
@@ -417,24 +421,6 @@ class MemberService
         $token = $this->jwtCodec->encode($payload);
 
         //send email
-    }
-
-
-    function generateUpdateNewPassword($length = 8, $member) {
-
-        $chars = 'abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ123456789@#$%^&*';
-        $count = mb_strlen($chars);
-
-        for ($i = 0, $result = ''; $i < $length; $i++) {
-            $index = rand(0, $count - 1);
-            $result .= mb_substr($chars, $index, 1);
-        }
-
-        $fields = array (
-            'username' => $member['username'],
-            'password' => $member['password']//new mdp
-        );
-
-        $this->userService->update($member['id'], $fields);
+        $this->mailFactory->sendMailResetMpTokenEnvoie($member, $token);
     }
 }

@@ -6,6 +6,7 @@ namespace Keros\Tools\Mail;
 
 use Keros\Entities\Core\Consultant;
 use Keros\Entities\Core\Member;
+use Keros\Entities\Core\User;
 use Keros\Entities\Sg\ConsultantInscription;
 use Keros\Entities\Sg\MemberInscription;
 use Keros\Error\KerosException;
@@ -32,7 +33,8 @@ class MailFactory
      *
      * @param MemberInscription $memberInscription
      */
-    public function sendMailCreateMemberInscriptionFromTemplate(MemberInscription $memberInscription){
+    public function sendMailCreateMemberInscriptionFromTemplate(MemberInscription $memberInscription)
+    {
         $globalFields = array();
         $tos = array($memberInscription->getEmail() => array(
             "nom"=>$memberInscription->getFirstName()." ".$memberInscription->getLastName(),"full_name"=>$memberInscription->getFirstName()." ".$memberInscription->getLastName())
@@ -52,7 +54,8 @@ class MailFactory
      * @param Member $member
      * @param String $password
      */
-    public function sendMailMemberValidationFromTemplate(Member $member, String $password){
+    public function sendMailMemberValidationFromTemplate(Member $member, String $password)
+    {
         $globalFields = array();
         $tos = array($member->getEmail() => array(
             "nom"=>$member->getFirstName()." ".$member->getLastName(),
@@ -75,7 +78,8 @@ class MailFactory
      * @param Consultant $consultant
      * @param String $password
      */
-    public function sendMailConsultantValidationFromTemplate(Consultant $consultant, String $password){
+    public function sendMailConsultantValidationFromTemplate(Consultant $consultant, String $password)
+    {
         $globalFields = array();
         $tos = array($consultant->getEmail() => array(
             "nom"=>$consultant->getFirstName()." ".$consultant->getLastName(),
@@ -95,7 +99,8 @@ class MailFactory
      *
      * @param ConsultantInscription $consultantInscription
      */
-    public function sendMailCreateConsultantInscriptionFromTemplate(ConsultantInscription $consultantInscription){
+    public function sendMailCreateConsultantInscriptionFromTemplate(ConsultantInscription $consultantInscription)
+    {
         $globalFields = array();
         $tos = array($consultantInscription->getEmail() => array(
             "nom"=>$consultantInscription->getFirstName()." ".$consultantInscription->getLastName(),"full_name"=>$consultantInscription->getFirstName()." ".$consultantInscription->getLastName())
@@ -109,4 +114,26 @@ class MailFactory
         }
     }
 
+    /**
+     * Envoie de mail avec un token pour reinitialiser le mot de passe
+     *
+     * @param Member $member
+     * @param String $token
+     */
+    public function sendMailResetMpTokenEnvoie(Member $member, string $token)
+    {
+        $globalFields = array();
+        $tos = array($member->getEmail() => array(
+            "full-name"=>$member->getFirstName()." ".$member->getLastName(),
+            "identifiant"=>$member->getUser()->getUsername(),
+            "token"=>$token,
+        ));
+
+        try {
+            $email = $this->mailSender->createTemplateMail("MAIL_RESET_MP_TOKEN_ENVOIE",$globalFields,false,$tos);
+            $this->mailSender->sendMail($email);
+        }catch (KerosException | TypeException $e) {
+            $this->logger->warning("Failed to send senTokenForReset mail : ".$e->getMessage());
+        }
+    }
 }

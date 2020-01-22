@@ -62,8 +62,6 @@ class LoginController
 
         $body = $request->getParsedBody();
         $this->memberService->sendTokenForReset($body);
-
-
     }
 
     public function resetPasswordMember(Request $request, Response $response, array $args)
