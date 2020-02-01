@@ -740,4 +740,42 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame(29, $body->meta->totalItems);
         $this->assertSame(25, $body->meta->itemsPerPage);
     }
+
+    public function testGetConsultantsOrderByUsernameShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/core/consultant?orderBy=username',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+        $body = json_decode($response->getBody());
+
+        $username = $body->content[0]->username;
+        foreach ($body->content as $consultant){
+            $this->assertGreaterThanOrEqual($username, $consultant->username);
+            $username = $consultant->username;
+        }
+    }
+
+    public function testGetConsultantsOrderByEmailShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/core/consultant?orderBy=email',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+        $body = json_decode($response->getBody());
+
+        $email = $body->content[0]->email;
+        foreach ($body->content as $consultant){
+            $this->assertGreaterThanOrEqual($email, $consultant->email);
+            $email = $consultant->email;
+        }
+    }
 }
