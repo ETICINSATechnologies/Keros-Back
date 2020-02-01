@@ -661,4 +661,112 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->assertEquals(12, count($body->content));
         $this->assertSame(false, $body->content[0]->hasPaid);
     }
+
+    public function testGetMemberInscriptionFilterFirstNameShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/sg/membre-inscription?firstName=Clark',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+
+        $body = json_decode($response->getBody());
+
+        foreach ($body->content as $memberInscription){
+            $this->assertContains('Clark', $memberInscription->firstName);
+        }
+    }
+
+    public function testGetMemberInscriptionFilterLastNameShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/sg/membre-inscription?lastName=Wayne',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+
+        $body = json_decode($response->getBody());
+
+        foreach ($body->content as $memberInscription){
+            $this->assertContains('Wayne', $memberInscription->lastName);
+        }
+    }
+
+    public function testGetMemberInscriptionFilterEmailShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/sg/membre-inscription?email=bruce.wayne@batman.com',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+
+        $body = json_decode($response->getBody());
+
+        foreach ($body->content as $memberInscription){
+            $this->assertContains('bruce.wayne@batman.com', $memberInscription->email);
+        }
+    }
+
+    public function testGetMemberInscriptionFilterPhoneNumberShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/sg/membre-inscription?phoneNumber=0033123456789',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+
+        $body = json_decode($response->getBody());
+
+        foreach ($body->content as $memberInscription){
+            $this->assertContains('0033123456789', $memberInscription->phoneNumber);
+        }
+    }
+
+    public function testGetMemberInscriptionFilterOutYearShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/sg/membre-inscription?outYear=2022',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+
+        $body = json_decode($response->getBody());
+
+        foreach ($body->content as $memberInscription){
+            $this->assertEquals(2022, $memberInscription->outYear);
+        }
+    }
+
+    public function testGetMemberInscriptionSearchShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/sg/membre-inscription?search=Cla',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+
+        $body = json_decode($response->getBody());
+
+        foreach ($body->content as $memberInscription){
+            $this->assertContains('Clark', array($memberInscription->firstName, $memberInscription->lastName, $memberInscription->phoneNumber, $memberInscription->email));
+        }
+    }
 }

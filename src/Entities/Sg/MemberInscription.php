@@ -2,6 +2,14 @@
 
 namespace Keros\Entities\Sg;
 
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\OneToMany;
+use Doctrine\ORM\Mapping\Table;
 use JsonSerializable;
 use Keros\Entities\Core\Address;
 use Keros\Entities\Core\Country;
@@ -183,12 +191,12 @@ class MemberInscription implements JsonSerializable
 
     public static function getSearchFields(): array
     {
-        return ['firstName', 'lastName', 'email', 'phoneNumber', 'outYear'];
+        return ['firstName', 'lastName', 'email', 'phoneNumber'];
     }
 
     public static function getFilterFields(): array
     {
-        return ['hasPaid'];
+        return ['hasPaid', 'firstName', 'lastName', 'email', 'phoneNumber', 'outYear'];
     }
 
     /**
