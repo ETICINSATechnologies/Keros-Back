@@ -785,7 +785,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
      * @throws MethodNotAllowedException
      * @throws NotFoundException
      */
-    public function testGetPage1MemberInscriptionShouldReturn200()
+    public function testGetPage1ConsultantInscriptionShouldReturn200()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
@@ -798,5 +798,114 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
 
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame(1, count($body->content));
+    }
+
+
+    public function testGetConsultantInscriptionFilterFirstNameShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/sg/consultant-inscription?firstName=Clark',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+
+        $body = json_decode($response->getBody());
+
+        foreach ($body->content as $consultantInscription){
+            $this->assertContains('Clark', $consultantInscription->firstName);
+        }
+    }
+
+    public function testGetConsultantInscriptionFilterLastNameShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/sg/consultant-inscription?lastName=Wayne',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+
+        $body = json_decode($response->getBody());
+
+        foreach ($body->content as $consultantInscription){
+            $this->assertContains('Wayne', $consultantInscription->lastName);
+        }
+    }
+
+    public function testGetConsultantInscriptionFilterEmailShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/sg/consultant-inscription?email=bruce.wayne@batman.com',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+
+        $body = json_decode($response->getBody());
+
+        foreach ($body->content as $consultantInscription){
+            $this->assertContains('bruce.wayne@batman.com', $consultantInscription->email);
+        }
+    }
+
+    public function testGetConsultantInscriptionFilterPhoneNumberShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/sg/consultant-inscription?phoneNumber=0033123456789',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+
+        $body = json_decode($response->getBody());
+
+        foreach ($body->content as $consultantInscription){
+            $this->assertContains('0033123456789', $consultantInscription->phoneNumber);
+        }
+    }
+
+    public function testGetConsultantInscriptionFilterOutYearShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/sg/consultant-inscription?outYear=2022',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+
+        $body = json_decode($response->getBody());
+
+        foreach ($body->content as $consultantInscription){
+            $this->assertEquals(2022, $consultantInscription->outYear);
+        }
+    }
+
+    public function testGetConsultantInscriptionSearchShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/sg/consultant-inscription?search=Cla',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+
+        $body = json_decode($response->getBody());
+
+        foreach ($body->content as $consultantInscription){
+            $this->assertContains('Clark', array($consultantInscription->firstName, $consultantInscription->lastName, $consultantInscription->phoneNumber, $consultantInscription->email));
+        }
     }
 }

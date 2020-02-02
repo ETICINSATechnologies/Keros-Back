@@ -183,12 +183,12 @@ class MemberInscription implements JsonSerializable
 
     public static function getSearchFields(): array
     {
-        return ['firstName', 'lastName', 'email', 'phoneNumber', 'outYear'];
+        return ['firstName', 'lastName', 'email', 'phoneNumber'];
     }
 
     public static function getFilterFields(): array
     {
-        return ['hasPaid'];
+        return ['hasPaid', 'firstName', 'lastName', 'email', 'phoneNumber', 'outYear'];
     }
 
     /**
