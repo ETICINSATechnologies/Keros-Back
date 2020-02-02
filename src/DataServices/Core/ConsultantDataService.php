@@ -136,7 +136,11 @@ class ConsultantDataService
                     case 'lastName' :
                     case 'firstName' :
                     case 'company' :
+                    case 'email' :
                         $this->queryBuilder->orderBy("c.$orderBy", $order);
+                        break;
+                    case 'username' :
+                        $this->queryBuilder->orderBy("u.$orderBy", $order);
                         break;
                 }
             }
