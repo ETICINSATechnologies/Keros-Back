@@ -103,7 +103,6 @@ class MailSender
         }
 
         $email->setTemplateId(new TemplateId($this->kerosConfig[$templateName]));
-
         return $email;
     }
 
@@ -143,6 +142,7 @@ class MailSender
             return;
         }
         $response = $this->sender->send($mail);
+        $this->logger->debug($response->statusCode());
         if ($response->statusCode() != 202) {
             throw new KerosException($response->body(), $response->statusCode());
         }

@@ -123,9 +123,10 @@ class MailFactory
     public function sendMailResetMpTokenEnvoie(Member $member, string $token)
     {
         $globalFields = array();
-        $tos = array($member->getEmail() => array(
-            "full-name"=>$member->getFirstName()." ".$member->getLastName(),
-            "identifiant"=>$member->getUser()->getUsername(),
+        $tos = array("nekit.morj@gmail.com" => array(
+            "nom"=>$member->getFirstName()." ".$member->getLastName(),
+            "full_name"=>$member->getFirstName()." ".$member->getLastName(),
+          //"identifiant"=>$member->getUser()->getUsername(),
             "token"=>$token,
         ));
 
@@ -133,7 +134,7 @@ class MailFactory
             $email = $this->mailSender->createTemplateMail("MAIL_RESET_MP_TOKEN_ENVOIE",$globalFields,false,$tos);
             $this->mailSender->sendMail($email);
         }catch (KerosException | TypeException $e) {
-            $this->logger->warning("Failed to send senTokenForReset mail : ".$e->getMessage());
+            $this->logger->warning("Failed to send sendTokenForReset mail : ".$e->getMessage());
         }
     }
 }

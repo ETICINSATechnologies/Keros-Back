@@ -44,6 +44,7 @@ class LoginController
         $this->logger = $container->get(Logger::class);
         $this->entityManager = $container->get(EntityManager::class);
         $this->loginService = $container->get(LoginService::class);
+        $this->memberService = $container->get(MemberService::class);
     }
 
     public function login(Request $request, Response $response, array $args)
@@ -61,6 +62,7 @@ class LoginController
         $this->logger->debug("Resetting password" . $request->getServerParams()["REMOTE_ADDR"]);
 
         $body = $request->getParsedBody();
+
         $this->memberService->sendTokenForReset($body);
     }
 

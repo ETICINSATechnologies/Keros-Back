@@ -12,12 +12,14 @@ use Keros\Entities\Core\Page;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Error\KerosException;
 use Keros\Services\Sg\MemberInscriptionDocumentService;
+use Keros\Tools\Authorization\JwtCodec;
 use Keros\Tools\ConfigLoader;
 use Keros\Tools\DirectoryManager;
 use Keros\Tools\Validator;
 use Keros\Tools\Mail\MailFactory;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
+use SendGrid\Mail\Mail;
 
 class MemberService
 {
@@ -59,6 +61,9 @@ class MemberService
     /** @var Logger */
     private $logger;
 
+    /** @var JwtCodec */
+    private $jwtCodec;
+
     /** @var MemberInscriptionDocumentService */
     private $memberInscriptionDocumentService;
 
@@ -80,6 +85,8 @@ class MemberService
         $this->directoryManager = $container->get(DirectoryManager::class);
         $this->kerosConfig = ConfigLoader::getConfig();
         $this->memberInscriptionDocumentService = $container->get(MemberInscriptionDocumentService::class);
+        $this->jwtCodec = $container->get(JwtCodec::class);
+        $this->mailFactory=$container->get(MailFactory::class);
     }
 
     /**
@@ -394,13 +401,15 @@ class MemberService
         }
 
         return $member;
-        //appel d'un tool pour generer le new mdp
-        //update du membre
     }
 
-    public function sendTokenForReset(array $args)
+    public function sendTokenForReset(?array $body)
     {
-        $member = $this->findMemberByEmail($args['email']);
+        if (is_null($body)) {
+            throw new KerosException("The member doesn't exist", 404);
+        }
+
+        $member = $this->findMemberByEmail($body['email']);
 
         if (is_null($member)) {
             throw new KerosException("The member doesn't exist", 404);
