@@ -69,7 +69,7 @@ class MemberInscription implements JsonSerializable
     private $phoneNumber;
 
     /**
-     * @var int|null
+     * @var int
      * @Column(type="integer")
      */
     private $outYear;
