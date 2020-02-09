@@ -200,7 +200,7 @@ class Consultant implements JsonSerializable
         ];
     }
     public static function getSearchFields(): array {
-        return ['firstName', 'lastName', 'company'];
+        return ['firstName', 'lastName', 'company', 'isGraduate'];
     }
     // Getters and setters
     /**

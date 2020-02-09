@@ -788,4 +788,38 @@ class ConsultantIntegrationTest extends AppTestCase
             $email = $consultant->email;
         }
     }
+
+    public function testGetConsultantsOnlyGraduateShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/core/consultant?isGraduate=true',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+        $body = json_decode($response->getBody());
+
+        foreach ($body->content as $consultant){
+            $this->assertTrue($consultant->isGraduate);
+        }
+    }
+
+    public function testGetConsultantsOnlyNotGraduateShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/core/consultant?isGraduate=false',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+        $body = json_decode($response->getBody());
+
+        foreach ($body->content as $consultant){
+            $this->assertFalse($consultant->isGraduate);
+        }
+    }
 }
