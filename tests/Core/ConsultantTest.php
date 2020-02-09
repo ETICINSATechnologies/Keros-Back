@@ -35,7 +35,8 @@ class ConsultantTest extends TestCase
                 null,
                 null,
                 null,
-                null));
+                null),
+                false);
     }
 
     public function testConsultantShouldCreateWithParams()
@@ -59,7 +60,8 @@ class ConsultantTest extends TestCase
             null,
             null,
             null,
-            null);
+            null,
+            true);
 
 
         $this->assertInstanceOf(Consultant::class, $consultant);
@@ -73,5 +75,6 @@ class ConsultantTest extends TestCase
         $this->assertEquals("http://photoprofile.jpg", $consultant->getProfilePicture());
         $this->assertEquals(true, $consultant->getIsApprentice());
         $this->assertEquals(true, $consultant->isDroitImage());
+        $this->assertTrue($consultant->isGraduate());
     }
 }

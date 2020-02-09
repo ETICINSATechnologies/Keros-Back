@@ -124,7 +124,13 @@ class Consultant implements JsonSerializable
      */
     private $documentCVEC;
 
-    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $socialSecurityNumber, $droitImage, $isApprentice, $createdDate, $documentIdentity, $documentScolaryCertificate, $documentRIB, $documentVitaleCard, $documentResidencePermit, $documentCVEC)
+    /**
+     * @var boolean
+     * @Column(type="boolean")
+     */
+    private $isGraduate;
+
+    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $socialSecurityNumber, $droitImage, $isApprentice, $createdDate, $documentIdentity, $documentScolaryCertificate, $documentRIB, $documentVitaleCard, $documentResidencePermit, $documentCVEC, $isGraduate)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -145,7 +151,8 @@ class Consultant implements JsonSerializable
         $this->documentRIB = $documentRIB;
         $this->documentVitaleCard = $documentVitaleCard;
         $this->documentResidencePermit = $documentResidencePermit;
-        $this->$documentCVEC = $documentCVEC;
+        $this->documentCVEC = $documentCVEC;
+        $this->isGraduate = $isGraduate;
     }
     public function jsonSerialize()
     {
@@ -166,6 +173,7 @@ class Consultant implements JsonSerializable
             'droitImage' => $this->isDroitImage(),
             'isApprentice' => $this->getIsApprentice(),
             'createdDate' => $this->getCreatedDate(),
+            'isGraduate' => $this->isGraduate()
         ];
     }
     public function getProtected()
@@ -188,6 +196,7 @@ class Consultant implements JsonSerializable
             'isApprentice' => $this->getIsApprentice(),
             'createdDate' => $this->getCreatedDate(),
             'socialSecurityNumber' => $this->getSocialSecurityNumber(),
+            'isGraduate' => $this->isGraduate()
         ];
     }
     public static function getSearchFields(): array {
@@ -543,5 +552,22 @@ class Consultant implements JsonSerializable
     {
         $this->documentCVEC = $documentCVEC;
     }
+
+    /**
+     * @return bool
+     */
+    public function isGraduate(): bool
+    {
+        return $this->isGraduate;
+    }
+
+    /**
+     * @param bool $isGraduate
+     */
+    public function setIsGraduate(bool $isGraduate): void
+    {
+        $this->isGraduate = $isGraduate;
+    }
+
 
 }

@@ -93,6 +93,7 @@ class ConsultantIntegrationTest extends AppTestCase
             "droitImage" => true,
             "isApprentice" => true,
             "socialSecurityNumber" => "12346781300139041",
+            'isGraduate' => true,
         );
 
         $env = Environment::mock([
@@ -124,6 +125,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertNotNull($body->address->id);
         $this->assertSame(true,$body->droitImage);
         $this->assertSame(true,$body->isApprentice);
+        $this->assertSame(true, $body->isGraduate);
     }
 
     public function testDeleteConsultantShouldReturn204()
@@ -278,6 +280,7 @@ class ConsultantIntegrationTest extends AppTestCase
             "droitImage" => true,
             "isApprentice" => true,
             "socialSecurityNumber" => "12346781300139041",
+            'isGraduate' => true,
         );
 
         $env = Environment::mock([
@@ -306,6 +309,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame("http://image.png", $body->profilePicture);
         $this->assertSame(true,$body->droitImage);
         $this->assertSame(true,$body->isApprentice);
+        $this->assertSame(true, $body->isGraduate);
     }
     
     public function testPutConsultantShouldReturn200()
@@ -345,6 +349,7 @@ class ConsultantIntegrationTest extends AppTestCase
             "droitImage" => true,
             "isApprentice" => true,
             "socialSecurityNumber" => "12346781300139041",
+            'isGraduate' => true,
         );
 
         $env = Environment::mock([
@@ -376,6 +381,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertNotNull($body->address->id);
         $this->assertSame(true,$body->droitImage);
         $this->assertSame(true,$body->isApprentice);
+        $this->assertSame(true, $body->isGraduate);
     }
 
     public function testPutConsultantOnlyRequiredFieldShouldReturn200()
@@ -411,6 +417,7 @@ class ConsultantIntegrationTest extends AppTestCase
             "droitImage" => true,
             "isApprentice" => true,
             "socialSecurityNumber" => "12346781300139041",
+            'isGraduate' => false,
         );
 
         $env = Environment::mock([
@@ -442,6 +449,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertNotNull($body->address->id);
         $this->assertSame(true,$body->droitImage);
         $this->assertSame(true,$body->isApprentice);
+        $this->assertSame(true, $body->isGraduate);
     }
 
     public function testPutConsultantEmptyBodyShouldReturn400()
@@ -648,6 +656,7 @@ class ConsultantIntegrationTest extends AppTestCase
             "droitImage" => true,
             "isApprentice" => true,
             "socialSecurityNumber" => "12346781300139041",
+            'isGraduate' => false
         );
 
         $env = Environment::mock([
@@ -687,6 +696,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame(true,$body->isApprentice);
         $dateDiff = ((new \DateTime())->diff(new \DateTime($body->createdDate->date)))->format('%a');
         $this->assertSame(intval($dateDiff),0);
+        $this->assertSame(false, $body->isGraduate);
     }
 
     public function testGetAllConsultantsPage0ShouldReturn200()
