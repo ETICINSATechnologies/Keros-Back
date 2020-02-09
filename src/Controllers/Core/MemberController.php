@@ -247,5 +247,16 @@ class MemberController
         $this->entityManager->commit();
 
         return $response->withStatus(204);
-    }
+	}
+
+	public function exportMembers(Request $request, Response $response, array $args)
+	{
+		$csvFile = fopen("members.csv", "w");
+		$body = $request->getParsedBody();
+		$this->logger->debug($body);
+		foreach($body["idList"] as $id) {
+			$member = $this->memberService->getOne($id);
+			$this->logger->debug($member->getFirstName());
+		}
+	}
 }
