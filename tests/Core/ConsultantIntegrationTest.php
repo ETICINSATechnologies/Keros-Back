@@ -449,7 +449,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertNotNull($body->address->id);
         $this->assertSame(true,$body->droitImage);
         $this->assertSame(true,$body->isApprentice);
-        $this->assertSame(true, $body->isGraduate);
+        $this->assertSame(false, $body->isGraduate);
     }
 
     public function testPutConsultantEmptyBodyShouldReturn400()
