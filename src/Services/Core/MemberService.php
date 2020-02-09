@@ -101,8 +101,9 @@ class MemberService
         $profilePicture = null;
         $droitImage = Validator::requiredBool($fields['droitImage']);
         $isAlumni = Validator::optionalBool($fields['isAlumni'] ?? false);
+        $ETICEmail = Validator::optionalEmail($fields["ETICEmail"] ?? null);
 
-        $member = new Member($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage, $createdDate, $isAlumni, array());
+        $member = new Member($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage, $createdDate, $isAlumni, array(), $ETICEmail);
 
         $user = $this->userService->create($fields);
         $address = $this->addressService->create($fields["address"]);
@@ -195,6 +196,7 @@ class MemberService
         $department = null;
         $departmentId = Validator::requiredId($fields["departmentId"]);
         $department = $this->departmentService->getOne($departmentId);
+        $ETICEmail = Validator::optionalEmail($fields["ETICEmail"] ?? null);
 
         $company = Validator::optionalString(isset($fields["company"]) ? $fields["company"] : $member->getCompany());
         $isAlumni = Validator::optionalBool($fields['isAlumni'] ?? $member->getIsAlumni());
@@ -220,6 +222,7 @@ class MemberService
         $member->setCompany($company);
         $member->setMemberPositions($memberPositions);
         $member->setIsAlumni($isAlumni);
+        $member->setETICEmail($ETICEmail);
 
         $this->addressService->update($member->getAddress()->getId(), $fields["address"]);
         $this->userService->update($member->getId(), $fields);
