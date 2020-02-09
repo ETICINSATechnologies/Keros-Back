@@ -251,12 +251,44 @@ class MemberController
 
 	public function exportMembers(Request $request, Response $response, array $args)
 	{
-		$csvFile = fopen("members.csv", "w");
+		$csvFile = fopen("php://temp", "w+");
 		$body = $request->getParsedBody();
-		$this->logger->debug($body);
-		foreach($body["idList"] as $id) {
-			$member = $this->memberService->getOne($id);
-			$this->logger->debug($member->getFirstName());
+
+		$members = $this->memberService->getSome($body["idList"]);
+		if (!empty($members)) {
+			$tags = array_keys($members[0]->jsonSerialize());
+			fputcsv($csvFile, $tags);
+
+			foreach ($members as $member) {
+				$data = array();
+				foreach ($member->jsonSerialize() as $key => $value) {
+					switch($key) {
+						case 'gender':
+						case 'department':
+							$data[] = $value->getLabel();
+							break;
+						case 'address':
+							$addr = $value->jsonSerialize();
+							$data[] = $addr['line1'] . $addr['line2'] . $addr['postalCode'] . $addr['city'] . $addr['country']->getLabel();
+							break;
+						case 'positions':
+							break;
+						case 'profilePicture':
+							break;
+						default:
+							break;
+					}
+				}
+				fputcsv($csvFile, $data);
+			}
 		}
+
+		rewind($csvFile);
+
+		$response = $response
+			->withHeader('Content-Type', 'text/csv')
+			->withHeader('Content-Disposition', 'attachment; filename="member.csv"');
+
+		return $response->withBody(new \Slim\Http\Stream($csvFile));
 	}
 }
