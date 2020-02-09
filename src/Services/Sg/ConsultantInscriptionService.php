@@ -275,6 +275,7 @@ class   ConsultantInscriptionService
             "droitImage" => $consultantInscription->isDroitImage(),
             "isApprentice" => $consultantInscription->getIsApprentice(),
             "createdDate" => new \DateTime(),
+            'isGraduate' => false,
         );
 
         //copy and add files to consultant

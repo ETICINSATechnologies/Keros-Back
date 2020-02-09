@@ -246,6 +246,10 @@ INSERT INTO core_consultant (id, genderId, firstName, lastName, birthday, teleph
   (54, 4, 'Consultant 54', 'Consultant Name54', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant54@fake.com', 115, null, 4, 4, 'Fake Enterprise Consultant 54', NULL, true, true, STR_TO_DATE('2019-09-01', '%Y-%m-%d'), NULL, NULL, NULL, NULL, NULL, NULL),
   (55, 3, 'Consultant 55', 'Consultant Name55', STR_TO_DATE('1987-11-2', '%Y-%m-%d'), '+337425254', 'fake.consultant55@fake.com', 116, null, 7, 3, 'Fake Enterprise Consultant 55', NULL, false, true, STR_TO_DATE('2019-09-01', '%Y-%m-%d'), NULL, NULL, NULL, NULL, NULL, NULL);
 
+UPDATE core_consultant
+SET isGraduate = true
+WHERE id IN (43, 46, 54, 33);
+
 TRUNCATE TABLE core_member_position;
 INSERT INTO core_member_position (id, memberId, positionId, isBoard, year) VALUES
   (1, 1, 3, TRUE, 2018),
