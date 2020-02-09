@@ -244,7 +244,6 @@ class   MemberInscriptionService
             "positions" => array(),
             "droitImage" => $memberInscription->isDroitImage(),
             "createdDate" => new \DateTime(),
-            'isGraduate' => false,
         );
 
         if ($memberInscription->getOutYear()) {
