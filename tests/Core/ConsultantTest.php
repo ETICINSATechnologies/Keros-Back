@@ -35,8 +35,9 @@ class ConsultantTest extends TestCase
                 null,
                 null,
                 null,
-                null),
-                false);
+                null,
+                false)
+                );
     }
 
     public function testConsultantShouldCreateWithParams()
