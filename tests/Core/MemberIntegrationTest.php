@@ -382,7 +382,7 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(false, $body->droitImage);
         $this->assertSame(intval($dateDiff),0);
         $this->assertSame(true, $body->isAlumni);
-        $this->assertSame("ETICEmail", "bonjour@aurevoir.fr");
+        $this->assertSame("bonjour@aurevoir.fr", $body->ETICEmail);
 
     }
 
@@ -455,7 +455,7 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(true, $body->droitImage);
         $this->assertSame(intval($dateDiff),0);
         $this->assertSame(false, $body->isAlumni);
-        $this->assertSame("ETICEmail", "bonjour@aurevoir.fr");
+        $this->assertSame("bonjour@aurevoir.fr", $body->ETICEmail);
     }
 
     public function testPutMemberEmptyBodyShouldReturn400()
