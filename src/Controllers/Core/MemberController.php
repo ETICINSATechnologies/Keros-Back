@@ -255,32 +255,40 @@ class MemberController
 		$body = $request->getParsedBody();
 
 		$members = $this->memberService->getSome($body["idList"]);
-		if (!empty($members)) {
-			$tags = array_keys($members[0]->jsonSerialize());
-			fputcsv($csvFile, $tags);
+		$tags = array_keys($members[0]->jsonSerialize());
+		fputcsv($csvFile, $tags);
 
-			foreach ($members as $member) {
-				$data = array();
-				foreach ($member->jsonSerialize() as $key => $value) {
-					switch($key) {
-						case 'gender':
-						case 'department':
-							$data[] = $value->getLabel();
-							break;
-						case 'address':
-							$addr = $value->jsonSerialize();
-							$data[] = $addr['line1'] . $addr['line2'] . $addr['postalCode'] . $addr['city'] . $addr['country']->getLabel();
-							break;
-						case 'positions':
-							break;
-						case 'profilePicture':
-							break;
-						default:
-							break;
-					}
+		foreach ($members as $member) {
+			$data = array();
+			foreach ($member->jsonSerialize() as $key => $value) {
+				switch($key) {
+					case 'id':
+					case 'username':
+					case 'firstName':
+					case 'lastName':
+					case 'email':
+					case 'birthday':
+					case 'schoolYear':
+					case 'telephone':
+					case 'company':
+						$data[] = $value;
+						break;
+					case 'gender':
+					case 'department':
+						$data[] = $value->getLabel();
+						break;
+					case 'address':
+						$data[] = $value->getFullAddress();
+						break;
+					case 'positions':
+						break;
+					case 'profilePicture':
+						break;
+					default:
+						break;
 				}
-				fputcsv($csvFile, $data);
 			}
+			fputcsv($csvFile, $data);
 		}
 
 		rewind($csvFile);
