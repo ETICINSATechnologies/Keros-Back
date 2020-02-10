@@ -44,9 +44,10 @@ class UserService
         $id = Validator::requiredId($id);
 
         $user = $this->userDataService->getOne($id);
-        if (!$user) {
+        if (is_null($user)) {
             throw new KerosException("The user could not be found", 404);
         }
+
         return $user;
     }
 

@@ -13,6 +13,7 @@ use Keros\Entities\Core\RequestParameters;
 use Keros\Error\KerosException;
 use Keros\Services\Sg\MemberInscriptionDocumentService;
 use Keros\Tools\Authorization\JwtCodec;
+use Keros\Tools\Authorization\PasswordEncryption;
 use Keros\Tools\ConfigLoader;
 use Keros\Tools\DirectoryManager;
 use Keros\Tools\Validator;
@@ -431,5 +432,32 @@ class MemberService
 
         //send email
         $this->mailFactory->sendMailResetMpTokenEnvoie($member, $token);
+    }
+
+    public function decryptTokenForReset(array $param)
+    {
+        $token = $param["token"];
+
+        if (!isset($token)) {
+            throw new KerosException("token wasn't found", 401);
+        }
+
+        $payload = $this->jwtCodec->decode($token);
+
+        //check if user does exist
+        if (is_null($this->userService->getOne($payload->id))) {
+            throw new KerosException("User doesn't exist", 401);
+        }
+
+        //check if token has expired
+        if ($fields->exp < time()) {
+            throw new KerosException("Reset MP token has expired, please reset again", 401);
+        }
+
+        $fields = array(
+            "id" => $payload->id
+        );
+
+        return $fields;
     }
 }

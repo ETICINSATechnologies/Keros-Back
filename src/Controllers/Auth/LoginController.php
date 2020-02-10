@@ -2,6 +2,7 @@
 
 namespace Keros\Controllers\Auth;
 
+use Keros\Entities\Core\User;
 use Keros\Services\Auth\LoginService;
 use Keros\Services\Core\MemberService;
 use Keros\Services\Core\UserService;
@@ -45,6 +46,7 @@ class LoginController
         $this->entityManager = $container->get(EntityManager::class);
         $this->loginService = $container->get(LoginService::class);
         $this->memberService = $container->get(MemberService::class);
+        $this->userService = $container->get(UserService::class);
     }
 
     public function login(Request $request, Response $response, array $args)
@@ -72,9 +74,10 @@ class LoginController
 
         $param = $request->getQueryParams();
 
-        $fields = $this->loginService->decryptTokenForReset($param);
+        $fields = $this->memberService->decryptTokenForReset($param);
 
         $body = $request->getParsedBody();
+
         $fields["username"] = $this->userService->getOne($fields["id"])->getUsername();
         $fields["password"] = $body["password"];
 
