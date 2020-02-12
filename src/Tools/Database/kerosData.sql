@@ -187,7 +187,7 @@ INSERT INTO core_ticket (id, userId, title, message, type, status) VALUES
 #si vous ajouter des core_member, pensez à mettre à jour MemberIntegrationTest.testDeleteAllExistingMemberShouldReturn204
 TRUNCATE TABLE core_member;
 INSERT INTO core_member (id, genderId, firstName, lastName, birthday, telephone, email, addressId, schoolYear, departmentId, company, profilePicture, droitImage, createdDate, isAlumni) VALUES
-  (1, 1, 'Conor', 'Breeze', STR_TO_DATE('1975-12-25', '%Y-%m-%d'), '+332541254', 'nekit.morj@gmail.com', 2, 3, 1, 'Google', '1c518c591e1be2f2703dd8c9bb77dbb5.jpg', true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false),
+  (1, 1, 'Conor', 'Breeze', STR_TO_DATE('1975-12-25', '%Y-%m-%d'), '+332541254', 'fake.mail@fake.com', 2, 3, 1, 'Google', '1c518c591e1be2f2703dd8c9bb77dbb5.jpg', true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false),
   (3, 1, 'Laurence', 'Tainturière', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.mail3@fake.com', 3, 5, 2, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false),
   (4, 3, 'Stéphane4', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly4@fake.com', 6, 3, 4, NULL, NULL, false, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false),
   (6, 3, 'SuperPrenom', 'SuperNom', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'super@vraimentsuper.com', 9, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false),
