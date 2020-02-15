@@ -73,7 +73,6 @@ class MemberDataService
     public function findByEmail(string $email): ?Member
     {
         try {
-            $this->logger->debug($email);
             $member = $this->repository->findOneBy(array ("email" => $email));
             return $member;
         } catch (Exception $e) {

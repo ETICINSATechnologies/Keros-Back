@@ -116,17 +116,15 @@ class MailFactory
 
     /**
      * Envoie de mail avec un token pour reinitialiser le mot de passe
-     *
      * @param Member $member
      * @param String $token
      */
     public function sendMailResetMpTokenEnvoie(Member $member, string $token)
     {
         $globalFields = array();
-        $tos = array("nekit.morj@gmail.com" => array(
+        $tos = array($member->getEmail() => array(
             "nom"=>$member->getFirstName()." ".$member->getLastName(),
             "full_name"=>$member->getFirstName()." ".$member->getLastName(),
-          //"identifiant"=>$member->getUser()->getUsername(),
             "token"=>$token,
         ));
 

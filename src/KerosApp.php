@@ -178,7 +178,6 @@ class KerosApp
                     $this->post("/me/photo", MemberController::class . ':createCurrentUserProfilePicture');
                     $this->get("/me/photo", MemberController::class . ':getCurrentUserProfilePicture');
                     $this->delete("/{id:[0-9]+}/photo", MemberController::class . ':deleteProfilePicture');
-                    $this->post("/reset-password", MemberController::class . ':postResetPassword');
 
                 });
 

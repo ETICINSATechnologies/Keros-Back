@@ -404,11 +404,8 @@ class MemberService
         return $member;
     }
 
-    public function sendTokenForReset(?array $body)
+    public function sendTokenForReset(array $body)
     {
-        if (is_null($body)) {
-            throw new KerosException("The member doesn't exist", 404);
-        }
 
         $member = $this->findMemberByEmail($body['email']);
 
@@ -439,7 +436,7 @@ class MemberService
         $token = $param["token"];
 
         if (!isset($token)) {
-            throw new KerosException("token wasn't found", 401);
+            throw new KerosException("token wasn't found", 403);
         }
 
         $payload = $this->jwtCodec->decode($token);
@@ -450,7 +447,7 @@ class MemberService
         }
 
         //check if token has expired
-        if ($fields->exp < time()) {
+        if ($payload->exp < time()) {
             throw new KerosException("Reset MP token has expired, please reset again", 401);
         }
 
