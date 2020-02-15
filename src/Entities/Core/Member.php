@@ -149,7 +149,7 @@ class Member implements JsonSerializable
             'company' => $this->getCompany(),
             'profilePicture' => $this->getProfilePicture(),
             'droitImage' => $this->isDroitImage(),
-            'createdDate' => $this->getCreatedDate()->format('Y-m-d'),
+            'createdDate' => $this->getCreatedDate(),
             'isAlumni' => $this->getIsAlumni(),
         ];
     }

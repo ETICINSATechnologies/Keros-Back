@@ -280,9 +280,11 @@ class MemberController
 					case 'lastName':
 					case 'telephone':
 					case 'email':
-					case 'createdDate':
 					case 'birthday':
 						$data[] = $memberData[$value];
+						break;
+					case 'createdDate':
+						$data[] = $memberData[$value]->format('Y-m-d');
 						break;
 					case 'gender':
 					case 'department':
