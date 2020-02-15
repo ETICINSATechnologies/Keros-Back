@@ -255,35 +255,49 @@ class MemberController
 		$body = $request->getParsedBody();
 
 		$members = $this->memberService->getSome($body["idList"]);
-		$tags = array_keys($members[0]->jsonSerialize());
-		fputcsv($csvFile, $tags);
+		$tags = array(
+			'Pole' => 'positions',
+			'Nom' => 'lastName',
+			'Prenom' => 'firstName',
+			'Sexe' => 'gender',
+			'Annee'=> 'schoolYear',
+			'Departement' => 'department',
+			'Telephone' => 'telephone',
+			'Adresse Mail' => 'email',
+			'Recrutement' => 'createdDate',
+			'Statut' => 'status',
+			'Naissance' => 'birthday'
+		);
+		fputcsv($csvFile, array_keys($tags));
 
 		foreach ($members as $member) {
+			$memberData = $member->jsonSerialize();
 			$data = array();
-			foreach ($member->jsonSerialize() as $key => $value) {
-				switch($key) {
-					case 'id':
-					case 'username':
+			foreach ($tags as $value){
+				switch($value) {
+					case 'schoolYear':
 					case 'firstName':
 					case 'lastName':
-					case 'email':
-					case 'birthday':
-					case 'schoolYear':
 					case 'telephone':
-					case 'company':
-						$data[] = $value;
+					case 'email':
+					case 'createdDate':
+					case 'birthday':
+						$data[] = $memberData[$value];
 						break;
 					case 'gender':
 					case 'department':
-						$data[] = $value->getLabel();
-						break;
-					case 'address':
-						$data[] = $value->getFullAddress();
+						$data[] = $memberData[$value]->getLabel();
 						break;
 					case 'positions':
+						$currentPole = $memberData[$value][0]->getPosition()->getPole();
+						if ($currentPole) {
+							$data[] = $currentPole->getName();
+						} else {
+							$data[] = ' ';
+						}
 						break;
-					case 'profilePicture':
-						break;
+					case 'status';
+						$data[] = ' ';
 					default:
 						break;
 				}

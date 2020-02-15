@@ -149,7 +149,7 @@ class Member implements JsonSerializable
             'company' => $this->getCompany(),
             'profilePicture' => $this->getProfilePicture(),
             'droitImage' => $this->isDroitImage(),
-            'createdDate' => $this->getCreatedDate(),
+            'createdDate' => $this->getCreatedDate()->format('Y-m-d'),
             'isAlumni' => $this->getIsAlumni(),
         ];
     }
@@ -384,8 +384,11 @@ class Member implements JsonSerializable
         foreach ($this->getMemberPositions() as $position)
         {
             $memberPositions[] = $position;
-        }
-
+		}
+		usort($memberPositions, function($a, $b)
+		{
+			return $a->getYear() < $b->getYear();
+		});
         return $memberPositions;
     }
 
@@ -457,7 +460,7 @@ class Member implements JsonSerializable
     {
         return $this->createdDate;
     }
-    
+
     /**
      * @param \DateTime $createdDate
      */
