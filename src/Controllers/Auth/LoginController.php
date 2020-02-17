@@ -66,20 +66,23 @@ class LoginController
         $body = $request->getParsedBody();
 
         $this->memberService->sendTokenForReset($body);
+
+        return $response->withStatus(200);
     }
 
     public function resetPasswordMember(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Updating password" . $request->getServerParams()["REMOTE_ADDR"]);
 
-        $param = $request->getQueryParams();
-
-        $fields = $this->memberService->decryptTokenForReset($param);
-
         $body = $request->getParsedBody();
 
-        $fields["username"] = $this->userService->getOne($fields["id"])->getUsername();
-        $fields["password"] = $body["password"];
+        $id = $this->memberService->decryptTokenForReset($body["token"]);
+
+        $fields = [
+            "id" => $id,
+            "username" => $this->userService->getOne($id)->getUsername(),
+            "password" => $body["password"],
+        ];
 
         $this->userService->update($fields["id"], $fields);
 

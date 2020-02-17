@@ -431,30 +431,25 @@ class MemberService
         $this->mailFactory->sendMailResetMpTokenEnvoie($member, $token);
     }
 
-    public function decryptTokenForReset(array $param)
+    public function decryptTokenForReset($token)
     {
-        $token = $param["token"];
 
         if (!isset($token)) {
-            throw new KerosException("token wasn't found", 403);
+            throw new KerosException("token wasn't found", 404);
         }
 
         $payload = $this->jwtCodec->decode($token);
 
         //check if user does exist
         if (is_null($this->userService->getOne($payload->id))) {
-            throw new KerosException("User doesn't exist", 401);
+            throw new KerosException("User doesn't exist", 404);
         }
 
         //check if token has expired
         if ($payload->exp < time()) {
-            throw new KerosException("Reset MP token has expired, please reset again", 401);
+            throw new KerosException("Reset MP token has expired, please reset again", 403);
         }
 
-        $fields = array(
-            "id" => $payload->id
-        );
-
-        return $fields;
+        return $payload->id;
     }
 }
