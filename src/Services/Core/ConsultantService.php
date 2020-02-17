@@ -99,8 +99,9 @@ class ConsultantService
         $documentVitaleCard = Validator::optionalString($fields['documentVitaleCard'] ?? null);
         $documentResidencePermit = Validator::optionalString($fields['documentResidencePermit'] ?? null);
         $documentCVEC = Validator::optionalString($fields['documentCVEC'] ?? null);
+        $isGraduate = Validator::requiredBool($fields['isGraduate']);
 
-        $consultant = new Consultant($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $socialSecurityNumber, $droitImage, $isApprentice, $createdDate, $documentIdentity, $documentScolaryCertificate, $documentRIB, $documentVitaleCard, $documentResidencePermit, $documentCVEC);
+        $consultant = new Consultant($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $socialSecurityNumber, $droitImage, $isApprentice, $createdDate, $documentIdentity, $documentScolaryCertificate, $documentRIB, $documentVitaleCard, $documentResidencePermit, $documentCVEC, $isGraduate);
         $user = $this->userService->create($fields);
         $address = $this->addressService->create($fields["address"]);
         $consultant->setUser($user);
@@ -189,6 +190,7 @@ class ConsultantService
         $profilePicture = Validator::optionalString(isset($fields["profilePicture"]) ? $fields["profilePicture"] : $consultant->getProfilePicture());
         $socialSecurityNumber = Validator::optionalString(isset($fields["socialSecurityNumber"]) ? $fields["socialSecurityNumber"] : $consultant->getSocialSecurityNumber());
         $isApprentice = Validator::requiredBool($fields['isApprentice']);
+        $isGraduate = Validator::requiredBool($fields['isGraduate']);
 
         $consultant->setFirstName($firstName);
         $consultant->setLastName($lastName);
@@ -202,6 +204,7 @@ class ConsultantService
         $consultant->setProfilePicture($profilePicture);
         $consultant->setIsApprentice($isApprentice);
         $consultant->setSocialSecurityNumber($socialSecurityNumber);
+        $consultant->setIsGraduate($isGraduate);
 
         $this->addressService->update($consultant->getAddress()->getId(), $fields["address"]);
         $this->userService->update($consultant->getId(), $fields);

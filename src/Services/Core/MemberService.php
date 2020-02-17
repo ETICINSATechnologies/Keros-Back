@@ -6,21 +6,29 @@ use Exception;
 use Keros\DataServices\Core\MemberDataService;
 use Keros\DataServices\Core\TicketDataService;
 use Keros\DataServices\Treso\PaymentSlipDataService;
+use Keros\Entities\Auth\LoginResponse;
 use Keros\Entities\Core\Member;
 use Keros\Entities\Core\Page;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Error\KerosException;
 use Keros\Services\Sg\MemberInscriptionDocumentService;
+use Keros\Tools\Authorization\JwtCodec;
+use Keros\Tools\Authorization\PasswordEncryption;
 use Keros\Tools\ConfigLoader;
 use Keros\Tools\DirectoryManager;
 use Keros\Tools\Validator;
+use Keros\Tools\Mail\MailFactory;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
+use SendGrid\Mail\Mail;
 
 class MemberService
 {
     /** @var AddressService */
     private $addressService;
+
+    /** @var MailFactory */
+    private $mailFactory;
 
     /** @var GenderService */
     private $genderService;
@@ -54,6 +62,9 @@ class MemberService
     /** @var Logger */
     private $logger;
 
+    /** @var JwtCodec */
+    private $jwtCodec;
+
     /** @var MemberInscriptionDocumentService */
     private $memberInscriptionDocumentService;
 
@@ -75,6 +86,8 @@ class MemberService
         $this->directoryManager = $container->get(DirectoryManager::class);
         $this->kerosConfig = ConfigLoader::getConfig();
         $this->memberInscriptionDocumentService = $container->get(MemberInscriptionDocumentService::class);
+        $this->jwtCodec = $container->get(JwtCodec::class);
+        $this->mailFactory=$container->get(MailFactory::class);
     }
 
     /**
@@ -381,4 +394,65 @@ class MemberService
         return $filepath;
     }
 
+    public function findMemberByEmail(String $email)
+    {
+        $email = Validator::requiredEmail($email);
+
+        $member = $this->memberDataService->findByEmail($email);
+
+        if (is_null($member)) {
+            throw new KerosException("The member with this email could not be found", 404);
+        }
+
+        return $member;
+    }
+
+    public function sendTokenForReset(array $body)
+    {
+
+        $member = $this->findMemberByEmail($body['email']);
+
+        if (is_null($member)) {
+            throw new KerosException("The member doesn't exist", 404);
+        }
+
+        $user = $member->getUser();
+
+        // the token will expire in exactly in two hours
+        $exp = time() + 2 * 3600;
+
+        // creation of the payload
+        $payload = array(
+            "id" => $user->getId(),
+            "exp" => $exp
+        );
+
+        // create the token from the payload
+        $token = $this->jwtCodec->encode($payload);
+
+        //send email
+        $this->mailFactory->sendMailResetMpTokenEnvoie($member, $token);
+    }
+
+    public function decryptTokenForReset($token)
+    {
+
+        if (!isset($token)) {
+            throw new KerosException("token wasn't found", 404);
+        }
+
+        $payload = $this->jwtCodec->decode($token);
+
+        //check if user does exist
+        if (is_null($this->userService->getOne($payload->id))) {
+            throw new KerosException("User doesn't exist", 404);
+        }
+
+        //check if token has expired
+        if ($payload->exp < time()) {
+            throw new KerosException("Reset MP token has expired, please reset again", 403);
+        }
+
+        return $payload->id;
+    }
 }
