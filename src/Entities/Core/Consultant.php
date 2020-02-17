@@ -41,6 +41,9 @@ class Consultant implements JsonSerializable
     /** @Column(type="string", length=255) */
     protected $email;
 
+    /** @Column(type="string", Length=255 */
+    private $nationality;
+
     /**
      * @ManyToOne(targetEntity="Address")
      * @JoinColumn(name="AddressId", referencedColumnName="id")
@@ -124,7 +127,7 @@ class Consultant implements JsonSerializable
      */
     private $documentCVEC;
 
-    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $socialSecurityNumber, $droitImage, $isApprentice, $createdDate, $documentIdentity, $documentScolaryCertificate, $documentRIB, $documentVitaleCard, $documentResidencePermit, $documentCVEC)
+    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $nationality, $gender, $department, $company, $profilePicture, $socialSecurityNumber, $droitImage, $isApprentice, $createdDate, $documentIdentity, $documentScolaryCertificate, $documentRIB, $documentVitaleCard, $documentResidencePermit, $documentCVEC)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -132,6 +135,7 @@ class Consultant implements JsonSerializable
         $this->telephone = $telephone;
         $this->email = $email;
         $this->schoolYear = $schoolYear;
+        $this->nationality = $nationality;
         $this->gender = $gender;
         $this->department = $department;
         $this->company = $company;
@@ -159,6 +163,7 @@ class Consultant implements JsonSerializable
             'birthday' => $this->getBirthday()->format('Y-m-d'),
             'department' => $this->getDepartment(),
             'schoolYear' => $this->getSchoolYear(),
+            'nationality' => $this->getNationality(),
             'telephone' => $this->getTelephone(),
             'address' => $this->getAddress(),
             'company' => $this->getCompany(),
@@ -180,6 +185,7 @@ class Consultant implements JsonSerializable
             'birthday' => $this->getBirthday()->format('Y-m-d'),
             'department' => $this->getDepartment(),
             'schoolYear' => $this->getSchoolYear(),
+            'nationality' => $this->getNationality(),
             'telephone' => $this->getTelephone(),
             'address' => $this->getAddress(),
             'company' => $this->getCompany(),
@@ -298,6 +304,20 @@ class Consultant implements JsonSerializable
     public function setEmail($email): void
     {
         $this->email = $email;
+    }
+    /**
+     * @return mixed
+     */
+    public function getNationality()
+    {
+        return $this->$nationality;
+    }
+    /**
+     * @param mixed $nationality
+     */
+    public function setNationality($nationality): void
+    {
+        $this->$nationality = $nationality;
     }
     /**
      * @return mixed
