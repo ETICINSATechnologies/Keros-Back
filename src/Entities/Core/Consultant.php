@@ -49,8 +49,14 @@ class Consultant implements JsonSerializable
 
     /** @Column(type="integer") */
     protected $schoolYear;
-    /** @Column(type="string", Length=200) */
+
+    /**
+     * @var Country
+     * @ManyToOne(targetEntity="Keros\Entities\Core\Country")
+     * @JoinColumn(name="nationalityId", referencedColumnName="id")
+     */
     protected $nationality;
+
     /**
      * @ManyToOne(targetEntity="Department")
      * @JoinColumn(name="DepartmentId", referencedColumnName="id")
@@ -319,14 +325,14 @@ class Consultant implements JsonSerializable
         return $this->nationality;
     }
     /**
-     * @param mixed $nationality
+     * @param Country $nationality
      */
     public function setNationality($nationality): void
     {
         $this->nationality = $nationality;
     }
     /**
-     * @return mixed
+     * @return Country
      */
     public function getAddress() : Address
     {

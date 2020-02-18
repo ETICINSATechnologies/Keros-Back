@@ -36,6 +36,10 @@ class ConsultantService
      */
     private $departmentService;
     /**
+     * @var CountryService
+     */
+    private $countryService;
+    /**
      * @var TicketDataService
      */
     private $ticketDataService;
@@ -63,6 +67,7 @@ class ConsultantService
         $this->genderService = $container->get(GenderService::class);
         $this->departmentService = $container->get(DepartmentService::class);
         $this->userService = $container->get(UserService::class);
+        $this->countryService = $container->get(CountryService::class);
         $this->consultantDataService = $container->get(ConsultantDataService::class);
         $this->ticketDataService = $container->get(TicketDataService::class);
         $this->directoryManager = $container->get(DirectoryManager::class);
@@ -79,7 +84,8 @@ class ConsultantService
         $firstName = Validator::requiredString($fields["firstName"]);
         $lastName = Validator::requiredString($fields["lastName"]);
         $email = Validator::requiredEmail($fields["email"]);
-        $nationality = Validator::requiredString($fields["nationality"]);
+        $nationalityId = Validator::requiredId($fields["nationalityId"]);
+        $nationality = $this->countryService->getOne($nationalityId);
         $telephone = Validator::optionalPhone(isset($fields["telephone"]) ? $fields["telephone"] : null);
         $birthday = Validator::requiredDate($fields["birthday"]);
         $schoolYear = Validator::requiredSchoolYear(isset($fields["schoolYear"]) ? $fields["schoolYear"] : null);
@@ -102,7 +108,7 @@ class ConsultantService
         $documentCVEC = Validator::optionalString($fields['documentCVEC'] ?? null);
         $isGraduate = Validator::requiredBool($fields['isGraduate']);
 
-        $consultant = new Consultant($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $nationality, $gender, $department, $company, $profilePicture, $socialSecurityNumber, $droitImage, $isApprentice, $createdDate, $documentIdentity, $documentScolaryCertificate, $documentRIB, $documentVitaleCard, $documentResidencePermit, $documentCVEC);
+        $consultant = new Consultant($firstName, $lastName, $birthday, $telephone, $nationality, $email, $schoolYear, $gender, $department, $company, $profilePicture, $socialSecurityNumber, $droitImage, $isApprentice, $createdDate, $documentIdentity, $documentScolaryCertificate, $documentRIB, $documentVitaleCard, $documentResidencePermit, $documentCVEC, $isGraduate);
 
         $user = $this->userService->create($fields);
         $address = $this->addressService->create($fields["address"]);
@@ -180,7 +186,8 @@ class ConsultantService
         $firstName = Validator::requiredString($fields["firstName"]);
         $lastName = Validator::requiredString($fields["lastName"]);
         $email = Validator::requiredEmail($fields["email"]);
-        $nationality = Validator::requiredString($fields["nationality"]);
+        $nationalityId = Validator::requiredId($fields["nationalityId"]);
+        $nationality = $this->countryService->getOne($nationalityId);
         $telephone = Validator::optionalPhone(isset($fields["telephone"]) ? $fields["telephone"] : $consultant->getTelephone());
         $birthday = Validator::requiredDate($fields["birthday"]);
         $schoolYear = Validator::requiredSchoolYear(isset($fields["schoolYear"]) ? $fields["schoolYear"] : $consultant->getSchoolYear());
