@@ -32,7 +32,7 @@ class Consultant implements JsonSerializable
     /** @Column(type="datetime") */
     protected $birthday;
 
-    /** 
+    /**
      * @var string|null
      * @Column(type="string", length=20)
     */
@@ -40,9 +40,6 @@ class Consultant implements JsonSerializable
 
     /** @Column(type="string", length=255) */
     protected $email;
-
-    /** @Column(type="string", Length=255 */
-    private $nationality;
 
     /**
      * @ManyToOne(targetEntity="Address")
@@ -91,43 +88,48 @@ class Consultant implements JsonSerializable
      */
     protected $studiesAsConsultant;
 
-    /** 
+    /**
      * @var string|null
      * @Column(type="string", length=200)
      */
     private $documentIdentity;
 
-    /** 
+    /**
      * @var string|null
      * @Column(type="string", length=200)
      */
     private $documentScolaryCertificate;
 
-    /** 
+    /**
      * @var string|null
      * @Column(type="string", length=200)
      */
     private $documentRIB;
 
-    /** 
+    /**
      * @var string|null
      * @Column(type="string", length=200)
      */
     private $documentVitaleCard;
 
-    /** 
+    /**
      * @var string|null
      * @Column(type="string", length=200)
      */
     private $documentResidencePermit;
 
-    /** 
+    /**
      * @var string|null
      * @Column(type="string", length=200)
      */
     private $documentCVEC;
+    /**
+     * @var boolean
+     * @Column(type="boolean")
+     */
+    private $isGraduate;
 
-    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $nationality, $gender, $department, $company, $profilePicture, $socialSecurityNumber, $droitImage, $isApprentice, $createdDate, $documentIdentity, $documentScolaryCertificate, $documentRIB, $documentVitaleCard, $documentResidencePermit, $documentCVEC)
+    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $socialSecurityNumber, $droitImage, $isApprentice, $createdDate, $documentIdentity, $documentScolaryCertificate, $documentRIB, $documentVitaleCard, $documentResidencePermit, $documentCVEC, $isGraduate)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -135,7 +137,6 @@ class Consultant implements JsonSerializable
         $this->telephone = $telephone;
         $this->email = $email;
         $this->schoolYear = $schoolYear;
-        $this->nationality = $nationality;
         $this->gender = $gender;
         $this->department = $department;
         $this->company = $company;
@@ -149,7 +150,8 @@ class Consultant implements JsonSerializable
         $this->documentRIB = $documentRIB;
         $this->documentVitaleCard = $documentVitaleCard;
         $this->documentResidencePermit = $documentResidencePermit;
-        $this->$documentCVEC = $documentCVEC;
+        $this->documentCVEC = $documentCVEC;
+        $this->isGraduate = $isGraduate;
     }
     public function jsonSerialize()
     {
@@ -163,7 +165,6 @@ class Consultant implements JsonSerializable
             'birthday' => $this->getBirthday()->format('Y-m-d'),
             'department' => $this->getDepartment(),
             'schoolYear' => $this->getSchoolYear(),
-            'nationality' => $this->getNationality(),
             'telephone' => $this->getTelephone(),
             'address' => $this->getAddress(),
             'company' => $this->getCompany(),
@@ -171,6 +172,7 @@ class Consultant implements JsonSerializable
             'droitImage' => $this->isDroitImage(),
             'isApprentice' => $this->getIsApprentice(),
             'createdDate' => $this->getCreatedDate(),
+            'isGraduate' => $this->isGraduate()
         ];
     }
     public function getProtected()
@@ -185,7 +187,6 @@ class Consultant implements JsonSerializable
             'birthday' => $this->getBirthday()->format('Y-m-d'),
             'department' => $this->getDepartment(),
             'schoolYear' => $this->getSchoolYear(),
-            'nationality' => $this->getNationality(),
             'telephone' => $this->getTelephone(),
             'address' => $this->getAddress(),
             'company' => $this->getCompany(),
@@ -194,10 +195,11 @@ class Consultant implements JsonSerializable
             'isApprentice' => $this->getIsApprentice(),
             'createdDate' => $this->getCreatedDate(),
             'socialSecurityNumber' => $this->getSocialSecurityNumber(),
+            'isGraduate' => $this->isGraduate()
         ];
     }
     public static function getSearchFields(): array {
-        return ['firstName', 'lastName', 'company'];
+        return ['firstName', 'lastName', 'company', 'isGraduate'];
     }
     // Getters and setters
     /**
@@ -304,20 +306,6 @@ class Consultant implements JsonSerializable
     public function setEmail($email): void
     {
         $this->email = $email;
-    }
-    /**
-     * @return mixed
-     */
-    public function getNationality()
-    {
-        return $this->$nationality;
-    }
-    /**
-     * @param mixed $nationality
-     */
-    public function setNationality($nationality): void
-    {
-        $this->$nationality = $nationality;
     }
     /**
      * @return mixed
@@ -563,5 +551,22 @@ class Consultant implements JsonSerializable
     {
         $this->documentCVEC = $documentCVEC;
     }
+
+    /**
+     * @return bool
+     */
+    public function isGraduate(): bool
+    {
+        return $this->isGraduate;
+    }
+
+    /**
+     * @param bool $isGraduate
+     */
+    public function setIsGraduate(bool $isGraduate): void
+    {
+        $this->isGraduate = $isGraduate;
+    }
+
 
 }

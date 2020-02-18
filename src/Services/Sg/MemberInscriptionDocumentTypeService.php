@@ -58,6 +58,7 @@ class MemberInscriptionDocumentTypeService
 
     /**
      * @return MemberInscriptionDocumentType[]
+     * @throws KerosException
      */
     public function getAll(): array
     {

@@ -88,7 +88,7 @@ class ConsultantInscriptionController
     {
         $this->logger->debug("Get page consultantInscriptions from " . $request->getServerParams()["REMOTE_ADDR"]);
         $queryParams = $request->getQueryParams();
-        $params = new RequestParameters($queryParams, ConsultantInscription::getSearchFields());
+        $params = new RequestParameters($queryParams, ConsultantInscription::getSearchFields(), ConsultantInscription::getFilterFields());
 
         $consultantInscriptions = $this->consultantInscriptionService->getPage($params);
         $count = $this->consultantInscriptionService->getCount($params);

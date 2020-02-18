@@ -147,6 +147,7 @@ CREATE TABLE `core_consultant` (
   `documentVitaleCard` varchar(255) DEFAULT NULL,
   `documentResidencePermit` varchar(255) DEFAULT NULL,
   `documentCVEC` varchar(255) DEFAULT NULL,
+  isGraduate boolean NOT NULL DEFAULT FALSE,
   PRIMARY KEY (`id`),
   CONSTRAINT `core_consultant_userId_fk` FOREIGN KEY (`id`) REFERENCES `core_user` (`id`),
   CONSTRAINT `core_consultant_genderId_fk` FOREIGN KEY (`genderId`) REFERENCES `core_gender` (`id`),

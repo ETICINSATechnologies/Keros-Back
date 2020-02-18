@@ -221,6 +221,11 @@ class ConsultantInscription implements JsonSerializable
 
     public static function getSearchFields(): array
     {
+        return ['firstName', 'lastName', 'email', 'phoneNumber'];
+    }
+
+    public static function getFilterFields(): array
+    {
         return ['firstName', 'lastName', 'email', 'phoneNumber', 'outYear'];
     }
 
