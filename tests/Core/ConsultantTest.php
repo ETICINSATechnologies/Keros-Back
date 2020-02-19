@@ -20,6 +20,7 @@ class ConsultantTest extends TestCase
                 "Maiga",
                 new DateTime("11/26/1998"),
                 "0675385495",
+                "France",
                 "basmah.maiga@gmail.com",
                 "2018",
                 new Gender("Femme"),
@@ -46,6 +47,7 @@ class ConsultantTest extends TestCase
             "Maiga",
             new DateTime("11/26/1998"),
             null,
+            "France",
             "basmah.maiga@gmail.com",
             "2018",
             new Gender("Femme"),
@@ -70,6 +72,7 @@ class ConsultantTest extends TestCase
         $this->assertEquals("Maiga", $consultant->getLastName());
         $this->assertEquals(new DateTime("11/26/1998"), $consultant->getBirthday());
         $this->assertEquals(null, $consultant->getTelephone());
+        $this->assertEquals("France", $consultant->getNationality());
         $this->assertEquals("basmah.maiga@gmail.com", $consultant->getEmail());
         $this->assertEquals("2018", $consultant->getSchoolYear());
         $this->assertEquals("Google", $consultant->getCompany());

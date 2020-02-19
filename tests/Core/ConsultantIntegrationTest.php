@@ -78,6 +78,7 @@ class ConsultantIntegrationTest extends AppTestCase
             "lastName" => "lastName",
             "genderId" => 1,
             "email" => "fakeEmail@gmail.com",
+            'nationalityId' => 133,
             "birthday" => "1975-12-01",
             "address" => [
                 "line1" => "20 avenue albert Einstein",
@@ -116,6 +117,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame("lastName", $body->lastName);
         $this->assertSame(1, $body->gender->id);
         $this->assertSame("fakeEmail@gmail.com", $body->email);
+        $this->assertSame(133, $body->nationality->id);
         $this->assertSame("1975-12-01", $body->birthday);
         $this->assertSame(1, $body->department->id);
         $this->assertSame(1, $body->schoolYear);
@@ -262,6 +264,7 @@ class ConsultantIntegrationTest extends AppTestCase
             "firstName" => "firstname",
             "lastName" => "lastname",
             "genderId" => 1,
+            'nationalityId' => 133,
             "email" => "fakeEmail@gmail.com",
             "birthday" => "1975-12-01",
             "telephone" => "0033675385495",
@@ -301,6 +304,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame("lastname", $body->lastName);
         $this->assertSame(1, $body->gender->id);
         $this->assertSame("fakeEmail@gmail.com", $body->email);
+        $this->assertSame(133, $body->nationality->id);
         $this->assertSame("1975-12-01", $body->birthday);
         $this->assertSame(1, $body->department->id);
         $this->assertSame(1, $body->schoolYear);
@@ -321,6 +325,7 @@ class ConsultantIntegrationTest extends AppTestCase
             "lastName" => "lastName",
             "genderId" => 1,
             "email" => "fakeEmail@gmail.com",
+            'nationalityId' => 133,
             "birthday" => "1975-12-01",
             "telephone" => "0033675385495",
             "address" => [
@@ -372,6 +377,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame("lastName", $body->lastName);
         $this->assertSame(1, $body->gender->id);
         $this->assertSame("fakeEmail@gmail.com", $body->email);
+        $this->assertSame(133, $body->nationality->id);
         $this->assertSame("1975-12-01", $body->birthday);
         $this->assertSame(1, $body->department->id);
         $this->assertSame(1, $body->schoolYear);
@@ -392,6 +398,7 @@ class ConsultantIntegrationTest extends AppTestCase
             "lastName" => "newlastName",
             "genderId" => 2,
             "email" => "fakeEmail@gmail.com",
+            'nationalityId' => 133,
             "birthday" => "1975-12-01",
             "telephone" => "0033675385495",
             "address" => [
@@ -440,6 +447,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame("newlastName", $body->lastName);
         $this->assertSame(2, $body->gender->id);
         $this->assertSame("fakeEmail@gmail.com", $body->email);
+        $this->assertSame(133, $body->nationality->id);
         $this->assertSame("1975-12-01", $body->birthday);
         $this->assertSame(1, $body->department->id);
         $this->assertSame(1, $body->schoolYear);
@@ -639,6 +647,7 @@ class ConsultantIntegrationTest extends AppTestCase
             "lastName" => "lastname",
             "genderId" => 1,
             "email" => "fakeEmail@gmail.com",
+            'nationalityId' => 133,
             "birthday" => "1975-12-01",
             "telephone" => "0033675385495",
             "departmentId" => 1,
@@ -686,6 +695,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame("lastname", $body->lastName);
         $this->assertSame(1, $body->gender->id);
         $this->assertSame("fakeEmail@gmail.com", $body->email);
+        $this->assertSame(133, $body->nationality->id);
         $this->assertSame("1975-12-01", $body->birthday);
         $this->assertSame(1, $body->department->id);
         $this->assertSame(1, $body->schoolYear);
