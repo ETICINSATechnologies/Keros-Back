@@ -291,15 +291,33 @@ class MemberController
 						$data[] = $memberData[$value]->getLabel();
 						break;
 					case 'positions':
-						$currentPole = $memberData[$value][0]->getPosition()->getPole();
-						if ($currentPole) {
-							$data[] = $currentPole->getName();
+						$latestYear = 0;
+						foreach ($memberData[$value] as $position) {
+							if ($latestYear < $position->getYear()) {
+								$latestYear = $position->getYear();
+								$poles = array();
+							}
+							if ($position->getYear() == $latestYear) {
+								if ($position->getPosition()->getPole()) {
+									$poles[$position->getPosition()->getPole()->getName()] = null;
+								}
+							}
+						}
+						if (count($poles)) {
+							$data[] = implode(" & ", array_keys($poles));
 						} else {
-							$data[] = ' ';
+							$data[] = " ";
 						}
 						break;
-					case 'status';
-						$data[] = ' ';
+					case 'status':
+						if ($memberData['isAlumni']) {
+							$data[] = 'Ancien';
+						} else if ($memberData['createdDate']->diff(new \DateTime('NOW'))->format("%a") / 365 > 1) {
+							$data[] = 'Senior';
+						} else {
+							$data[] = 'Junior';
+						}
+						break;
 					default:
 						break;
 				}
