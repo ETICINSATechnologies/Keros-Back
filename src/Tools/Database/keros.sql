@@ -113,7 +113,7 @@ CREATE TABLE `core_member` (
   `droitImage` boolean DEFAULT TRUE,
   `createdDate` date  NOT NULL,
   `isAlumni` boolean  DEFAULT FALSE,
-  ETICEmail varchar(255) DEFAULT NULL,
+  `emailETIC` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `core_member_userId_fk` FOREIGN KEY (`id`) REFERENCES `core_user` (`id`),
   CONSTRAINT `core_member_genderId_fk` FOREIGN KEY (`genderId`) REFERENCES `core_gender` (`id`),

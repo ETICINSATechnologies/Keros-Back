@@ -100,7 +100,7 @@ class Member implements JsonSerializable
      * @var string|null
      * @Column(type="string", length=255)
      */
-    private $ETICEmail;
+    private $emailETIC;
 
     /**
      * Member constructor.
@@ -118,9 +118,9 @@ class Member implements JsonSerializable
      * @param $createdDate
      * @param $isAlumni
      * @param $memberInscriptionDocuments
-     * @param $ETICEmail
+     * @param $emailETIC
      */
-    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage, $createdDate, $isAlumni, $memberInscriptionDocuments, $ETICEmail)
+    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage, $createdDate, $isAlumni, $memberInscriptionDocuments, $emailETIC)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -136,7 +136,7 @@ class Member implements JsonSerializable
         $this->createdDate = $createdDate;
         $this->isAlumni = $isAlumni;
         $this->memberInscriptionDocuments = $memberInscriptionDocuments;
-        $this->ETICEmail = $ETICEmail;
+        $this->emailETIC = $emailETIC;
     }
 
     public function jsonSerialize()
@@ -159,7 +159,7 @@ class Member implements JsonSerializable
             'droitImage' => $this->isDroitImage(),
             'createdDate' => $this->getCreatedDate(),
             'isAlumni' => $this->getIsAlumni(),
-            'ETICEmail' => $this->getETICEmail(),
+            'emailETIC' => $this->getEmailETIC(),
         ];
     }
 
@@ -522,17 +522,17 @@ class Member implements JsonSerializable
     /**
      * @return string|null
      */
-    public function getETICEmail(): ?string
+    public function getEmailETIC(): ?string
     {
-        return $this->ETICEmail;
+        return $this->emailETIC;
     }
 
     /**
-     * @param string|null $ETICEmail
+     * @param string|null $emailETIC
      */
-    public function setETICEmail(?string $ETICEmail): void
+    public function setEmailETIC(?string $emailETIC): void
     {
-        $this->ETICEmail = $ETICEmail;
+        $this->emailETIC = $emailETIC;
     }
 
     /**
@@ -540,6 +540,6 @@ class Member implements JsonSerializable
      * @return string
      */
     public function getSendableMail(){
-        return $this->getETICEmail() ?? $this->getEmail();
+        return $this->getEmailETIC() ?? $this->getEmail();
     }
 }
