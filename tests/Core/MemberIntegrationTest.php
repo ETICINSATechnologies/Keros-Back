@@ -66,8 +66,8 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(1, sizeof($body->content));
         $this->assertSame(3, $body->content[0]->id);
         $this->assertSame(1, $body->content[0]->positions[0]->id);
-        $this->assertSame(2, $body->content[0]->positions[1]->id);
-        $this->assertSame(3, $body->content[0]->positions[2]->id);
+        $this->assertSame(3, $body->content[0]->positions[1]->id);
+        $this->assertSame(2, $body->content[0]->positions[2]->id);
     }
 
     public function testSearchMemberShouldReturn200()
@@ -88,8 +88,8 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(1, sizeof($body->content));
         $this->assertSame(3, $body->content[0]->id);
         $this->assertSame(1, $body->content[0]->positions[0]->id);
-        $this->assertSame(2, $body->content[0]->positions[1]->id);
-        $this->assertSame(3, $body->content[0]->positions[2]->id);
+        $this->assertSame(3, $body->content[0]->positions[1]->id);
+        $this->assertSame(2, $body->content[0]->positions[2]->id);
     }
 
     public function testSearchLatestMemberShouldReturn200()
@@ -112,8 +112,8 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(3, $body->content[0]->positions[0]->id);
         $this->assertSame(3, $body->content[1]->id);
         $this->assertSame(1, $body->content[1]->positions[0]->id);
-        $this->assertSame(2, $body->content[1]->positions[1]->id);
-        $this->assertSame(3, $body->content[1]->positions[2]->id);
+        $this->assertSame(3, $body->content[1]->positions[1]->id);
+        $this->assertSame(2, $body->content[1]->positions[2]->id);
     }
 
     public function testGetConnectedMemberEmptyBodyShouldReturn200()
