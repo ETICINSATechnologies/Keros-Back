@@ -78,6 +78,7 @@ class ConsultantIntegrationTest extends AppTestCase
             "lastName" => "lastName",
             "genderId" => 1,
             "email" => "fakeEmail@gmail.com",
+            'nationalityId' => 133,
             "birthday" => "1975-12-01",
             "address" => [
                 "line1" => "20 avenue albert Einstein",
@@ -93,6 +94,7 @@ class ConsultantIntegrationTest extends AppTestCase
             "droitImage" => true,
             "isApprentice" => true,
             "socialSecurityNumber" => "12346781300139041",
+            'isGraduate' => true,
         );
 
         $env = Environment::mock([
@@ -115,6 +117,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame("lastName", $body->lastName);
         $this->assertSame(1, $body->gender->id);
         $this->assertSame("fakeEmail@gmail.com", $body->email);
+        $this->assertSame(133, $body->nationality->id);
         $this->assertSame("1975-12-01", $body->birthday);
         $this->assertSame(1, $body->department->id);
         $this->assertSame(1, $body->schoolYear);
@@ -124,6 +127,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertNotNull($body->address->id);
         $this->assertSame(true,$body->droitImage);
         $this->assertSame(true,$body->isApprentice);
+        $this->assertSame(true, $body->isGraduate);
     }
 
     public function testDeleteConsultantShouldReturn204()
@@ -260,6 +264,7 @@ class ConsultantIntegrationTest extends AppTestCase
             "firstName" => "firstname",
             "lastName" => "lastname",
             "genderId" => 1,
+            'nationalityId' => 133,
             "email" => "fakeEmail@gmail.com",
             "birthday" => "1975-12-01",
             "telephone" => "0033675385495",
@@ -278,6 +283,7 @@ class ConsultantIntegrationTest extends AppTestCase
             "droitImage" => true,
             "isApprentice" => true,
             "socialSecurityNumber" => "12346781300139041",
+            'isGraduate' => true,
         );
 
         $env = Environment::mock([
@@ -298,6 +304,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame("lastname", $body->lastName);
         $this->assertSame(1, $body->gender->id);
         $this->assertSame("fakeEmail@gmail.com", $body->email);
+        $this->assertSame(133, $body->nationality->id);
         $this->assertSame("1975-12-01", $body->birthday);
         $this->assertSame(1, $body->department->id);
         $this->assertSame(1, $body->schoolYear);
@@ -306,6 +313,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame("http://image.png", $body->profilePicture);
         $this->assertSame(true,$body->droitImage);
         $this->assertSame(true,$body->isApprentice);
+        $this->assertSame(true, $body->isGraduate);
     }
     
     public function testPutConsultantShouldReturn200()
@@ -317,6 +325,7 @@ class ConsultantIntegrationTest extends AppTestCase
             "lastName" => "lastName",
             "genderId" => 1,
             "email" => "fakeEmail@gmail.com",
+            'nationalityId' => 133,
             "birthday" => "1975-12-01",
             "telephone" => "0033675385495",
             "address" => [
@@ -345,6 +354,7 @@ class ConsultantIntegrationTest extends AppTestCase
             "droitImage" => true,
             "isApprentice" => true,
             "socialSecurityNumber" => "12346781300139041",
+            'isGraduate' => true,
         );
 
         $env = Environment::mock([
@@ -367,6 +377,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame("lastName", $body->lastName);
         $this->assertSame(1, $body->gender->id);
         $this->assertSame("fakeEmail@gmail.com", $body->email);
+        $this->assertSame(133, $body->nationality->id);
         $this->assertSame("1975-12-01", $body->birthday);
         $this->assertSame(1, $body->department->id);
         $this->assertSame(1, $body->schoolYear);
@@ -376,6 +387,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertNotNull($body->address->id);
         $this->assertSame(true,$body->droitImage);
         $this->assertSame(true,$body->isApprentice);
+        $this->assertSame(true, $body->isGraduate);
     }
 
     public function testPutConsultantOnlyRequiredFieldShouldReturn200()
@@ -386,6 +398,7 @@ class ConsultantIntegrationTest extends AppTestCase
             "lastName" => "newlastName",
             "genderId" => 2,
             "email" => "fakeEmail@gmail.com",
+            'nationalityId' => 133,
             "birthday" => "1975-12-01",
             "telephone" => "0033675385495",
             "address" => [
@@ -411,6 +424,7 @@ class ConsultantIntegrationTest extends AppTestCase
             "droitImage" => true,
             "isApprentice" => true,
             "socialSecurityNumber" => "12346781300139041",
+            'isGraduate' => false,
         );
 
         $env = Environment::mock([
@@ -433,6 +447,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame("newlastName", $body->lastName);
         $this->assertSame(2, $body->gender->id);
         $this->assertSame("fakeEmail@gmail.com", $body->email);
+        $this->assertSame(133, $body->nationality->id);
         $this->assertSame("1975-12-01", $body->birthday);
         $this->assertSame(1, $body->department->id);
         $this->assertSame(1, $body->schoolYear);
@@ -442,6 +457,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertNotNull($body->address->id);
         $this->assertSame(true,$body->droitImage);
         $this->assertSame(true,$body->isApprentice);
+        $this->assertSame(false, $body->isGraduate);
     }
 
     public function testPutConsultantEmptyBodyShouldReturn400()
@@ -631,6 +647,7 @@ class ConsultantIntegrationTest extends AppTestCase
             "lastName" => "lastname",
             "genderId" => 1,
             "email" => "fakeEmail@gmail.com",
+            'nationalityId' => 133,
             "birthday" => "1975-12-01",
             "telephone" => "0033675385495",
             "departmentId" => 1,
@@ -648,6 +665,7 @@ class ConsultantIntegrationTest extends AppTestCase
             "droitImage" => true,
             "isApprentice" => true,
             "socialSecurityNumber" => "12346781300139041",
+            'isGraduate' => false
         );
 
         $env = Environment::mock([
@@ -677,6 +695,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame("lastname", $body->lastName);
         $this->assertSame(1, $body->gender->id);
         $this->assertSame("fakeEmail@gmail.com", $body->email);
+        $this->assertSame(133, $body->nationality->id);
         $this->assertSame("1975-12-01", $body->birthday);
         $this->assertSame(1, $body->department->id);
         $this->assertSame(1, $body->schoolYear);
@@ -687,6 +706,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame(true,$body->isApprentice);
         $dateDiff = ((new \DateTime())->diff(new \DateTime($body->createdDate->date)))->format('%a');
         $this->assertSame(intval($dateDiff),0);
+        $this->assertSame(false, $body->isGraduate);
     }
 
     public function testGetAllConsultantsPage0ShouldReturn200()
@@ -776,6 +796,40 @@ class ConsultantIntegrationTest extends AppTestCase
         foreach ($body->content as $consultant){
             $this->assertGreaterThanOrEqual($email, $consultant->email);
             $email = $consultant->email;
+        }
+    }
+
+    public function testGetConsultantsOnlyGraduateShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/core/consultant?isGraduate=true',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+        $body = json_decode($response->getBody());
+
+        foreach ($body->content as $consultant){
+            $this->assertTrue($consultant->isGraduate);
+        }
+    }
+
+    public function testGetConsultantsOnlyNotGraduateShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/core/consultant?isGraduate=false',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(200, $response->getStatusCode());
+        $body = json_decode($response->getBody());
+
+        foreach ($body->content as $consultant){
+            $this->assertFalse($consultant->isGraduate);
         }
     }
 }

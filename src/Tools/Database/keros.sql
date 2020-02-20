@@ -131,6 +131,7 @@ CREATE TABLE `core_consultant` (
   `lastName`     varchar(100) NOT NULL,
   `birthday`     date        DEFAULT NULL,
   `telephone`    varchar(20) DEFAULT NULL,
+  `nationalityId` int(11) NOT NULL,
   `email`        varchar(255) NOT NULL UNIQUE,
   `addressId`    int(11)      NOT NULL UNIQUE,
   `socialSecurityNumber`    varchar(255) DEFAULT NULL,  
@@ -147,8 +148,10 @@ CREATE TABLE `core_consultant` (
   `documentVitaleCard` varchar(255) DEFAULT NULL,
   `documentResidencePermit` varchar(255) DEFAULT NULL,
   `documentCVEC` varchar(255) DEFAULT NULL,
+  isGraduate boolean NOT NULL DEFAULT FALSE,
   PRIMARY KEY (`id`),
   CONSTRAINT `core_consultant_userId_fk` FOREIGN KEY (`id`) REFERENCES `core_user` (`id`),
+  CONSTRAINT `core_consultant_nationalityId_fk` FOREIGN KEY (nationalityId) REFERENCES core_country(id),
   CONSTRAINT `core_consultant_genderId_fk` FOREIGN KEY (`genderId`) REFERENCES `core_gender` (`id`),
   CONSTRAINT `core_consultant_addressId_fk` FOREIGN KEY (`addressId`) REFERENCES `core_address` (`id`),
   CONSTRAINT `core_consultant_departmentId_fk` FOREIGN KEY (`departmentId`) REFERENCES `core_department` (`id`)

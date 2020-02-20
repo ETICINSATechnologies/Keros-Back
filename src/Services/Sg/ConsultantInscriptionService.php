@@ -257,6 +257,7 @@ class   ConsultantInscriptionService
             "firstName" => $consultantInscription->getFirstName(),
             "lastName" => $consultantInscription->getLastName(),
             "email" => $consultantInscription->getEmail(),
+            "nationalityId" => $consultantInscription->getNationality()->getId(),
             "telephone" => $consultantInscription->getPhoneNumber(),
             "birthday" => $consultantInscription->getBirthday()->format('Y-m-d'),
             "genderId" => $consultantInscription->getGender()->getId(),
@@ -275,6 +276,7 @@ class   ConsultantInscriptionService
             "droitImage" => $consultantInscription->isDroitImage(),
             "isApprentice" => $consultantInscription->getIsApprentice(),
             "createdDate" => new \DateTime(),
+            'isGraduate' => false,
         );
 
         //copy and add files to consultant

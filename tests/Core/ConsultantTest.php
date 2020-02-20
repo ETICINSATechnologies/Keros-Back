@@ -20,6 +20,7 @@ class ConsultantTest extends TestCase
                 "Maiga",
                 new DateTime("11/26/1998"),
                 "0675385495",
+                "France",
                 "basmah.maiga@gmail.com",
                 "2018",
                 new Gender("Femme"),
@@ -35,7 +36,9 @@ class ConsultantTest extends TestCase
                 null,
                 null,
                 null,
-                null));
+                null,
+                false)
+                );
     }
 
     public function testConsultantShouldCreateWithParams()
@@ -44,6 +47,7 @@ class ConsultantTest extends TestCase
             "Maiga",
             new DateTime("11/26/1998"),
             null,
+            "France",
             "basmah.maiga@gmail.com",
             "2018",
             new Gender("Femme"),
@@ -59,7 +63,8 @@ class ConsultantTest extends TestCase
             null,
             null,
             null,
-            null);
+            null,
+            true);
 
 
         $this->assertInstanceOf(Consultant::class, $consultant);
@@ -67,11 +72,13 @@ class ConsultantTest extends TestCase
         $this->assertEquals("Maiga", $consultant->getLastName());
         $this->assertEquals(new DateTime("11/26/1998"), $consultant->getBirthday());
         $this->assertEquals(null, $consultant->getTelephone());
+        $this->assertEquals("France", $consultant->getNationality());
         $this->assertEquals("basmah.maiga@gmail.com", $consultant->getEmail());
         $this->assertEquals("2018", $consultant->getSchoolYear());
         $this->assertEquals("Google", $consultant->getCompany());
         $this->assertEquals("http://photoprofile.jpg", $consultant->getProfilePicture());
         $this->assertEquals(true, $consultant->getIsApprentice());
         $this->assertEquals(true, $consultant->isDroitImage());
+        $this->assertTrue($consultant->isGraduate());
     }
 }

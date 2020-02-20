@@ -103,7 +103,6 @@ class MailSender
         }
 
         $email->setTemplateId(new TemplateId($this->kerosConfig[$templateName]));
-
         return $email;
     }
 
@@ -148,4 +147,3 @@ class MailSender
         }
     }
 }
-
