@@ -244,6 +244,7 @@ class   MemberInscriptionService
             "positions" => array(),
             "droitImage" => $memberInscription->isDroitImage(),
             "createdDate" => new \DateTime(),
+            "emailETIC" => null
         );
 
         if ($memberInscription->getOutYear()) {
