@@ -251,86 +251,8 @@ class MemberController
 
 	public function exportMembers(Request $request, Response $response, array $args)
 	{
-		$csvFile = fopen("php://temp", "w+");
-		$body = $request->getParsedBody();
-
-		$members = $this->memberService->getSome($body["idList"]);
-		$tags = array(
-			'Pole' => 'positions',
-			'Nom' => 'lastName',
-			'Prenom' => 'firstName',
-			'Sexe' => 'gender',
-			'Annee'=> 'schoolYear',
-			'Departement' => 'department',
-			'Telephone' => 'telephone',
-			'Adresse Mail' => 'email',
-			'Recrutement' => 'createdDate',
-			'Statut' => 'status',
-			'Naissance' => 'birthday'
-		);
-		fputcsv($csvFile, array_keys($tags));
-
-		foreach ($members as $member) {
-			$memberData = $member->jsonSerialize();
-			$data = array();
-			foreach ($tags as $value){
-				switch($value) {
-					case 'schoolYear':
-					case 'firstName':
-					case 'lastName':
-					case 'telephone':
-					case 'email':
-					case 'birthday':
-						$data[] = $memberData[$value];
-						break;
-					case 'createdDate':
-						$data[] = $memberData[$value]->format('Y-m-d');
-						break;
-					case 'gender':
-					case 'department':
-						$data[] = $memberData[$value]->getLabel();
-						break;
-					case 'positions':
-						$latestYear = 0;
-						foreach ($memberData[$value] as $position) {
-							if ($latestYear < $position->getYear()) {
-								$latestYear = $position->getYear();
-								$poles = array();
-							}
-							if ($position->getYear() == $latestYear) {
-								if ($position->getPosition()->getPole()) {
-									$poles[$position->getPosition()->getPole()->getName()] = null;
-								}
-							}
-						}
-						if (count($poles)) {
-							$data[] = implode(" & ", array_keys($poles));
-						} else {
-							$data[] = " ";
-						}
-						break;
-					case 'status':
-						if ($memberData['isAlumni']) {
-							$data[] = 'Ancien';
-						} else if ($memberData['createdDate']->diff(new \DateTime('NOW'))->format("%a") / 365 > 1) {
-							$data[] = 'Senior';
-						} else {
-							$data[] = 'Junior';
-						}
-						break;
-					default:
-						break;
-				}
-			}
-			fputcsv($csvFile, $data);
-		}
-
-		rewind($csvFile);
-
-		$response = $response
-			->withHeader('Content-Type', 'text/csv')
-			->withHeader('Content-Disposition', 'attachment; filename="member.csv"');
-
-		return $response->withBody(new \Slim\Http\Stream($csvFile));
+		$this->logger->debug("Exporting specified members to csv file.");
+		$location = $this->memberService->export($request->getQueryParam('idList'));
+		return $response->withJson(array('location' => $this->kerosConfig['BACK_URL'] . $location), 200);
 	}
 }
