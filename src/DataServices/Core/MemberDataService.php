@@ -134,10 +134,7 @@ class MemberDataService
                         } elseif ($key == 'year') {
                             $whereStatement .= 'mp.year = :year';
                             $whereParameters[':' . $key] = $value;
-                        } elseif ($key == 'company') {
-                            $whereStatement .= 'm.' . $key . ' LIKE :' . $key;
-                            $whereParameters[':' . $key] = '%' . $value . '%';
-                        } elseif ($key == 'firstName' || $key == 'lastName') {
+                        } elseif ($key == 'firstName' || $key == 'lastName' || $key == 'company') {
                             // where with the form: 'm.key = :key'
                             $whereStatement .= 'm.' . $key . ' LIKE :' . $key;
                             $whereParameters[':' . $key] = '%' . $value . '%';
