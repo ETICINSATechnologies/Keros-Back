@@ -505,13 +505,12 @@ class MemberService
 						break;
 					case 'positions':
 						$latestYear = $memberData[$value][0]->getYear();
-						$posPoles = array_unique(array_filter($memberData[$value], function($pos) use ($latestYear) {
-							return $pos->getYear() == $latestYear && $pos->getPosition()->getPole();
-						}));
-
-						$poles = array_map(function($position) {
+						$posPoles = array_filter($memberData[$value], function($pos) use ($latestYear) {
+							return ($pos->getYear() == $latestYear) && $pos->getPosition()->getPole();
+						});
+						$poles = array_unique(array_map(function($position) {
 							return $position->getPosition()->getPole()->getName();
-						}, $posPoles);
+						}, $posPoles));
 
 						if (!empty($poles)) {
 							$data[] = implode(" & ", $poles);

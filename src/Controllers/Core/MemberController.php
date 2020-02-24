@@ -252,7 +252,9 @@ class MemberController
 	public function exportMembers(Request $request, Response $response, array $args)
 	{
 		$this->logger->debug("Exporting specified members to csv file.");
-		$location = $this->memberService->export($request->getQueryParam('idList'));
+		$body = $request->getParsedBody();
+
+		$location = $this->memberService->export($body['idList']);
 		return $response->withJson(array('location' => $this->kerosConfig['BACK_URL'] . $location), 200);
 	}
 }
