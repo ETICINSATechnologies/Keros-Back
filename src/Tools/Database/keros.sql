@@ -533,7 +533,8 @@ INSERT INTO `core_pole` (id, label, name) VALUES
   (6, 'RH', 'Ressources Humaines'),
   (7, 'SI', 'Systèmes d''Information'),
   (8, 'Treso', 'Trésorerie'),
-  (9, 'UA', 'Unité d''Affaires');
+  (9, 'UA', 'Unité d''Affaires'),
+  (10, 'Tech', 'Technique');
 
 INSERT INTO `core_position` (id, label, poleId) VALUES
   (1, 'Auditeur orga', null),
@@ -557,7 +558,9 @@ INSERT INTO `core_position` (id, label, poleId) VALUES
   (23, 'Trésorier', 8),
   (24, 'Vice-Président', 5),
   (25, 'Vice-Trésorier', 8),
-  (26, 'Autre', null);
+  (26, 'Autre', null),
+  (27, 'Responsable Technique', 10),
+  (28, 'Junior Technique', 10);
 
 INSERT INTO core_department (id, label, name) VALUES
   (1, 'BB', 'Biochimie et Biotechnologies'),
