@@ -57,7 +57,7 @@ class MailFactory
     public function sendMailMemberValidationFromTemplate(Member $member, String $password)
     {
         $globalFields = array();
-        $tos = array($member->getEmail() => array(
+        $tos = array($member->getSendableMail() => array(
             "nom"=>$member->getFirstName()." ".$member->getLastName(),
             "identifiant"=>$member->getUser()->getUsername(),
             "mdp"=>$password,
@@ -122,7 +122,7 @@ class MailFactory
     public function sendMailResetMpTokenEnvoie(Member $member, string $token)
     {
         $globalFields = array();
-        $tos = array($member->getEmail() => array(
+        $tos = array($member->getSendableMail() => array(
             "nom"=>$member->getFirstName()." ".$member->getLastName(),
             "full_name"=>$member->getFirstName()." ".$member->getLastName(),
             "token"=>$token,

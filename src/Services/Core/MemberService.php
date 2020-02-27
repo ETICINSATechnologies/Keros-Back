@@ -114,8 +114,9 @@ class MemberService
         $profilePicture = null;
         $droitImage = Validator::requiredBool($fields['droitImage']);
         $isAlumni = Validator::optionalBool($fields['isAlumni'] ?? false);
+        $emailETIC = Validator::optionalEmail($fields["emailETIC"] ?? null);
 
-        $member = new Member($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage, $createdDate, $isAlumni, array());
+        $member = new Member($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage, $createdDate, $isAlumni, array(), $emailETIC);
 
         $user = $this->userService->create($fields);
         $address = $this->addressService->create($fields["address"]);
@@ -208,6 +209,7 @@ class MemberService
         $department = null;
         $departmentId = Validator::requiredId($fields["departmentId"]);
         $department = $this->departmentService->getOne($departmentId);
+        $emailETIC = Validator::optionalEmail($fields["emailETIC"] ?? null);
 
         $company = Validator::optionalString(isset($fields["company"]) ? $fields["company"] : $member->getCompany());
         $isAlumni = Validator::optionalBool($fields['isAlumni'] ?? $member->getIsAlumni());
@@ -233,6 +235,7 @@ class MemberService
         $member->setCompany($company);
         $member->setMemberPositions($memberPositions);
         $member->setIsAlumni($isAlumni);
+        $member->setEmailETIC($emailETIC);
 
         $this->addressService->update($member->getAddress()->getId(), $fields["address"]);
         $this->userService->update($member->getId(), $fields);
@@ -465,7 +468,7 @@ class MemberService
 			throw new KerosException("No members found.", 404);
 		}
 
-		$filepath = "./documents/tmp/members" . (new \DateTime("NOW"))->format("Y-m-d;H:i:s") . ".csv";
+		$filepath = "documents/tmp/members" . (new \DateTime("NOW"))->format("Y-m-d;H:i:s") . ".csv";
 		$csvFile = fopen($filepath, "w+");
 
 		$tags = array(

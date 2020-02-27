@@ -29,7 +29,8 @@ class MemberTest extends TestCase
                 true,
                 new DateTime("9/1/2019"),
                 false,
-                array()
+                array(),
+                "etic@etic-insra.com"
             )
         );
     }
@@ -49,7 +50,8 @@ class MemberTest extends TestCase
             true,
             new DateTime("9/1/2019"),
             true,
-            array()
+            array(),
+            "etic@etic-insra.com"
         );
 
 

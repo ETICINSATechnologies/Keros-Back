@@ -103,7 +103,7 @@ class   ConsultantInscriptionService
         $department = $this->departmentService->getOne($departmentId);
         $email = Validator::requiredEmail($fields["email"]);
         $phoneNumber = Validator::optionalPhone(isset($fields["phoneNumber"]) ? $fields["phoneNumber"] : null);
-        $outYear = Validator::optionalInt(isset($fields["outYear"]) ? $fields["outYear"] : null);
+        $outYear = Validator::requiredInt($fields["outYear"]);
         $nationalityId = Validator::requiredId($fields["nationalityId"]);
         $nationality = $this->countryService->getOne($nationalityId);
         $address = $this->addressService->create($fields["address"]);
