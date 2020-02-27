@@ -234,8 +234,7 @@ class ConsultantController
 	{
 		$this->logger->debug("Exporting specified consultants to csv file.");
 		$body = $request->getParsedBody();
-
 		$location = $this->consultantService->export($body['idList']);
-		return $response->withJson(array('location' => $this->kerosConfig['BACK_URL'] . $location), 200);
+		return $response->withJson(array('location' => $this->kerosConfig['BACK_URL'] . "/generated/" . $location), 200);
 	}
 }
