@@ -180,6 +180,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
             'email' => 'thanos@claquementdedoigts.com',
             'nationalityId' => 133,
             'wantedPoleId' => 5,
+            'outYear' => 2021,
             'address' => array(
                 'line1' => 'je sais pas quoi mettre',
                 'line2' => "",
@@ -211,7 +212,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->assertSame(4, $body->department->id);
         $this->assertSame('thanos@claquementdedoigts.com', $body->email);
         $this->assertSame(null, $body->phoneNumber);
-        $this->assertSame(null, $body->outYear);
+        $this->assertSame(2021, $body->outYear);
         $this->assertSame(133, $body->nationality->id);
         $this->assertSame(5, $body->wantedPole->id);
         $this->assertSame('je sais pas quoi mettre', $body->address->line1);

@@ -97,6 +97,12 @@ class Member implements JsonSerializable
     private $memberInscriptionDocuments;
 
     /**
+     * @var string|null
+     * @Column(type="string", length=255)
+     */
+    private $emailETIC;
+
+    /**
      * Member constructor.
      * @param $firstName
      * @param $lastName
@@ -112,8 +118,9 @@ class Member implements JsonSerializable
      * @param $createdDate
      * @param $isAlumni
      * @param $memberInscriptionDocuments
+     * @param $emailETIC
      */
-    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage, $createdDate, $isAlumni, $memberInscriptionDocuments)
+    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage, $createdDate, $isAlumni, $memberInscriptionDocuments, $emailETIC)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -129,6 +136,7 @@ class Member implements JsonSerializable
         $this->createdDate = $createdDate;
         $this->isAlumni = $isAlumni;
         $this->memberInscriptionDocuments = $memberInscriptionDocuments;
+        $this->emailETIC = $emailETIC;
     }
 
     public function jsonSerialize()
@@ -151,6 +159,7 @@ class Member implements JsonSerializable
             'droitImage' => $this->isDroitImage(),
             'createdDate' => $this->getCreatedDate(),
             'isAlumni' => $this->getIsAlumni(),
+            'emailETIC' => $this->getEmailETIC(),
         ];
     }
 
@@ -513,4 +522,27 @@ class Member implements JsonSerializable
         $this->memberInscriptionDocuments = $memberInscriptionDocument;
     }
 
+    /**
+     * @return string|null
+     */
+    public function getEmailETIC(): ?string
+    {
+        return $this->emailETIC;
+    }
+
+    /**
+     * @param string|null $emailETIC
+     */
+    public function setEmailETIC(?string $emailETIC): void
+    {
+        $this->emailETIC = $emailETIC;
+    }
+
+    /**
+     * Retourne le mail à utiliser
+     * @return string
+     */
+    public function getSendableMail(){
+        return $this->getEmailETIC() ?? $this->getEmail();
+    }
 }

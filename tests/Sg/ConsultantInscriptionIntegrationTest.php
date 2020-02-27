@@ -75,7 +75,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
             'departmentId' => 4,
             'email' => 'thanos@claquementdedoigts.com',
             'phoneNumber' => '0033454653254',
-            'outYear' => 6666,
+            'outYear' => 2021,
             'nationalityId' => 133,
             'address' => array(
                 'line1' => 'je sais pas quoi mettre',
@@ -119,7 +119,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         $this->assertSame(4, $body->department->id);
         $this->assertSame('thanos@claquementdedoigts.com', $body->email);
         $this->assertSame('0033454653254', $body->phoneNumber);
-        $this->assertSame(6666, $body->outYear);
+        $this->assertSame(2021, $body->outYear);
         $this->assertSame(133, $body->nationality->id);
         $this->assertSame('je sais pas quoi mettre', $body->address->line1);
         $this->assertSame('Lorem ipsum', $body->address->city);
@@ -157,7 +157,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
             'departmentId' => 4,
             'email' => 'thanos@claquementdedoigts.com',
             'phoneNumber' => '0033454653254',
-            'outYear' => 6666,
+            'outYear' => 2021,
             'nationalityId' => 133,
             'address' => array(
                 'line1' => 'je sais pas quoi mettre',
@@ -218,6 +218,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
             'genderId' => 4,
             'birthday' => '1000-01-01',
             'departmentId' => 4,
+            'outYear' => 2021,
             'email' => 'thanos@claquementdedoigts.com',
             'nationalityId' => 133,
             'address' => array(
@@ -262,6 +263,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         $this->assertSame(4, $body->department->id);
         $this->assertSame('thanos@claquementdedoigts.com', $body->email);
         $this->assertSame(133, $body->nationality->id);
+        $this->assertSame(2021, $body->outYear);
         $this->assertSame('je sais pas quoi mettre', $body->address->line1);
         $this->assertSame('Lorem ipsum', $body->address->city);
         $this->assertSame(true, $body->droitImage);
@@ -335,7 +337,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
             'departmentId' => 4,
             'email' => 'thanos@claquementdedoigts.com',
             'phoneNumber' => '0033454653254',
-            'outYear' => 6666,
+            'outYear' => 2021,
             'nationalityId' => 133,
             'address' => array(
                 'line1' => 'je sais pas quoi mettre',
@@ -369,7 +371,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         $this->assertSame(4, $body->department->id);
         $this->assertSame('thanos@claquementdedoigts.com', $body->email);
         $this->assertSame('0033454653254', $body->phoneNumber);
-        $this->assertSame(6666, $body->outYear);
+        $this->assertSame(2021, $body->outYear);
         $this->assertSame(133, $body->nationality->id);
         $this->assertSame('je sais pas quoi mettre', $body->address->line1);
         $this->assertSame('Lorem ipsum', $body->address->city);
@@ -393,7 +395,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
             'departmentId' => 4,
             'email' => 'thanos@claquementdedoigts.com',
             'phoneNumber' => '0033454653254',
-            'outYear' => 6666,
+            'outYear' => 2021,
             'nationalityId' => 133,
             'address' => array(
                 'line1' => 'je sais pas quoi mettre',
@@ -435,7 +437,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
             'departmentId' => 4,
             'email' => 'thanos@claquementdedoigts.com',
             'phoneNumber' => '0033454653254',
-            'outYear' => 6666,
+            'outYear' => 2021,
             'nationalityId' => 133,
             'address' => array(
                 'line1' => 'je sais pas quoi mettre',

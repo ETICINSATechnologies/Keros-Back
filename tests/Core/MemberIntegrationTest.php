@@ -70,6 +70,26 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(2, $body->content[0]->positions[2]->id);
     }
 
+    public function testLikeSearchMemberCompanyShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/core/member?company=danone',
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(200, $response->getStatusCode());
+
+        $body = json_decode($response->getBody());
+        $this->assertNotNull($body->content);
+        $this->assertSame(1, sizeof($body->content));
+        $this->assertSame(1, $body->content[0]->id);
+        $this->assertSame("Danone Group", $body->content[0]->company);
+    }
+
     public function testSearchMemberShouldReturn200()
     {
         $env = Environment::mock([
@@ -181,7 +201,8 @@ class MemberIntegrationTest extends AppTestCase
                 )
             ],
             "company" => "Amazon",
-            "droitImage" => true
+            "droitImage" => true,
+            'emailETIC' => "bonjour@aurevoir.fr"
         );
 
         $env = Environment::mock([
@@ -213,6 +234,7 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(3, $body->positions[1]->id);
         $this->assertSame(true, $body->droitImage);
         $this->assertSame(false, $body->isAlumni);
+        $this->assertSame("bonjour@aurevoir.fr", $body->emailETIC);
     }
 
     public function testDeleteMembersShouldReturn204()
@@ -345,6 +367,7 @@ class MemberIntegrationTest extends AppTestCase
             "company" => "Amazon",
             "droitImage" => false,
             "isAlumni" => true,
+            "emailETIC" => "bonjour@aurevoir.fr",
         );
 
         $env = Environment::mock([
@@ -379,6 +402,7 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(false, $body->droitImage);
         $this->assertSame(intval($dateDiff),0);
         $this->assertSame(true, $body->isAlumni);
+        $this->assertSame("bonjour@aurevoir.fr", $body->emailETIC);
 
     }
 
@@ -415,6 +439,7 @@ class MemberIntegrationTest extends AppTestCase
                 )
             ],
             "company" => "Amazon",
+            "emailETIC" => "bonjour@aurevoir.fr"
         );
 
         $env = Environment::mock([
@@ -450,6 +475,7 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame(true, $body->droitImage);
         $this->assertSame(intval($dateDiff),0);
         $this->assertSame(false, $body->isAlumni);
+        $this->assertSame("bonjour@aurevoir.fr", $body->emailETIC);
     }
 
     public function testPutMemberEmptyBodyShouldReturn400()
