@@ -465,7 +465,7 @@ class MemberService
 			throw new KerosException("No members found.", 404);
 		}
 
-		$filepath = "./documents/tmp/members" . (new \DateTime("NOW"))->format("Y-m-d;H:i:s") . ".csv";
+		$filepath = "documents/tmp/members" . (new \DateTime("NOW"))->format("Y-m-d;H:i:s") . ".csv";
 		$csvFile = fopen($filepath, "w+");
 
 		$tags = array(
