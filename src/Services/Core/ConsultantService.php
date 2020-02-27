@@ -364,6 +364,7 @@ class ConsultantService
 						$data[] = $consultantData[$value];
 						break;
 					case 'schoolYear':
+						$data[] = (new \DateTime('NOW'))->format('Y') + 5 - $consultantData[$value];
 						break;
 					case 'createdDate':
 						$data[] = $consultantData[$value]->format('Y-m-d');
