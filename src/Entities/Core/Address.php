@@ -158,5 +158,13 @@ class Address implements JsonSerializable, Searchable
     public function setCountry($country): void
     {
         $this->country = $country;
-    }
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getFullAddress(): string
+	{
+		return $this->line1 . ", " . $this->line2 . ", " . $this->postalCode . ", " . $this->city . ", " . $this->country->getLabel();
+	}
 }

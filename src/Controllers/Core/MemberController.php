@@ -247,5 +247,13 @@ class MemberController
         $this->entityManager->commit();
 
         return $response->withStatus(204);
-    }
+	}
+
+	public function exportMembers(Request $request, Response $response, array $args)
+	{
+		$this->logger->debug("Exporting specified members to csv file.");
+		$body = $request->getParsedBody();
+		$location = $this->memberService->export($body['idList']);
+		return $response->withJson(array('location' => $this->kerosConfig['BACK_URL'] . "/generated/" . $location), 200);
+	}
 }

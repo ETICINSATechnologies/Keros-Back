@@ -323,7 +323,7 @@ class MemberService
                 unlink($filepath);
             }
         }
-        
+
         $filename = $this->directoryManager->uniqueFilenameOnly($file, false, $this->kerosConfig['MEMBER_PHOTO_DIRECTORY']);
 
         $this->directoryManager->mkdir($this->kerosConfig['MEMBER_PHOTO_DIRECTORY']);
@@ -454,5 +454,93 @@ class MemberService
         }
 
         return $payload->id;
-    }
+	}
+
+	public function export($idList)
+	{
+		if (!isset($idList)) {
+			throw new KerosException("idList not specified.", 400);
+		}
+
+		$members = $this->getSome($idList);
+
+		if (empty($members)) {
+			throw new KerosException("No members found.", 404);
+		}
+
+		$filepath = "documents/tmp/members" . (new \DateTime("NOW"))->format("Y-m-d;H:i:s") . ".csv";
+		$csvFile = fopen($filepath, "w+");
+
+		$tags = array(
+			'Pole' => 'positions',
+			'Nom' => 'lastName',
+			'Prenom' => 'firstName',
+			'Sexe' => 'gender',
+			'Annee'=> 'schoolYear',
+			'Departement' => 'department',
+			'Telephone' => 'telephone',
+			'Adresse Mail' => 'email',
+			'Recrutement' => 'createdDate',
+			'Statut' => 'status',
+			'Naissance' => 'birthday'
+		);
+		fputcsv($csvFile, array_keys($tags));
+
+		foreach ($members as $member) {
+			$memberData = $member->jsonSerialize();
+			$data = array();
+			foreach ($tags as $value){
+				switch($value) {
+					case 'schoolYear':
+					case 'firstName':
+					case 'lastName':
+					case 'telephone':
+					case 'email':
+					case 'birthday':
+						$data[] = $memberData[$value];
+						break;
+					case 'createdDate':
+						$data[] = $memberData[$value]->format('Y-m-d');
+						break;
+					case 'gender':
+					case 'department':
+						$data[] = $memberData[$value]->getLabel();
+						break;
+					case 'positions':
+						if (!empty($memberData[$value])) {
+							$latestYear = $memberData[$value][0]->getYear();
+							$posPoles = array_filter($memberData[$value], function($pos) use ($latestYear) {
+								return ($pos->getYear() == $latestYear) && $pos->getPosition()->getPole();
+							});
+							$poles = array_unique(array_map(function($position) {
+								return $position->getPosition()->getPole()->getName();
+							}, $posPoles));
+
+							if (!empty($poles)) {
+								$data[] = implode(" & ", $poles);
+							} else {
+								$data[] = " ";
+							}
+						} else {
+							$data[] = " ";
+						}
+						break;
+					case 'status':
+						if ($memberData['isAlumni']) {
+							$data[] = 'Ancien';
+						} else if ($memberData['createdDate']->diff(new \DateTime('NOW'))->format("%a") / 365 > 1) {
+							$data[] = 'Senior';
+						} else {
+							$data[] = 'Junior';
+						}
+						break;
+					default:
+						break;
+				}
+			}
+			fputcsv($csvFile, $data);
+		}
+		fclose($csvFile);
+		return $filepath;
+	}
 }

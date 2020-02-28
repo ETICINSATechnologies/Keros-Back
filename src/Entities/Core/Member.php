@@ -393,8 +393,11 @@ class Member implements JsonSerializable
         foreach ($this->getMemberPositions() as $position)
         {
             $memberPositions[] = $position;
-        }
-
+		}
+		usort($memberPositions, function($a, $b)
+		{
+			return $a->getYear() < $b->getYear();
+		});
         return $memberPositions;
     }
 
@@ -466,7 +469,7 @@ class Member implements JsonSerializable
     {
         return $this->createdDate;
     }
-    
+
     /**
      * @param \DateTime $createdDate
      */
