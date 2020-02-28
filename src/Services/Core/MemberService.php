@@ -507,16 +507,20 @@ class MemberService
 						$data[] = $memberData[$value]->getLabel();
 						break;
 					case 'positions':
-						$latestYear = $memberData[$value][0]->getYear();
-						$posPoles = array_filter($memberData[$value], function($pos) use ($latestYear) {
-							return ($pos->getYear() == $latestYear) && $pos->getPosition()->getPole();
-						});
-						$poles = array_unique(array_map(function($position) {
-							return $position->getPosition()->getPole()->getName();
-						}, $posPoles));
+						if (!empty($memberData[$value])) {
+							$latestYear = $memberData[$value][0]->getYear();
+							$posPoles = array_filter($memberData[$value], function($pos) use ($latestYear) {
+								return ($pos->getYear() == $latestYear) && $pos->getPosition()->getPole();
+							});
+							$poles = array_unique(array_map(function($position) {
+								return $position->getPosition()->getPole()->getName();
+							}, $posPoles));
 
-						if (!empty($poles)) {
-							$data[] = implode(" & ", $poles);
+							if (!empty($poles)) {
+								$data[] = implode(" & ", $poles);
+							} else {
+								$data[] = " ";
+							}
 						} else {
 							$data[] = " ";
 						}
