@@ -316,5 +316,79 @@ class ConsultantService
         }
 
         return $documenArray;
-    }
+	}
+
+	public function export($idList)
+	{
+		if (!isset($idList)) {
+			throw new KerosException("idList not specified.", 400);
+		}
+
+		$consultants = $this->getSome($idList);
+
+		if (empty($consultants)) {
+			throw new KerosException("No consultants found.", 404);
+		}
+
+		$filepath = "documents/tmp/consultants" . (new \DateTime("NOW"))->format("Y-m-d;H:i:s") . ".csv";
+		$csvFile = fopen($filepath, "w+");
+
+		$tags = array(
+			'Nom' => 'lastName',
+			'Prenom' => 'firstName',
+			'Sexe' => 'gender',
+			"Date d'inscription" => 'createdDate',
+			'Departement' => 'department',
+			'Annee de Sortie'=> 'schoolYear',
+			'Nationalite' => 'nationality',
+			'Numero de Securite Sociale' => 'socialSecurityNumber',
+			'Telephone' => 'telephone',
+			'Adresse Mail' => 'email',
+			'Adresse' => 'address_line',
+			'Code postal' => 'address_cp',
+			'Ville' => 'address_ville'
+		);
+		fputcsv($csvFile, array_keys($tags));
+
+		foreach ($consultants as $consultant) {
+			$consultantData = $consultant->getProtected();
+			$data = array();
+			foreach ($tags as $value){
+				switch($value) {
+					case 'firstName':
+					case 'lastName':
+					case 'telephone':
+					case 'email':
+					case 'birthday':
+					case 'socialSecurityNumber':
+						$data[] = $consultantData[$value];
+						break;
+					case 'schoolYear':
+						$data[] = (new \DateTime('NOW'))->format('Y') + 5 - $consultantData[$value];
+						break;
+					case 'createdDate':
+						$data[] = $consultantData[$value]->format('Y-m-d');
+						break;
+					case 'gender':
+					case 'department':
+					case 'nationality':
+						$data[] = $consultantData[$value]->getLabel();
+						break;
+					case 'address_line':
+						$data[] = $consultantData['address']->getLine1() . ", " . $consultantData['address']->getLine2();
+						break;
+					case 'address_cp':
+						$data[] = $consultantData['address']->getPostalCode();
+						break;
+					case 'address_ville':
+						$data[] = $consultantData['address']->getCity();
+					default:
+						break;
+				}
+			}
+			fputcsv($csvFile, $data);
+		}
+		fclose($csvFile);
+		return $filepath;
+	}
 }

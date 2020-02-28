@@ -193,6 +193,7 @@ class KerosApp
                     $this->post("/{id:[0-9]+}/document/{document_name:[a-zA-Z]+}", ConsultantController::class . ':createDocument');
                     $this->get("/{id:[0-9]+}/protected", ConsultantController::class . ':getConsultantProtectedData');
                     $this->get("/me/protected", ConsultantController::class . ':getConnectedConsultantProtectedData');
+					$this->post("/export", ConsultantController::class . ':exportConsultants');
                 });
 
                 $this->group('/ticket', function () {

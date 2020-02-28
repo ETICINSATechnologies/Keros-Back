@@ -192,12 +192,12 @@ class ConsultantController
     public function getDocument(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Getting consultant document from " . $request->getServerParams()["REMOTE_ADDR"]);
-        
+
         $document_name = ConsultantFileHelper::doesExist($args['document_name']);
         $filepath = $this->consultantService->getDocument($args["id"], $document_name);
         $response = FileHelper::getFileResponse($filepath, $response);
         readfile($filepath);
-        
+
         return $response;
     }
 
@@ -228,6 +228,13 @@ class ConsultantController
         $this->entityManager->commit();
 
         return $response->withJson($consultant, 201);
-    }
+	}
 
+	public function exportConsultants(Request $request, Response $response, array $args)
+	{
+		$this->logger->debug("Exporting specified consultants to csv file.");
+		$body = $request->getParsedBody();
+		$location = $this->consultantService->export($body['idList']);
+		return $response->withJson(array('location' => $this->kerosConfig['BACK_URL'] . "/generated/" . $location), 200);
+	}
 }
