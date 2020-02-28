@@ -216,6 +216,14 @@ class ConsultantInscription implements JsonSerializable
             'droitImage' => $this->isDroitImage(),
             'isApprentice' => $this->getIsApprentice(),
             'createdDate' => $this->getCreatedDate(),
+            'isFileUploaded' => array (
+                'documentIdentity' => !is_null($this->getDocumentIdentity()),
+                'documentScolaryCertificate' => !is_null($this->getDocumentScolaryCertificate()),
+                'documentRIB' =>!is_null($this->getDocumentRIB()),
+                'documentVitaleCard' =>!is_null($this->getDocumentVitaleCard()),
+                'documentResidencePermit' =>!is_null($this->getDocumentResidencePermit()),
+                'documentCVEC' => !is_null($this->getDocumentCVEC()),
+            )
         ];
     }
 

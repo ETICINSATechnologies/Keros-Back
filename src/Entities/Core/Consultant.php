@@ -181,32 +181,22 @@ class Consultant implements JsonSerializable
             'droitImage' => $this->isDroitImage(),
             'isApprentice' => $this->getIsApprentice(),
             'createdDate' => $this->getCreatedDate(),
-            'isGraduate' => $this->isGraduate()
+            'isGraduate' => $this->isGraduate(),
+            'isFileUploaded' => array (
+                'documentIdentity' => !is_null($this->getDocumentIdentity()),
+                'documentScolaryCertificate' => !is_null($this->getDocumentScolaryCertificate()),
+                'documentRIB' =>!is_null($this->getDocumentRIB()),
+                'documentVitaleCard' =>!is_null($this->getDocumentVitaleCard()),
+                'documentResidencePermit' =>!is_null($this->getDocumentResidencePermit()),
+                'documentCVEC' => !is_null($this->getDocumentCVEC()),
+            )
         ];
     }
     public function getProtected()
     {
-        return [
-            'id' => $this->getUser()->getId(),
-            'username' => $this->getUser()->getUsername(),
-            'firstName' => $this->getFirstName(),
-            'lastName' => $this->getLastName(),
-            'gender' => $this->getGender(),
-            'email' => $this->getEmail(),
-            'nationality' => $this->getNationality(),
-            'birthday' => $this->getBirthday()->format('Y-m-d'),
-            'department' => $this->getDepartment(),
-            'schoolYear' => $this->getSchoolYear(),
-            'telephone' => $this->getTelephone(),
-            'address' => $this->getAddress(),
-            'company' => $this->getCompany(),
-            'profilePicture' => $this->getProfilePicture(),
-            'droitImage' => $this->isDroitImage(),
-            'isApprentice' => $this->getIsApprentice(),
-            'createdDate' => $this->getCreatedDate(),
-            'socialSecurityNumber' => $this->getSocialSecurityNumber(),
-            'isGraduate' => $this->isGraduate()
-        ];
+        $returnArray = $this->jsonSerialize();
+        $returnArray['socialSecurityNumber'] = $this->getSocialSecurityNumber();
+        return $returnArray;
     }
     public static function getSearchFields(): array {
         return ['firstName', 'lastName', 'company', 'isGraduate'];
