@@ -330,7 +330,7 @@ class ConsultantService
 			throw new KerosException("No consultants found.", 404);
 		}
 
-		$filepath = "documents/tmp/consultants" . (new \DateTime("NOW"))->format("Y-m-d;H:i:s") . ".csv";
+		$filepath = $this->kerosConfig['TEMPORARY_DIRECTORY'] . "consultants" . (new \DateTime("NOW"))->format("Y-m-d;H:i:s") . ".csv";
 		$csvFile = fopen($filepath, "w+");
 
 		$tags = array(
@@ -389,6 +389,6 @@ class ConsultantService
 			fputcsv($csvFile, $data);
 		}
 		fclose($csvFile);
-		return $filepath;
+		return pathinfo($filepath, PATHINFO_BASENAME);
 	}
 }
