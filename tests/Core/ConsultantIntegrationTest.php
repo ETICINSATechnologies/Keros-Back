@@ -477,10 +477,170 @@ class ConsultantIntegrationTest extends AppTestCase
      * @throws MethodNotAllowedException
      * @throws NotFoundException
      */
-    public function testPostConsultantDocumentShouldReturn201()
+    public function testPostConsultantDocumentIdentityShouldReturn201()
     {
 
         $filename = 'documentIdentity';
+        $uploaded_files = array();
+
+        $filename_ext = $filename . '.pdf';
+        $temp_file = FileHelper::makeNewFile($filename_ext);
+        $uploaded_files[$filename] = FileHelper::getUploadedFile($filename_ext);
+
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => "/api/v1/core/consultant/2/document/$filename",
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withUploadedFiles($uploaded_files);
+
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        FileHelper::closeFile($temp_file);
+        FileHelper::deleteFile($filename_ext);
+
+        $this->assertSame(201, $response->getStatusCode());
+    }
+
+    /**
+     * @throws MethodNotAllowedException
+     * @throws NotFoundException
+     */
+    public function testPostConsultantDocumentScolaryCertificateShouldReturn201()
+    {
+
+        $filename = 'documentScolaryCertificate';
+        $uploaded_files = array();
+
+        $filename_ext = $filename . '.pdf';
+        $temp_file = FileHelper::makeNewFile($filename_ext);
+        $uploaded_files[$filename] = FileHelper::getUploadedFile($filename_ext);
+
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => "/api/v1/core/consultant/2/document/$filename",
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withUploadedFiles($uploaded_files);
+
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        FileHelper::closeFile($temp_file);
+        FileHelper::deleteFile($filename_ext);
+
+        $this->assertSame(201, $response->getStatusCode());
+    }
+
+    /**
+     * @throws MethodNotAllowedException
+     * @throws NotFoundException
+     */
+    public function testPostConsultantDocumentRIBShouldReturn201()
+    {
+
+        $filename = 'documentRIB';
+        $uploaded_files = array();
+
+        $filename_ext = $filename . '.pdf';
+        $temp_file = FileHelper::makeNewFile($filename_ext);
+        $uploaded_files[$filename] = FileHelper::getUploadedFile($filename_ext);
+
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => "/api/v1/core/consultant/2/document/$filename",
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withUploadedFiles($uploaded_files);
+
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        FileHelper::closeFile($temp_file);
+        FileHelper::deleteFile($filename_ext);
+
+        $this->assertSame(201, $response->getStatusCode());
+    }
+
+    /**
+     * @throws MethodNotAllowedException
+     * @throws NotFoundException
+     */
+    public function testPostConsultantDocumentVitaleCardShouldReturn201()
+    {
+
+        $filename = 'documentVitaleCard';
+        $uploaded_files = array();
+
+        $filename_ext = $filename . '.pdf';
+        $temp_file = FileHelper::makeNewFile($filename_ext);
+        $uploaded_files[$filename] = FileHelper::getUploadedFile($filename_ext);
+
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => "/api/v1/core/consultant/2/document/$filename",
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withUploadedFiles($uploaded_files);
+
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        FileHelper::closeFile($temp_file);
+        FileHelper::deleteFile($filename_ext);
+
+        $this->assertSame(201, $response->getStatusCode());
+    }
+
+    /**
+     * @throws MethodNotAllowedException
+     * @throws NotFoundException
+     */
+    public function testPostConsultantDocumentResidencePermitShouldReturn201()
+    {
+
+        $filename = 'documentResidencePermit';
+        $uploaded_files = array();
+
+        $filename_ext = $filename . '.pdf';
+        $temp_file = FileHelper::makeNewFile($filename_ext);
+        $uploaded_files[$filename] = FileHelper::getUploadedFile($filename_ext);
+
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => "/api/v1/core/consultant/2/document/$filename",
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withUploadedFiles($uploaded_files);
+
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        FileHelper::closeFile($temp_file);
+        FileHelper::deleteFile($filename_ext);
+
+        $this->assertSame(201, $response->getStatusCode());
+    }
+
+    /**
+     * @throws MethodNotAllowedException
+     * @throws NotFoundException
+     */
+    public function testPostConsultantDocumentCVECShouldReturn201()
+    {
+
+        $filename = 'documentCVEC';
         $uploaded_files = array();
 
         $filename_ext = $filename . '.pdf';
