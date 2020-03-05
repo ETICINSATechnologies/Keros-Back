@@ -535,6 +535,41 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
      * @throws MethodNotAllowedException
      * @throws NotFoundException
      */
+    public function testPostConsultantInscriptionAllDocumentsShouldReturn201()
+    {
+        $filenames = ['documentIdentity', 'documentScolaryCertificate', 'documentRIB', 'documentVitaleCard', 'documentResidencePermit', 'documentCVEC']
+
+        foreach ($filenames as $filename) {
+            $uploaded_files = array();
+
+            $filename_ext = $filename . '.pdf';
+            $temp_file = FileHelper::makeNewFile($filename_ext);
+            $uploaded_files[$filename] = FileHelper::getUploadedFile($filename_ext);
+
+
+            $env = Environment::mock([
+                'REQUEST_METHOD' => 'POST',
+                'REQUEST_URI' => "/api/v1/sg/consultant-inscription/2/document/$filename",
+            ]);
+
+            $req = Request::createFromEnvironment($env);
+            $req = $req->withUploadedFiles($uploaded_files);
+
+            $this->app->getContainer()['request'] = $req;
+            $response = $this->app->run(false);
+
+            FileHelper::closeFile($temp_file);
+            FileHelper::deleteFile($filename_ext);
+
+            $this->assertSame(201, $response->getStatusCode());
+        }
+        
+    }
+
+    /**
+     * @throws MethodNotAllowedException
+     * @throws NotFoundException
+     */
     public function testPostConsultantInscriptionDocumentUnacceptedFormatShouldReturn400()
     {
 

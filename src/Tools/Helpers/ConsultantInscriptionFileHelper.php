@@ -33,7 +33,7 @@ class ConsultantInscriptionFileHelper
         ),
         'documentScolaryCertificate' => array(
             'name' => 'documentScolaryCertificate',
-            'set' => 'createDocumentScolaryCertificate',
+            'set' => 'setDocumentScolaryCertificate',
             'get' => 'getDocumentScolaryCertificate',
             'directory_key' => 'INSCRIPTION_SCOLARY_CERTIFICATE_DIRECTORY',
             'isRequired' => true,
@@ -42,7 +42,7 @@ class ConsultantInscriptionFileHelper
         ),
         'documentRIB' => array(
             'name' => 'documentRIB',
-            'set' => 'createDocumentRIB',
+            'set' => 'setDocumentRIB',
             'get' => 'getDocumentRIB',
             'directory_key' => 'INSCRIPTION_RIB_DIRECTORY',
             'isRequired' => true,
@@ -51,7 +51,7 @@ class ConsultantInscriptionFileHelper
         ),
         'documentVitaleCard' => array(
             'name' => 'documentVitaleCard',
-            'set' => 'createDocumentVitaleCard',
+            'set' => 'setDocumentVitaleCard',
             'get' => 'getDocumentVitaleCard',
             'directory_key' => 'INSCRIPTION_VITALE_CARD_DIRECTORY',
             'isRequired' => true,
@@ -60,7 +60,7 @@ class ConsultantInscriptionFileHelper
         ),
         'documentResidencePermit' => array(
             'name' => 'documentResidencePermit',
-            'set' => 'createDocumentResidencePermit',
+            'set' => 'setDocumentResidencePermit',
             'get' => 'getDocumentResidencePermit',
             'directory_key' => 'INSCRIPTION_RESIDENCE_PERMIT_DIRECTORY',
             'isRequired' => false,
@@ -69,7 +69,7 @@ class ConsultantInscriptionFileHelper
         ),
         'documentCVEC' => array(
             'name' => 'documentCVEC',
-            'set' => 'createDocumentCVEC',
+            'set' => 'setDocumentCVEC',
             'get' => 'getDocumentCVEC',
             'directory_key' => 'INSCRIPTION_CVEC_DIRECTORY',
             'isRequired' => true,
