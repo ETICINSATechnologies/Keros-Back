@@ -537,7 +537,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
      */
     public function testPostConsultantInscriptionAllDocumentsShouldReturn201()
     {
-        $filenames = ['documentIdentity', 'documentScolaryCertificate', 'documentRIB', 'documentVitaleCard', 'documentResidencePermit', 'documentCVEC'];
+        $filenames = array('documentIdentity', 'documentScolaryCertificate', 'documentRIB', 'documentVitaleCard', 'documentResidencePermit', 'documentCVEC');
 
         foreach ($filenames as $filename) {
             $uploaded_files = array();
