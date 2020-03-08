@@ -68,6 +68,7 @@ class MemberService
     /** @var MemberInscriptionDocumentService */
     private $memberInscriptionDocumentService;
 
+
     /**
      * MemberService constructor.
      * @param ContainerInterface $container
@@ -194,6 +195,7 @@ class MemberService
      */
     public function update(int $id, ?array $fields): Member
     {
+        $this->logger->debug("in update " );
         $id = Validator::requiredId($id);
         $member = $this->getOne($id);
 
@@ -213,6 +215,10 @@ class MemberService
 
         $company = Validator::optionalString(isset($fields["company"]) ? $fields["company"] : $member->getCompany());
         $isAlumni = Validator::optionalBool($fields['isAlumni'] ?? $member->getIsAlumni());
+        if(!$member->getIsAlumni()&&$fields['isAlumni']){
+            //send email
+            $this->mailFactory->sendMailMemberAlumniFromTemplate($member);
+        }
 
         $memberPositions = $member->getMemberPositions();
         foreach ($memberPositions as $memberPosition)
@@ -223,7 +229,6 @@ class MemberService
             $memberPositions[] = $this->memberPositionService->create($member, $position);
         }
         $member->setMemberPositions($memberPositions);
-
         $member->setFirstName($firstName);
         $member->setLastName($lastName);
         $member->setEmail($email);
