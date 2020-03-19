@@ -118,8 +118,7 @@ class MemberDataService
 
                             $searchStatement .=
                                 '(m.firstName like :search' . $i
-                                . ' OR m.lastName like :search' . $i
-                                . ' OR m.company like :search' . $i . ')';
+                                . ' OR m.lastName like :search' . $i . ')';
                             $whereParameters[':search' . $i] = '%' . $field . '%';
                         }
 

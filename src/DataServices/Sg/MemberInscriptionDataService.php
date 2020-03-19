@@ -225,8 +225,6 @@ class   MemberInscriptionDataService
         }
     }
 
-
-
     /**
      * @param RequestParameters|null $requestParameters
      * @return int
