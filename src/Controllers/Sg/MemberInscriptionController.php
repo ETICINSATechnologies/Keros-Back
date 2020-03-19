@@ -79,15 +79,7 @@ class MemberInscriptionController
         }
         $params = new RequestParameters($queryParams, MemberInscription::getSearchFields(), MemberInscription::getFilterFields());
 
-        $memberInscriptions = $this->memberInscriptionService->getPage($params);
-        $memberInscriptionsWithDocument = array();
-        foreach ($memberInscriptions as $memberInscription) {
-            $memberInscriptionsWithDocument[] = $this->addDocumentsToJsonMemberInscription($memberInscription);
-        }
-
-        $count = $this->memberInscriptionService->getCount($params);
-
-        $page = new Page($memberInscriptionsWithDocument, $params, $count);
+        $page = $this->memberInscriptionService->getPage($params, $queryParams);
 
         return $response->withJson($page, 200);
     }

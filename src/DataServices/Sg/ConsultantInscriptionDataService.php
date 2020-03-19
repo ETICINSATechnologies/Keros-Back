@@ -5,9 +5,12 @@ namespace Keros\DataServices\Sg;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Exception;
+use Keros\Entities\Core\Page;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Sg\ConsultantInscription;
+use Keros\Entities\Sg\MemberInscription;
 use Keros\Error\KerosException;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
@@ -112,14 +115,90 @@ class   ConsultantInscriptionDataService
      * @return array
      * @throws KerosException
      */
-    public function getPage(RequestParameters $requestParameters): array
+    public function getPage(RequestParameters $requestParameters, array $queryParams): Page
     {
         try {
-            $criteria = $requestParameters->getCriteria();
-            $consultantInscriptions = $this->repository->matching($criteria)->getValues();
-            return $consultantInscriptions;
+            $this->queryBuilder = $this->entityManager->createQueryBuilder();
+            $this->queryBuilder
+                ->select('ci')
+                ->from(ConsultantInscription::class, 'ci')
+                ->groupBy('ci.id');
+
+            $whereStatement = '';
+            $whereParameters = array();
+
+            foreach ($queryParams as $key => $value) {
+                if (in_array($key, ['search', 'createdDate', 'firstName', 'lastName', 'company', 'isAlumni'])) {
+                    if (!empty($whereStatement))
+                        $whereStatement .= ' AND ';
+
+                    if ($key == 'search') {
+                        $searchValues = explode(' ', $value);
+                        $searchStatement = '';
+                        foreach ($searchValues as $i => $field) {
+                            if (!empty($searchStatement))
+                                $searchStatement .= ' AND ';
+
+                            $searchStatement .=
+                                '(ci.firstName like :search' . $i
+                                . ' OR ci.lastName like :search' . $i
+                                . ' OR ci.company like :search' . $i . ')';
+                            $whereParameters[':search' . $i] = '%' . $field . '%';
+                        }
+
+                        $whereStatement .= $searchStatement;
+                    } else {
+                        if ($key == 'createdDate') {
+                            $whereStatement .= 'ci.createdDate >= :createdDate';
+                            $whereParameters[':' . $key] = $value;
+                        } elseif ($key == 'company') {
+                            $whereStatement .= 'ci.' . $key . ' = :' . $key;
+                            $whereParameters[':' . $key] = $value;
+                        } elseif ($key == 'firstName' || $key == 'lastName') {
+                            // where with the form: 'ci.key = :key'
+                            $whereStatement .= 'ci.' . $key . ' LIKE :' . $key;
+                            $whereParameters[':' . $key] = '%' . $value . '%';
+                        } elseif ($key == 'isAlumni') {
+                            $booleanValue = filter_var(strtolower($value), FILTER_VALIDATE_BOOLEAN);
+                            $whereStatement .= 'ci.' . $key . ' = :' . $key;
+                            $whereParameters[':' . $key] = $booleanValue;
+                        }
+                    }
+
+                    /* $whereStatement .=*/
+                }
+            }
+
+            if (!empty($whereStatement)) {
+                $this->queryBuilder
+                    ->where($whereStatement)
+                    ->setParameters($whereParameters);
+            }
+
+            $order = $requestParameters->getParameters()['order'];
+            $orderBy = $requestParameters->getParameters()['orderBy'];
+            $pageSize = $requestParameters->getParameters()['pageSize'];
+            $firstResult = $pageSize * $requestParameters->getParameters()['pageNumber'];
+
+            if (isset($orderBy)) {
+                switch ($orderBy) {
+                    case 'lastName' :
+                    case 'firstName' :
+                    case 'email' :
+                        $this->queryBuilder->orderBy("ci.$orderBy", $order);
+                        break;
+                }
+            }
+
+            $this->queryBuilder
+                ->setFirstResult($firstResult)
+                ->setMaxResults($pageSize);
+            $query = $this->queryBuilder->getQuery();
+            $paginator = new Paginator($query, $fetchJoinCollection = true);
+            return new Page($query->execute(), $requestParameters, count($paginator));
+
         } catch (Exception $e) {
-            $msg = "Error finding page of consultantInscriptions : " . $e->getMessage();
+            $msg = "Error finding page of members : " . $e->getMessage();
             $this->logger->error($msg);
             throw new KerosException($msg, 500);
         }

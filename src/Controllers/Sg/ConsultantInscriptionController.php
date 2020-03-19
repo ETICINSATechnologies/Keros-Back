@@ -90,10 +90,8 @@ class ConsultantInscriptionController
         $queryParams = $request->getQueryParams();
         $params = new RequestParameters($queryParams, ConsultantInscription::getSearchFields(), ConsultantInscription::getFilterFields());
 
-        $consultantInscriptions = $this->consultantInscriptionService->getPage($params);
-        $count = $this->consultantInscriptionService->getCount($params);
 
-        $page = new Page($consultantInscriptions, $params, $count);
+        $page = $this->consultantInscriptionService->getPage($params, $queryParams);
 
         return $response->withJson($page, 200);
     }

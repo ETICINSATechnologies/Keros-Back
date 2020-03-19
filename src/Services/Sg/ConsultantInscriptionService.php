@@ -4,6 +4,7 @@
 namespace Keros\Services\Sg;
 
 use Keros\DataServices\Sg\ConsultantInscriptionDataService;
+use Keros\Entities\Core\Page;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Sg\ConsultantInscription;
 use Keros\Error\KerosException;
@@ -177,9 +178,9 @@ class   ConsultantInscriptionService
      * @return array
      * @throws KerosException
      */
-    public function getPage(RequestParameters $requestParameters): array
+    public function getPage(RequestParameters $requestParameters, $queryParams): Page
     {
-        return $this->consultantInscriptionDataService->getPage($requestParameters);
+        return $this->consultantInscriptionDataService->getPage($requestParameters, $queryParams);
     }
 
     /**

@@ -5,6 +5,7 @@ namespace Keros\Services\Sg;
 
 use DateTime;
 use Keros\DataServices\Sg\MemberInscriptionDataService;
+use Keros\Entities\Core\Page;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Sg\MemberInscription;
 use Keros\Error\KerosException;
@@ -150,9 +151,9 @@ class   MemberInscriptionService
      * @return array
      * @throws KerosException
      */
-    public function getPage(RequestParameters $requestParameters): array
+    public function getPage(RequestParameters $requestParameters, array $queryParams): Page
     {
-        return $this->memberInscriptionDataService->getPage($requestParameters);
+        return $this->memberInscriptionDataService->getPage($requestParameters, $queryParams);
     }
 
     /**

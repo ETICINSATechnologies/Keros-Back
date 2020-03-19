@@ -105,7 +105,7 @@ class MemberDataService
             $whereParameters = array();
 
             foreach ($queryParams as $key => $value) {
-                if (in_array($key, ['search', 'poleId', 'positionId', 'year', 'firstName', 'lastName', 'company', 'isAlumni'])) {
+                if (in_array($key, ['search', 'poleId', 'positionId', 'year', 'createdDate', 'firstName', 'lastName', 'company', 'isAlumni'])) {
                     if (!empty($whereStatement))
                         $whereStatement .= ' AND ';
 
@@ -134,6 +134,9 @@ class MemberDataService
                         } elseif ($key == 'year') {
                             $whereStatement .= 'mp.year = :year';
                             $whereParameters[':' . $key] = $value;
+                        } elseif ($key == 'createdDate') {
+                            $whereStatement .= 'm.createdDate >= :createdDate';
+                            $whereParameters[':' . $key] = $value;
                         } elseif ($key == 'company') {
                             $whereStatement .= 'm.' . $key . ' = :' . $key;
                             $whereParameters[':' . $key] = $value;
@@ -147,6 +150,8 @@ class MemberDataService
                             $whereParameters[':' . $key] = $booleanValue;
                         }
                     }
+
+                    /* $whereStatement .=*/
                 }
             }
 

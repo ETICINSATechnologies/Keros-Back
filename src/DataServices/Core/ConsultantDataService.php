@@ -88,7 +88,7 @@ class ConsultantDataService
             $whereParameters = array();
 
             foreach ($queryParams as $key => $value) {
-                if (in_array($key, ['search', 'firstName', 'lastName', 'company', 'isGraduate'])) {
+                if (in_array($key, ['search', 'firstName', 'lastName', 'company', 'isGraduate', 'createdDate'])) {
                     if (!empty($whereStatement))
                         $whereStatement .= ' AND ';
 
@@ -115,7 +115,10 @@ class ConsultantDataService
                             // where with the form: 'c.key = :key'
                             $whereStatement .= 'c.' . $key . ' LIKE :' . $key;
                             $whereParameters[':' . $key] = '%' . $value . '%';
-                        }elseif ($key == 'isGraduate') {
+                        } elseif ($key == 'createdDate') {
+                            $whereStatement .= 'c.createdDate >= :createdDate';
+                            $whereParameters[':' . $key] = $value;
+                        } elseif ($key == 'isGraduate') {
                             $booleanValue = filter_var(strtolower($value), FILTER_VALIDATE_BOOLEAN);
                             $whereStatement .= 'c.' . $key . ' = :' . $key;
                             $whereParameters[':' . $key] = $booleanValue;
