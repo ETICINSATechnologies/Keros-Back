@@ -61,7 +61,7 @@ class MailFactory
             "nom"=>$member->getFirstName()." ".$member->getLastName(),
             "full_name"=>$member->getFirstName()." ".$member->getLastName()
         ));
-
+        $this->logger->debug("sending mail to". $member->getSendableMail());
         try {
             $email = $this->mailSender->createTemplateMail("MAIL_MEMBRE_ALUMNI",$globalFields,false,$tos);
             $this->mailSender->sendMail($email);

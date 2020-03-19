@@ -195,7 +195,6 @@ class MemberService
      */
     public function update(int $id, ?array $fields): Member
     {
-        $this->logger->debug("in update " );
         $id = Validator::requiredId($id);
         $member = $this->getOne($id);
 
@@ -215,8 +214,7 @@ class MemberService
 
         $company = Validator::optionalString(isset($fields["company"]) ? $fields["company"] : $member->getCompany());
         $isAlumni = Validator::optionalBool($fields['isAlumni'] ?? $member->getIsAlumni());
-        if(!$member->getIsAlumni()&&$fields['isAlumni']){
-            //send email
+        if((!$member->getIsAlumni())&&$fields['isAlumni']){
             $this->mailFactory->sendMailMemberAlumniFromTemplate($member);
         }
 

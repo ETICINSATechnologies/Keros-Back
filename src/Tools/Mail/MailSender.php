@@ -137,9 +137,11 @@ class MailSender
     public function sendMail(Mail $mail)
     {
         if($this->kerosConfig['isTesting']) {
+            $this->logger->debug("is Testing " );
             return;
         }
         $response = $this->sender->send($mail);
+        $this->logger->debug((string)$response->statusCode());
         if ($response->statusCode() != 202) {
             throw new KerosException($response->body(), $response->statusCode());
         }
