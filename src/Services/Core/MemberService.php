@@ -221,7 +221,7 @@ class MemberService
         $memberPositions = $member->getMemberPositions();
         foreach ($memberPositions as $memberPosition)
             $this->memberPositionService->delete($memberPosition);
-
+    
         $memberPositions = [];
         foreach ($fields["positions"] as $position) {
             $memberPositions[] = $this->memberPositionService->create($member, $position);
