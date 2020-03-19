@@ -214,14 +214,15 @@ class MemberService
 
         $company = Validator::optionalString(isset($fields["company"]) ? $fields["company"] : $member->getCompany());
         $isAlumni = Validator::optionalBool($fields['isAlumni'] ?? $member->getIsAlumni());
-        if((!$member->getIsAlumni())&&$fields['isAlumni']){
-            $this->mailFactory->sendMailMemberAlumniFromTemplate($member);
+        if(!empty($isAlumni)){
+            if((!$member->getIsAlumni())&&$fields['isAlumni']){
+                $this->mailFactory->sendMailMemberAlumniFromTemplate($member);
+            }
         }
-
         $memberPositions = $member->getMemberPositions();
         foreach ($memberPositions as $memberPosition)
             $this->memberPositionService->delete($memberPosition);
-    
+
         $memberPositions = [];
         foreach ($fields["positions"] as $position) {
             $memberPositions[] = $this->memberPositionService->create($member, $position);
