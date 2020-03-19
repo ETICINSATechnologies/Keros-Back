@@ -128,7 +128,7 @@ class   ConsultantInscriptionDataService
             $whereParameters = array();
 
             foreach ($queryParams as $key => $value) {
-                if (in_array($key, ['search', 'createdDate', 'firstName', 'lastName', 'company', 'isAlumni'])) {
+                if (in_array($key, ['search', 'outYear', 'email', 'createdDate', 'firstName', 'lastName', 'isAlumni'])) {
                     if (!empty($whereStatement))
                         $whereStatement .= ' AND ';
 
@@ -141,8 +141,7 @@ class   ConsultantInscriptionDataService
 
                             $searchStatement .=
                                 '(ci.firstName like :search' . $i
-                                . ' OR ci.lastName like :search' . $i
-                                . ' OR ci.company like :search' . $i . ')';
+                                . ' OR ci.lastName like :search' . $i . ')';
                             $whereParameters[':search' . $i] = '%' . $field . '%';
                         }
 
@@ -151,7 +150,10 @@ class   ConsultantInscriptionDataService
                         if ($key == 'createdDate') {
                             $whereStatement .= 'ci.createdDate >= :createdDate';
                             $whereParameters[':' . $key] = $value;
-                        } elseif ($key == 'company') {
+                        } elseif ($key == 'email') {
+                            $whereStatement .= 'ci.' . $key . ' = :' . $key;
+                            $whereParameters[':' . $key] = $value;
+                        } elseif ($key == 'outYear') {
                             $whereStatement .= 'ci.' . $key . ' = :' . $key;
                             $whereParameters[':' . $key] = $value;
                         } elseif ($key == 'firstName' || $key == 'lastName') {

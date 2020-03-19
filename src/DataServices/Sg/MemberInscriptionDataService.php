@@ -138,7 +138,7 @@ class   MemberInscriptionDataService
             $whereParameters = array();
 
             foreach ($queryParams as $key => $value) {
-                if (in_array($key, ['search', 'createdDate', 'firstName', 'lastName', 'company', 'isAlumni'])) {
+                if (in_array($key, ['search', 'createdDate', 'email', 'phoneNumber', 'outYear', 'firstName', 'hasPaid', 'lastName', 'company', 'isAlumni'])) {
                     if (!empty($whereStatement))
                         $whereStatement .= ' AND ';
 
@@ -151,8 +151,7 @@ class   MemberInscriptionDataService
 
                             $searchStatement .=
                                 '(mi.firstName like :search' . $i
-                                . ' OR mi.lastName like :search' . $i
-                                . ' OR mi.company like :search' . $i . ')';
+                                . ' OR mi.lastName like :search' . $i . ')';
                             $whereParameters[':search' . $i] = '%' . $field . '%';
                         }
 
@@ -160,6 +159,18 @@ class   MemberInscriptionDataService
                     } else {
                         if ($key == 'createdDate') {
                             $whereStatement .= 'mi.createdDate >= :createdDate';
+                            $whereParameters[':' . $key] = $value;
+                        } elseif ($key == 'email') {
+                            $whereStatement .= 'mi.' . $key . ' = :' . $key;
+                            $whereParameters[':' . $key] = $value;
+                        } elseif ($key == 'outYear') {
+                            $whereStatement .= 'mi.' . $key . ' = :' . $key;
+                            $whereParameters[':' . $key] = $value;
+                        } elseif ($key == 'hasPaid') {
+                            $whereStatement .= 'mi.' . $key . ' = :' . $key;
+                            $whereParameters[':' . $key] = $value;
+                        } elseif ($key == 'phoneNumber') {
+                            $whereStatement .= 'mi.' . $key . ' = :' . $key;
                             $whereParameters[':' . $key] = $value;
                         } elseif ($key == 'company') {
                             $whereStatement .= 'mi.' . $key . ' = :' . $key;
