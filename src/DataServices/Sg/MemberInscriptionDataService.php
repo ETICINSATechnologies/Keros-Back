@@ -16,6 +16,7 @@ use Keros\Entities\Core\Position;
 use Keros\Entities\Core\RequestParameters;
 use Keros\Entities\Core\User;
 use Keros\Entities\Sg\MemberInscription;
+use Keros\Entities\Sg\MemberInscriptionDocument;
 use Keros\Error\KerosException;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
@@ -132,6 +133,7 @@ class   MemberInscriptionDataService
             $this->queryBuilder
                 ->select('mi')
                 ->from(MemberInscription::class, 'mi')
+                ->leftJoin(MemberInscriptionDocument::class, 'document', 'WITH', 'document.memberInscriptionId = mi.id')
                 ->groupBy('mi.id');
 
             $whereStatement = '';
