@@ -133,7 +133,7 @@ class   MemberInscriptionDataService
             $this->queryBuilder
                 ->select('mi')
                 ->from(MemberInscription::class, 'mi')
-                ->leftJoin(MemberInscriptionDocument::class, 'document', 'WITH', 'document.memberInscriptionId = mi.id')
+                ->leftJoin(MemberInscriptionDocument::class, 'document', 'WITH', 'mi = document.memberInscription')
                 ->groupBy('mi.id');
 
             $whereStatement = '';
