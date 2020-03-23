@@ -48,7 +48,8 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->assertSame(false, $body->content[0]->hasPaid);
         $this->assertSame(false, $body->content[0]->droitImage);
         $this->assertSame(intval($dateDiff),0);
-        $this->assertSame(1, $body->content[0]->documents[0]->id);
+        $this->assertIsArray($body->document);
+        $this->assertSame(1, $body->documents[0]->id);
         $this->assertSame("Fiche inscription membre", $body->content[0]->documents[0]->name);
         $this->assertSame(true, $body->content[0]->documents[0]->isTemplatable);
         $this->assertSame(true, $body->content[0]->documents[0]->isUploaded);
