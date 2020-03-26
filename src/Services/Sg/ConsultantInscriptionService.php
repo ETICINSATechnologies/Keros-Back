@@ -117,13 +117,9 @@ class   ConsultantInscriptionService
         $documentVitaleCard = Validator::requiredString($fields['documentVitaleCard'] ?? null);
         $documentResidencePermit = Validator::optionalString($fields['documentResidencePermit'] ?? null);
         $documentCVEC = Validator::requiredString($fields['documentCVEC'] ?? null);
-
         $consultantInscription = new ConsultantInscription($firstName, $lastName, $gender, $birthday, $department, $email, $phoneNumber, $outYear, $nationality, $address, $socialSecurityNumber, $droitImage, $isApprentice, $createdDate, $documentIdentity, $documentScolaryCertificate, $documentRIB, $documentVitaleCard, $documentResidencePermit, $documentCVEC);
-
         $this->consultantInscriptionDataService->persist($consultantInscription);
-
         $this->mailFactory->sendMailCreateConsultantInscriptionFromTemplate($consultantInscription);
-
         return $consultantInscription;
     }
 

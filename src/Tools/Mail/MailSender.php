@@ -85,7 +85,6 @@ class MailSender
     public function createTemplateMail(string $templateName, array $globalFields, bool $generic, array $tos): Mail
     {
         $email = new Mail();
-
         $email->setFrom($this->from);
 
         if ($generic) {
@@ -101,7 +100,6 @@ class MailSender
                 $email->addTo(new To($toMail, $toFields["full_name"], array_merge($toFields, $globalFields)), null, null, $index++);
             }
         }
-
         $email->setTemplateId(new TemplateId($this->kerosConfig[$templateName]));
         return $email;
     }
@@ -138,7 +136,7 @@ class MailSender
      */
     public function sendMail(Mail $mail)
     {
-        if($this->kerosConfig['isTesting']){
+        if($this->kerosConfig['isTesting']) {
             return;
         }
         $response = $this->sender->send($mail);
