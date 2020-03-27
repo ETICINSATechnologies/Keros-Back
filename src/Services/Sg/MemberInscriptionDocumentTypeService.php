@@ -123,7 +123,7 @@ class MemberInscriptionDocumentTypeService
                 $wantedPole = "affaires";
                 break;
             case (10):
-                $wantedPole = "A REMPLIR"; //TODO
+                $wantedPole = "technique";
                 break;
             default:
                 $wantedPole = "Off";
