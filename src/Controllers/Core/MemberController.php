@@ -134,6 +134,7 @@ class MemberController
     public function updateMember(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Updating member " . $args['id'] . " from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->accessRightsService->ensureOnlyGeneralSecretary($request);
         $body = $request->getParsedBody();
 
         $this->entityManager->beginTransaction();

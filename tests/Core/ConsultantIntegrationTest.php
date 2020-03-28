@@ -164,6 +164,7 @@ class ConsultantIntegrationTest extends AppTestCase
         ]);
 
         $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId", 6);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 

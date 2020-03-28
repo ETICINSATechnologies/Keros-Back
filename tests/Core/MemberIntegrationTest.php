@@ -448,6 +448,7 @@ class MemberIntegrationTest extends AppTestCase
         ]);
 
         $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId", 6);
         $req = $req->withParsedBody($post_body);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
@@ -478,6 +479,55 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame("bonjour@aurevoir.fr", $body->emailETIC);
     }
 
+    public function testPutMemberWithoutRightShouldReturn401()
+    {
+        $post_body = array(
+            "username" => "newusername",
+            "password" => "password",
+            "firstName" => "firstName",
+            "lastName" => "lastName",
+            "genderId" => 1,
+            "email" => "fakeEmail@gmail.com",
+            "birthday" => "1975-12-01",
+            "telephone" => "0033675385495",
+            "address" => [
+                "line1" => "20 avenue albert Einstein",
+                "line2" => "residence g",
+                "city" => "lyon",
+                "postalCode" => 69100,
+                "countryId" => 1
+            ],
+            "schoolYear" => 1,
+            "departmentId" => 1,
+            "positions" => [
+                array(
+                    "id" => 3,
+                    "year" => 2018,
+                    "isBoard" => true
+                ),
+                array(
+                    "id" => 3,
+                    "year" => 2019,
+                    "isBoard" => false
+                )
+            ],
+            "company" => "Amazon",
+            "emailETIC" => "bonjour@aurevoir.fr"
+        );
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'PUT',
+            'REQUEST_URI' => '/api/v1/core/member/1',
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withParsedBody($post_body);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(401, $response->getStatusCode());
+    }
+
     public function testPutMemberEmptyBodyShouldReturn400()
     {
         $env = Environment::mock([
@@ -486,6 +536,7 @@ class MemberIntegrationTest extends AppTestCase
         ]);
 
         $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId", 6);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
         $this->assertSame(400, $response->getStatusCode());
