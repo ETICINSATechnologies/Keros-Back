@@ -243,7 +243,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame("123456789012345", $body->socialSecurityNumber);
     }
 
-    public function testGetConsultantProtectedWithoutRightDataShouldReturn200()
+    public function testGetConsultantProtectedWithoutRightDataShouldReturn401()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
@@ -332,7 +332,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame(true, $body->isGraduate);
     }
 
-    public function testPostConsultantWithoutRightShouldReturn201()
+    public function testPostConsultantWithoutRightShouldReturn401()
     {
         $post_body = array(
             "username" => "newusername",
@@ -424,6 +424,7 @@ class ConsultantIntegrationTest extends AppTestCase
         ]);
 
         $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId",6);
         $req = $req->withParsedBody($post_body);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
@@ -449,6 +450,61 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame(true,$body->droitImage);
         $this->assertSame(true,$body->isApprentice);
         $this->assertSame(true, $body->isGraduate);
+    }
+
+    public function testPutConsultantWithoutRightShouldReturn401()
+    {
+        $post_body = array(
+            "username" => "newusername",
+            "password" => "password",
+            "firstName" => "firstName",
+            "lastName" => "lastName",
+            "genderId" => 1,
+            "email" => "fakeEmail@gmail.com",
+            'nationalityId' => 133,
+            "birthday" => "1975-12-01",
+            "telephone" => "0033675385495",
+            "address" => [
+                "line1" => "20 avenue albert Einstein",
+                "line2" => "residence g",
+                "city" => "lyon",
+                "postalCode" => 69100,
+                "countryId" => 1
+            ],
+            "schoolYear" => 1,
+            "departmentId" => 1,
+            "positions" => [
+                array(
+                    "id" => 3,
+                    "year" => 2018,
+                    "isBoard" => true
+                ),
+                array(
+                    "id" => 4,
+                    "year" => 2019,
+                    "isBoard" => false
+                )
+            ],
+            "company" => "Amazon",
+            "profilePicture" => "http://image.png",
+            "droitImage" => true,
+            "isApprentice" => true,
+            "socialSecurityNumber" => "12346781300139041",
+            'isGraduate' => true,
+        );
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'PUT',
+            'REQUEST_URI' => '/api/v1/core/consultant/2',
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId",6);
+        $req = $req->withParsedBody($post_body);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(401, $response->getStatusCode());
     }
 
     public function testPutConsultantOnlyRequiredFieldShouldReturn200()
@@ -494,6 +550,7 @@ class ConsultantIntegrationTest extends AppTestCase
         ]);
 
         $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId",6);
         $req = $req->withParsedBody($post_body);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
@@ -529,6 +586,7 @@ class ConsultantIntegrationTest extends AppTestCase
         ]);
 
         $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId",6);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
         $this->assertSame(400, $response->getStatusCode());

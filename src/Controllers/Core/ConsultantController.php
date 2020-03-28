@@ -170,6 +170,7 @@ class ConsultantController
     public function updateConsultant(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Updating consultant from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->accessRightsService->ensureOnlyGeneralSecretary($request);
         $body = $request->getParsedBody();
 
         $this->entityManager->beginTransaction();
