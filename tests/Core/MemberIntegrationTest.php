@@ -272,6 +272,7 @@ class MemberIntegrationTest extends AppTestCase
         ]);
 
         $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId",6);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 
@@ -834,6 +835,7 @@ class MemberIntegrationTest extends AppTestCase
                 'REQUEST_URI' => '/api/v1/core/member/' . $id,
             ]);
             $req = Request::createFromEnvironment($env);
+            $req = $req->withAttribute("userId",6);
             $this->app->getContainer()['request'] = $req;
             $response = $this->app->run(false);
 
