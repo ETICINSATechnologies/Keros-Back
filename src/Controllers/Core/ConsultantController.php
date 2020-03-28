@@ -183,7 +183,7 @@ class ConsultantController
     public function deleteConsultant(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Deleting consultant from " . $request->getServerParams()["REMOTE_ADDR"]);
-
+        $this->accessRightsService->ensureOnlyGeneralSecretary($request);
         $this->entityManager->beginTransaction();
         $this->consultantService->delete($args['id']);
         $this->entityManager->commit();

@@ -137,10 +137,24 @@ class ConsultantIntegrationTest extends AppTestCase
             'REQUEST_URI' => '/api/v1/core/consultant/2',
         ]);
         $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId", 6);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 
         $this->assertSame(204, $response->getStatusCode());
+    }
+
+    public function testDeleteConsultantWithoutRightShouldReturn401()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'DELETE',
+            'REQUEST_URI' => '/api/v1/core/consultant/2',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(401, $response->getStatusCode());
     }
 
     public function testDeleteInvalidConsultantShouldReturn404(){
