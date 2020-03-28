@@ -59,7 +59,8 @@ INSERT INTO core_user (id, username, password, expiresAt, disabled) VALUES
     (52, 'consultant 52', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
     (53, 'consultant 53', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
     (54, 'consultant 54', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
-    (55, 'consultant 55', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false); #password
+    (55, 'consultant 55', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false), #password
+    (56, 'Admin-keros', '$2y$10$CMdJgBHbdymIM5/WUuz8guvjvSA2dxgDQKAQkaiOD8aMF0sKc4GhG', STR_TO_DATE('5/15/2022 8:06:26 AM', '%c/%e/%Y %r'), false); #password
 
 TRUNCATE TABLE core_address;
 INSERT INTO core_address (id, line1, line2, postalCode, city, countryId) VALUES
@@ -178,7 +179,8 @@ INSERT INTO core_address (id, line1, line2, postalCode, city, countryId) VALUES
     (113, 'Rue consultant 52', 'Ter', '79413', 'Lyon City', 61), #consultant 52
     (114, 'Rue consultant 53', 'Ter', '79413', 'Lyon City', 85), #consultant 53
     (115, 'Rue consultant 54', 'Ter', '79413', 'Lyon City', 71), #consultant 54
-    (116, 'Rue consultant 55', 'Ter', '79413', 'Lyon City', 97); #consultant 55
+    (116, 'Rue consultant 55', 'Ter', '79413', 'Lyon City', 97), #consultant 55
+    (117, 'Rue ADMIN 55', 'Ter', '79413', 'Lyon City', 97); #consultant 55
 
 TRUNCATE TABLE core_ticket;
 INSERT INTO core_ticket (id, userId, title, message, type, status) VALUES
@@ -212,7 +214,8 @@ INSERT INTO core_member (id, genderId, firstName, lastName, birthday, telephone,
   (25, 3, 'Stéphane25', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly25@fake.com', 28, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false),
   (26, 3, 'Stéphane26', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly26@fake.com', 29, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false),
   (27, 3, 'Stéphane27', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly27@fake.com', 30, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), true),
-  (28, 3, 'Stéphane28', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly28@fake.com', 31, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), true);
+  (28, 3, 'Stéphane28', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly28@fake.com', 31, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), true),
+  (56, 3, 'Admin', 'Admin', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'admin@fake.com', 117, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false);
 
 TRUNCATE TABLE core_consultant;
 INSERT INTO core_consultant (id, genderId, firstName, lastName, birthday, telephone, nationalityId, email, addressId, socialSecurityNumber, schoolYear, departmentId, company, profilePicture, droitImage, isApprentice, createdDate, documentIdentity, documentScolaryCertificate, documentRIB, documentVitaleCard, documentResidencePermit, documentCVEC) VALUES
@@ -263,7 +266,8 @@ INSERT INTO core_member_position (id, memberId, positionId, isBoard, year) VALUE
   (10, 6, 21, TRUE, 2018),
   (11, 6, 21, TRUE, 2018),
   (12, 6, 22, TRUE, 2018),
-  (13, 6, 18, TRUE, 2018);
+  (13, 6, 18, TRUE, 2018),
+  (14, 56, 27, FALSE, 2020);
 
 TRUNCATE TABLE ua_firm;
 INSERT INTO ua_firm (id, siret, name, addressId, typeId, mainContact) VALUES

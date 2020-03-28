@@ -49,6 +49,12 @@ class PositionDataService
     {
         try {
             $positions = $this->repository->findAll();
+            //We remove the Admin-Keros position -> 27
+            foreach ($positions as $key=>$position){
+                if($position->getId() == 27) {
+                    unset($positions[$key]);
+                }
+            }
             return $positions;
         } catch (Exception $e) {
             $msg = "Error finding page of positions : " . $e->getMessage();

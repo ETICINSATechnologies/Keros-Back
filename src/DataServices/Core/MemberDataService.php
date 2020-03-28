@@ -101,7 +101,8 @@ class MemberDataService
                 ->leftJoin(Pole::class, 'pole', 'WITH', 'p.pole = pole.id')
                 ->groupBy('u.id');
 
-            $whereStatement = '';
+            $whereStatement = 'p.id != 27';
+            //$whereStatement = '';
             $whereParameters = array();
 
             foreach ($queryParams as $key => $value) {

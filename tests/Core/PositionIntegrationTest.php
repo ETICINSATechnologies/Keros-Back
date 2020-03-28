@@ -25,6 +25,10 @@ class PositionIntegrationTest extends AppTestCase
         $this->assertEquals(22, count($body));
         $this->assertNotNull(strlen($body[0]->id));
         $this->assertNotNull(strlen($body[0]->label));
+        //We don't want to have the Admin position returned here
+        foreach ($body as $position){
+            $this->assertNotEquals(27, $position->id);
+        }
     }
 
     public function testGetPositionWithoutPoleShouldReturn200()
@@ -74,5 +78,21 @@ class PositionIntegrationTest extends AppTestCase
         $response = $this->app->run(false);
 
         $this->assertSame(404, $response->getStatusCode());
+    }
+
+    public function testGetAdminPositionShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/core/position/27',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(200, $response->getStatusCode());
+
+        $body = json_decode($response->getBody());
+        $this->assertSame(27, $body->id);
     }
 }
