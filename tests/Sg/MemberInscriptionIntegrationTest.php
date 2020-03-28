@@ -770,4 +770,37 @@ class MemberInscriptionIntegrationTest extends AppTestCase
             $this->assertContains('Clark', array($memberInscription->firstName, $memberInscription->lastName, $memberInscription->phoneNumber, $memberInscription->email));
         }
     }
+
+    public function testPostMemberWithoutPhoneNumberInscriptionShouldReturn400()
+    {
+        $post_body = array(
+            'firstName' => 'Thanos',
+            'lastName' => 'Tueur de monde',
+            'genderId' => 4,
+            'birthday' => '1000-01-01',
+            'departmentId' => 4,
+            'email' => 'thanos@claquementdedoigts.com',
+            'outYear' => 6666,
+            'nationalityId' => 133,
+            'wantedPoleId' => 5,
+            'address' => array(
+                'line1' => 'je sais pas quoi mettre',
+                'line2' => "",
+                'city' => 'Lorem ipsum',
+                'postalCode' => 66666,
+                'countryId' => 133,
+            ),
+            'droitImage' => true,
+        );
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => '/api/v1/sg/membre-inscription',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withParsedBody($post_body);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(400, $response->getStatusCode());
+    }
 }
