@@ -208,8 +208,6 @@ class MemberService
         $genderId = Validator::requiredId($fields["genderId"]);
         $gender = $this->genderService->getOne($genderId);
         $department = null;
-
-        
         $departmentId = Validator::requiredId($fields["departmentId"]);
         $department = $this->departmentService->getOne($departmentId);
         $emailETIC = Validator::optionalEmail($fields["emailETIC"] ?? null);
