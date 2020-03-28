@@ -213,6 +213,7 @@ class ConsultantIntegrationTest extends AppTestCase
         ]);
 
         $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId",6);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 
@@ -240,6 +241,20 @@ class ConsultantIntegrationTest extends AppTestCase
         $body = json_decode($response->getBody());
         $this->assertSame(2, $body->id);
         $this->assertSame("123456789012345", $body->socialSecurityNumber);
+    }
+
+    public function testGetConsultantProtectedWithoutRightDataShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/core/consultant/2/protected',
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(401, $response->getStatusCode());
     }
 
 

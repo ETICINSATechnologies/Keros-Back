@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Keros\Entities\Core\Consultant;
 use Keros\Entities\Core\Page;
 use Keros\Entities\Core\RequestParameters;
+use Keros\Services\Auth\AccessRightsService;
 use Keros\Services\Core\ConsultantService;
 use Keros\Tools\Authorization\JwtCodec;
 use Monolog\Logger;
@@ -47,6 +48,9 @@ class ConsultantController
      */
     private $directoryManager;
 
+    /** @var AccessRightsService  */
+    private $accessRightsService;
+
     public function __construct(ContainerInterface $container)
     {
         $this->logger = $container->get(Logger::class);
@@ -54,6 +58,7 @@ class ConsultantController
         $this->consultantService = $container->get(ConsultantService::class);
         $this->directoryManager = $container->get(DirectoryManager::class);
         $this->kerosConfig = ConfigLoader::getConfig();
+        $this->accessRightsService = $container->get(AccessRightsService::class);
     }
 
     public function getConsultant(Request $request, Response $response, array $args)
@@ -84,6 +89,8 @@ class ConsultantController
     public function getConsultantProtectedData(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Getting consultant protected data by ID " . $args["id"] . " from " . $request->getServerParams()["REMOTE_ADDR"]);
+
+        $this->accessRightsService->ensureOnlyGeneralSecretary($request);
 
         $consultantProtectedData = $this->consultantService->getOneProtectedData($args["id"]);
 
@@ -133,6 +140,7 @@ class ConsultantController
     public function createConsultant(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Creating consultant from " . $request->getServerParams()["REMOTE_ADDR"]);
+        
         $uploadedFiles = FileValidator::optionalFiles($request->getUploadedFiles());
         $consultantFiles = ConsultantFileHelper::getConsultantFiles();
         $body = $request->getParsedBody();

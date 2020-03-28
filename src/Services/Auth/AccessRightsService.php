@@ -57,6 +57,25 @@ class AccessRightsService
         throw new KerosException("You do not have the rights for creating a member", 401);
     }
 
+    /**
+     * return if member that send the request have one of the positions specified in @param $positionsIdAllowed.
+     * Throws exception otherwise
+     * @param Request $request
+     * @param mixed ...$positionsIdAllowed
+     * @throws KerosException
+     */
+    public function ensureMemberIs(Request $request, ... $positionsIdAllowed){
+
+        $currentMember = $this->memberService->getOne($request->getAttribute("userId"));
+        $memberPositions = $currentMember->getMemberPositions();
+        foreach ($memberPositions as $memberPosition) {
+            if (in_array($memberPosition->getPosition()->getId(), $positionsIdAllowed)) {
+                return;
+            }
+        }
+        throw new KerosException("You do not have the rights for creating a member", 401);
+    }
+
     public function checkRightsConfidentialStudies(Request $request, Study $study)
     {
         $accessAllowed = array(self::UA_MANAGER_ID);
@@ -196,5 +215,9 @@ class AccessRightsService
 
         $response = $next($request, $response);
         return $response;
+    }
+
+    public function ensureOnlyGeneralSecretary(Request $request){
+        $this->ensureMemberIs($request, 22);
     }
 }
