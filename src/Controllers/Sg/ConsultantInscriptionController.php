@@ -166,6 +166,7 @@ class ConsultantInscriptionController
     public function deleteConsultantInscription(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Deleting consultantInscription from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->accessRightsService->ensureOnlyGeneralSecretary($request);
 
         $this->entityManager->beginTransaction();
         $this->consultantInscriptionService->delete($args['id']);

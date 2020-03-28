@@ -476,10 +476,24 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
             'REQUEST_URI' => '/api/v1/sg/consultant-inscription/1000',
         ]);
         $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId",6);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 
         $this->assertSame(404, $response->getStatusCode());
+    }
+
+    public function testDeleteConsultantInscriptionWithoutRightShouldReturn401()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'DELETE',
+            'REQUEST_URI' => '/api/v1/sg/consultant-inscription/1000',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(401, $response->getStatusCode());
     }
 
     /**
@@ -493,6 +507,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
             'REQUEST_URI' => '/api/v1/sg/consultant-inscription/1',
         ]);
         $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId",6);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 
