@@ -827,7 +827,7 @@ class MemberIntegrationTest extends AppTestCase
     public function testDeleteAllExistingMemberShouldReturn204()
     {
         for($id = 1;  $id <= 28; $id++) {
-            if(in_array($id, array(1, 2, 5))){
+            if(in_array($id, array(1, 2, 5, 6))){
                 continue;
             }
             $env = Environment::mock([
