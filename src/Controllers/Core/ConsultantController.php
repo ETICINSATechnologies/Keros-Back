@@ -140,7 +140,7 @@ class ConsultantController
     public function createConsultant(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Creating consultant from " . $request->getServerParams()["REMOTE_ADDR"]);
-        $this->accessRightsService->ensureOnlyGeneralSecretary();
+        $this->accessRightsService->ensureOnlyGeneralSecretary($request);
         $uploadedFiles = FileValidator::optionalFiles($request->getUploadedFiles());
         $consultantFiles = ConsultantFileHelper::getConsultantFiles();
         $body = $request->getParsedBody();
