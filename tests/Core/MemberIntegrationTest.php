@@ -244,10 +244,24 @@ class MemberIntegrationTest extends AppTestCase
             'REQUEST_URI' => '/api/v1/core/member/1',
         ]);
         $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId",6);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 
         $this->assertSame(204, $response->getStatusCode());
+    }
+
+    public function testDeleteMembersWithoutRightShouldReturn401()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'DELETE',
+            'REQUEST_URI' => '/api/v1/core/member/1',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(401, $response->getStatusCode());
     }
 
     public function testDeleteInvalidMemberShouldReturn404()
@@ -736,6 +750,7 @@ class MemberIntegrationTest extends AppTestCase
             'REQUEST_URI' => '/api/v1/core/member/2/photo',
         ]);
         $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId",6);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
         $this->assertSame(404, $response->getStatusCode());

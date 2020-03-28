@@ -147,7 +147,7 @@ class MemberController
     public function deleteMember(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Deleting member " . $args['id'] . " from " . $request->getServerParams()["REMOTE_ADDR"]);
-
+        $this->accessRightsService->ensureOnlyGeneralSecretary($request);
         $this->entityManager->beginTransaction();
         $this->memberService->delete($args['id']);
         $this->entityManager->commit();
