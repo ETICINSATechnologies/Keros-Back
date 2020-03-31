@@ -771,7 +771,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         }
     }
 
-    public function testPostMemberWithoutPhoneNumberInscriptionShouldReturn400()
+    public function testPostMemberWithoutPhoneNumberInscriptionShouldReturn500()
     {
         $post_body = array(
             'firstName' => 'Thanos',
@@ -801,6 +801,6 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $req = $req->withParsedBody($post_body);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
-        $this->assertSame(400, $response->getStatusCode());
+        $this->assertSame(500, $response->getStatusCode());
     }
 }
