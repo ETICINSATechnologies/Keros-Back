@@ -22,7 +22,7 @@ class PositionIntegrationTest extends AppTestCase
         $this->assertSame(200, $response->getStatusCode());
 
         $body = json_decode($response->getBody());
-        $this->assertEquals(22, count($body));
+        $this->assertEquals(24, count($body));
         $this->assertNotNull(strlen($body[0]->id));
         $this->assertNotNull(strlen($body[0]->label));
     }
