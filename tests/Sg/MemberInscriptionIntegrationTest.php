@@ -178,6 +178,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
             'birthday' => '1000-01-01',
             'departmentId' => 4,
             'email' => 'thanos@claquementdedoigts.com',
+            'phoneNumber' => '3311111111111',
             'nationalityId' => 133,
             'wantedPoleId' => 5,
             'outYear' => 2021,
