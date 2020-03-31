@@ -212,7 +212,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->assertSame('1000-01-01', $body->birthday);
         $this->assertSame(4, $body->department->id);
         $this->assertSame('thanos@claquementdedoigts.com', $body->email);
-        $this->assertSame(null, $body->phoneNumber);
+        $this->assertSame('3311111111111', $body->phoneNumber);
         $this->assertSame(2021, $body->outYear);
         $this->assertSame(133, $body->nationality->id);
         $this->assertSame(5, $body->wantedPole->id);
