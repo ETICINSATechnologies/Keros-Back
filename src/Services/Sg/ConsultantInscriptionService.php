@@ -163,6 +163,23 @@ class   ConsultantInscriptionService
         return $consultantInscription;
     }
 
+
+    /**
+     * @param int $id
+     * @return array
+     * @throws KerosException
+     */
+    public function getOneProtectedData(int $id)
+    {
+        $id = Validator::requiredId($id);
+        $consultantInscription = $this->consultantInscriptionDataService->getOne($id);
+        if (!$consultantInscription) {
+            throw new KerosException("The consultantInscription could not be found", 404);
+        }
+        $consultantInscriptionProtectedData=$consultantInscription->getProtected();
+        return $consultantInscriptionProtectedData;
+    }
+
     /**
      * @return array
      * @throws KerosException

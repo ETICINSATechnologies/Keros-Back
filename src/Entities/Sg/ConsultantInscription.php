@@ -212,6 +212,26 @@ class ConsultantInscription implements JsonSerializable
             'outYear' => $this->getOutYear(),
             'nationality' => $this->getNationality(),
             'address' => $this->getAddress(),
+            'droitImage' => $this->isDroitImage(),
+            'isApprentice' => $this->getIsApprentice(),
+            'createdDate' => $this->getCreatedDate(),
+        ];
+    }
+
+    public function getProtected()
+    {
+        return [
+            'id' => $this->getId(),
+            'firstName' => $this->getFirstName(),
+            'lastName' => $this->getLastName(),
+            'gender' => $this->getGender(),
+            'birthday' => $this->getBirthday()->format('Y-m-d'),
+            'department' => $this->getDepartment(),
+            'email' => $this->getEmail(),
+            'phoneNumber' => $this->getPhoneNumber(),
+            'outYear' => $this->getOutYear(),
+            'nationality' => $this->getNationality(),
+            'address' => $this->getAddress(),
             'socialSecurityNumber' => $this->getSocialSecurityNumber(),
             'droitImage' => $this->isDroitImage(),
             'isApprentice' => $this->getIsApprentice(),
