@@ -906,7 +906,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         }
     }
 
-    public function testGetConsultantInscriptionProtectedDataShouldReturn200()
+    public function testGetConsultantInscriptionProtectedShouldReturn200()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'GET',
