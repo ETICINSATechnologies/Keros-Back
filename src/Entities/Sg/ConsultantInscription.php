@@ -212,7 +212,6 @@ class ConsultantInscription implements JsonSerializable
             'outYear' => $this->getOutYear(),
             'nationality' => $this->getNationality(),
             'address' => $this->getAddress(),
-            'socialSecurityNumber' => $this->getSocialSecurityNumber(),
             'droitImage' => $this->isDroitImage(),
             'isApprentice' => $this->getIsApprentice(),
             'createdDate' => $this->getCreatedDate(),
@@ -225,6 +224,13 @@ class ConsultantInscription implements JsonSerializable
                 'documentCVEC' => !is_null($this->getDocumentCVEC()),
             )
         ];
+    }
+
+    public function getProtected()
+    {
+        $returnArray=$this->JsonSerialize();
+        $returnArray['socialSecurityNumber']=$this->getSocialSecurityNumber();
+        return $returnArray;
     }
 
     public static function getSearchFields(): array
