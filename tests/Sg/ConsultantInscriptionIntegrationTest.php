@@ -1117,7 +1117,6 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
             'REQUEST_URI' => '/api/v1/sg/consultant-inscription/1/protected',
         ]);
         $req = Request::createFromEnvironment($env);
-        $req = $req->withAttribute("userId", 6);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
         $body = json_decode($response->getBody());
