@@ -38,7 +38,6 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         $this->assertSame(3, $body->content[0]->department->id);
         $this->assertSame('bruce.wayne@batman.com', $body->content[0]->email);
         $this->assertSame('0033123456789', $body->content[0]->phoneNumber);
-        //$this->assertSame('12345678901234567', $body->content[0]->socialSecurityNumber);
         $this->assertSame(2021, $body->content[0]->outYear);
         $this->assertSame(42, $body->content[0]->nationality->id);
         $this->assertSame(1, $body->content[0]->address->id);
@@ -125,7 +124,6 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         $this->assertSame('Lorem ipsum', $body->address->city);
         $this->assertSame(true, $body->droitImage);
         $this->assertSame(true,$body->isApprentice);
-        //$this->assertSame('12346781300139041', $body->socialSecurityNumber);
         $dateDiff = ((new \DateTime())->diff(new \DateTime($body->createdDate->date)))->format('%a');
         $this->assertSame(intval($dateDiff),0);
     }
@@ -268,7 +266,6 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         $this->assertSame('Lorem ipsum', $body->address->city);
         $this->assertSame(true, $body->droitImage);
         $this->assertSame(true,$body->isApprentice);
-        //$this->assertSame('12346781300139041', $body->socialSecurityNumber);
         $dateDiff = ((new \DateTime())->diff(new \DateTime($body->createdDate->date)))->format('%a');
         $this->assertSame(intval($dateDiff),0);
     }
@@ -302,7 +299,6 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         $this->assertSame(1, $body->address->id);
         $this->assertSame(false, $body->droitImage);
         $this->assertSame(true,$body->isApprentice);
-        //$this->assertSame('12345678901234567', $body->socialSecurityNumber);
     }
 
     /**
@@ -377,7 +373,6 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         $this->assertSame('Lorem ipsum', $body->address->city);
         $this->assertSame(true, $body->droitImage);
         $this->assertSame(true,$body->isApprentice);
-        //$this->assertSame('12346781300139041', $body->socialSecurityNumber);
     }
 
     /**
@@ -909,5 +904,33 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         foreach ($body->content as $consultantInscription){
             $this->assertContains('Clark', array($consultantInscription->firstName, $consultantInscription->lastName, $consultantInscription->phoneNumber, $consultantInscription->email));
         }
+    }
+
+    public function testGetConsultantInscriptionProtectedDataShouldReturn200()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/sg/consultant-inscription/1/protected',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $body = json_decode($response->getBody());
+
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame(1, $body->id);
+        $this->assertSame('Bruce', $body->firstName);
+        $this->assertSame('Wayne', $body->lastName);
+        $this->assertSame(1, $body->gender->id);
+        $this->assertSame('2000-02-14', $body->birthday);
+        $this->assertSame(3, $body->department->id);
+        $this->assertSame('bruce.wayne@batman.com', $body->email);
+        $this->assertSame('0033123456789', $body->phoneNumber);
+        $this->assertSame(2021, $body->outYear);
+        $this->assertSame(42, $body->nationality->id);
+        $this->assertSame(1, $body->address->id);
+        $this->assertSame(false, $body->droitImage);
+        $this->assertSame(true,$body->isApprentice);
+        $this->assertSame('12345678901234567', $body->socialSecurityNumber);
     }
 }

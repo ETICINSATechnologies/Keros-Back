@@ -104,7 +104,7 @@ class ConsultantInscriptionController
      */
     public function getConsultantInscriptionProtectedData(Request $request,Response $response,array $args)
     {
-        $this->logger->debug("Getting consultantInscription protectec data by ID from ". $args["id"] . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->logger->debug("Getting consultantInscription protected data by ID from ". $args["id"] . $request->getServerParams()["REMOTE_ADDR"]);
         $consultantInscriptionProtectedData=$this->consultantInscriptionService->getOneProtectedData($args["id"]);
         return $response->withJson($consultantInscriptionProtectedData,200);
     }
