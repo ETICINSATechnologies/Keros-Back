@@ -3,12 +3,12 @@
 
 namespace KerosTest\Sg;
 
+use Keros\Tools\Helpers\FileHelper;
 use KerosTest\AppTestCase;
+use Slim\Exception\MethodNotAllowedException;
+use Slim\Exception\NotFoundException;
 use Slim\Http\Environment;
 use Slim\Http\Request;
-use \Slim\Exception\MethodNotAllowedException;
-use \Slim\Exception\NotFoundException;
-use Keros\Tools\Helpers\FileHelper;
 
 class ConsultantInscriptionIntegrationTest extends AppTestCase
 {
@@ -123,9 +123,9 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         $this->assertSame('je sais pas quoi mettre', $body->address->line1);
         $this->assertSame('Lorem ipsum', $body->address->city);
         $this->assertSame(true, $body->droitImage);
-        $this->assertSame(true,$body->isApprentice);
+        $this->assertSame(true, $body->isApprentice);
         $dateDiff = ((new \DateTime())->diff(new \DateTime($body->createdDate->date)))->format('%a');
-        $this->assertSame(intval($dateDiff),0);
+        $this->assertSame(intval($dateDiff), 0);
     }
 
     /**
@@ -265,9 +265,9 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         $this->assertSame('je sais pas quoi mettre', $body->address->line1);
         $this->assertSame('Lorem ipsum', $body->address->city);
         $this->assertSame(true, $body->droitImage);
-        $this->assertSame(true,$body->isApprentice);
+        $this->assertSame(true, $body->isApprentice);
         $dateDiff = ((new \DateTime())->diff(new \DateTime($body->createdDate->date)))->format('%a');
-        $this->assertSame(intval($dateDiff),0);
+        $this->assertSame(intval($dateDiff), 0);
     }
 
     /**
@@ -298,7 +298,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         $this->assertSame(42, $body->nationality->id);
         $this->assertSame(1, $body->address->id);
         $this->assertSame(false, $body->droitImage);
-        $this->assertSame(true,$body->isApprentice);
+        $this->assertSame(true, $body->isApprentice);
     }
 
     /**
@@ -353,7 +353,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         ]);
         $req = Request::createFromEnvironment($env);
         $req = $req->withParsedBody($put_body);
-        $req = $req->withAttribute("userId",6);
+        $req = $req->withAttribute("userId", 6);
 
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
@@ -372,7 +372,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         $this->assertSame('je sais pas quoi mettre', $body->address->line1);
         $this->assertSame('Lorem ipsum', $body->address->city);
         $this->assertSame(true, $body->droitImage);
-        $this->assertSame(true,$body->isApprentice);
+        $this->assertSame(true, $body->isApprentice);
     }
 
     /**
@@ -410,7 +410,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         ]);
         $req = Request::createFromEnvironment($env);
         $req = $req->withParsedBody($put_body);
-        $req = $req->withAttribute("userId",6);
+        $req = $req->withAttribute("userId", 6);
 
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
@@ -471,7 +471,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
             'REQUEST_URI' => '/api/v1/sg/consultant-inscription/1000',
         ]);
         $req = Request::createFromEnvironment($env);
-        $req = $req->withAttribute("userId",6);
+        $req = $req->withAttribute("userId", 6);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 
@@ -502,7 +502,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
             'REQUEST_URI' => '/api/v1/sg/consultant-inscription/1',
         ]);
         $req = Request::createFromEnvironment($env);
-        $req = $req->withAttribute("userId",6);
+        $req = $req->withAttribute("userId", 6);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 
@@ -842,7 +842,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
             'REQUEST_URI' => '/api/v1/sg/consultant-inscription/1/validate',
         ]);
         $req = Request::createFromEnvironment($env);
-        $req = $req->withAttribute("userId",6);
+        $req = $req->withAttribute("userId", 6);
 
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
@@ -863,7 +863,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         $this->assertNotNull($body->address->id);
         $this->assertSame('13 Rue du renard', $body->address->line1);
         $dateDiff = ((new \DateTime())->diff(new \DateTime($body->createdDate->date)))->format('%a');
-        $this->assertSame(intval($dateDiff),0);
+        $this->assertSame(intval($dateDiff), 0);
 
         foreach ($filepaths as $file_path) {
             FileHelper::deleteFile(FileHelper::normalizePath($file_path));
@@ -908,7 +908,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
             'REQUEST_URI' => '/api/v1/sg/consultant-inscription/1000/validate',
         ]);
         $req = Request::createFromEnvironment($env);
-        $req = $req->withAttribute("userId",6);
+        $req = $req->withAttribute("userId", 6);
 
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
@@ -986,7 +986,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
 
         $body = json_decode($response->getBody());
 
-        foreach ($body->content as $consultantInscription){
+        foreach ($body->content as $consultantInscription) {
             $this->assertContains('Clark', $consultantInscription->firstName);
         }
     }
@@ -1004,7 +1004,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
 
         $body = json_decode($response->getBody());
 
-        foreach ($body->content as $consultantInscription){
+        foreach ($body->content as $consultantInscription) {
             $this->assertContains('Wayne', $consultantInscription->lastName);
         }
     }
@@ -1022,7 +1022,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
 
         $body = json_decode($response->getBody());
 
-        foreach ($body->content as $consultantInscription){
+        foreach ($body->content as $consultantInscription) {
             $this->assertContains('bruce.wayne@batman.com', $consultantInscription->email);
         }
     }
@@ -1040,7 +1040,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
 
         $body = json_decode($response->getBody());
 
-        foreach ($body->content as $consultantInscription){
+        foreach ($body->content as $consultantInscription) {
             $this->assertContains('0033123456789', $consultantInscription->phoneNumber);
         }
     }
@@ -1058,7 +1058,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
 
         $body = json_decode($response->getBody());
 
-        foreach ($body->content as $consultantInscription){
+        foreach ($body->content as $consultantInscription) {
             $this->assertEquals(2022, $consultantInscription->outYear);
         }
     }
@@ -1076,7 +1076,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
 
         $body = json_decode($response->getBody());
 
-        foreach ($body->content as $consultantInscription){
+        foreach ($body->content as $consultantInscription) {
             $this->assertContains('Clark', array($consultantInscription->firstName, $consultantInscription->lastName, $consultantInscription->phoneNumber, $consultantInscription->email));
         }
     }
@@ -1088,6 +1088,7 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
             'REQUEST_URI' => '/api/v1/sg/consultant-inscription/1/protected',
         ]);
         $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId", 6);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
         $body = json_decode($response->getBody());
@@ -1105,7 +1106,23 @@ class ConsultantInscriptionIntegrationTest extends AppTestCase
         $this->assertSame(42, $body->nationality->id);
         $this->assertSame(1, $body->address->id);
         $this->assertSame(false, $body->droitImage);
-        $this->assertSame(true,$body->isApprentice);
+        $this->assertSame(true, $body->isApprentice);
         $this->assertSame('12345678901234567', $body->socialSecurityNumber);
     }
+    
+    public function testGetConsultantInscriptionProtectedWithoutRightShouldReturn401()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/sg/consultant-inscription/1/protected',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId", 6);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $body = json_decode($response->getBody());
+
+        $this->assertSame(401, $response->getStatusCode());
+    }
+
 }
