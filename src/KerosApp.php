@@ -250,6 +250,7 @@ class KerosApp
                     $this->get("", ConsultantInscriptionController::class . ':getPageConsultantInscriptions');
                     $this->post("", ConsultantInscriptionController::class . ':createConsultantInscription');
                     $this->get('/{id:[0-9]+}', ConsultantInscriptionController::class . ':getConsultantInscription');
+                    $this->get('/{id:[0-9]+}/protected', ConsultantInscriptionController::class.':getConsultantInscriptionProtected');
                     $this->delete("/{id:[0-9]+}", ConsultantInscriptionController::class . ':deleteConsultantInscription');
                     $this->put("/{id:[0-9]+}", ConsultantInscriptionController::class . ':updateConsultantInscription');
                     $this->post("/{id:[0-9]+}/validate", ConsultantInscriptionController::class . ':validateConsultantInscription');

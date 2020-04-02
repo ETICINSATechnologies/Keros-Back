@@ -71,9 +71,7 @@ class ConsultantInscriptionController
     public function getConsultantInscription(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Getting consultantInscription by ID from " . $request->getServerParams()["REMOTE_ADDR"]);
-
         $consultantInscription = $this->consultantInscriptionService->getOne($args["id"]);
-
         return $response->withJson($consultantInscription, 200);
     }
 
@@ -96,6 +94,19 @@ class ConsultantInscriptionController
         $page = new Page($consultantInscriptions, $params, $count);
 
         return $response->withJson($page, 200);
+    }
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array $arg
+     * @return mixed
+     */
+    public function getConsultantInscriptionProtected(Request $request,Response $response,array $args)
+    {
+        $this->logger->debug("Getting consultantInscription protected data by ID from ". $args["id"] . $request->getServerParams()["REMOTE_ADDR"]);
+        $consultantInscriptionProtectedData=$this->consultantInscriptionService->getOneProtectedData($args["id"]);
+        return $response->withJson($consultantInscriptionProtectedData,200);
     }
 
     /**

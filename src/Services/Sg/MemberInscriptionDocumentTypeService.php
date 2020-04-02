@@ -2,6 +2,8 @@
 
 namespace Keros\Services\Sg;
 
+use DateTime;
+use Exception;
 use Keros\DataServices\Sg\MemberInscriptionDocumentTypeDataService;
 use Keros\Entities\Sg\MemberInscription;
 use Keros\Entities\Sg\MemberInscriptionDocumentType;
@@ -11,22 +13,17 @@ use Keros\Tools\DocumentGenerator;
 use Keros\Tools\Validator;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
-use \Exception;
-use \DateTime;
 
 class MemberInscriptionDocumentTypeService
 {
-    /** @var */
-    private $kerosConfig;
-
     /** @var Logger */
     protected $logger;
-
     /** @var MemberInscriptionDocumentTypeDataService */
     protected $memberInscriptionDocumentTypeDataService;
-
     /** @var DocumentGenerator */
     protected $documentGenerator;
+    /** @var */
+    private $kerosConfig;
 
     /**
      * MemberInscriptionDocumentTypeService constructor.
@@ -38,22 +35,6 @@ class MemberInscriptionDocumentTypeService
         $this->kerosConfig = ConfigLoader::getConfig();
         $this->memberInscriptionDocumentTypeDataService = $container->get(MemberInscriptionDocumentTypeDataService::class);
         $this->documentGenerator = $container->get(DocumentGenerator::class);
-    }
-
-    /**
-     * @param int $id
-     * @return MemberInscriptionDocumentType
-     * @throws KerosException
-     */
-    public function getOne(int $id): MemberInscriptionDocumentType
-    {
-        $id = Validator::requiredId($id);
-
-        $documentType = $this->memberInscriptionDocumentTypeDataService->getOne($id);
-        if (!$documentType) {
-            throw new KerosException("The memberInscriptionDocumentType could not be found", 404);
-        }
-        return $documentType;
     }
 
     /**
@@ -85,6 +66,22 @@ class MemberInscriptionDocumentTypeService
         $location = $this->documentGenerator->generateSimpleDocument($documentType, $replacementArray);
 
         return $location;
+    }
+
+    /**
+     * @param int $id
+     * @return MemberInscriptionDocumentType
+     * @throws KerosException
+     */
+    public function getOne(int $id): MemberInscriptionDocumentType
+    {
+        $id = Validator::requiredId($id);
+
+        $documentType = $this->memberInscriptionDocumentTypeDataService->getOne($id);
+        if (!$documentType) {
+            throw new KerosException("The memberInscriptionDocumentType could not be found", 404);
+        }
+        return $documentType;
     }
 
     /**
@@ -124,6 +121,9 @@ class MemberInscriptionDocumentTypeService
                 break;
             case (9):
                 $wantedPole = "affaires";
+                break;
+            case (10):
+                $wantedPole = "technique";
                 break;
             default:
                 $wantedPole = "Off";
