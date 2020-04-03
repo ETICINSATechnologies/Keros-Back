@@ -91,7 +91,19 @@ class MemberController
         $body = $request->getParsedBody();
 
         $this->entityManager->beginTransaction();
+        $memberBeforeUpdate = $this->memberService->getOne($request->getAttribute("userId"));
+        $droitImageBefore = $memberBeforeUpdate->isDroitImage();
+        $isAlumniBefore = $memberBeforeUpdate->getIsAlumni();
+
+        // Ensure that the member didn't modify some critical information about him
+        if((isset($body["isAlumni"]) && $isAlumniBefore != $body["isAlumni"]) || (isset($body["droitImage"]) && $droitImageBefore != $body["droitImage"])){
+            // SG can modify his own information
+            $this->accessRightsService->ensureOnlyGeneralSecretary($request);
+        }
+        // Modification is allowed, we continue
+
         $member = $this->memberService->update($request->getAttribute("userId"), $body);
+
         $this->entityManager->commit();
 
         return $response->withJson($member, 200);

@@ -3,6 +3,7 @@
 namespace Keros\Services\Core;
 
 
+use Cassandra\Date;
 use Keros\DataServices\Core\MemberPositionDataService;
 use Keros\Entities\Core\Member;
 use Keros\Entities\Core\MemberPosition;
@@ -51,8 +52,8 @@ class MemberPositionService
     public function create(Member $member, array $fields): MemberPosition
     {
         $positionId = Validator::requiredId($fields["id"]);
-        $isBoard = Validator::optionalBool($fields["isBoard"]);
-        $year = Validator::optionalInt($fields["year"]);
+        $isBoard = Validator::optionalBool($fields["isBoard"] ?? false);
+        $year = Validator::optionalInt($fields["year"] ?? intval(date("Y")));
 
         $position = $this->positionService->getOne($positionId);
 
