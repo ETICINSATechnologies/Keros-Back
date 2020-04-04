@@ -91,7 +91,19 @@ class MemberController
         $body = $request->getParsedBody();
 
         $this->entityManager->beginTransaction();
+        $memberBeforeUpdate = $this->memberService->getOne($request->getAttribute("userId"));
+        $droitImageBefore = $memberBeforeUpdate->isDroitImage();
+        $isAlumniBefore = $memberBeforeUpdate->getIsAlumni();
+
+        // Ensure that the member didn't modify some critical information about him
+        if((isset($body["isAlumni"]) && $isAlumniBefore != $body["isAlumni"]) || (isset($body["droitImage"]) && $droitImageBefore != $body["droitImage"])){
+            // SG can modify his own information
+            $this->accessRightsService->ensureOnlyGeneralSecretary($request);
+        }
+        // Modification is allowed, we continue
+
         $member = $this->memberService->update($request->getAttribute("userId"), $body);
+
         $this->entityManager->commit();
 
         return $response->withJson($member, 200);
@@ -134,6 +146,7 @@ class MemberController
     public function updateMember(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Updating member " . $args['id'] . " from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->accessRightsService->ensureOnlyGeneralSecretary($request);
         $body = $request->getParsedBody();
 
         $this->entityManager->beginTransaction();
@@ -146,7 +159,7 @@ class MemberController
     public function deleteMember(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Deleting member " . $args['id'] . " from " . $request->getServerParams()["REMOTE_ADDR"]);
-
+        $this->accessRightsService->ensureOnlyGeneralSecretary($request);
         $this->entityManager->beginTransaction();
         $this->memberService->delete($args['id']);
         $this->entityManager->commit();

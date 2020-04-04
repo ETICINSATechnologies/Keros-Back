@@ -105,6 +105,7 @@ class ConsultantInscriptionController
     public function getConsultantInscriptionProtected(Request $request,Response $response,array $args)
     {
         $this->logger->debug("Getting consultantInscription protected data by ID from ". $args["id"] . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->accessRightsService->ensureOnlyGeneralSecretary($request);
         $consultantInscriptionProtectedData=$this->consultantInscriptionService->getOneProtectedData($args["id"]);
         return $response->withJson($consultantInscriptionProtectedData,200);
     }
@@ -177,6 +178,7 @@ class ConsultantInscriptionController
     public function deleteConsultantInscription(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Deleting consultantInscription from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $this->accessRightsService->ensureOnlyGeneralSecretary($request);
 
         $this->entityManager->beginTransaction();
         $this->consultantInscriptionService->delete($args['id']);

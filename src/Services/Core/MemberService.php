@@ -204,7 +204,6 @@ class MemberService
         $telephone = Validator::requiredPhone($fields["telephone"]);
         $birthday = Validator::requiredDate($fields["birthday"]);
         $schoolYear = Validator::requiredSchoolYear($fields["schoolYear"]);
-
         $genderId = Validator::requiredId($fields["genderId"]);
         $gender = $this->genderService->getOne($genderId);
         $department = null;
@@ -214,8 +213,9 @@ class MemberService
 
         $company = Validator::optionalString(isset($fields["company"]) ? $fields["company"] : $member->getCompany());
         $isAlumni = Validator::optionalBool($fields['isAlumni'] ?? $member->getIsAlumni());
+        $droitImage = Validator::optionalBool($fields['droitImage'] ?? $member->isDroitImage());
         if(!empty($isAlumni)){
-            if((!$member->getIsAlumni())&&$fields['isAlumni']){
+            if((!$member->getIsAlumni()) && $fields['isAlumni']){
                 $this->mailFactory->sendMailMemberAlumniFromTemplate($member);
             }
         }
@@ -240,6 +240,7 @@ class MemberService
         $member->setMemberPositions($memberPositions);
         $member->setIsAlumni($isAlumni);
         $member->setEmailETIC($emailETIC);
+        $member->setDroitImage($droitImage);
 
         $this->addressService->update($member->getAddress()->getId(), $fields["address"]);
         $this->userService->update($member->getId(), $fields);

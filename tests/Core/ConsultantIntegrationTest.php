@@ -137,10 +137,24 @@ class ConsultantIntegrationTest extends AppTestCase
             'REQUEST_URI' => '/api/v1/core/consultant/2',
         ]);
         $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId", 6);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 
         $this->assertSame(204, $response->getStatusCode());
+    }
+
+    public function testDeleteConsultantWithoutRightShouldReturn401()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'DELETE',
+            'REQUEST_URI' => '/api/v1/core/consultant/2',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(401, $response->getStatusCode());
     }
 
     public function testDeleteInvalidConsultantShouldReturn404(){
@@ -150,6 +164,7 @@ class ConsultantIntegrationTest extends AppTestCase
         ]);
 
         $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId", 6);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 
@@ -213,6 +228,7 @@ class ConsultantIntegrationTest extends AppTestCase
         ]);
 
         $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId",6);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 
@@ -240,6 +256,20 @@ class ConsultantIntegrationTest extends AppTestCase
         $body = json_decode($response->getBody());
         $this->assertSame(2, $body->id);
         $this->assertSame("123456789012345", $body->socialSecurityNumber);
+    }
+
+    public function testGetConsultantProtectedWithoutRightDataShouldReturn401()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/api/v1/core/consultant/2/protected',
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(401, $response->getStatusCode());
     }
 
 
@@ -293,6 +323,7 @@ class ConsultantIntegrationTest extends AppTestCase
 
         $req = Request::createFromEnvironment($env);
         $req = $req->withParsedBody($post_body);
+        $req = $req->withAttribute("userId",6);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 
@@ -315,8 +346,128 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->assertSame(true,$body->isApprentice);
         $this->assertSame(true, $body->isGraduate);
     }
-    
+
+    public function testPostConsultantWithoutRightShouldReturn401()
+    {
+        $post_body = array(
+            "username" => "newusername",
+            "password" => "password",
+            "firstName" => "firstname",
+            "lastName" => "lastname",
+            "genderId" => 1,
+            'nationalityId' => 133,
+            "email" => "fakeEmail@gmail.com",
+            "birthday" => "1975-12-01",
+            "telephone" => "0033675385495",
+            "departmentId" => 1,
+            "schoolYear" => 1,
+            "address" => [
+                "line1" => "20 avenue albert Eistein",
+                "line2" => "residence g",
+                "city" => "lyon",
+                "postalCode" => 69100,
+                "countryId" => 1
+            ],
+            "disabled" => null,
+            "company" => "Amazon",
+            "profilePicture" => "http://image.png",
+            "droitImage" => true,
+            "isApprentice" => true,
+            "socialSecurityNumber" => "12346781300139041",
+            'isGraduate' => true,
+        );
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => '/api/v1/core/consultant',
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withParsedBody($post_body);
+
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(401, $response->getStatusCode());
+    }
+
+
     public function testPutConsultantShouldReturn200()
+    {
+        $post_body = array(
+            "username" => "newusername",
+            "password" => "password",
+            "firstName" => "firstName",
+            "lastName" => "lastName",
+            "genderId" => 1,
+            "email" => "fakeEmail@gmail.com",
+            'nationalityId' => 133,
+            "birthday" => "1975-12-01",
+            "telephone" => "0033675385495",
+            "address" => [
+                "line1" => "20 avenue albert Einstein",
+                "line2" => "residence g",
+                "city" => "lyon",
+                "postalCode" => 69100,
+                "countryId" => 1
+            ],
+            "schoolYear" => 1,
+            "departmentId" => 1,
+            "positions" => [
+                array(
+                    "id" => 3,
+                    "year" => 2018,
+                    "isBoard" => true
+                ),
+                array(
+                    "id" => 4,
+                    "year" => 2019,
+                    "isBoard" => false
+                )
+            ],
+            "company" => "Amazon",
+            "profilePicture" => "http://image.png",
+            "droitImage" => true,
+            "isApprentice" => true,
+            "socialSecurityNumber" => "12346781300139041",
+            'isGraduate' => true,
+        );
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'PUT',
+            'REQUEST_URI' => '/api/v1/core/consultant/2',
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId",6);
+        $req = $req->withParsedBody($post_body);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(200, $response->getStatusCode());
+
+        $body = json_decode($response->getBody());
+
+        $this->assertNotNull($body->id);
+        $this->assertSame("newusername", $body->username);
+        $this->assertSame("firstName", $body->firstName);
+        $this->assertSame("lastName", $body->lastName);
+        $this->assertSame(1, $body->gender->id);
+        $this->assertSame("fakeEmail@gmail.com", $body->email);
+        $this->assertSame(133, $body->nationality->id);
+        $this->assertSame("1975-12-01", $body->birthday);
+        $this->assertSame(1, $body->department->id);
+        $this->assertSame(1, $body->schoolYear);
+        $this->assertSame("0033675385495", $body->telephone);
+        $this->assertSame("Amazon", $body->company);
+        $this->assertSame("http://image.png", $body->profilePicture);
+        $this->assertNotNull($body->address->id);
+        $this->assertSame(true,$body->droitImage);
+        $this->assertSame(true,$body->isApprentice);
+        $this->assertSame(true, $body->isGraduate);
+    }
+
+    public function testPutConsultantWithoutRightShouldReturn401()
     {
         $post_body = array(
             "username" => "newusername",
@@ -367,27 +518,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 
-        $this->assertSame(200, $response->getStatusCode());
-
-        $body = json_decode($response->getBody());
-
-        $this->assertNotNull($body->id);
-        $this->assertSame("newusername", $body->username);
-        $this->assertSame("firstName", $body->firstName);
-        $this->assertSame("lastName", $body->lastName);
-        $this->assertSame(1, $body->gender->id);
-        $this->assertSame("fakeEmail@gmail.com", $body->email);
-        $this->assertSame(133, $body->nationality->id);
-        $this->assertSame("1975-12-01", $body->birthday);
-        $this->assertSame(1, $body->department->id);
-        $this->assertSame(1, $body->schoolYear);
-        $this->assertSame("0033675385495", $body->telephone);
-        $this->assertSame("Amazon", $body->company);
-        $this->assertSame("http://image.png", $body->profilePicture);
-        $this->assertNotNull($body->address->id);
-        $this->assertSame(true,$body->droitImage);
-        $this->assertSame(true,$body->isApprentice);
-        $this->assertSame(true, $body->isGraduate);
+        $this->assertSame(401, $response->getStatusCode());
     }
 
     public function testPutConsultantOnlyRequiredFieldShouldReturn200()
@@ -433,6 +564,7 @@ class ConsultantIntegrationTest extends AppTestCase
         ]);
 
         $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId",6);
         $req = $req->withParsedBody($post_body);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
@@ -468,6 +600,7 @@ class ConsultantIntegrationTest extends AppTestCase
         ]);
 
         $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId",6);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
         $this->assertSame(400, $response->getStatusCode());
@@ -495,6 +628,7 @@ class ConsultantIntegrationTest extends AppTestCase
 
         $req = Request::createFromEnvironment($env);
         $req = $req->withUploadedFiles($uploaded_files);
+        $req = $req->withAttribute("userId",6);
 
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
@@ -526,6 +660,7 @@ class ConsultantIntegrationTest extends AppTestCase
         ]);
 
         $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId",6);
         $req = $req->withUploadedFiles($uploaded_files);
 
         $this->app->getContainer()['request'] = $req;
@@ -559,6 +694,7 @@ class ConsultantIntegrationTest extends AppTestCase
 
         $req = Request::createFromEnvironment($env);
         $req = $req->withUploadedFiles($uploaded_files);
+        $req = $req->withAttribute("userId",6);
 
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
@@ -591,6 +727,7 @@ class ConsultantIntegrationTest extends AppTestCase
 
         $req = Request::createFromEnvironment($env);
         $req = $req->withUploadedFiles($uploaded_files);
+        $req = $req->withAttribute("userId",6);
 
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
@@ -623,6 +760,7 @@ class ConsultantIntegrationTest extends AppTestCase
 
         $req = Request::createFromEnvironment($env);
         $req = $req->withUploadedFiles($uploaded_files);
+        $req = $req->withAttribute("userId",6);
 
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
@@ -655,6 +793,7 @@ class ConsultantIntegrationTest extends AppTestCase
 
         $req = Request::createFromEnvironment($env);
         $req = $req->withUploadedFiles($uploaded_files);
+        $req = $req->withAttribute("userId",6);
 
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
@@ -687,6 +826,7 @@ class ConsultantIntegrationTest extends AppTestCase
 
         $req = Request::createFromEnvironment($env);
         $req = $req->withUploadedFiles($uploaded_files);
+        $req = $req->withAttribute("userId",6);
 
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
@@ -719,6 +859,7 @@ class ConsultantIntegrationTest extends AppTestCase
 
         $req = Request::createFromEnvironment($env);
         $req = $req->withUploadedFiles($uploaded_files);
+        $req = $req->withAttribute("userId",6);
 
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
@@ -747,6 +888,7 @@ class ConsultantIntegrationTest extends AppTestCase
 
         $req = Request::createFromEnvironment($env);
         $req = $req->withUploadedFiles($uploaded_files);
+        $req = $req->withAttribute("userId",6);
 
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
@@ -836,6 +978,7 @@ class ConsultantIntegrationTest extends AppTestCase
         $req = Request::createFromEnvironment($env);
         $req = $req->withParsedBody($post_body);
         $req = $req->withUploadedFiles($uploaded_files);
+        $req = $req->withAttribute("userId",6);
 
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);

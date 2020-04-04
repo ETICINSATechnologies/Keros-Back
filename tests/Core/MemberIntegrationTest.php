@@ -201,7 +201,6 @@ class MemberIntegrationTest extends AppTestCase
                 )
             ],
             "company" => "Amazon",
-            "droitImage" => true,
             'emailETIC' => "bonjour@aurevoir.fr"
         );
 
@@ -237,7 +236,121 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame("bonjour@aurevoir.fr", $body->emailETIC);
     }
 
+    public function testPutConnectedMemberDroitImageWithoutRightShouldReturn200()
+    {
+        $put_body = array(
+            "username" => "newusername",
+            "password" => "password",
+            "firstName" => "firstName",
+            "lastName" => "lastName",
+            "genderId" => 1,
+            "email" => "fakeEmail@gmail.com",
+            "birthday" => "1975-12-01",
+            "telephone" => "0033675385495",
+            "address" => [
+                "line1" => "20 avenue albert Einstein",
+                "line2" => "residence g",
+                "city" => "lyon",
+                "postalCode" => 69100,
+                "countryId" => 1
+            ],
+            "schoolYear" => 1,
+            "departmentId" => 1,
+            "positions" => [
+                array(
+                    "id" => 3,
+                    "year" => 2018,
+                    "isBoard" => true
+                ),
+                array(
+                    "id" => 3,
+                    "year" => 2019,
+                    "isBoard" => false
+                )
+            ],
+            "company" => "Amazon",
+            "droitImage" => false,
+            'emailETIC' => "bonjour@aurevoir.fr"
+        );
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'PUT',
+            'REQUEST_URI' => '/api/v1/core/member/me',
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withParsedBody($put_body);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(401, $response->getStatusCode());
+    }
+
+    public function testPutConnectedMemberIsAlumniWithoutRightShouldReturn200()
+    {
+        $put_body = array(
+            "username" => "newusername",
+            "password" => "password",
+            "firstName" => "firstName",
+            "lastName" => "lastName",
+            "genderId" => 1,
+            "email" => "fakeEmail@gmail.com",
+            "birthday" => "1975-12-01",
+            "telephone" => "0033675385495",
+            "address" => [
+                "line1" => "20 avenue albert Einstein",
+                "line2" => "residence g",
+                "city" => "lyon",
+                "postalCode" => 69100,
+                "countryId" => 1
+            ],
+            "schoolYear" => 1,
+            "departmentId" => 1,
+            "positions" => [
+                array(
+                    "id" => 3,
+                    "year" => 2018,
+                    "isBoard" => true
+                ),
+                array(
+                    "id" => 3,
+                    "year" => 2019,
+                    "isBoard" => false
+                )
+            ],
+            "company" => "Amazon",
+            "isAlumni" => true,
+            'emailETIC' => "bonjour@aurevoir.fr"
+        );
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'PUT',
+            'REQUEST_URI' => '/api/v1/core/member/me',
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withParsedBody($put_body);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(401, $response->getStatusCode());
+    }
+
     public function testDeleteMembersShouldReturn204()
+    {
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'DELETE',
+            'REQUEST_URI' => '/api/v1/core/member/1',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId",6);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(204, $response->getStatusCode());
+    }
+
+    public function testDeleteMembersWithoutRightShouldReturn401()
     {
         $env = Environment::mock([
             'REQUEST_METHOD' => 'DELETE',
@@ -247,7 +360,7 @@ class MemberIntegrationTest extends AppTestCase
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 
-        $this->assertSame(204, $response->getStatusCode());
+        $this->assertSame(401, $response->getStatusCode());
     }
 
     public function testDeleteInvalidMemberShouldReturn404()
@@ -258,6 +371,7 @@ class MemberIntegrationTest extends AppTestCase
         ]);
 
         $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId",6);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
 
@@ -448,6 +562,7 @@ class MemberIntegrationTest extends AppTestCase
         ]);
 
         $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId", 6);
         $req = $req->withParsedBody($post_body);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
@@ -478,6 +593,55 @@ class MemberIntegrationTest extends AppTestCase
         $this->assertSame("bonjour@aurevoir.fr", $body->emailETIC);
     }
 
+    public function testPutMemberWithoutRightShouldReturn401()
+    {
+        $post_body = array(
+            "username" => "newusername",
+            "password" => "password",
+            "firstName" => "firstName",
+            "lastName" => "lastName",
+            "genderId" => 1,
+            "email" => "fakeEmail@gmail.com",
+            "birthday" => "1975-12-01",
+            "telephone" => "0033675385495",
+            "address" => [
+                "line1" => "20 avenue albert Einstein",
+                "line2" => "residence g",
+                "city" => "lyon",
+                "postalCode" => 69100,
+                "countryId" => 1
+            ],
+            "schoolYear" => 1,
+            "departmentId" => 1,
+            "positions" => [
+                array(
+                    "id" => 3,
+                    "year" => 2018,
+                    "isBoard" => true
+                ),
+                array(
+                    "id" => 3,
+                    "year" => 2019,
+                    "isBoard" => false
+                )
+            ],
+            "company" => "Amazon",
+            "emailETIC" => "bonjour@aurevoir.fr"
+        );
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'PUT',
+            'REQUEST_URI' => '/api/v1/core/member/1',
+        ]);
+
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withParsedBody($post_body);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+
+        $this->assertSame(401, $response->getStatusCode());
+    }
+
     public function testPutMemberEmptyBodyShouldReturn400()
     {
         $env = Environment::mock([
@@ -486,6 +650,7 @@ class MemberIntegrationTest extends AppTestCase
         ]);
 
         $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId", 6);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
         $this->assertSame(400, $response->getStatusCode());
@@ -685,6 +850,7 @@ class MemberIntegrationTest extends AppTestCase
             'REQUEST_URI' => '/api/v1/core/member/2/photo',
         ]);
         $req = Request::createFromEnvironment($env);
+        $req = $req->withAttribute("userId",6);
         $this->app->getContainer()['request'] = $req;
         $response = $this->app->run(false);
         $this->assertSame(404, $response->getStatusCode());
@@ -760,7 +926,7 @@ class MemberIntegrationTest extends AppTestCase
     public function testDeleteAllExistingMemberShouldReturn204()
     {
         for($id = 1;  $id <= 28; $id++) {
-            if(in_array($id, array(1, 2, 5))){
+            if(in_array($id, array(1, 2, 5, 6))){
                 continue;
             }
             $env = Environment::mock([
@@ -768,6 +934,7 @@ class MemberIntegrationTest extends AppTestCase
                 'REQUEST_URI' => '/api/v1/core/member/' . $id,
             ]);
             $req = Request::createFromEnvironment($env);
+            $req = $req->withAttribute("userId",6);
             $this->app->getContainer()['request'] = $req;
             $response = $this->app->run(false);
 
