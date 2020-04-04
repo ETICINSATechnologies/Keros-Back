@@ -73,7 +73,7 @@ class AccessRightsService
                 return;
             }
         }
-        throw new KerosException("You do not have enough to perform this action, please contact SG or DSI", 401);
+        throw new KerosException("You do not have enough right to perform this action, please contact SG or DSI", 401);
     }
 
     public function checkRightsConfidentialStudies(Request $request, Study $study)
