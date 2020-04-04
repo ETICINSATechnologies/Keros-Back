@@ -178,6 +178,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
             'birthday' => '1000-01-01',
             'departmentId' => 4,
             'email' => 'thanos@claquementdedoigts.com',
+            'phoneNumber' => '3311111111111',
             'nationalityId' => 133,
             'wantedPoleId' => 5,
             'outYear' => 2021,
@@ -211,7 +212,7 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->assertSame('1000-01-01', $body->birthday);
         $this->assertSame(4, $body->department->id);
         $this->assertSame('thanos@claquementdedoigts.com', $body->email);
-        $this->assertSame(null, $body->phoneNumber);
+        $this->assertSame('3311111111111', $body->phoneNumber);
         $this->assertSame(2021, $body->outYear);
         $this->assertSame(133, $body->nationality->id);
         $this->assertSame(5, $body->wantedPole->id);
@@ -769,5 +770,38 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         foreach ($body->content as $memberInscription){
             $this->assertContains('Clark', array($memberInscription->firstName, $memberInscription->lastName, $memberInscription->phoneNumber, $memberInscription->email));
         }
+    }
+
+    public function testPostMemberWithoutPhoneNumberInscriptionShouldReturn500()
+    {
+        $post_body = array(
+            'firstName' => 'Thanos',
+            'lastName' => 'Tueur de monde',
+            'genderId' => 4,
+            'birthday' => '1000-01-01',
+            'departmentId' => 4,
+            'email' => 'thanos@claquementdedoigts.com',
+            'outYear' => 6666,
+            'nationalityId' => 133,
+            'wantedPoleId' => 5,
+            'address' => array(
+                'line1' => 'je sais pas quoi mettre',
+                'line2' => "",
+                'city' => 'Lorem ipsum',
+                'postalCode' => 66666,
+                'countryId' => 133,
+            ),
+            'droitImage' => true,
+        );
+
+        $env = Environment::mock([
+            'REQUEST_METHOD' => 'POST',
+            'REQUEST_URI' => '/api/v1/sg/membre-inscription',
+        ]);
+        $req = Request::createFromEnvironment($env);
+        $req = $req->withParsedBody($post_body);
+        $this->app->getContainer()['request'] = $req;
+        $response = $this->app->run(false);
+        $this->assertSame(500, $response->getStatusCode());
     }
 }

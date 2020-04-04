@@ -26,6 +26,10 @@ class AddressService
      */
     private $logger;
 
+    /**
+     * AddressService constructor.
+     * @param ContainerInterface $container
+     */
     public function __construct(ContainerInterface $container)
     {
         $this->addressDataService = $container->get(AddressDataService::class);

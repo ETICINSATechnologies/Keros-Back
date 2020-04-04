@@ -424,7 +424,7 @@ CREATE TABLE sg_member_inscription (
   genderId int(11) NOT NULL,
   departmentId int(11) NOT NULL,
   email varchar(255) NOT NULL,
-  phoneNumber varchar(255),
+  phoneNumber varchar(255) NOT NULL,
   outYear int NOT NULL,
   nationalityId int(11) NOT NULL,
   wantedPoleId int(11) NOT NULL,
