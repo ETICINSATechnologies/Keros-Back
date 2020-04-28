@@ -21,6 +21,7 @@ use Keros\Tools\Mail\MailFactory;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use SendGrid\Mail\Mail;
+use Stripe\Stripe;
 
 class MemberService
 {
@@ -548,4 +549,51 @@ class MemberService
 		fclose($csvFile);
 		return pathinfo($filepath, PATHINFO_BASENAME);
 	}
+
+	public function updateMembersPaymentDate()
+    {
+        $this->kerosConfig = ConfigLoader::getConfig();
+        Stripe::setApiKey(kerosConfig['API_KEY']);
+
+        $endpoint_secret = $this->kerosConfig['ENDPOINT_SECRET'];
+
+        $payload = @file_get_contents('php://input');
+        $sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'];
+        $event = null;
+
+        try {
+            $event = \Stripe\Webhook::constructEvent(
+                $payload, $sig_header, $endpoint_secret
+            );
+
+        } catch(\UnexpectedValueException $e) {
+            // Invalid payload
+            http_response_code(400);
+            exit();
+        } catch(\Stripe\Exception\SignatureVerificationException $e) {
+            // Invalid signature
+            http_response_code(400);
+            exit();
+        }
+
+        // Handle the checkout.session.completed event
+        if ($event->type == 'checkout.session.completed') {
+            $session  = $event->data->object->id;   // contains a StripeSession
+
+            // Fetch the session JSON
+            $sessionInfo = \Stripe\Checkout\Session::retrieve($session);
+
+            //get client_reference_id
+            $client_reference_id = $sessionInfo->client_reference_id;
+
+            if (isset($client_reference_id)) {
+                $this->memberDataService->updateCreatedDate($client_reference_id);
+                $this->logger->debug("La date de paiement du membre id = " . $client_reference_id . " est mise à jour");
+            } else {
+                $this->logger->debug("ID du membre est null");
+            }
+        }
+
+        http_response_code(200);
+    }
 }

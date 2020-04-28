@@ -105,7 +105,7 @@ class Member implements JsonSerializable
     /**
      * @Column(type="datetime")
      */
-    private $dateRepayement;
+    private $dateRepayment;
 
     /**
      * Member constructor.
@@ -124,9 +124,9 @@ class Member implements JsonSerializable
      * @param $isAlumni
      * @param $memberInscriptionDocuments
      * @param $emailETIC
-     * @param $dateRepayement
+     * @param $dateRepayment
      */
-    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage, $createdDate, $isAlumni, $memberInscriptionDocuments, $emailETIC, $dateRepayement)
+    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage, $createdDate, $isAlumni, $memberInscriptionDocuments, $emailETIC, $dateRepayment)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -143,7 +143,7 @@ class Member implements JsonSerializable
         $this->isAlumni = $isAlumni;
         $this->memberInscriptionDocuments = $memberInscriptionDocuments;
         $this->emailETIC = $emailETIC;
-        $this->dateRepayement = $dateRepayement;
+        $this->dateRepayment = $dateRepayment;
     }
 
     public function jsonSerialize()
@@ -167,7 +167,7 @@ class Member implements JsonSerializable
             'createdDate' => $this->getCreatedDate(),
             'isAlumni' => $this->getIsAlumni(),
             'emailETIC' => $this->getEmailETIC(),
-            'dateRepayement' => $this->getDateRepayement(),
+            'dateRepayment' => $this->getDateRepayment(),
         ];
     }
 
@@ -505,17 +505,17 @@ class Member implements JsonSerializable
     /**
      * @return \DateTime
      */
-    public function getDateRepayement(): \DateTime
+    public function getDateRepayment(): \DateTime
     {
-        return $this->dateRepayement;
+        return $this->dateRepayment;
     }
 
     /**
-     * @param \DateTime $dateRepayement
+     * @param \DateTime $dateRepayment
      */
-    public function setDateRepayement(\DateTime $dateRepayement): void
+    public function setDateRepayment(\DateTime $dateRepayment): void
     {
-        $this->dateRepayement = $dateRepayement;
+        $this->dateRepayment = $dateRepayment;
     }
 
     /**

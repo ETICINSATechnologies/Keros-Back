@@ -16,6 +16,8 @@ use Psr\Container\ContainerInterface;
 use Keros\Tools\ConfigLoader;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Stripe\Customer;
+use Stripe\Stripe;
 
 class MemberController
 {
@@ -96,7 +98,7 @@ class MemberController
         $isAlumniBefore = $memberBeforeUpdate->getIsAlumni();
 
         // Ensure that the member didn't modify some critical information about him
-        if((isset($body["isAlumni"]) && $isAlumniBefore != $body["isAlumni"]) || (isset($body["droitImage"]) && $droitImageBefore != $body["droitImage"])){
+        if ((isset($body["isAlumni"]) && $isAlumniBefore != $body["isAlumni"]) || (isset($body["droitImage"]) && $droitImageBefore != $body["droitImage"])) {
             // SG can modify his own information
             $this->accessRightsService->ensureOnlyGeneralSecretary($request);
         }
@@ -199,7 +201,7 @@ class MemberController
         }
 
         $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
-        if (!($extension=='jpg' || $extension=='jpeg' || $extension=='png')) {
+        if (!($extension == 'jpg' || $extension == 'jpeg' || $extension == 'png')) {
             $msg = 'File format not supported, only jpg and png formats supported';
             $this->logger->error($msg);
             throw new KerosException($msg, 400);
@@ -230,15 +232,15 @@ class MemberController
 
         $extension = pathinfo($filepath, PATHINFO_EXTENSION);
         $mimeType = 'image/*';
-        if ($extension=='jpg' || $extension=='jpeg') {
+        if ($extension == 'jpg' || $extension == 'jpeg') {
             $mimeType = 'image/jpeg';
-        } else if ($extension=='png') {
+        } else if ($extension == 'png') {
             $mimeType = 'image/png';
         }
 
-        $response   = $response->withHeader('Content-Type', $mimeType);
-        $response   = $response->withHeader('Content-Disposition', 'attachment; filename="' .basename("$filepath") . '"');
-        $response   = $response->withHeader('Content-Length', filesize($filepath));
+        $response = $response->withHeader('Content-Type', $mimeType);
+        $response = $response->withHeader('Content-Disposition', 'attachment; filename="' . basename("$filepath") . '"');
+        $response = $response->withHeader('Content-Length', filesize($filepath));
 
         readfile($filepath);
 
@@ -260,13 +262,22 @@ class MemberController
         $this->entityManager->commit();
 
         return $response->withStatus(204);
-	}
+    }
 
-	public function exportMembers(Request $request, Response $response, array $args)
-	{
-		$this->logger->debug("Exporting specified members to csv file.");
-		$body = $request->getParsedBody();
-		$location = $this->memberService->export($body['idList']);
-		return $response->withJson(array('location' => $this->kerosConfig['BACK_URL'] . "/generated/" . $location), 200);
-	}
+    public function exportMembers(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Exporting specified members to csv file.");
+        $body = $request->getParsedBody();
+        $location = $this->memberService->export($body['idList']);
+        return $response->withJson(array('location' => $this->kerosConfig['BACK_URL'] . "/generated/" . $location), 200);
+    }
+
+    public function updatePaymentDate(Request $request, Response $response, array $args)
+    {
+        $this->logger->debug("Updating member's payment date");
+
+        $this->memberService->updateMembersPaementDate();
+
+        return $response->withStatus(204);
+    }
 }

@@ -179,6 +179,7 @@ class KerosApp
                     $this->get("/me/photo", MemberController::class . ':getCurrentUserProfilePicture');
 					$this->delete("/{id:[0-9]+}/photo", MemberController::class . ':deleteProfilePicture');
 					$this->post("/export", MemberController::class . ':exportMembers');
+                    $this->post("/{id:[0-9]+}/paid", MemberController::class. ':updatePaymentDate');
                 });
 
                 $this->group('/consultant', function () {
