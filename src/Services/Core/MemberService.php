@@ -69,7 +69,6 @@ class MemberService
     /** @var MemberInscriptionDocumentService */
     private $memberInscriptionDocumentService;
 
-
     /**
      * MemberService constructor.
      * @param ContainerInterface $container
@@ -551,15 +550,12 @@ class MemberService
 		return pathinfo($filepath, PATHINFO_BASENAME);
 	}
 
-	public function updateMembersPaymentDate()
+	public function updateMembersPaymentDate(String $payload, String $sig_header)
     {
-        $this->kerosConfig = ConfigLoader::getConfig();
-        Stripe::setApiKey(kerosConfig['API_KEY']);
+        Stripe::setApiKey($this->kerosConfig['API_KEY']);
 
         $endpoint_secret = $this->kerosConfig['ENDPOINT_SECRET'];
 
-        $payload = @file_get_contents('php://input');
-        $sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'];
         $event = null;
 
         try {
@@ -568,13 +564,9 @@ class MemberService
             );
 
         } catch(\UnexpectedValueException $e) {
-            // Invalid payload
-            http_response_code(400);
-            exit();
+            throw new KerosException("Invalid payload", 400);
         } catch(\Stripe\Exception\SignatureVerificationException $e) {
-            // Invalid signature
-            http_response_code(400);
-            exit();
+            throw new KerosException("Invalid signature", 400);
         }
 
         // Handle the checkout.session.completed event
@@ -588,13 +580,12 @@ class MemberService
             $client_reference_id = $sessionInfo->client_reference_id;
 
             if (isset($client_reference_id)) {
-                $this->memberDataService->updateDateRepayment($client_reference_id);
+                $member = $this->memberDataService->getOne($client_reference_id);
+                $member->setDateRepayment(new \DateTime("now"));
                 $this->logger->debug("La date de paiement du membre id = " . $client_reference_id . " est mise à jour");
             } else {
-                $this->logger->debug("ID du membre est null");
+                $this->logger->error("ID du membre est null");
             }
         }
-
-        http_response_code(200);
     }
 }

@@ -276,7 +276,9 @@ class MemberController
     {
         $this->logger->debug("Updating member's payment date");
 
-        $this->memberService->updateMembersPaementDate();
+        $payload = $request->getBody()->getContents();
+        $sig_header = $request->getHeaderLine('HTTP_STRIPE_SIGNATURE');
+        $this->memberService->updateMembersPaymentDate($payload, $sig_header);
 
         return $response->withStatus(204);
     }

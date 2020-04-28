@@ -35,6 +35,7 @@ use Keros\Tools\ToolRegistrar;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Stripe\Stripe;
 
 
 /**
@@ -83,6 +84,8 @@ class KerosApp
             $this->group("/reset-password-member", function () {
                 $this->post("", LoginController::class . ':resetPasswordMember');
             });
+
+            $this->post("/{id:[0-9]+}/paid", MemberController::class. ':updatePaymentDate');
 
             $this->group("/forgot-password-member", function () {
                 $this->post("", LoginController::class . ':forgotMemberPassword');
@@ -179,7 +182,6 @@ class KerosApp
                     $this->get("/me/photo", MemberController::class . ':getCurrentUserProfilePicture');
 					$this->delete("/{id:[0-9]+}/photo", MemberController::class . ':deleteProfilePicture');
 					$this->post("/export", MemberController::class . ':exportMembers');
-                    $this->post("/{id:[0-9]+}/paid", MemberController::class. ':updatePaymentDate');
                 });
 
                 $this->group('/consultant', function () {

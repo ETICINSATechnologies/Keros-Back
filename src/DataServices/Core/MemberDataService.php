@@ -202,17 +202,4 @@ class MemberDataService
             throw new KerosException($msg, 500);
         }
     }
-
-    public function updateDateRepayment(int $id): void
-    {
-        try {
-            $member = $this->repository->getOne($id);
-            $member->setDateRepayment(new \DateTime("now"));
-        } catch (Exception $e) {
-            $msg = "Error finding member with id $id : " . $e->getMessage();
-            $this->logger->error($msg);
-            throw new KerosException($msg, 500);
-        }
-    }
-
 }
