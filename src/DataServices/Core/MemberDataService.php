@@ -203,11 +203,11 @@ class MemberDataService
         }
     }
 
-    public function updateCreatedDate(int $id): void
+    public function updateDateRepayment(int $id): void
     {
         try {
             $member = $this->repository->getOne($id);
-            $member->setCreatedDate(new \DateTime("now"));
+            $member->setDateRepayment(new \DateTime("now"));
         } catch (Exception $e) {
             $msg = "Error finding member with id $id : " . $e->getMessage();
             $this->logger->error($msg);

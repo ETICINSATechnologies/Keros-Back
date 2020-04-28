@@ -120,6 +120,12 @@ class MemberInscription implements JsonSerializable
     private $memberInscriptionDocuments;
 
     /**
+     * @var DateTime
+     * @Column(type="date")
+     */
+    private $dateRepayment;
+
+    /**
      * MemberInscription constructor.
      * @param string $firstName
      * @param string $lastName
@@ -136,8 +142,9 @@ class MemberInscription implements JsonSerializable
      * @param bool $droitImage
      * @param DateTime $createdDate
      * @param array $memberInscriptionDocument
+     * @param DateTime $dateRepayment
      */
-    public function __construct(string $firstName, string $lastName, Gender $gender, DateTime $birthday, Department $department, string $email, ?string $phoneNumber, ?int $outYear, Country $nationality, Address $address, Pole $wantedPole, bool $hasPaid, bool $droitImage, DateTime $createdDate, array $memberInscriptionDocument)
+    public function __construct(string $firstName, string $lastName, Gender $gender, DateTime $birthday, Department $department, string $email, ?string $phoneNumber, ?int $outYear, Country $nationality, Address $address, Pole $wantedPole, bool $hasPaid, bool $droitImage, DateTime $createdDate, array $memberInscriptionDocument, DateTime $dateRepayment)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -154,6 +161,7 @@ class MemberInscription implements JsonSerializable
         $this->droitImage = $droitImage;
         $this->createdDate = $createdDate;
         $this->memberInscriptionDocuments = $memberInscriptionDocument;
+        $this->dateRepayment = $dateRepayment;
     }
 
 
@@ -178,6 +186,7 @@ class MemberInscription implements JsonSerializable
             'hasPaid' => $this->isHasPaid(),
             'droitImage' => $this->isDroitImage(),
             'createdDate' => $this->getCreatedDate(),
+            'dateRepayment' =>$this->getdateRepayment(),
         ];
     }
 
@@ -429,6 +438,22 @@ class MemberInscription implements JsonSerializable
     public function getMemberInscriptionDocuments()
     {
         return $this->memberInscriptionDocuments;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getdateRepayment(): DateTime
+    {
+        return $this->dateRepayment;
+    }
+
+    /**
+     * @param DateTime $dateRepayment
+     */
+    public function setDateRepayment(DateTime $dateRepayment): void
+    {
+        $this->dateRepayment = $dateRepayment;
     }
 
     /**

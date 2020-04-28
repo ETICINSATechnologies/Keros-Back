@@ -117,8 +117,9 @@ class MemberService
         $droitImage = Validator::requiredBool($fields['droitImage']);
         $isAlumni = Validator::optionalBool($fields['isAlumni'] ?? false);
         $emailETIC = Validator::optionalEmail($fields["emailETIC"] ?? null);
+        $dateRepayment = Validator::requiredDate($fields["dateRepayment"]);
 
-        $member = new Member($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage, $createdDate, $isAlumni, array(), $emailETIC);
+        $member = new Member($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage, $createdDate, $isAlumni, array(), $emailETIC, $dateRepayment);
 
         $user = $this->userService->create($fields);
         $address = $this->addressService->create($fields["address"]);
@@ -587,7 +588,7 @@ class MemberService
             $client_reference_id = $sessionInfo->client_reference_id;
 
             if (isset($client_reference_id)) {
-                $this->memberDataService->updateCreatedDate($client_reference_id);
+                $this->memberDataService->updateDateRepayment($client_reference_id);
                 $this->logger->debug("La date de paiement du membre id = " . $client_reference_id . " est mise à jour");
             } else {
                 $this->logger->debug("ID du membre est null");
