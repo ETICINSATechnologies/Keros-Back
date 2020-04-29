@@ -85,7 +85,6 @@ class KerosApp
                 $this->post("", LoginController::class . ':resetPasswordMember');
             });
 
-            $this->post("/{id:[0-9]+}/paid", MemberController::class. ':updatePaymentDate');
 
             $this->group("/forgot-password-member", function () {
                 $this->post("", LoginController::class . ':forgotMemberPassword');
@@ -207,6 +206,8 @@ class KerosApp
                 });
 
             })->add($this->getContainer()->get(AuthenticationMiddleware::class));
+
+            $this->post("/core/member/paid", MemberController::class. ':updatePaymentDate');
 
             $this->group('/treso', function () {
 
