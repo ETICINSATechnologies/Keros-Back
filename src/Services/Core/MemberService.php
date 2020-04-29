@@ -110,7 +110,7 @@ class MemberService
         $department = null;
         $departmentId = Validator::requiredId(isset($fields["departmentId"]) ? $fields["departmentId"] : null);
         $department = $this->departmentService->getOne($departmentId);
-        $createdDate = Validator::requiredDate($fields["createdDate"] ?? (new \DateTime("now"))->format("Y-m-d"));
+        $createdDate = new \DateTime();
         $company = Validator::optionalString($fields["company"]);
         $profilePicture = null;
         $droitImage = Validator::requiredBool($fields['droitImage']);
