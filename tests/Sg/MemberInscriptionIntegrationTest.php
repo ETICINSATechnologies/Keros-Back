@@ -370,7 +370,6 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $body = json_decode($response->getBody());
 
         $dateDiff = ((new \DateTime())->diff(new \DateTime($body->createdDate->date)))->format('%a');
-        $dateDiffRepayment = ((new \DateTime())->diff(new \DateTime($body->dateRepayement->date)))->format('%a');
 
         $this->assertSame(200, $response->getStatusCode());
         $this->assertNotNull($body->id);
@@ -390,7 +389,6 @@ class MemberInscriptionIntegrationTest extends AppTestCase
         $this->assertNotNull($body->address->id);
         $this->assertSame('13 Rue du renard', $body->address->line1);
         $this->assertSame(0, count($body->positions));
-        $this->assertSame(0, intval($dateDiffRepayment));
     }
 
     /**
