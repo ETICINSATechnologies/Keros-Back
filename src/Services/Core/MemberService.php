@@ -110,13 +110,13 @@ class MemberService
         $department = null;
         $departmentId = Validator::requiredId(isset($fields["departmentId"]) ? $fields["departmentId"] : null);
         $department = $this->departmentService->getOne($departmentId);
-        $createdDate = new \DateTime();
+        $createdDate = Validator::requiredDate($fields["createdDate"] ?? (new \DateTime("now"))->format("Y-m-d"));
         $company = Validator::optionalString($fields["company"]);
         $profilePicture = null;
         $droitImage = Validator::requiredBool($fields['droitImage']);
         $isAlumni = Validator::optionalBool($fields['isAlumni'] ?? false);
         $emailETIC = Validator::optionalEmail($fields["emailETIC"] ?? null);
-        $dateRepayment = Validator::requiredDate($fields["dateRepayment"]);
+        $dateRepayment = Validator::requiredDate($fields["dateRepayment"] ?? (new \DateTime("now"))->format("Y-m-d"));
 
         $member = new Member($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage, $createdDate, $isAlumni, array(), $emailETIC, $dateRepayment);
 
@@ -582,7 +582,8 @@ class MemberService
             if (isset($client_reference_id)) {
                 $member = $this->memberDataService->getOne($client_reference_id);
                 $member->setDateRepayment(new \DateTime("now"));
-                $this->logger->debug("La date de paiement du membre id = " . $client_reference_id . " est mise à jour");
+                $this->memberDataService->persist($member);
+                $this->logger->info("La date de paiement du membre id = " . $client_reference_id . " est mise à jour");
             } else {
                 $this->logger->error("ID du membre est null");
             }

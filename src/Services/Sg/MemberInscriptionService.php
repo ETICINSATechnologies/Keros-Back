@@ -89,10 +89,9 @@ class   MemberInscriptionService
         $hasPaid = false;
         $droitImage = Validator::requiredBool($fields['droitImage']);
         $createdDate = new \DateTime();
-        $dateRepayment = new \DateTime();
 
         $address = $this->addressService->create($fields["address"]);
-        $memberInscription = new MemberInscription($firstName, $lastName, $gender, $birthday, $department, $email, $phoneNumber, $outYear, $nationality, $address, $wantedPole, $hasPaid, $droitImage, $createdDate, array(), $dateRepayment);
+        $memberInscription = new MemberInscription($firstName, $lastName, $gender, $birthday, $department, $email, $phoneNumber, $outYear, $nationality, $address, $wantedPole, $hasPaid, $droitImage, $createdDate, array());
 
         $this->memberInscriptionDataService->persist($memberInscription);
 
@@ -244,9 +243,9 @@ class   MemberInscriptionService
             ),
             "positions" => array(),
             "droitImage" => $memberInscription->isDroitImage(),
-            "createdDate" => new \DateTime(),
+            "createdDate" => (new \DateTime())->format("Y-m-d"),
             "emailETIC" => null,
-            "dateRepayment" => "2019-12-01"
+            "dateRepayment" => (new \DateTime())->format("Y-m-d")
         );
 
         if ($memberInscription->getOutYear()) {

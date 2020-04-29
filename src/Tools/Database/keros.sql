@@ -433,7 +433,6 @@ CREATE TABLE sg_member_inscription (
   hasPaid boolean DEFAULT FALSE,
   droitImage boolean DEFAULT FALSE,
   createdDate date  NOT NULL,
-  dateRepayment date NOT NULL,
   PRIMARY KEY (id),
   CONSTRAINT fk_sg_member_inscription_department FOREIGN KEY (departmentId) REFERENCES core_department(id),
   CONSTRAINT fk_sg_member_inscription_nationality FOREIGN KEY (nationalityId) REFERENCES core_country(id),
