@@ -552,7 +552,7 @@ class MemberService
 
 	public function updateMembersPaymentDate(String $payload, String $sig_header)
     {
-        Stripe::setApiKey($this->kerosConfig['API_KEY']);
+        Stripe::setApiKey($this->kerosConfig['STRIPE_API_KEY']);
 
         $endpoint_secret = $this->kerosConfig['ENDPOINT_SECRET'];
 
