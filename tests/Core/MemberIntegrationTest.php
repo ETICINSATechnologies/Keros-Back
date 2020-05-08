@@ -201,7 +201,8 @@ class MemberIntegrationTest extends AppTestCase
                 )
             ],
             "company" => "Amazon",
-            'emailETIC' => "bonjour@aurevoir.fr"
+            'emailETIC' => "bonjour@aurevoir.fr",
+            "dateRepayment" => "2019-12-01"
         );
 
         $env = Environment::mock([
@@ -270,7 +271,8 @@ class MemberIntegrationTest extends AppTestCase
             ],
             "company" => "Amazon",
             "droitImage" => false,
-            'emailETIC' => "bonjour@aurevoir.fr"
+            'emailETIC' => "bonjour@aurevoir.fr",
+            "dateRepayment" => "2019-12-01"
         );
 
         $env = Environment::mock([
@@ -320,7 +322,8 @@ class MemberIntegrationTest extends AppTestCase
             ],
             "company" => "Amazon",
             "isAlumni" => true,
-            'emailETIC' => "bonjour@aurevoir.fr"
+            'emailETIC' => "bonjour@aurevoir.fr",
+            "dateRepayment" => "2019-12-01",
         );
 
         $env = Environment::mock([
@@ -482,6 +485,7 @@ class MemberIntegrationTest extends AppTestCase
             "droitImage" => false,
             "isAlumni" => true,
             "emailETIC" => "bonjour@aurevoir.fr",
+            "dateRepayment" => "2019-12-01"
         );
 
         $env = Environment::mock([
@@ -553,7 +557,8 @@ class MemberIntegrationTest extends AppTestCase
                 )
             ],
             "company" => "Amazon",
-            "emailETIC" => "bonjour@aurevoir.fr"
+            "emailETIC" => "bonjour@aurevoir.fr",
+            "dateRepayment" => "2019-12-01"
         );
 
         $env = Environment::mock([
@@ -626,7 +631,8 @@ class MemberIntegrationTest extends AppTestCase
                 )
             ],
             "company" => "Amazon",
-            "emailETIC" => "bonjour@aurevoir.fr"
+            "emailETIC" => "bonjour@aurevoir.fr",
+            "dateRepayment" => "2019-12-01"
         );
 
         $env = Environment::mock([

@@ -35,6 +35,7 @@ use Keros\Tools\ToolRegistrar;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Stripe\Stripe;
 
 
 /**
@@ -83,6 +84,7 @@ class KerosApp
             $this->group("/reset-password-member", function () {
                 $this->post("", LoginController::class . ':resetPasswordMember');
             });
+
 
             $this->group("/forgot-password-member", function () {
                 $this->post("", LoginController::class . ':forgotMemberPassword');
@@ -204,6 +206,8 @@ class KerosApp
                 });
 
             })->add($this->getContainer()->get(AuthenticationMiddleware::class));
+
+            $this->post("/core/member/paid", MemberController::class. ':updatePaymentDate');
 
             $this->group('/treso', function () {
 

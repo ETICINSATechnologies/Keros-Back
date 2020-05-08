@@ -21,6 +21,7 @@ use Keros\Tools\Mail\MailFactory;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use SendGrid\Mail\Mail;
+use Stripe\Stripe;
 
 class MemberService
 {
@@ -67,7 +68,6 @@ class MemberService
 
     /** @var MemberInscriptionDocumentService */
     private $memberInscriptionDocumentService;
-
 
     /**
      * MemberService constructor.
@@ -116,8 +116,9 @@ class MemberService
         $droitImage = Validator::requiredBool($fields['droitImage']);
         $isAlumni = Validator::optionalBool($fields['isAlumni'] ?? false);
         $emailETIC = Validator::optionalEmail($fields["emailETIC"] ?? null);
+        $dateRepayment = Validator::requiredDate($fields["dateRepayment"] ?? (new \DateTime("now"))->format("Y-m-d"));
 
-        $member = new Member($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage, $createdDate, $isAlumni, array(), $emailETIC);
+        $member = new Member($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage, $createdDate, $isAlumni, array(), $emailETIC, $dateRepayment);
 
         $user = $this->userService->create($fields);
         $address = $this->addressService->create($fields["address"]);
@@ -548,4 +549,54 @@ class MemberService
 		fclose($csvFile);
 		return pathinfo($filepath, PATHINFO_BASENAME);
 	}
+
+	public function updateMembersPaymentDate(String $payload, String $sig_header)
+    {
+        Stripe::setApiKey($this->kerosConfig['STRIPE_API_KEY']);
+
+        $endpoint_secret = $this->kerosConfig['ENDPOINT_SECRET'];
+
+        $event = null;
+
+        try {
+            $event = \Stripe\Webhook::constructEvent(
+                $payload, $sig_header, $endpoint_secret
+            );
+
+        } catch(\UnexpectedValueException $e) {
+            throw new KerosException("Invalid payload", 200);
+        } catch(\Stripe\Exception\SignatureVerificationException $e) {
+            throw new KerosException("Invalid signature", 200);
+        }
+
+        // Handle the checkout.session.completed event
+        if ($event->type == 'checkout.session.completed') {
+            $session  = $event->data->object->id;   // contains a StripeSession
+
+            // Fetch the session JSON
+            $sessionInfo = \Stripe\Checkout\Session::retrieve($session);
+
+            if(empty($sessionInfo->display_items)){
+                throw new KerosException("No item in Stripe session", 200);
+            }
+
+            if($sessionInfo->display_items[0]->sku->id != $this->kerosConfig['STRIPE_REPAYMENT_SUBSCRIPTION_ID']){
+                throw new KerosException("Purchased item is not a repayment subscription", 200);
+            }
+
+            //get client_reference_id
+            $client_reference_id = $sessionInfo->client_reference_id;
+
+            if (isset($client_reference_id)) {
+                $member = $this->memberDataService->getOne($client_reference_id);
+                $member->setDateRepayment(new \DateTime("now"));
+                $this->memberDataService->persist($member);
+                $this->logger->info("La date de paiement du membre id = " . $client_reference_id . " est mise à jour");
+            } else {
+                throw new KerosException("Membership ID is null", 400);
+            }
+        }else{
+            throw new KerosException("Irrelevant event type", 200);
+        }
+    }
 }

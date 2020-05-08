@@ -42,7 +42,8 @@ class UserIntegrationTest extends AppTestCase
                 )
             ],
             "company" => "Amazon",
-            "droitImage" => false
+            "droitImage" => false,
+            "dateRepayment" => "2019-12-01"
         );
 
         $env = Environment::mock([

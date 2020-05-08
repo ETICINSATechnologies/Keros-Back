@@ -103,6 +103,11 @@ class Member implements JsonSerializable
     private $emailETIC;
 
     /**
+     * @Column(type="datetime")
+     */
+    private $dateRepayment;
+
+    /**
      * Member constructor.
      * @param $firstName
      * @param $lastName
@@ -119,8 +124,9 @@ class Member implements JsonSerializable
      * @param $isAlumni
      * @param $memberInscriptionDocuments
      * @param $emailETIC
+     * @param $dateRepayment
      */
-    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage, $createdDate, $isAlumni, $memberInscriptionDocuments, $emailETIC)
+    public function __construct($firstName, $lastName, $birthday, $telephone, $email, $schoolYear, $gender, $department, $company, $profilePicture, $droitImage, $createdDate, $isAlumni, $memberInscriptionDocuments, $emailETIC, $dateRepayment)
     {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -137,6 +143,7 @@ class Member implements JsonSerializable
         $this->isAlumni = $isAlumni;
         $this->memberInscriptionDocuments = $memberInscriptionDocuments;
         $this->emailETIC = $emailETIC;
+        $this->dateRepayment = $dateRepayment;
     }
 
     public function jsonSerialize()
@@ -160,6 +167,7 @@ class Member implements JsonSerializable
             'createdDate' => $this->getCreatedDate(),
             'isAlumni' => $this->getIsAlumni(),
             'emailETIC' => $this->getEmailETIC(),
+            'dateRepayment' => $this->getDateRepayment(),
         ];
     }
 
@@ -492,6 +500,22 @@ class Member implements JsonSerializable
     public function setIsAlumni(bool $isAlumni): void
     {
         $this->isAlumni = $isAlumni;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDateRepayment(): \DateTime
+    {
+        return $this->dateRepayment;
+    }
+
+    /**
+     * @param \DateTime $dateRepayment
+     */
+    public function setDateRepayment(\DateTime $dateRepayment): void
+    {
+        $this->dateRepayment = $dateRepayment;
     }
 
     /**
