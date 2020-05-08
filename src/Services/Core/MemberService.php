@@ -576,6 +576,14 @@ class MemberService
             // Fetch the session JSON
             $sessionInfo = \Stripe\Checkout\Session::retrieve($session);
 
+            if(empty($sessionInfo->display_items)){
+                throw new KerosException("No item in Stripe session", 400);
+            }
+
+            if($sessionInfo->display_items[0]->sku->id != $this->kerosConfig['STRIPE_REPAYMENT_SUBSCRIPTION_ID']){
+                throw new KerosException("Purchased item is not a repayment subscription", 400);
+            }
+
             //get client_reference_id
             $client_reference_id = $sessionInfo->client_reference_id;
 
@@ -585,8 +593,7 @@ class MemberService
                 $this->memberDataService->persist($member);
                 $this->logger->info("La date de paiement du membre id = " . $client_reference_id . " est mise à jour");
             } else {
-                $this->logger->error("ID du membre est null");
-                throw new KerosException("Irrelevant event type", 400);
+                throw new KerosException("Membership ID is null", 400);
             }
         }else{
             throw new KerosException("Irrelevant event type", 422);
