@@ -593,7 +593,7 @@ class MemberService
                 $this->memberDataService->persist($member);
                 $this->logger->info("La date de paiement du membre id = " . $client_reference_id . " est mise à jour");
             } else {
-                throw new KerosException("Membership ID is null", 200);
+                throw new KerosException("Membership ID is null", 400);
             }
         }else{
             throw new KerosException("Irrelevant event type", 200);
