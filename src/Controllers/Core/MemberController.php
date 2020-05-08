@@ -278,7 +278,9 @@ class MemberController
 
         $payload = $request->getBody()->getContents();
         $sig_header = $request->getHeaderLine('HTTP_STRIPE_SIGNATURE');
+        $this->entityManager->beginTransaction();
         $this->memberService->updateMembersPaymentDate($payload, $sig_header);
+        $this->entityManager->commit();
 
         return $response->withStatus(204);
     }
