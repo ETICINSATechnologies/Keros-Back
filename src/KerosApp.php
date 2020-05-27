@@ -139,6 +139,51 @@ class KerosApp
             ->add(AccessRightsService::class . ":checkRightsNotAlumni")
             ->add($this->getContainer()->get(AuthenticationMiddleware::class));
 
+            // Protected core routes
+            $this->group('/core', function () {
+
+                $this->group('/member', function () {
+                    $this->get("", MemberController::class . ':getPageMembers');
+                    $this->get("/me", MemberController::class . ':getConnectedUser');
+                    $this->put("/me", MemberController::class . ':updateConnectedUser');
+                    $this->get('/{id:[0-9]+}', MemberController::class . ':getMember');
+                    $this->post("", MemberController::class . ':createMember');
+                    $this->put("/{id:[0-9]+}", MemberController::class . ':updateMember');
+                    $this->delete("/{id:[0-9]+}", MemberController::class . ':deleteMember');
+                    $this->get("/board/latest", MemberController::class . ':getLatestBoard');
+                    $this->post("/{id:[0-9]+}/photo", MemberController::class . ':createProfilePicture');
+                    $this->get("/{id:[0-9]+}/photo", MemberController::class . ':getProfilePicture');
+                    $this->post("/me/photo", MemberController::class . ':createCurrentUserProfilePicture');
+                    $this->get("/me/photo", MemberController::class . ':getCurrentUserProfilePicture');
+					$this->delete("/{id:[0-9]+}/photo", MemberController::class . ':deleteProfilePicture');
+					$this->post("/export", MemberController::class . ':exportMembers');
+                });
+
+                $this->group('/consultant', function () {
+                    $this->get("", ConsultantController::class . ':getPageConsultants');
+                    $this->get("/me", ConsultantController::class . ':getConnectedConsultant');
+                    $this->put("/me", ConsultantController::class . ':updateConnectedConsultant');
+                    $this->get('/{id:[0-9]+}', ConsultantController::class . ':getConsultant');
+                    $this->post("", ConsultantController::class . ':createConsultant');
+                    $this->put("/{id:[0-9]+}", ConsultantController::class . ':updateConsultant');
+                    $this->delete("/{id:[0-9]+}", ConsultantController::class . ':deleteConsultant');
+                    $this->get("/{id:[0-9]+}/document/{document_name:[a-zA-Z]+}", ConsultantController::class . ':getDocument');
+                    $this->post("/{id:[0-9]+}/document/{document_name:[a-zA-Z]+}", ConsultantController::class . ':createDocument');
+                    $this->get("/{id:[0-9]+}/protected", ConsultantController::class . ':getConsultantProtectedData');
+                    $this->get("/me/protected", ConsultantController::class . ':getConnectedConsultantProtectedData');
+					$this->post("/export", ConsultantController::class . ':exportConsultants');
+                });
+
+                $this->group('/ticket', function () {
+                    $this->get("", TicketController::class . ':getPageTickets');
+                    $this->get('/{id:[0-9]+}', TicketController::class . ':getTicket');
+                    $this->post("", TicketController::class . ':createTicket');
+                    $this->delete("/{id:[0-9]+}", TicketController::class . ':deleteTicket');
+                });
+
+            })->add($this->getContainer()->get(AuthenticationMiddleware::class));
+
+            // Public core routes
             $this->group('/core', function () {
 
                 $this->group('/department', function () {
@@ -165,45 +210,6 @@ class KerosApp
                     $this->get("", PositionController::class . ':getAllPositions');
                     $this->get("/{id:[0-9]+}", PositionController::class . ':getPosition');
                 });
-
-                $this->group('/member', function () {
-                    $this->get("", MemberController::class . ':getPageMembers');
-                    $this->get("/me", MemberController::class . ':getConnectedUser');
-                    $this->put("/me", MemberController::class . ':updateConnectedUser');
-                    $this->get('/{id:[0-9]+}', MemberController::class . ':getMember');
-                    $this->post("", MemberController::class . ':createMember');
-                    $this->put("/{id:[0-9]+}", MemberController::class . ':updateMember');
-                    $this->delete("/{id:[0-9]+}", MemberController::class . ':deleteMember');
-                    $this->get("/board/latest", MemberController::class . ':getLatestBoard');
-                    $this->post("/{id:[0-9]+}/photo", MemberController::class . ':createProfilePicture');
-                    $this->get("/{id:[0-9]+}/photo", MemberController::class . ':getProfilePicture');
-                    $this->post("/me/photo", MemberController::class . ':createCurrentUserProfilePicture');
-                    $this->get("/me/photo", MemberController::class . ':getCurrentUserProfilePicture');
-					$this->delete("/{id:[0-9]+}/photo", MemberController::class . ':deleteProfilePicture');
-					$this->post("/export", MemberController::class . ':exportMembers');
-                })->add($this->getContainer()->get(AuthenticationMiddleware::class));
-
-                $this->group('/consultant', function () {
-                    $this->get("", ConsultantController::class . ':getPageConsultants');
-                    $this->get("/me", ConsultantController::class . ':getConnectedConsultant');
-                    $this->put("/me", ConsultantController::class . ':updateConnectedConsultant');
-                    $this->get('/{id:[0-9]+}', ConsultantController::class . ':getConsultant');
-                    $this->post("", ConsultantController::class . ':createConsultant');
-                    $this->put("/{id:[0-9]+}", ConsultantController::class . ':updateConsultant');
-                    $this->delete("/{id:[0-9]+}", ConsultantController::class . ':deleteConsultant');
-                    $this->get("/{id:[0-9]+}/document/{document_name:[a-zA-Z]+}", ConsultantController::class . ':getDocument');
-                    $this->post("/{id:[0-9]+}/document/{document_name:[a-zA-Z]+}", ConsultantController::class . ':createDocument');
-                    $this->get("/{id:[0-9]+}/protected", ConsultantController::class . ':getConsultantProtectedData');
-                    $this->get("/me/protected", ConsultantController::class . ':getConnectedConsultantProtectedData');
-					$this->post("/export", ConsultantController::class . ':exportConsultants');
-                })->add($this->getContainer()->get(AuthenticationMiddleware::class));
-
-                $this->group('/ticket', function () {
-                    $this->get("", TicketController::class . ':getPageTickets');
-                    $this->get('/{id:[0-9]+}', TicketController::class . ':getTicket');
-                    $this->post("", TicketController::class . ':createTicket');
-                    $this->delete("/{id:[0-9]+}", TicketController::class . ':deleteTicket');
-                })->add($this->getContainer()->get(AuthenticationMiddleware::class));
 
             });
 
