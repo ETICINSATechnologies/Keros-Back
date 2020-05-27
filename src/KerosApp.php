@@ -180,7 +180,6 @@ class KerosApp
                     $this->post("", TicketController::class . ':createTicket');
                     $this->delete("/{id:[0-9]+}", TicketController::class . ':deleteTicket');
                 });
-
             })->add($this->getContainer()->get(AuthenticationMiddleware::class));
 
             // Public core routes
@@ -210,7 +209,6 @@ class KerosApp
                     $this->get("", PositionController::class . ':getAllPositions');
                     $this->get("/{id:[0-9]+}", PositionController::class . ':getPosition');
                 });
-
             });
 
             $this->post("/core/member/paid", MemberController::class. ':updatePaymentDate');
@@ -243,10 +241,10 @@ class KerosApp
             ->add(AccessRightsService::class . ":checkRightsNotAlumni")
             ->add($this->getContainer()->get(AuthenticationMiddleware::class));
 
+            // Protected sg routes
             $this->group('/sg', function () {
                 $this->group('/membre-inscription', function () {
                     $this->get("", MemberInscriptionController::class . ':getPageMemberInscriptions');
-                    $this->post("", MemberInscriptionController::class . ':createMemberInscription');
                     $this->get('/{id:[0-9]+}', MemberInscriptionController::class . ':getMemberInscription');
                     $this->delete("/{id:[0-9]+}", MemberInscriptionController::class . ':deleteMemberInscription');
                     $this->put("/{id:[0-9]+}", MemberInscriptionController::class . ':updateMemberInscription');
@@ -258,7 +256,6 @@ class KerosApp
                 });
                 $this->group('/consultant-inscription', function () {
                     $this->get("", ConsultantInscriptionController::class . ':getPageConsultantInscriptions');
-                    $this->post("", ConsultantInscriptionController::class . ':createConsultantInscription');
                     $this->get('/{id:[0-9]+}', ConsultantInscriptionController::class . ':getConsultantInscription');
                     $this->get('/{id:[0-9]+}/protected', ConsultantInscriptionController::class.':getConsultantInscriptionProtected');
                     $this->delete("/{id:[0-9]+}", ConsultantInscriptionController::class . ':deleteConsultantInscription');
@@ -270,6 +267,16 @@ class KerosApp
             })
             ->add(AccessRightsService::class . ":checkRightsNotAlumni")
             ->add($this->getContainer()->get(AuthenticationMiddleware::class));
+
+            // Public sg routes
+            $this->group('/sg', function () {
+                $this->group('/membre-inscription', function () {
+                    $this->post("", MemberInscriptionController::class . ':createMemberInscription');
+                });
+                $this->group('/consultant-inscription', function () {
+                    $this->post("", ConsultantInscriptionController::class . ':createConsultantInscription');
+                });
+            });
         });
 
         $this->app = $app;
