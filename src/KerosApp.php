@@ -181,7 +181,7 @@ class KerosApp
                     $this->get("/me/photo", MemberController::class . ':getCurrentUserProfilePicture');
 					$this->delete("/{id:[0-9]+}/photo", MemberController::class . ':deleteProfilePicture');
 					$this->post("/export", MemberController::class . ':exportMembers');
-                });
+                })->add($this->getContainer()->get(AuthenticationMiddleware::class));
 
                 $this->group('/consultant', function () {
                     $this->get("", ConsultantController::class . ':getPageConsultants');
@@ -196,16 +196,16 @@ class KerosApp
                     $this->get("/{id:[0-9]+}/protected", ConsultantController::class . ':getConsultantProtectedData');
                     $this->get("/me/protected", ConsultantController::class . ':getConnectedConsultantProtectedData');
 					$this->post("/export", ConsultantController::class . ':exportConsultants');
-                });
+                })->add($this->getContainer()->get(AuthenticationMiddleware::class));
 
                 $this->group('/ticket', function () {
                     $this->get("", TicketController::class . ':getPageTickets');
                     $this->get('/{id:[0-9]+}', TicketController::class . ':getTicket');
                     $this->post("", TicketController::class . ':createTicket');
                     $this->delete("/{id:[0-9]+}", TicketController::class . ':deleteTicket');
-                });
+                })->add($this->getContainer()->get(AuthenticationMiddleware::class));
 
-            })->add($this->getContainer()->get(AuthenticationMiddleware::class));
+            });
 
             $this->post("/core/member/paid", MemberController::class. ':updatePaymentDate');
 
