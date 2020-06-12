@@ -5,6 +5,8 @@ WORKDIR /var/www
 COPY . ./keros-api
 
 RUN a2enmod rewrite \
+    ## Enable apache headers
+    && a2enmod headers \
     # General preparation
     && apt-get update \
     && apt-get install git zip unzip pdftk libzip-dev -yq \
