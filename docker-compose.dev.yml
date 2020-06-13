@@ -3,7 +3,7 @@ services:
   keros-back:
     build:
       context: .
-      dockerfile: dev.Dockerfile
+      dockerfile: Dockerfile.dev
     image: "keros-back"
     container_name: keros-back
     restart: always
@@ -21,16 +21,14 @@ services:
       - "./src/.htaccess:/usr/src/app/src/.htaccess"
       - "./src/index.php:/usr/src/app/src/index.php"
       - "./src/KerosApp.php:/usr/src/app/src/KerosApp.php"
-      - "./src/test.json:/usr/src/app/src/test.json"
     entrypoint:
       - bash
       - /usr/src/app/.deploy/php.entrypoint.sh
-
   mysql:
     image: "mysql:5.7"
     container_name: mysql
     ports:
-      - "3306"
+      - "3306:3306"
     environment:
       MYSQL_USER: 'root'
       MYSQL_ROOT_PASSWORD: 'root'
@@ -38,6 +36,5 @@ services:
       - "./src/Tools/Database:/opt/Database"
       - "./.deploy:/opt/.deploy"
       - persistent-db:/var/lib/mysql
-
 volumes:
   persistent-db:
