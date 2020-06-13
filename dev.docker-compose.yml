@@ -1,0 +1,43 @@
+version: "3.7"
+services:
+  keros-back:
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+    image: "keros-back"
+    container_name: keros-back
+    restart: always
+    ports:
+      - "8000:8000"
+    volumes:
+      - "./documents:/usr/src/app/documents"
+      - "./tests:/usr/src/app/tests"
+      - "./src/Controllers:/usr/src/app/src/Controllers"
+      - "./src/DataServices:/usr/src/app/src/DataServices"
+      - "./src/Entities:/usr/src/app/src/Entities"
+      - "./src/Error:/usr/src/app/src/Error"
+      - "./src/Services:/usr/src/app/src/Services"
+      - "./src/Tools:/usr/src/app/src/Tools"
+      - "./src/.htaccess:/usr/src/app/src/.htaccess"
+      - "./src/index.php:/usr/src/app/src/index.php"
+      - "./src/KerosApp.php:/usr/src/app/src/KerosApp.php"
+      - "./src/test.json:/usr/src/app/src/test.json"
+    entrypoint:
+      - bash
+      - /usr/src/app/.deploy/php.entrypoint.sh
+
+  mysql:
+    image: "mysql:5.7"
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_USER: 'root'
+      MYSQL_ROOT_PASSWORD: 'root'
+    volumes:
+      - "./src/Tools/Database:/opt/Database"
+      - "./.deploy:/opt/.deploy"
+      - "persistent-db:/var/lib/mysql"
+
+volumes:
+  persistent-db:
