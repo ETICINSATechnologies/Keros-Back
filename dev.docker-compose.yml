@@ -30,14 +30,14 @@ services:
     image: "mysql:5.7"
     container_name: mysql
     ports:
-      - "3306:3306"
+      - "3306"
     environment:
       MYSQL_USER: 'root'
       MYSQL_ROOT_PASSWORD: 'root'
     volumes:
       - "./src/Tools/Database:/opt/Database"
       - "./.deploy:/opt/.deploy"
-      - "persistent-db:/var/lib/mysql"
+      - persistent-db:/var/lib/mysql
 
 volumes:
   persistent-db:

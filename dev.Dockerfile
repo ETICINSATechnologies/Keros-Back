@@ -6,7 +6,9 @@ WORKDIR /usr/src/app
 
 RUN apt-get update \
     # General preparation
+    # Workaround for man packages error for pdftk
     && mkdir -p /usr/share/man/man1 \
+    # Install system packages
     && apt-get install git zip unzip pdftk libzip-dev -yq \
     # Install Apache PHP MySQL modules
     && docker-php-ext-install -j$(nproc) pdo pdo_mysql zip \
