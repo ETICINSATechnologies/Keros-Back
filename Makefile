@@ -2,13 +2,13 @@
 staging-build:
 	docker-compose build
 dev-docker-build:
-	docker-compose -f docker-compose.dev.yml build
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml build
 
 # Launch targets
 staging-up:
 	docker-compose up -d
 dev-docker-up:
-	docker-compose -f docker-compose.dev.yml up -d
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 dev-up:
 	php -S 0.0.0.0:8000 -t src src/index.php
 
@@ -21,22 +21,22 @@ staging-down-all:
 	docker-compose down -v
 ## Down containers
 dev-docker-down:
-	docker-compose -f docker-compose.dev.yml down
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml down
 ## Down containers and volumes
 dev-docker-down-all:
-	docker-compose -f docker-compose.dev.yml down -v
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml down -v
 
 # Logs targets
 staging-logs:
 	docker-compose logs -f
 dev-logs:
-	docker-compose -f docker-compose.dev.yml logs -f
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml logs -f
 
 # Test targets
 test-docker:
-	docker exec -it keros-back vendor/bin/phpunit -c tests/phpunit.xml --stop-on-failure
+	docker exec -it keros-back keros-api/vendor/bin/phpunit -c keros-api/tests/phpunit.xml --stop-on-failure
 test-all-docker:
-	docker exec -it keros-back vendor/bin/phpunit -c tests/phpunit.xml
+	docker exec -it keros-back keros-api/vendor/bin/phpunit -c keros-api/tests/phpunit.xml
 test:
 	./vendor/bin/phpunit -c tests/phpunit.xml --stop-on-failure
 test-all:
