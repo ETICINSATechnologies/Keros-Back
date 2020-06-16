@@ -3,6 +3,7 @@ services:
   keros-back:
     restart: on-failure
     volumes:
+      - "./tests:/var/www/keros-api/tests"
       - "./src/Controllers:/var/www/keros-api/src/Controllers"
       - "./src/DataServices:/var/www/keros-api/src/DataServices"
       - "./src/Entities:/var/www/keros-api/src/Entities"

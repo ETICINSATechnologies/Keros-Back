@@ -34,9 +34,9 @@ dev-logs:
 
 # Test targets
 test-docker:
-	docker exec -it keros-back keros-api/vendor/bin/phpunit -c keros-api/tests/phpunit.xml --stop-on-failure
+	docker exec -it keros-back /bin/bash -c "cd keros-api && vendor/bin/phpunit -c tests/phpunit.xml --stop-on-failure"
 test-all-docker:
-	docker exec -it keros-back keros-api/vendor/bin/phpunit -c keros-api/tests/phpunit.xml
+	docker exec -it keros-back /bin/bash -c "cd keros-api && vendor/bin/phpunit -c tests/phpunit.xml"
 test:
 	./vendor/bin/phpunit -c tests/phpunit.xml --stop-on-failure
 test-all:
