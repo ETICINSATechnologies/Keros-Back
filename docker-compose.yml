@@ -1,6 +1,7 @@
 version: "3.7"
 services:
   keros-back:
+    build: .
     image: "keros-back"
     container_name: keros-back
     restart: always
