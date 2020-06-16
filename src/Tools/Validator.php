@@ -240,6 +240,10 @@ class Validator
 
     public static function requiredPhone($telephone): ?string
     {
+        if ($telephone == null) {
+            throw new KerosException("The phone number cannot be null", 400);
+        }
+
         if (strlen($telephone) < 8 || strlen($telephone) > 16)
             throw new KerosException("The provided phone number is invalid", 400);
 
