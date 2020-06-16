@@ -102,6 +102,7 @@ class MemberInscriptionController
     public function createMemberInscription(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Creating member_inscription from " . $request->getServerParams()["REMOTE_ADDR"]);
+        $uploadedFiles = FileValidator::requiredFiles($request->getUploadedFiles());
         $body = $request->getParsedBody();
 
         $this->entityManager->beginTransaction();

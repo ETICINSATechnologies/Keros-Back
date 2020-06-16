@@ -5,6 +5,7 @@ namespace Keros\Tools\Mail;
 use Keros\Error\KerosException;
 
 use Keros\Tools\ConfigLoader;
+use Keros\Tools\Helpers\FileHelper;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use \SendGrid as SendGrid;
@@ -15,6 +16,7 @@ use \SendGrid\Mail\TemplateId as TemplateId;
 use \SendGrid\Mail\Substitution as Substitution;
 use \SendGrid\Mail\PlainTextContent as PlainTextContent;
 use \SendGrid\Mail\HtmlContent as HtmlContent;
+use \SendGrid\Mail\Attachment as Attachment;
 use \SendGrid\Mail\Mail as Mail;
 
 
@@ -112,22 +114,27 @@ class MailSender
      * @param string $toName
      * @param string $htmlContent
      * @param string $plainTextContent
+     * @param array $fileAttachments
      * @return Mail
      */
-    public function createSimpleMail(string $subject, string $toMail, string $toName, string $htmlContent, string $plainTextContent): Mail
+    public function createSimpleMail(string $subject, string $toMail, string $toName, string $htmlContent, string $plainTextContent, array $fileAttachments = array()): Mail
     {
         $to = new To($toMail, $toName);
         $mailSubject = new Subject($subject);
         $mailHtmlContent = new HtmlContent($htmlContent);
         $mailPlainTextContent = new PlainTextContent($plainTextContent);
 
-        return new Mail(
+        $email = new Mail(
             $this->from,
             $to,
             $mailSubject,
             $mailPlainTextContent,
             $mailHtmlContent
         );
+
+        $this->addAttachmentsToEmail($email, $fileAttachments);
+
+        return $email;
     }
 
     /**
@@ -143,5 +150,36 @@ class MailSender
         if ($response->statusCode() != 202) {
             throw new KerosException($response->body(), $response->statusCode());
         }
+    }
+
+    /**
+     * @param Mail $mail
+     * @param array $fileAttachments
+     * @return Mail
+     */
+    public function addAttachmentsToEmail(Mail $mail, array $fileAttachments)
+    {
+        foreach ($fileAttachments as $key => $fileAttachment) 
+        {
+            try 
+            {
+                FileHelper::verifyFilepath($fileAttachment, $fileAttachment);
+                $file_encoded = base64_encode(file_get_contents($fileAttachment));
+                $file_mime_type = mime_content_type($fileAttachment);
+                $file_name = basename($fileAttachment);
+                $email->addAttachment(
+                    $file_encoded,
+                    $file_mime_type,
+                    $file_name,
+                    "attachment"
+                );
+                $this->logger->debug("File attached : ". $fileAttachment);
+            } 
+            catch (Exception $e) 
+            {
+                $this->logger->warning("Error when attaching file : ".$e->getMessage());
+            }
+        }
+        return $email;
     }
 }

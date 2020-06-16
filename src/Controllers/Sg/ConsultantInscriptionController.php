@@ -120,7 +120,7 @@ class ConsultantInscriptionController
     public function createConsultantInscription(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Creating consultantInscription from " . $request->getServerParams()["REMOTE_ADDR"]);
-        $uploadedFiles = FileValidator::requiredFiles($request->getUploadedFiles());
+        $uploadedFiles = FileValidator::optionalFiles($request->getUploadedFiles());
         $consultantInscriptionFiles = ConsultantInscriptionFileHelper::getConsultantInscriptionFiles();
         $body = $request->getParsedBody();
 
