@@ -1,6 +1,7 @@
 SET AUTOCOMMIT = 0;
 SET FOREIGN_KEY_CHECKS = 0;
 SET UNIQUE_CHECKS = 0;
+SET NAMES 'utf8' COLLATE 'utf8_general_ci';
 
 /* Passwords are on the right */
 TRUNCATE TABLE core_user;
