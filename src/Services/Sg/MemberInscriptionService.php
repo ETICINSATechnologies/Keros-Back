@@ -77,7 +77,7 @@ class   MemberInscriptionService
         $departmentId = Validator::requiredId($fields["departmentId"]);
         $department = $this->departmentService->getOne($departmentId);
         $email = Validator::requiredEmail($fields["email"]);
-        $phoneNumber = Validator::requiredPhone($fields["phoneNumber"]);
+        $phoneNumber = Validator::requiredPhone($fields["phoneNumber"] ?? null);
         $outYear = Validator::requiredInt($fields["outYear"]);
         $nationalityId = Validator::requiredId($fields["nationalityId"]);
         $nationality = $this->countryService->getOne($nationalityId);

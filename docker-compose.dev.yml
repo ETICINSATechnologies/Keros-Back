@@ -1,0 +1,15 @@
+version: "3.7"
+services:
+  keros-back:
+    restart: on-failure
+    volumes:
+      - "./tests:/var/www/keros-api/tests"
+      - "./src/Controllers:/var/www/keros-api/src/Controllers"
+      - "./src/DataServices:/var/www/keros-api/src/DataServices"
+      - "./src/Entities:/var/www/keros-api/src/Entities"
+      - "./src/Error:/var/www/keros-api/src/Error"
+      - "./src/Services:/var/www/keros-api/src/Services"
+      - "./src/Tools:/var/www/keros-api/src/Tools"
+      - "./src/.htaccess:/var/www/keros-api/src/.htaccess"
+      - "./src/index.php:/var/www/keros-api/src/index.php"
+      - "./src/KerosApp.php:/var/www/keros-api/src/KerosApp.php"

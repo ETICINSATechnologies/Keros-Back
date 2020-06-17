@@ -21,6 +21,6 @@ services:
     volumes:
       - "./src/Tools/Database:/opt/Database"
       - "./.deploy:/opt/.deploy"
-    entrypoint:
-      - bash
-      - /opt/.deploy/mysql.entrypoint.sh
+      - persistent-db:/var/lib/mysql
+volumes:
+  persistent-db:
