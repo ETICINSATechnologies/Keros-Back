@@ -19,7 +19,12 @@ class EntityManagerBuilder
         $dbName = $kerosConfig['DB_NAME'];
         $devMode = $kerosConfig['DEV_MODE'];
 
-        $doctrineConfig = Setup::createAnnotationMetadataConfiguration(array(__DIR__), $devMode);
+        $cacheDir = dirname(__FILE__).'/cache';
+        if (!is_dir($cacheDir)) {
+            mkdir($cacheDir);
+        }
+        $doctrineConfig = Setup::createAnnotationMetadataConfiguration(array(__DIR__), $devMode, $cacheDir);
+        $doctrineConfig->setAutoGenerateProxyClasses(true);     
 
         $conn = array(
             'url' => "pdo-mysql://$user:$pass@$host:$port/$dbName?charset=UTF8",
