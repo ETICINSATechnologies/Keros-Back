@@ -16,7 +16,7 @@ logs
 .deploy/settings.docker.ini
 /documents/*
 tests/documents/
-
+src/Tools/Database/cache
 
 #Do not ignore some files for testing
 !documents/templates/Fiche_inscription_membre_actif.pdf
