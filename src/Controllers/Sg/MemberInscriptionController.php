@@ -142,7 +142,7 @@ class MemberInscriptionController
     public function deleteMemberInscription(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Deleting member_inscription from " . $request->getServerParams()["REMOTE_ADDR"]);
-        $this->accessRightsService->ensureOnlyGeneralSecretary($request);
+        $this->accessRightsService->ensureGeneralSecretaryOrHRresp($request);
 
         $this->entityManager->beginTransaction();
         $this->memberInscriptionService->delete($args['id']);
