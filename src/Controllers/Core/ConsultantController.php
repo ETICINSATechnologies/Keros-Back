@@ -90,7 +90,7 @@ class ConsultantController
     {
         $this->logger->debug("Getting consultant protected data by ID " . $args["id"] . " from " . $request->getServerParams()["REMOTE_ADDR"]);
 
-        $this->accessRightsService->ensureGeneralSecretaryOrHRresp($request);
+        $this->accessRightsService->ensureGeneralSecretaryOrHRManager($request);
 
         $consultantProtectedData = $this->consultantService->getOneProtectedData($args["id"]);
 
@@ -140,7 +140,7 @@ class ConsultantController
     public function createConsultant(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Creating consultant from " . $request->getServerParams()["REMOTE_ADDR"]);
-        $this->accessRightsService->ensureGeneralSecretaryOrHRresp($request);
+        $this->accessRightsService->ensureGeneralSecretaryOrHRManager($request);
         $uploadedFiles = FileValidator::optionalFiles($request->getUploadedFiles());
         $consultantFiles = ConsultantFileHelper::getConsultantFiles();
         $body = $request->getParsedBody();
@@ -170,7 +170,7 @@ class ConsultantController
     public function updateConsultant(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Updating consultant from " . $request->getServerParams()["REMOTE_ADDR"]);
-        $this->accessRightsService->ensureGeneralSecretaryOrHRresp($request);
+        $this->accessRightsService->ensureGeneralSecretaryOrHRManager($request);
         $body = $request->getParsedBody();
 
         $this->entityManager->beginTransaction();
@@ -183,7 +183,7 @@ class ConsultantController
     public function deleteConsultant(Request $request, Response $response, array $args)
     {
         $this->logger->debug("Deleting consultant from " . $request->getServerParams()["REMOTE_ADDR"]);
-        $this->accessRightsService->ensureGeneralSecretaryOrHRresp($request);
+        $this->accessRightsService->ensureGeneralSecretaryOrHRManager($request);
         $this->entityManager->beginTransaction();
         $this->consultantService->delete($args['id']);
         $this->entityManager->commit();

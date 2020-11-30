@@ -9,7 +9,7 @@ use Keros\Entities\Sg\MemberInscriptionDocument;
  * @Entity
  * @Table(name="core_member")
  */
-class Member implements JsonSerializable
+class Member implements JsonpSerializable
 {
     /**
      * @Id

@@ -221,7 +221,7 @@ class AccessRightsService
         $this->ensureMemberIs($request, self::GENERAL_SECRETARY_ID);
     }
 
-    public function ensureGeneralSecretaryOrHRresp(Request $request){
+    public function ensureGeneralSecretaryOrHRManager(Request $request){
         $this->ensureMemberIs($request, array(self::GENERAL_SECRETARY_ID, self::HR_MANAGER_ID));
     }
 }
