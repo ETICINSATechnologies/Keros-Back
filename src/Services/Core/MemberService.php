@@ -216,7 +216,7 @@ class MemberService
         $isAlumni = Validator::optionalBool($fields['isAlumni'] ?? $member->getIsAlumni());
         $droitImage = Validator::optionalBool($fields['droitImage'] ?? $member->isDroitImage());
         if(!empty($isAlumni)){
-            # Member become an alumni
+            # Member becomes an alumni
             if((!$member->getIsAlumni()) && $fields['isAlumni']){
                 $emailETIC = null;
                 $this->mailFactory->sendMailMemberAlumniFromTemplate($member);
