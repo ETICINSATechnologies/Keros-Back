@@ -216,7 +216,9 @@ class MemberService
         $isAlumni = Validator::optionalBool($fields['isAlumni'] ?? $member->getIsAlumni());
         $droitImage = Validator::optionalBool($fields['droitImage'] ?? $member->isDroitImage());
         if(!empty($isAlumni)){
+            # Member becomes an alumni
             if((!$member->getIsAlumni()) && $fields['isAlumni']){
+                $emailETIC = null;
                 $this->mailFactory->sendMailMemberAlumniFromTemplate($member);
             }
         }
@@ -404,7 +406,11 @@ class MemberService
     {
         $email = Validator::requiredEmail($email);
 
-        $member = $this->memberDataService->findByEmail($email);
+        $member = $this->memberDataService->findByEmailETIC($email);
+
+        if(is_null($member)) {
+            $member = $this->memberDataService->findByEmail($email);
+        }
 
         if (is_null($member)) {
             throw new KerosException("The member with this email could not be found", 404);
