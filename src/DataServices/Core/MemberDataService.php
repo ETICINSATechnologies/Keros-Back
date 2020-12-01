@@ -116,7 +116,7 @@ class MemberDataService
             $whereParameters = array();
 
             foreach ($queryParams as $key => $value) {
-                if (in_array($key, ['search', 'poleId', 'positionId', 'year', 'firstName', 'lastName', 'company', 'isAlumni'])) {
+                if (in_array($key, ['search', 'poleId', 'positionId', 'year', 'firstName', 'lastName', 'company', 'isAlumni', 'hasPaidMemberFees'])) {
                     if (!empty($whereStatement))
                         $whereStatement .= ' AND ';
 
@@ -153,6 +153,18 @@ class MemberDataService
                             $booleanValue = filter_var(strtolower($value), FILTER_VALIDATE_BOOLEAN);
                             $whereStatement .= 'm.' . $key . ' = :' . $key;
                             $whereParameters[':' . $key] = $booleanValue;
+                        } elseif ($key == 'hasPaidMemberFees') {
+                            $booleanValue = filter_var(strtolower($value), FILTER_VALIDATE_BOOLEAN);
+                            $today = new \DateTime();
+                            if ($booleanValue) {
+                                $whereStatement .= "DATE_ADD(m.dateRepayment, 1, 'day') >= :" . 'hasPaidMemberFees';
+                            }
+                            else {
+                                $whereStatement .= "DATE_ADD(m.dateRepayment, 1, 'day') < :" . 'hasPaidMemberFees';
+                            }
+                            $this->logger->debug("debug : " . $today->format("Y-m-d"));
+                            var_dump($today->format("Y-m-d"));
+                            $whereParameters[':' . $key] = $today->format("Y-m-d");
                         }
                     }
                 }
@@ -193,6 +205,7 @@ class MemberDataService
                 ->setMaxResults($pageSize);
             $query = $this->queryBuilder->getQuery();
             $paginator = new Paginator($query, $fetchJoinCollection = true);
+            $this->logger->debug("debug : " . var_dump($query->getSQL()) . var_dump($query->getParameters()));
             return new Page($query->execute(), $requestParameters, count($paginator));
 
         } catch (Exception $e) {

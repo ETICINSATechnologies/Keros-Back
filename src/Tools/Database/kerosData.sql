@@ -189,7 +189,7 @@ INSERT INTO core_ticket (id, userId, title, message, type, status) VALUES
 TRUNCATE TABLE core_member;
 INSERT INTO core_member (id, genderId, firstName, lastName, birthday, telephone, email, addressId, schoolYear, departmentId, company, profilePicture, droitImage, createdDate, isAlumni, dateRepayment) VALUES
   (1, 1, 'Conor', 'Breeze', STR_TO_DATE('1975-12-25', '%Y-%m-%d'), '+332541254', 'fake.mail@fake.com', 2, 3, 1, 'Danone Group', '1c518c591e1be2f2703dd8c9bb77dbb5.jpg', true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
-  (3, 1, 'Laurence', 'Tainturière', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.mail3@fake.com', 3, 5, 2, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
+  (3, 1, 'Laurence', 'Tainturière', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.mail3@fake.com', 3, 5, 2, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false, STR_TO_DATE('2020/9/1', '%Y/%m/%d')),
   (4, 3, 'Stéphane4', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly4@fake.com', 6, 3, 4, NULL, NULL, false, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
   (6, 3, 'SuperPrenom', 'SuperNom', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'super@vraimentsuper.com', 9, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
   (7, 3, 'Disabled', 'DisabledName', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'disabled@fake.com', 10, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false, STR_TO_DATE('2019/9/1', '%Y/%m/%d')), -- Disabled member
@@ -211,9 +211,9 @@ INSERT INTO core_member (id, genderId, firstName, lastName, birthday, telephone,
   (23, 3, 'Stéphane23', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly23@fake.com', 26, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
   (24, 3, 'Stéphane24', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly24@fake.com', 27, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
   (25, 3, 'Stéphane25', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly25@fake.com', 28, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
-  (26, 3, 'Stéphane26', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly26@fake.com', 29, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
-  (27, 3, 'Stéphane27', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly27@fake.com', 30, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), true, STR_TO_DATE('2019/9/1', '%Y/%m/%d')),
-  (28, 3, 'Stéphane28', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly28@fake.com', 31, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'));
+  (26, 3, 'Stéphane26', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly26@fake.com', 29, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), false, STR_TO_DATE('2020/9/1', '%Y/%m/%d')),
+  (27, 3, 'Stéphane27', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly27@fake.com', 30, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), true, STR_TO_DATE('2020/9/1', '%Y/%m/%d')),
+  (28, 3, 'Stéphane28', 'McMahon', STR_TO_DATE('1987-12-2', '%Y-%m-%d'), '+337425254', 'fake.maly28@fake.com', 31, 3, 4, NULL, NULL, true, STR_TO_DATE('2019/9/1', '%Y/%m/%d'), true, STR_TO_DATE('2020/9/1', '%Y/%m/%d'));
 
 TRUNCATE TABLE core_consultant;
 INSERT INTO core_consultant (id, genderId, firstName, lastName, birthday, telephone, nationalityId, email, addressId, socialSecurityNumber, schoolYear, departmentId, company, profilePicture, droitImage, isApprentice, createdDate, documentIdentity, documentScolaryCertificate, documentRIB, documentVitaleCard, documentResidencePermit, documentCVEC) VALUES
