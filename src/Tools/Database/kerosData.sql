@@ -261,7 +261,6 @@ INSERT INTO core_member_position (id, memberId, positionId, isBoard, year) VALUE
   (7, 2, 7, FALSE, 2002),
   (8, 4, 9, FALSE, 2015),
   (9, 6, 19, TRUE, 2018),
-  (10, 6, 21, TRUE, 2018),
   (11, 6, 21, TRUE, 2018),
   (12, 6, 22, TRUE, 2018),
   (13, 6, 18, TRUE, 2018);

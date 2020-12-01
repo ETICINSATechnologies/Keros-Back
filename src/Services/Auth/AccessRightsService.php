@@ -67,7 +67,7 @@ class AccessRightsService
     public function ensureMemberIs(Request $request, ... $positionsIdAllowed){
 
         $currentMember = $this->memberService->getOne($request->getAttribute("userId"));
-        $memberPositions = $currentMember->getMemberPositions();
+        $memberPositions = $currentMember->getMemberPositionsArray();
         foreach ($memberPositions as $memberPosition) {
             if (in_array($memberPosition->getPosition()->getId(), $positionsIdAllowed)) {
                 return;
@@ -218,6 +218,10 @@ class AccessRightsService
     }
 
     public function ensureOnlyGeneralSecretary(Request $request){
-        $this->ensureMemberIs($request, 22);
+        $this->ensureMemberIs($request, self::GENERAL_SECRETARY_ID);
+    }
+
+    public function ensureGeneralSecretaryOrHRManager(Request $request){
+        $this->ensureMemberIs($request, self::GENERAL_SECRETARY_ID, self::HR_MANAGER_ID);
     }
 }
