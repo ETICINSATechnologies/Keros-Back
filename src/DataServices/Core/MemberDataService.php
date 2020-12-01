@@ -116,7 +116,7 @@ class MemberDataService
             $whereParameters = array();
 
             foreach ($queryParams as $key => $value) {
-                if (in_array($key, ['search', 'poleId', 'positionId', 'year', 'firstName', 'lastName', 'company', 'isAlumni'])) {
+                if (in_array($key, ['search', 'poleId', 'positionId', 'year', 'firstName', 'lastName', 'company', 'isAlumni', 'hasPaidMemberFees'])) {
                     if (!empty($whereStatement))
                         $whereStatement .= ' AND ';
 
@@ -153,6 +153,16 @@ class MemberDataService
                             $booleanValue = filter_var(strtolower($value), FILTER_VALIDATE_BOOLEAN);
                             $whereStatement .= 'm.' . $key . ' = :' . $key;
                             $whereParameters[':' . $key] = $booleanValue;
+                        } elseif ($key == 'hasPaidMemberFees') {
+                            $booleanValue = filter_var(strtolower($value), FILTER_VALIDATE_BOOLEAN);
+                            $today = new \DateTime();
+                            if ($booleanValue) {
+                                $whereStatement .= "DATE_ADD(m.dateRepayment, 1, 'year') >= :today";
+                            }
+                            else {
+                                $whereStatement .= "DATE_ADD(m.dateRepayment, 1, 'year') < :today";
+                            }
+                            $whereParameters[':today'] = $today->format("Y-m-d");
                         }
                     }
                 }
