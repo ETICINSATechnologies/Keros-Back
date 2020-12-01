@@ -157,14 +157,12 @@ class MemberDataService
                             $booleanValue = filter_var(strtolower($value), FILTER_VALIDATE_BOOLEAN);
                             $today = new \DateTime();
                             if ($booleanValue) {
-                                $whereStatement .= "DATE_ADD(m.dateRepayment, 1, 'day') >= :" . 'hasPaidMemberFees';
+                                $whereStatement .= "DATE_ADD(m.dateRepayment, 1, 'year') >= :today";
                             }
                             else {
-                                $whereStatement .= "DATE_ADD(m.dateRepayment, 1, 'day') < :" . 'hasPaidMemberFees';
+                                $whereStatement .= "DATE_ADD(m.dateRepayment, 1, 'year') < :today";
                             }
-                            $this->logger->debug("debug : " . $today->format("Y-m-d"));
-                            var_dump($today->format("Y-m-d"));
-                            $whereParameters[':' . $key] = $today->format("Y-m-d");
+                            $whereParameters[':today'] = $today->format("Y-m-d");
                         }
                     }
                 }
@@ -205,7 +203,6 @@ class MemberDataService
                 ->setMaxResults($pageSize);
             $query = $this->queryBuilder->getQuery();
             $paginator = new Paginator($query, $fetchJoinCollection = true);
-            $this->logger->debug("debug : " . var_dump($query->getSQL()) . var_dump($query->getParameters()));
             return new Page($query->execute(), $requestParameters, count($paginator));
 
         } catch (Exception $e) {
