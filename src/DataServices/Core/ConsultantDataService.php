@@ -88,7 +88,7 @@ class ConsultantDataService
             $whereParameters = array();
 
             foreach ($queryParams as $key => $value) {
-                if (in_array($key, ['search', 'firstName', 'lastName', 'company', 'isGraduate'])) {
+                if (in_array($key, ['search', 'firstName', 'lastName', 'company', 'isGraduate', 'isFr'])) {
                     if (!empty($whereStatement))
                         $whereStatement .= ' AND ';
 
@@ -119,6 +119,15 @@ class ConsultantDataService
                             $booleanValue = filter_var(strtolower($value), FILTER_VALIDATE_BOOLEAN);
                             $whereStatement .= 'c.' . $key . ' = :' . $key;
                             $whereParameters[':' . $key] = $booleanValue;
+                        }elseif ($key == 'isFr') {
+                            $booleanValue = filter_var(strtolower($value), FILTER_VALIDATE_BOOLEAN);
+                            if($booleanValue){
+                                $whereStatement .= 'c.nationality = :frenchId';
+                            }
+                            else {
+                                $whereStatement .= 'c.nationality != :frenchId';
+                            }
+                            $whereParameters[':frenchId'] = '62';
                         }
                     }
                 }
