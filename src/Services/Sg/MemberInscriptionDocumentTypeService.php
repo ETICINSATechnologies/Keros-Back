@@ -125,6 +125,12 @@ class MemberInscriptionDocumentTypeService
             case (10):
                 $wantedPole = "technique";
                 break;
+            case (11):
+                $wantedPole = "mkt";
+                break;
+            case (12):
+                $wantedPole = "gwt";
+                break;
             default:
                 $wantedPole = "Off";
         }
