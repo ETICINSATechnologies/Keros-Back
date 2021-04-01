@@ -566,7 +566,7 @@ INSERT INTO `core_position` (id, label, poleId) VALUES
   (27, 'Responsable Technique', 10),
   (28, 'Junior Technique', 10),
   (29, 'Membre Marketing', 11),
-  (30, 'Membre Growth', 12)
+  (30, 'Membre Growth', 12),
   (31, 'Responsable Marketing', 11),
   (32, 'Responsable Growth', 12);
 
